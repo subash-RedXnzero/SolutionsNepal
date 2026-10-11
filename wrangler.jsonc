@@ -8,6 +8,10 @@
     {
       "pattern": "solutionsnepal.com",
       "custom_domain": true
+    },
+    {
+      "pattern": "www.solutionsnepal.com",
+      "custom_domain": true
     }
   ],
   "assets": {

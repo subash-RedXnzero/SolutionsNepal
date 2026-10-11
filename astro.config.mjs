@@ -1,8 +1,41 @@
 // @ts-check
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import { getSeo } from './src/data/seo.js';
 
 // https://astro.build/config
+const redirects = {
+  '/robots': '/robots.txt',
+  '/llms': '/llms.txt',
+  '/sitemap': '/sitemap-index.xml',
+  '/sitemap.xml': '/sitemap-index.xml',
+  '/tools': '/nepal',
+  '/best-remittance-exchange-rate-nepal-guide': '/blog/best-remittance-exchange-rate-nepal-guide',
+  '/nepal/foreign-job-salary-savings': '/nepal/finance/foreign-job-salary-savings',
+  '/nepal/freelancer-take-home-calculator': '/nepal/finance/freelancer-take-home-calculator',
+  '/nepal/jobs': '/nepal/utilities/jobs',
+  '/nepal/pdf-editor': '/tools/merge-pdf',
+  '/tools/nepal-passport-photo': '/tools/passport-photo-resizer',
+  '/tools/visa-photo-resizer': '/tools/passport-photo-resizer',
+  '/tools/dv-lottery-photo': '/tools/passport-photo-resizer',
+  '/tools/citizenship-photo': '/tools/passport-photo-resizer',
+  '/tools/convert': '/tools/image-compressor',
+  '/nepal/tools/dashain-bonus-calculator': '/nepal/finance/dashain-bonus-calculator',
+};
+const cloudflareRedirectPaths = readFileSync(new URL('./public/_redirects', import.meta.url), 'utf8')
+  .split(/\r?\n/)
+  .map(line => line.trim().split(/\s+/, 1)[0])
+  .filter(path => path.startsWith('/') && !path.includes('*'));
+const redirectedPaths = new Set([...Object.keys(redirects), ...cloudflareRedirectPaths]);
+const nonIndexablePaths = new Set([
+  '/404',
+  '/nepal/electricity',
+  '/nepal/electricity/bill-calculator',
+  '/silver-price-nepal',
+]);
+
 export default defineConfig({
   site: 'https://solutionsnepal.com',
 
@@ -12,24 +45,24 @@ export default defineConfig({
     domains: ['images.unsplash.com'],
   },
 
-  redirects: {
-    '/tools': '/nepal',
-    '/best-remittance-exchange-rate-nepal-guide': '/blog/best-remittance-exchange-rate-nepal-guide',
-    '/nepal/foreign-job-salary-savings': '/nepal/finance/foreign-job-salary-savings',
-    '/nepal/freelancer-take-home-calculator': '/nepal/finance/freelancer-take-home-calculator',
-    '/nepal/jobs': '/nepal/utilities/jobs',
-    '/nepal/pdf-editor': '/tools/merge-pdf',
-    '/tools/nepal-passport-photo': '/tools/passport-photo-resizer',
-    '/tools/visa-photo-resizer': '/tools/passport-photo-resizer',
-    '/tools/dv-lottery-photo': '/tools/passport-photo-resizer',
-    '/tools/citizenship-photo': '/tools/passport-photo-resizer',
-    '/tools/convert': '/tools/image-compressor',
-    '/nepal/tools/dashain-bonus-calculator': '/nepal/finance/dashain-bonus-calculator',
-  },
+  redirects,
 
-  // Single source of truth for sitemap: src/pages/sitemap.xml.js
-  // (removed @astrojs/sitemap to avoid duplicate /sitemap.xml output)
-  integrations: [],
+  integrations: [
+    sitemap({
+      entryLimit: 45_000,
+      filter(page) {
+        const pathname = new URL(page).pathname.replace(/\/+$/, '') || '/';
+        return !redirectedPaths.has(pathname)
+          && !nonIndexablePaths.has(pathname)
+          && !getSeo(pathname).noindex;
+      },
+      serialize(item) {
+        const url = new URL(item.url);
+        if (url.pathname !== '/') url.pathname = url.pathname.replace(/\/+$/, '');
+        return { ...item, url: url.href };
+      },
+    }),
+  ],
 
   // Viewport prefetch is cheaper than hover+All for 1000+ pages.
   // Previously prefetchAll:true + hover generated huge speculation-rules.

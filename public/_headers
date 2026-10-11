@@ -4,7 +4,7 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-/sitemap.xml
+/sitemap-*.xml
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
 /blog/*
@@ -18,3 +18,7 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+
+https://solutionsnepal.subashchy245.workers.dev/*
+  X-Robots-Tag: noindex

@@ -46,4 +46,4 @@ User-agent: facebookexternalhit
 Disallow: /
 
 # ── Sitemap ──
-Sitemap: https://solutionsnepal.com/sitemap.xml
+Sitemap: https://solutionsnepal.com/sitemap-index.xml
