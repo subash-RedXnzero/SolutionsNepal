@@ -1,0 +1,566 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CalculatorCard from '../../../components/calculator/CalculatorCard.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import { VEHICLE_PRESETS, FUEL_TYPES } from '../../../lib/calculators/fuel-cost.js';
+
+const relatedTools = [
+  { title: 'Vehicle Tax, Fine & Renewal', description: 'Calculate vehicle renewal cost', href: '/nepal/transport/vehicle-tax' },
+  { title: 'NEA Electricity Bill', description: 'Estimate your NEA electricity bill', href: '/nepal/utilities/electricity-bill' },
+  { title: 'Nepal Salary Calculator', description: 'Calculate take-home salary', href: '/nepal/finance/salary-checker' },
+];
+
+const presets = Object.values(VEHICLE_PRESETS);
+const fuelTypes = Object.values(FUEL_TYPES);
+---
+
+<BaseLayout
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Vehicle', href: '/nepal/vehicle' },
+      { label: 'Fuel Cost' },
+    ]} />
+
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">Fuel Cost</h1>
+      <p class="mt-1 text-sm" style="color: var(--nk-text-secondary);">Trip Cost & Per KM Calculator</p>
+    </div>
+
+    <CalculatorCard title="" description="">
+      <div class="space-y-5">
+
+        <!-- DISTANCE -->
+        <div>
+          <label for="distance-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Distance <span class="font-normal" style="color: var(--nk-text-secondary);">— one-way, in km</span></label>
+          <div class="relative">
+            <input inputmode="decimal"
+              id="distance-input"
+              type="number"
+              min="1"
+              step="1"
+              value="250"
+              placeholder="250"
+              class="w-full pl-3 pr-12 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">km</span>
+          </div>
+        </div>
+
+        <!-- TRIP TYPE -->
+        <div>
+          <label for="trip-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Trip Type</label>
+          <select
+            id="trip-type"
+            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
+            style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+          >
+            <option value="one-way">One Way</option>
+            <option value="round-trip">Round Trip</option>
+          </select>
+        </div>
+
+        <hr style="border-color: var(--nk-border);" />
+
+        <!-- VEHICLE PRESET (optional) -->
+        <div>
+          <label for="preset-select" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+            Vehicle Type
+            <span class="text-xs font-normal" style="color: var(--nk-text-secondary);">(optional preset)</span>
+          </label>
+          <select
+            id="preset-select"
+            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
+            style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+          >
+            <option value="">Custom — enter your own values</option>
+            {presets.map(p => (
+              <option value={p.id}>{p.label} — {p.description}</option>
+            ))}
+          </select>
+        </div>
+
+        <!-- FUEL TYPE -->
+        <div>
+          <label for="fuel-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fuel Type</label>
+          <select
+            id="fuel-type"
+            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
+            style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+          >
+            {fuelTypes.map(f => (
+              <option value={f.id}>{f.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <!-- PETROL/DIESEL INPUTS -->
+        <div id="ice-inputs">
+          <!-- Mileage -->
+          <div class="mb-4">
+            <label for="mileage-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Vehicle Mileage <span class="font-normal" style="color: var(--nk-text-secondary);">— km per litre</span></label>
+            <div class="relative">
+              <input inputmode="decimal"
+                id="mileage-input"
+                type="number"
+                min="1"
+                step="0.1"
+                value="15"
+                placeholder="15"
+                class="w-full pl-3 pr-16 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">km/L</span>
+            </div>
+            <p id="mileage-hint" class="text-xs mt-1" style="color: var(--nk-text-secondary);">Estimate: Motorcycle ~40, Car ~15, SUV ~11 km/L</p>
+          </div>
+
+          <!-- Fuel Price -->
+          <div>
+            <label for="fuel-price-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fuel Price <span class="font-normal" style="color: var(--nk-text-secondary);">— current pump price</span></label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">Rs.</span>
+              <input inputmode="decimal"
+                id="fuel-price-input"
+                type="number"
+                min="0"
+                step="0.5"
+                value="156"
+                placeholder="156"
+                class="w-full pl-10 pr-14 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">/ L</span>
+            </div>
+            <p id="fuel-price-hint" class="text-xs mt-1" style="color: var(--nk-text-secondary);">Enter current fuel price from pump</p>
+          </div>
+        </div>
+
+        <!-- EV INPUTS (hidden by default) -->
+        <div id="ev-inputs" class="hidden">
+          <!-- Energy Consumption -->
+          <div class="mb-4">
+            <label for="consumption-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Energy Consumption</label>
+            <div class="relative">
+              <input inputmode="decimal"
+                id="consumption-input"
+                type="number"
+                min="1"
+                step="0.1"
+                value="18"
+                placeholder="18"
+                class="w-full pl-3 pr-20 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">kWh/100km</span>
+            </div>
+            <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">Estimate: ~14-22 kWh/100km for most EVs</p>
+          </div>
+
+          <!-- Electricity Price -->
+          <div>
+            <label for="elec-price-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Electricity Price</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">Rs.</span>
+              <input inputmode="decimal"
+                id="elec-price-input"
+                type="number"
+                min="0"
+                step="0.5"
+                value="12"
+                placeholder="12"
+                class="w-full pl-10 pr-14 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">/ kWh</span>
+            </div>
+            <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">NEA domestic tariff or charging station rate</p>
+          </div>
+        </div>
+
+        <hr style="border-color: var(--nk-border);" />
+
+        <!-- COST SPLITTING -->
+        <div>
+          <label for="people-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+            Split Fuel Cost
+            <span class="text-xs font-normal" style="color: var(--nk-text-secondary);">(optional)</span>
+          </label>
+          <div class="relative">
+            <input inputmode="decimal"
+              id="people-input"
+              type="number"
+              min="1"
+              max="50"
+              step="1"
+              value="1"
+              placeholder="1"
+              class="w-full pl-3 pr-16 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">people</span>
+          </div>
+          <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">Set to 1 if not splitting</p>
+        </div>
+
+        <!-- CALCULATE -->
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Calculate Fuel Cost
+        </button>
+        <p class="text-center text-[13px]" style="color: var(--nk-text-secondary);">Result updates automatically as you type</p>
+
+        <!-- ============================================ -->
+        <!-- RESULTS                                      -->
+        <!-- ============================================ -->
+        <div id="result" class="hidden">
+          <hr class="my-2" style="border-color: var(--nk-border);" />
+
+          <!-- TOTAL COST HERO -->
+          <div class="text-center py-6">
+            <p class="text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Estimated Fuel Cost</p>
+            <p id="total-cost" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+            <p id="total-subtitle" class="text-xs mt-2" style="color: var(--nk-text-secondary);"></p>
+          </div>
+
+          <!-- BREAKDOWN -->
+          <div class="space-y-3 mb-6">
+            <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-secondary);">Breakdown</p>
+
+              <!-- ICE breakdown -->
+              <div id="bd-ice" class="space-y-2">
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Distance</span>
+                  <span id="bd-distance" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Mileage</span>
+                  <span id="bd-mileage" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Fuel Required</span>
+                  <span id="bd-fuel-req" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Fuel Price</span>
+                  <span id="bd-fuel-price" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+              </div>
+
+              <!-- EV breakdown -->
+              <div id="bd-ev" class="space-y-2 hidden">
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Distance</span>
+                  <span id="bd-ev-distance" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Consumption</span>
+                  <span id="bd-ev-consumption" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Energy Required</span>
+                  <span id="bd-ev-energy" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Electricity Price</span>
+                  <span id="bd-ev-price" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+              </div>
+
+              <hr style="border-color: var(--nk-border);" />
+              <div class="flex justify-between text-sm font-semibold">
+                <span style="color: var(--nk-text);">Total Fuel Cost</span>
+                <span id="bd-total" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm mt-1">
+                <span style="color: var(--nk-text-secondary);">Cost per km</span>
+                <span id="bd-per-km" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+            </div>
+
+            <!-- COST SPLIT (if applicable) -->
+            <div id="bd-split-section" class="p-4 rounded-lg hidden" style="background-color: var(--nk-muted);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Cost Split</p>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Total Fuel Cost</span>
+                <span id="bd-split-total" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">People</span>
+                <span id="bd-split-people" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <hr style="border-color: var(--nk-border);" />
+              <div class="flex justify-between text-base font-bold">
+                <span style="color: var(--nk-text);">Cost per Person</span>
+                <span id="bd-split-per-person" style="color: var(--nk-accent);"></span>
+              </div>
+            </div>
+
+            <!-- FORMULA (collapsed) -->
+            <details class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+              <summary class="text-xs font-semibold uppercase tracking-wider cursor-pointer" style="color: var(--nk-text-secondary);">How it's calculated</summary>
+              <div id="bd-formula" class="mt-3 space-y-1 text-xs" style="color: var(--nk-text-secondary);"></div>
+            </details>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="flex gap-2">
+            <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              Copy Result
+            </button>
+            <button id="reset-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </CalculatorCard>
+
+    <!-- HOW IT WORKS / SEO CONTENT -->
+    <div class="mt-8 space-y-6">
+      <div class="p-5 rounded-lg" style="background-color: var(--nk-muted);">
+        <h2 class="text-lg font-bold mb-3" style="color: var(--nk-text);">How the Calculator Works</h2>
+        <div class="space-y-3 text-sm" style="color: var(--nk-text-secondary);">
+          <div>
+            <p class="font-medium mb-1" style="color: var(--nk-text);">Fuel Required</p>
+            <p>Divide your total distance by your vehicle's mileage (km/L) to find how many litres of fuel you need.</p>
+            <p class="font-mono text-xs mt-1 p-2 rounded" style="background-color: var(--nk-bg);">Fuel Required = Distance ÷ Mileage</p>
+          </div>
+          <div>
+            <p class="font-medium mb-1" style="color: var(--nk-text);">Total Fuel Cost</p>
+            <p>Multiply the fuel required by the current fuel price per litre.</p>
+            <p class="font-mono text-xs mt-1 p-2 rounded" style="background-color: var(--nk-bg);">Fuel Cost = Fuel Required × Fuel Price</p>
+          </div>
+          <div>
+            <p class="font-medium mb-1" style="color: var(--nk-text);">Cost per Kilometre</p>
+            <p>Divide the total fuel cost by the distance to find your cost per km.</p>
+            <p class="font-mono text-xs mt-1 p-2 rounded" style="background-color: var(--nk-bg);">Cost per KM = Fuel Cost ÷ Distance</p>
+          </div>
+          <div>
+            <p class="font-medium mb-1" style="color: var(--nk-text);">Round Trip</p>
+            <p>For round trips, the distance is doubled before calculating fuel required and total cost.</p>
+          </div>
+          <div>
+            <p class="font-medium mb-1" style="color: var(--nk-text);">Electric Vehicles (EV)</p>
+            <p>For EVs, energy consumption is measured in kWh per 100 km. The calculator converts distance to energy required, then multiplies by the electricity price.</p>
+            <p class="font-mono text-xs mt-1 p-2 rounded" style="background-color: var(--nk-bg);">Energy = Distance × Consumption ÷ 100<br/>Cost = Energy × Electricity Price</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="mt-6 p-4 rounded-lg text-xs" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color: var(--nk-text);">Disclaimer</p>
+      <p>This calculator provides <strong>estimates only</strong>. Actual fuel costs depend on driving conditions, vehicle condition, fuel price fluctuations, and other factors. Fuel prices are user-entered and should reflect current pump prices. Vehicle mileage estimates are approximate.</p>
+      <p class="mt-1">Last updated: <strong>2026-08-19</strong></p>
+    </div>
+
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <script>
+    import { calculateFuelCost, formatNPR, formatDecimal, VEHICLE_PRESETS, FUEL_TYPES } from '../../../lib/calculators/fuel-cost.js';
+
+    // DOM refs
+    const distanceInput = document.getElementById('distance-input');
+    const tripType = document.getElementById('trip-type');
+    const presetSelect = document.getElementById('preset-select');
+    const fuelType = document.getElementById('fuel-type');
+    const mileageInput = document.getElementById('mileage-input');
+    const fuelPriceInput = document.getElementById('fuel-price-input');
+    const consumptionInput = document.getElementById('consumption-input');
+    const elecPriceInput = document.getElementById('elec-price-input');
+    const peopleInput = document.getElementById('people-input');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const copyBtn = document.getElementById('copy-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const iceInputs = document.getElementById('ice-inputs');
+    const evInputs = document.getElementById('ev-inputs');
+    const mileageHint = document.getElementById('mileage-hint');
+
+    // === FUEL TYPE TOGGLE ===
+    function updateFuelInputs() {
+      const ft = fuelType?.value || 'petrol';
+      if (ft === 'electric') {
+        iceInputs?.classList.add('hidden');
+        evInputs?.classList.remove('hidden');
+      } else {
+        iceInputs?.classList.remove('hidden');
+        evInputs?.classList.add('hidden');
+      }
+    }
+
+    fuelType?.addEventListener('change', () => { updateFuelInputs(); calculate(); });
+    tripType?.addEventListener('change', calculate);
+
+    // === VEHICLE PRESET ===
+    presetSelect?.addEventListener('change', () => {
+      const presetId = presetSelect.value;
+      if (!presetId) return;
+
+      const preset = VEHICLE_PRESETS[presetId];
+      if (!preset) return;
+
+      // Set fuel type
+      if (fuelType) {
+        fuelType.value = preset.fuelType;
+        updateFuelInputs();
+      }
+
+      // Set mileage or consumption
+      if (preset.fuelType === 'electric') {
+        if (consumptionInput) consumptionInput.value = preset.consumption || '';
+      } else {
+        if (mileageInput) mileageInput.value = preset.mileage || '';
+      }
+      calculate();
+    });
+
+    // === CALCULATE ===
+    function calculate() {
+      const distance = parseFloat(distanceInput?.value) || 0;
+      const ft = fuelType?.value || 'petrol';
+      const mileage = parseFloat(mileageInput?.value) || 0;
+      const consumption = parseFloat(consumptionInput?.value) || 0;
+      const fuelPrice = ft === 'electric'
+        ? (parseFloat(elecPriceInput?.value) || 0)
+        : (parseFloat(fuelPriceInput?.value) || 0);
+      const trip = tripType?.value || 'one-way';
+      const people = parseInt(peopleInput?.value) || 1;
+
+      const r = calculateFuelCost({
+        distance,
+        fuelType: ft,
+        mileage,
+        consumption,
+        fuelPrice,
+        tripType: trip,
+        people,
+      });
+
+      if (!r.valid) { resultDiv?.classList.add('hidden'); return; }
+
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+      // Hero
+      const displayCost = r.isSplit ? r.costPerPerson : r.totalCost;
+      set('total-cost', formatNPR(displayCost));
+      set('total-subtitle', r.isSplit
+        ? `${formatNPR(r.totalCost)} total · split ${r.input.people} ways`
+        : `${formatNPR(r.costPerKm)} per km · ${r.fuelRequiredLabel} ${ft === 'electric' ? 'energy' : 'fuel'}`
+      );
+
+      // ICE breakdown
+      const bdIce = document.getElementById('bd-ice');
+      const bdEv = document.getElementById('bd-ev');
+
+      if (ft === 'electric') {
+        bdIce?.classList.add('hidden');
+        bdEv?.classList.remove('hidden');
+        set('bd-ev-distance', `${formatNPR(r.totalDistance).replace('NPR', '')} km`);
+        set('bd-ev-consumption', `${r.input.consumption} kWh/100km`);
+        set('bd-ev-energy', r.fuelRequiredLabel);
+        set('bd-ev-price', `NPR ${r.input.fuelPrice}/kWh`);
+      } else {
+        bdIce?.classList.remove('hidden');
+        bdEv?.classList.add('hidden');
+        set('bd-distance', `${r.totalDistance} km`);
+        set('bd-mileage', `${r.input.mileage} km/L`);
+        set('bd-fuel-req', r.fuelRequiredLabel);
+        set('bd-fuel-price', `NPR ${r.input.fuelPrice}/L`);
+      }
+
+      set('bd-total', formatNPR(r.totalCost));
+      set('bd-per-km', `NPR ${formatDecimal(r.costPerKm)}`);
+
+      // Cost split
+      const splitSection = document.getElementById('bd-split-section');
+      if (r.isSplit) {
+        splitSection?.classList.remove('hidden');
+        set('bd-split-total', formatNPR(r.totalCost));
+        set('bd-split-people', r.input.people);
+        set('bd-split-per-person', formatNPR(r.costPerPerson));
+      } else {
+        splitSection?.classList.add('hidden');
+      }
+
+      // Formula
+      const formulaEl = document.getElementById('bd-formula');
+      if (formulaEl) {
+        const formulas = Object.entries(r.formula);
+        formulaEl.innerHTML = formulas.map(([key, val]) =>
+          `<p class="font-mono p-2 rounded" style="background-color: var(--nk-bg);">${val}</p>`
+        ).join('');
+      }
+
+      resultDiv?.classList.remove('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    // Live result: recalculate as the user types (button kept for keyboard/mouse users).
+    [distanceInput, mileageInput, fuelPriceInput, consumptionInput, elecPriceInput, peopleInput].forEach(el => {
+      el?.addEventListener('input', calculate);
+      el?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    });
+
+    calculate(); // Prefilled example values show a result immediately
+
+    // === COPY ===
+    copyBtn?.addEventListener('click', async () => {
+      const distance = parseFloat(distanceInput?.value) || 0;
+      const ft = fuelType?.value || 'petrol';
+      const mileage = parseFloat(mileageInput?.value) || 0;
+      const consumption = parseFloat(consumptionInput?.value) || 0;
+      const fuelPrice = ft === 'electric'
+        ? (parseFloat(elecPriceInput?.value) || 0)
+        : (parseFloat(fuelPriceInput?.value) || 0);
+      const trip = tripType?.value || 'one-way';
+      const people = parseInt(peopleInput?.value) || 1;
+
+      const r = calculateFuelCost({ distance, fuelType: ft, mileage, consumption, fuelPrice, tripType: trip, people });
+      if (!r.valid) return;
+
+      const lines = [
+        `Nepal Fuel Cost Estimate`,
+        `Distance: ${r.totalDistance} km (${r.input.tripLabel})`,
+        ft === 'electric'
+          ? `Consumption: ${r.input.consumption} kWh/100km`
+          : `Mileage: ${r.input.mileage} km/L`,
+        ft === 'electric'
+          ? `Energy: ${r.fuelRequiredLabel} @ NPR ${r.input.fuelPrice}/kWh`
+          : `Fuel: ${r.fuelRequiredLabel} @ NPR ${r.input.fuelPrice}/L`,
+        `---------------------------------`,
+        `Total Fuel Cost: ${formatNPR(r.totalCost)}`,
+        `Cost per km:     NPR ${formatDecimal(r.costPerKm)}`,
+        r.isSplit ? `Cost per person: ${formatNPR(r.costPerPerson)} (${r.input.people} people)` : null,
+      ].filter(Boolean).join('\n');
+
+      try {
+        await navigator.clipboard.writeText(lines);
+        if (copyBtn) copyBtn.textContent = 'Copied!';
+        setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy Result'; }, 2000);
+      } catch {}
+    });
+
+    // === RESET ===
+    resetBtn?.addEventListener('click', () => {
+      if (distanceInput) distanceInput.value = '250';
+      if (mileageInput) mileageInput.value = '15';
+      if (fuelPriceInput) fuelPriceInput.value = '156';
+      if (consumptionInput) consumptionInput.value = '18';
+      if (elecPriceInput) elecPriceInput.value = '12';
+      if (peopleInput) peopleInput.value = '1';
+      calculate();
+    });
+  </script>
+</BaseLayout>

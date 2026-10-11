@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CalculatorCard from '../../../components/calculator/CalculatorCard.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolSeoContent from '../../../components/seo/ToolSeoContent.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'Tola to Gram Converter', description: 'Convert tola to grams (×11.664)', href: '/nepal/gold/tola-to-gram' },
+  { title: 'Gold Price in Nepal Today', description: 'Per tola & gram rates', href: '/nepal/gold-price-nepal' },
+  { title: 'Silver Price in Nepal Today', description: 'Per tola & gram rates', href: '/nepal/silver-price-nepal' },
+  { title: 'All Gold Tools', description: 'Browse gold converters', href: '/nepal/gold' },
+];
+---
+
+<BaseLayout>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Gold', href: '/nepal/gold' },
+      { label: 'Gram → Tola' },
+    ]} />
+
+    <CalculatorCard
+      title="Gram to Tola Converter"
+      description="Convert grams to tola for gold and silver — divide by 11.664. Ideal for comparing international gram prices with Nepali tola rates."
+    >
+      <div class="space-y-4">
+        <div>
+          <label for="input-value" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+            Value in Grams
+          </label>
+          <input inputmode="decimal"
+            id="input-value"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="11.664"
+            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+            style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+          />
+        </div>
+
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Convert
+        </button>
+
+        <div id="result" class="hidden">
+          <hr class="my-4" style="border-color: var(--nk-border);" />
+          <div class="text-center py-4">
+            <p class="text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Result in Tola</p>
+            <p id="result-value" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">Copy Result</button>
+            <button id="reset-btn" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">Reset</button>
+          </div>
+        </div>
+      </div>
+    </CalculatorCard>
+
+    <ToolSeoContent
+      howTo={[
+        { t: 'Enter grams', d: 'Type the weight in grams, e.g. 50 g of silver or 11.664 g to verify 1 tola.' },
+        { t: 'Convert', d: 'Divide by 11.664 — the tool shows tola to 4 decimals for jewellery accuracy.' },
+        { t: 'Price it', d: 'Multiply the tola result by today\'s per-tola rate to estimate NPR value.' },
+      ]}
+      formula="tola = grams ÷ 11.664"
+      example={{ t: '100 grams gold:', d: '100 ÷ 11.664 = 8.5734 tola. At Rs. 1,52,000/tola that is about Rs. 13,03,000.' }}
+      faqs={[
+        { q: 'How many tola is 1 gram?', a: 'About 0.0857 tola (1 ÷ 11.664). Jewellers round display to 4 decimals; billing uses the exact product.' },
+        { q: 'When do I need gram-to-tola?', a: 'When comparing Dubai/Indian gram quotes with Nepali tola rates, or weighing imported jewellery on a gram scale.' },
+        { q: 'Is the factor exact?', a: 'Yes — 11.664 g per tola is the legal standard. Small scale errors come from rounding, not the factor.' },
+      ]}
+      related={relatedTools}
+    />
+
+    <Disclaimer variant="general" />
+  </div>
+
+  <script>
+    import { gramToTola } from '../../../lib/converters/gold.js';
+    import { formatNumber } from '../../../lib/utils/format.js';
+
+    const inputEl = document.getElementById('input-value');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const resultEl = document.getElementById('result-value');
+    const copyBtn = document.getElementById('copy-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    function calculate() {
+      const value = parseFloat(inputEl?.value) || 0;
+      if (value <= 0) return;
+      const result = gramToTola(value);
+      if (resultEl) resultEl.textContent = formatNumber(result, 4);
+      resultDiv?.classList.remove('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    inputEl?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    copyBtn?.addEventListener('click', async () => {
+      const value = parseFloat(inputEl?.value) || 0;
+      if (value > 0) {
+        const result = gramToTola(value);
+        try { await navigator.clipboard.writeText(`${value} Grams = ${formatNumber(result, 4)} Tola`); if (copyBtn) copyBtn.textContent = 'Copied!'; setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy Result'; }, 2000); } catch {}
+      }
+    });
+    resetBtn?.addEventListener('click', () => { if (inputEl) inputEl.value = ''; resultDiv?.classList.add('hidden'); });
+  </script>
+</BaseLayout>

@@ -1,0 +1,46 @@
+---
+const { title, description, href } = Astro.props;
+---
+
+<div
+  class="tool-card group"
+  style="background-color: var(--nk-surface); color: var(--nk-text);"
+>
+  <a
+    href={href}
+    class="flex items-center justify-between gap-3 flex-1 min-w-0 no-underline"
+    style="text-decoration: none; color: inherit;"
+  >
+    <div class="flex-1 min-w-0">
+      <h3 class="text-[13px] font-medium truncate" style="color: var(--nk-text);">
+        {title}
+      </h3>
+      <p class="text-[11px] truncate mt-0.5" style="color: var(--nk-text-tertiary);">
+        {description}
+      </p>
+    </div>
+    <svg
+      class="tool-arrow flex-shrink-0 w-3.5 h-3.5 transition-all duration-100"
+      style="color: var(--nk-text-tertiary);"
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M5 12h14"/>
+      <path d="m12 5 7 7-7 7"/>
+    </svg>
+  </a>
+</div>
+
+<style>
+  .tool-card:hover .tool-arrow {
+    transform: translateX(3px);
+    opacity: 0.6;
+  }
+</style>

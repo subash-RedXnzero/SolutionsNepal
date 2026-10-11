@@ -1,0 +1,501 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Cuboid, BrickWall, PaintRoller, Grid3x3, Weight, Building2, Calculator, RotateCcw, Copy, Printer } from '@lucide/astro';
+import { CONCRETE_MIX, TILE_SIZES, STEEL_DIAMETERS } from '../../../../data/construction/construction-material.js';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+
+const title = 'Construction Material Calculator Nepal 2026 | SolutionsNepal';
+const description = "Calculate estimated cement, sand, aggregate, bricks and steel quantities for construction projects in Nepal with SolutionsNepal's construction material calculator.";
+const canonical = 'https://solutionsnepal.com/nepal/construction/construction-material-calculator';
+
+const faqItems = [
+  { q: 'How do I calculate construction materials for a house in Nepal?', a: 'Measure your project, pick the work type (concrete, brickwork, plaster, flooring or steel), enter dimensions and mix/ratio, then calculate. The calculator converts units, applies dry-volume factors and wastage, and shows cement bags, sand, aggregate, bricks or steel weight. For a full house, use Full Project Estimate as a preliminary planning figure and refine with structural drawings.' },
+  { q: 'How many cement bags are required for 1 cubic meter of concrete?', a: 'It depends on the grade. For example at dry factor 1.54, M15 (1:2:4) needs about 6.4 bags per m³ and M20 (1:1.5:3) about 8.0 bags per m³ (50 kg bags). The calculator shows the exact estimate for your grade, volume and wastage.' },
+  { q: 'How much sand and aggregate are required for concrete?', a: 'From the dry volume split by mix ratio. At M15 1:2:4, 1 m³ wet concrete needs roughly 0.44 m³ sand and 0.88 m³ aggregate plus wastage. Results are shown in both m³ and cu ft.' },
+  { q: 'How many bricks are required per square foot?', a: 'About 4.5 bricks per sq ft for a 9-inch (230 mm) wall using standard Nepal bricks (230×110×55 mm) with 10 mm mortar, before wastage. For half-brick walls it is less. The brickwork calculator uses wall volume and brick + mortar size to estimate more accurately.' },
+  { q: 'How much steel is required for a house?', a: 'Steel depends on structural design, not just built-up area. As a very rough planning ballpark, 1.8–2.8 kg per sq ft is common for residential frames, but the only correct figure is from the structural drawings and bar bending schedule. Use the steel calculator with the engineer’s bar list for an accurate weight.' },
+  { q: 'How much wastage should I allow for construction materials?', a: 'Common planning allowances are 5% for concrete, brickwork and plaster, 5–10% for flooring/tiles and 2–3% for steel. The calculator defaults to these and lets you adjust. Actual wastage depends on handling, cutting, site conditions and workmanship.' },
+  { q: 'Is this construction material calculator accurate?', a: 'It is a planning estimate using centralized assumptions for bag weight, mix ratios, brick size, mortar thickness and dry factors. Actual quantities vary with drawings, mix design, compaction, brick dimensions, site conditions and wastage — treat results as a guide.' },
+  { q: 'Can I use this calculator for structural design?', a: 'No. It does not design beams, columns, slabs or reinforcement. For structural safety and code compliance, consult a qualified civil/structural engineer.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@context':'https://schema.org', '@type':'WebApplication', name:'Construction Material Calculator Nepal', description:'Estimate cement, sand, aggregate, bricks, and steel requirements for your construction project in Nepal.', url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@context':'https://schema.org', '@type':'FAQPage', mainEntity: faqItems.map(i=>({ '@type':'Question', name:i.q, acceptedAnswer:{'@type':'Answer', text:i.a} })) }
+  ]}>
+  <div class="mx-auto max-w-[1320px] px-4 sm:px-6 py-4 sm:py-6 cm-wrap">
+    <Breadcrumbs items={[
+      { label:'Land & Property', href:'/nepal/land' },
+      { label:'Construction', href:'/nepal/construction' },
+      { label:'Construction Material Calculator' }
+    ]} />
+
+    <div class="mb-4">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">Estimation only • not a structural design</div>
+      <h1 class="text-[24px] sm:text-[28px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-2" style="color:var(--nk-text);">Construction Material Calculator Nepal</h1>
+      <p class="text-[13px] leading-[1.55] mt-1.5 max-w-[720px]" style="color:var(--nk-text-secondary);">Estimate cement, sand, aggregate, bricks, and steel requirements for your construction project in Nepal.</p>
+      <p class="text-[11.5px] mt-1" style="color:var(--nk-text-tertiary);">Get a quick material estimate based on your project dimensions and selected construction work.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-1.5 mb-4 overflow-x-auto pb-1 scrollbar-thin" style="scrollbar-width:thin;">
+      <button class="cm-tab cm-tab-active" data-tab="concrete"><Cuboid size={14}/> Concrete</button>
+      <button class="cm-tab" data-tab="brickwork"><BrickWall size={14}/> Brickwork</button>
+      <button class="cm-tab" data-tab="plaster"><PaintRoller size={14}/> Plaster</button>
+      <button class="cm-tab" data-tab="flooring"><Grid3x3 size={14}/> Flooring</button>
+      <button class="cm-tab" data-tab="steel"><Weight size={14}/> Steel</button>
+      <button class="cm-tab" data-tab="full"><Building2 size={14}/> Full Project</button>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.65fr_420px] gap-5 items-start">
+
+      <!-- LEFT: INPUTS -->
+      <div class="space-y-4 min-w-0">
+
+        <!-- CONCRETE -->
+        <section class="nk-card p-4 cm-panel" data-panel="concrete">
+          <h2 class="text-[13px] font-bold flex items-center gap-1.5 mb-3" style="color:var(--nk-text);"><Cuboid size={16}/> Concrete Material Calculator</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="cm-field"><label class="cm-label">Length</label><div class="cm-box"><input id="c-length" type="text" inputmode="decimal" placeholder="e.g. 10" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label">Width</label><div class="cm-box"><input id="c-width" type="text" inputmode="decimal" placeholder="e.g. 12" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label">Depth / Thickness</label><div class="cm-box"><input id="c-depth" type="text" inputmode="decimal" placeholder="e.g. 0.5" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Unit</label><select id="c-unit" class="nk-input text-[13px]" style="height:38px; border-radius:10px;"><option value="ft">ft</option><option value="m">m</option></select></div>
+            <div class="cm-field"><label class="cm-label">Concrete Grade / Mix</label><select id="c-grade" class="nk-input text-[13px]" style="height:38px; border-radius:10px;"><option value="M10">M10 (1:3:6)</option><option value="M15" selected>M15 (1:2:4)</option><option value="M20">M20 (1:1.5:3)</option><option value="M25">M25 (1:1:2)</option><option value="CUSTOM">Custom Mix</option></select></div>
+            <div class="cm-field"><label class="cm-label">Wastage %</label><div class="cm-box"><input id="c-wastage" type="text" inputmode="decimal" placeholder="5" class="cm-input" /><span class="cm-unit">%</span></div></div>
+          </div>
+          <div id="c-custom-row" class="hidden grid grid-cols-3 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Cement</label><input id="c-cust-c" type="text" class="nk-input" placeholder="1" /></div>
+            <div class="cm-field"><label class="cm-label">Sand</label><input id="c-cust-s" type="text" class="nk-input" placeholder="2" /></div>
+            <div class="cm-field"><label class="cm-label">Aggregate</label><input id="c-cust-a" type="text" class="nk-input" placeholder="4" /></div>
+          </div>
+          <p class="text-[11px] mt-2" style="color:var(--nk-text-tertiary);">1 m³ = 35.3147 cu ft • Cement bag assumption: 50 kg (0.0347 m³). Custom mix as cement:sand:aggregate.</p>
+        </section>
+
+        <!-- BRICKWORK -->
+        <section class="nk-card p-4 cm-panel hidden" data-panel="brickwork">
+          <h2 class="text-[13px] font-bold flex items-center gap-1.5 mb-3" style="color:var(--nk-text);"><BrickWall size={16}/> Brickwork Material Calculator</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="cm-field"><label class="cm-label">Wall Length</label><div class="cm-box"><input id="b-length" type="text" placeholder="e.g. 20" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label">Wall Height</label><div class="cm-box"><input id="b-height" type="text" placeholder="e.g. 10" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label">Wall Thickness</label><div class="cm-box"><input id="b-thick" type="text" placeholder="e.g. 0.75" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Unit</label><select id="b-unit" class="nk-input" style="height:38px; border-radius:10px;"><option value="ft">ft</option><option value="m">m</option></select></div>
+            <div class="cm-field"><label class="cm-label">Brick size</label><select id="b-brick" class="nk-input" style="height:38px; border-radius:10px;"><option value="standard">Standard Nepal (230×110×55 mm)</option><option value="custom">Custom</option></select></div>
+            <div class="cm-field"><label class="cm-label">Wastage %</label><div class="cm-box"><input id="b-wastage" type="text" placeholder="5" class="cm-input" /><span class="cm-unit">%</span></div></div>
+          </div>
+          <div id="b-custom-brick" class="hidden grid grid-cols-3 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Brick L (mm)</label><input id="b-bl" type="text" class="nk-input" placeholder="230" /></div>
+            <div class="cm-field"><label class="cm-label">Brick W (mm)</label><input id="b-bw" type="text" class="nk-input" placeholder="110" /></div>
+            <div class="cm-field"><label class="cm-label">Brick H (mm)</label><input id="b-bh" type="text" class="nk-input" placeholder="55" /></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Mortar thickness (mm)</label><input id="b-mortar" type="text" class="nk-input" placeholder="10" /></div>
+            <div class="cm-field"><label class="cm-label">Mortar ratio (cement:sand)</label><select id="b-mortar-ratio" class="nk-input" style="height:38px; border-radius:10px;"><option value="1:6" selected>1:6</option><option value="1:4">1:4</option><option value="1:5">1:5</option></select></div>
+          </div>
+        </section>
+
+        <!-- PLASTER -->
+        <section class="nk-card p-4 cm-panel hidden" data-panel="plaster">
+          <h2 class="text-[13px] font-bold flex items-center gap-1.5 mb-3" style="color:var(--nk-text);"><PaintRoller size={16}/> Plaster Material Calculator</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="cm-field"><label class="cm-label">Wall Length</label><div class="cm-box"><input id="p-length" type="text" placeholder="e.g. 15" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label">Wall Height</label><div class="cm-box"><input id="p-height" type="text" placeholder="e.g. 10" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label">Number of walls</label><input id="p-walls" type="text" class="nk-input" placeholder="1" /></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Unit</label><select id="p-unit" class="nk-input" style="height:38px; border-radius:10px;"><option value="ft">ft</option><option value="m">m</option></select></div>
+            <div class="cm-field"><label class="cm-label">Plaster thickness (mm)</label><input id="p-thick" type="text" class="nk-input" placeholder="12" /></div>
+            <div class="cm-field"><label class="cm-label">Wastage %</label><div class="cm-box"><input id="p-wastage" type="text" placeholder="5" class="cm-input" /><span class="cm-unit">%</span></div></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Mix ratio</label><select id="p-mix" class="nk-input" style="height:38px; border-radius:10px;"><option value="1:4" selected>1:4</option><option value="1:5">1:5</option><option value="1:6">1:6</option><option value="custom">Custom</option></select></div>
+            <div id="p-custom-row" class="hidden grid grid-cols-2 gap-3"><div class="cm-field"><label class="cm-label">Cement</label><input id="p-cust-c" type="text" class="nk-input" placeholder="1" /></div><div class="cm-field"><label class="cm-label">Sand</label><input id="p-cust-s" type="text" class="nk-input" placeholder="4" /></div></div>
+          </div>
+        </section>
+
+        <!-- FLOORING -->
+        <section class="nk-card p-4 cm-panel hidden" data-panel="flooring">
+          <h2 class="text-[13px] font-bold flex items-center gap-1.5 mb-3" style="color:var(--nk-text);"><Grid3x3 size={16}/> Flooring / Tiles Calculator</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="cm-field"><label class="cm-label">Floor Length</label><div class="cm-box"><input id="f-length" type="text" placeholder="e.g. 12" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label">Floor Width</label><div class="cm-box"><input id="f-width" type="text" placeholder="e.g. 14" class="cm-input" /><span class="cm-unit">ft</span></div></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Unit</label><select id="f-unit" class="nk-input" style="height:38px; border-radius:10px;"><option value="ft">ft</option><option value="m">m</option></select></div>
+            <div class="cm-field"><label class="cm-label">Tile size</label><select id="f-tile" class="nk-input" style="height:38px; border-radius:10px;"><option value="12x12">12 × 12 in</option><option value="24x24">24 × 24 in</option><option value="16x16">16 × 16 in</option><option value="custom">Custom</option></select></div>
+            <div class="cm-field"><label class="cm-label">Wastage %</label><div class="cm-box"><input id="f-wastage" type="text" placeholder="7" class="cm-input" /><span class="cm-unit">%</span></div></div>
+          </div>
+          <div id="f-custom-tile" class="hidden grid grid-cols-2 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Tile length (in)</label><input id="f-tl" type="text" class="nk-input" placeholder="12" /></div>
+            <div class="cm-field"><label class="cm-label">Tile width (in)</label><input id="f-tw" type="text" class="nk-input" placeholder="12" /></div>
+          </div>
+        </section>
+
+        <!-- STEEL -->
+        <section class="nk-card p-4 cm-panel hidden" data-panel="steel">
+          <h2 class="text-[13px] font-bold flex items-center gap-1.5 mb-3" style="color:var(--nk-text);"><Weight size={16}/> Steel Estimator</h2>
+          <p class="text-[11px] mb-3" style="color:var(--nk-text-tertiary);">Weight (kg/m) = d² / 162, where d is bar diameter in mm. Number of bars × length. Use structural drawings or bar bending schedule for actual reinforcement.</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="cm-field"><label class="cm-label">Bar diameter</label><select id="s-dia" class="nk-input" style="height:38px; border-radius:10px;">{STEEL_DIAMETERS.map(d=> <option value={String(d)} selected={d===12}>{d} mm</option>) }</select></div>
+            <div class="cm-field"><label class="cm-label">Bar length (m)</label><input id="s-len" type="text" class="nk-input" placeholder="12" /></div>
+            <div class="cm-field"><label class="cm-label">Number of bars</label><input id="s-num" type="text" class="nk-input" placeholder="e.g. 20" /></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">OR Total length (m)</label><input id="s-totallen" type="text" class="nk-input" placeholder="optional" /></div>
+            <div class="cm-field"><label class="cm-label">Wastage %</label><div class="cm-box"><input id="s-wastage" type="text" placeholder="3" class="cm-input" /><span class="cm-unit">%</span></div></div>
+          </div>
+          <div id="steel-multi" class="mt-3">
+            <p class="text-[12px] font-semibold mb-1.5" style="color:var(--nk-text);">Multiple bar types (optional)</p>
+            <div id="steel-rows" class="space-y-2"></div>
+            <button type="button" id="steel-add" class="mt-2 text-[12px] font-medium px-3 py-1.5 rounded-full border" style="border-color:var(--nk-border); color:var(--nk-text-secondary);">+ Add bar type</button>
+          </div>
+        </section>
+
+        <!-- FULL PROJECT -->
+        <section class="nk-card p-4 cm-panel hidden" data-panel="full">
+          <h2 class="text-[13px] font-bold flex items-center gap-1.5 mb-3" style="color:var(--nk-text);"><Building2 size={16}/> Full Project Estimate (preliminary)</h2>
+          <p class="text-[11px] p-2.5 rounded-lg mb-3" style="background:var(--nk-accent-subtle); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">This is a preliminary planning estimate. Actual quantities should be calculated from architectural and structural drawings.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="cm-field"><label class="cm-label">Built-up Area</label><input id="fp-area" type="text" class="nk-input" placeholder="e.g. 1200" /></div>
+            <div class="cm-field"><label class="cm-label">Area unit</label><select id="fp-unit" class="nk-input" style="height:38px; border-radius:10px;"><option value="sqft">sq ft</option><option value="sqm">sq m</option></select></div>
+            <div class="cm-field"><label class="cm-label">Number of Floors</label><input id="fp-floors" type="text" class="nk-input" placeholder="1" /></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mt-3">
+            <div class="cm-field"><label class="cm-label">Building Type</label><select id="fp-type" class="nk-input" style="height:38px; border-radius:10px;"><option value="residential">Residential</option><option value="commercial">Commercial</option></select></div>
+            <div class="cm-field"><label class="cm-label">Construction quality</label><select id="fp-quality" class="nk-input" style="height:38px; border-radius:10px;"><option value="basic">Basic</option><option value="standard" selected>Standard</option><option value="premium">Premium</option></select></div>
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <label class="inline-flex items-center gap-1.5 text-[12px]" style="color:var(--nk-text);"><input type="checkbox" id="fp-concrete" checked /> Concrete</label>
+            <label class="inline-flex items-center gap-1.5 text-[12px]" style="color:var(--nk-text);"><input type="checkbox" id="fp-brickwork" checked /> Brickwork</label>
+            <label class="inline-flex items-center gap-1.5 text-[12px]" style="color:var(--nk-text);"><input type="checkbox" id="fp-plaster" checked /> Plaster</label>
+            <label class="inline-flex items-center gap-1.5 text-[12px]" style="color:var(--nk-text);"><input type="checkbox" id="fp-flooring" checked /> Flooring</label>
+            <label class="inline-flex items-center gap-1.5 text-[12px]" style="color:var(--nk-text);"><input type="checkbox" id="fp-steel" checked /> Steel</label>
+          </div>
+        </section>
+
+        <div class="flex gap-2.5">
+          <button type="button" id="calc-btn" class="nk-btn w-full justify-center py-3 text-[14px] font-bold" style="background:var(--nk-accent); color:#fff; border-radius:12px; border:none;"><Calculator size={16}/> Calculate Materials</button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-6 py-3 text-[13px] font-semibold" style="border-radius:12px;"><RotateCcw size={14}/> Reset</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium" style="color:#DC2626;"></p>
+
+        <!-- Assumptions -->
+        <details class="nk-card p-4">
+          <summary class="text-[12px] font-bold cursor-pointer" style="color:var(--nk-text);">Calculation assumptions</summary>
+          <div class="mt-3 text-[11.5px] leading-relaxed space-y-1.5" style="color:var(--nk-text-secondary);">
+            <p><strong style="color:var(--nk-text);">Cement bag:</strong> 50 kg (0.0347 m³) • <strong>Dry factor concrete:</strong> 1.54 • <strong>Plaster dry:</strong> 1.27 • <strong>Brick:</strong> 230×110×55 mm, mortar 10 mm, ratio 1:6 • <strong>Steel:</strong> d²/162 kg/m • <strong>Wastage:</strong> concrete/brick/plaster 5%, flooring 7%, steel 3% (editable) • <strong>1 m³ = 35.3147 cu ft</strong> • All editable in <code style="background:var(--nk-hover); padding:1px 4px; border-radius:4px;">src/data/construction/construction-material.js</code></p>
+            <p class="text-[11px]" style="color:var(--nk-text-tertiary);">Update assumptions centrally; calculations read only from config.</p>
+          </div>
+        </details>
+
+      </div>
+
+      <!-- RIGHT: RESULT -->
+      <div class="lg:sticky lg:top-4 space-y-3">
+        <div class="nk-card overflow-hidden" id="result-card">
+          <div id="res-empty" class="p-6 text-center">
+            <div class="w-10 h-10 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-semibold" style="color:var(--nk-text);">Your material estimate</p>
+            <p class="text-[11.5px] mt-1" style="color:var(--nk-text-secondary);">Enter dimensions and click <strong>Calculate Materials</strong>.</p>
+            <p class="text-[11px] mt-2" style="color:var(--nk-text-tertiary);">All results include wastage % shown in results.</p>
+          </div>
+          <div id="res-body" class="hidden">
+            <div class="px-4 pt-4 pb-3 text-center" style="background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 70%); border-bottom:1px solid var(--nk-border);">
+              <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);" id="res-kicker">Estimate</p>
+              <p class="text-[22px] font-extrabold leading-tight mt-1" style="color:var(--nk-text);" id="res-hero">—</p>
+              <p class="text-[11.5px] mt-1" style="color:var(--nk-text-secondary);" id="res-sub">—</p>
+            </div>
+            <div class="p-4 space-y-3">
+              <div id="res-breakdown" class="space-y-1.5 text-[12.5px]"></div>
+              <div id="res-extra" class="text-[11.5px] space-y-1" style="color:var(--nk-text-secondary);"></div>
+              <div class="flex gap-2 pt-1">
+                <button type="button" id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1 text-[12px]"><Copy size={13}/> Copy</button>
+                <button type="button" id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1 text-[12px]"><Printer size={13}/> Print</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nk-card p-3.5">
+          <p class="text-[11px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Quick conversion</p>
+          <p class="text-[11.5px] mt-1" style="color:var(--nk-text-secondary);">1 m³ = 35.3147 cu ft • 1 m = 3.28084 ft • 1 sq m = 10.7639 sq ft</p>
+          <p class="text-[11.5px] mt-1" style="color:var(--nk-text-secondary);">Steel: kg/m = d²/162 (d in mm)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info below -->
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">What materials are commonly used in house construction in Nepal?</h2>
+        <ul class="text-[12.5px] leading-relaxed list-disc pl-5 space-y-1" style="color:var(--nk-text-secondary);">
+          <li><strong style="color:var(--nk-text);">Cement:</strong> binder for concrete, mortar and plaster (commonly 50 kg bags).</li>
+          <li><strong style="color:var(--nk-text);">Sand:</strong> fine aggregate for concrete and mortar.</li>
+          <li><strong style="color:var(--nk-text);">Aggregate:</strong> coarse stone for concrete strength.</li>
+          <li><strong style="color:var(--nk-text);">Bricks:</strong> wall construction; mortar fills joints.</li>
+          <li><strong style="color:var(--nk-text);">Steel:</strong> reinforcement in beams, columns, slabs and foundations.</li>
+          <li><strong style="color:var(--nk-text);">Water:</strong> for mixing and curing.</li>
+        </ul>
+      </section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How many cement bags are required for construction?</h2>
+        <p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">It depends on concrete volume and mix, plus brickwork and plaster volumes and their mortar ratios. Use the specific calculators above — concrete for slabs/beams/columns, brickwork for walls, plaster for finishing — and add their cement bags for a total. The full-project tab does this approximately from built-up area.</p>
+      </section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How is construction material quantity calculated?</h2>
+        <p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Volume or area → dry volume (for concrete/plaster) → split by mix ratio → divide cement volume by bag volume (0.0347 m³ for 50 kg) → apply wastage. Bricks from wall volume divided by brick+Mortar size. Tiles from floor area divided by tile area. Steel from length × d²/162.</p>
+      </section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-1.5">
+          {faqItems.map(item=> (
+            <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);">
+              <summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+      <div class="rounded-xl p-3.5 text-[11.5px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+        <strong style="color:var(--nk-text);">Important:</strong> This calculator provides approximate material quantities for planning purposes only. Actual quantities may vary based on structural design, mix specifications, workmanship, material dimensions, site conditions, and wastage. For construction and structural decisions, consult a qualified engineer or construction professional.
+      </div>
+    </div>
+
+    <Disclaimer variant="property" />
+    <RelatedTools tools={[
+      { title:'House Construction Cost', description:'Estimate house cost per sq ft', href:'/nepal/construction/house-construction-cost' },
+      { title:'Land Registration Fee', description:'Estimate land registration', href:'/nepal/property/land-registration' },
+      { title:'Ropani to Aana', description:'Convert land units', href:'/nepal/land/ropani-to-aana' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap { background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .cm-tab { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:12.5px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all 140ms ease; }
+  .cm-tab:hover { border-color:var(--nk-border-strong); color:var(--nk-text); }
+  .cm-tab-active { background:var(--nk-accent); border-color:var(--nk-accent); color:#fff; font-weight:700; box-shadow: 0 6px 14px -8px rgba(230,43,30,.5); }
+  .cm-field { display:flex; flex-direction:column; gap:5px; }
+  .cm-label { font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box { position:relative; display:flex; align-items:center; }
+  .cm-input { width:100%; padding:8px 36px 8px 10px; border-radius:10px; border:1px solid var(--nk-border); background:var(--nk-surface); font-size:13px; }
+  .cm-input:focus { outline:none; border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-unit { position:absolute; right:8px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-panel { border-radius:14px; }
+  #result-card { border-radius:14px; box-shadow:var(--shadow-sm); }
+</style>
+
+<script>
+  import { calcConcrete, calcBrickwork, calcPlaster, calcFlooring, calcSteel, calcSteelFromBars, calcFullProject, steelWeightPerMeter } from '../../../../lib/calculators/construction-material.js';
+  import { CONCRETE_MIX } from '../../../../data/construction/construction-material.js';
+
+  const $ = (id) => document.getElementById(id);
+  let activeTab = 'concrete';
+
+  function setTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.cm-tab').forEach(b=> b.classList.toggle('cm-tab-active', b.dataset.tab===tab));
+    document.querySelectorAll('.cm-panel').forEach(p=> p.classList.toggle('hidden', p.dataset.panel!==tab));
+    $('res-empty')?.classList.remove('hidden');
+    $('res-body')?.classList.add('hidden');
+  }
+  document.querySelectorAll('.cm-tab').forEach(b=> b.addEventListener('click', ()=> setTab(b.dataset.tab)));
+
+  // show/hide custom rows
+  $('c-grade')?.addEventListener('change', ()=> $('c-custom-row')?.classList.toggle('hidden', $('c-grade').value!=='CUSTOM'));
+  $('b-brick')?.addEventListener('change', ()=> $('b-custom-brick')?.classList.toggle('hidden', $('b-brick').value!=='standard'));
+  $('p-mix')?.addEventListener('change', ()=> $('p-custom-row')?.classList.toggle('hidden', $('p-mix').value!=='custom'));
+  $('f-tile')?.addEventListener('change', ()=> $('f-custom-tile')?.classList.toggle('hidden', $('f-tile').value!=='custom'));
+  $('p-thick')?.addEventListener('input', ()=>{});
+
+  // Steel multi rows
+  function addSteelRow(dia=12, len=12, cnt=1) {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex gap-2 items-center';
+    wrap.innerHTML = `<select class="nk-input text-[13px] s-dia2" style="height:36px; border-radius:10px; flex:1;"><option value="8">8 mm</option><option value="10">10 mm</option><option value="12" ${dia===12?'selected':''}>12 mm</option><option value="16" ${dia===16?'selected':''}>16 mm</option><option value="20" ${dia===20?'selected':''}>20 mm</option><option value="25">25 mm</option><option value="32">32 mm</option></select><input type="text" placeholder="length m" value="${len}" class="nk-input s-len2" style="flex:1;" /><input type="text" placeholder="count" value="${cnt}" class="nk-input s-cnt2" style="flex:1;" /><button type="button" class="px-2 py-1 text-[12px] border rounded-full" style="border-color:var(--nk-border);">×</button>`;
+    wrap.querySelector('button').addEventListener('click', ()=> wrap.remove());
+    $('steel-rows').appendChild(wrap);
+  }
+  $('steel-add')?.addEventListener('click', ()=> addSteelRow());
+  // add one initial empty row hidden? keep optional
+
+  function val(id) { const el=$(id); return el? el.value : ''; }
+  function num(id) { return Number(String(val(id)).replace(/,/g,'')) || 0; }
+  // Empty field = use the documented default (shown as placeholder); typed 0 is still respected.
+  function numOr(id, def) { const v = String(val(id)).trim(); return v === '' ? def : (Number(v.replace(/,/g,'')) || 0); }
+
+  function renderConcrete(r) {
+    if(!r) return null;
+    $('res-kicker').textContent = 'Concrete • ' + r.ratio.join(':');
+    $('res-hero').textContent = r.volumeM3.toFixed(2) + ' m³ concrete';
+    $('res-sub').textContent = `Cement bag assumption: 50 kg • ${r.wastagePct}% wastage included`;
+    const breakdown = `
+      <div class="flex justify-between"><span>Cement</span><strong>${Math.ceil(r.cementBags)} bags <span style="color:var(--nk-text-tertiary); font-weight:400;">(${r.cementKg.toFixed(0)} kg)</span></strong></div>
+      <div class="flex justify-between"><span>Sand</span><strong>${r.sandM3.toFixed(2)} m³ <span style="color:var(--nk-text-tertiary);">(${r.sandCuFt.toFixed(1)} cu ft)</span></strong></div>
+      <div class="flex justify-between"><span>Aggregate</span><strong>${r.aggregateM3.toFixed(2)} m³ <span style="color:var(--nk-text-tertiary);">(${r.aggregateCuFt.toFixed(1)} cu ft)</span></strong></div>
+      <div class="pt-2 mt-2" style="border-top:1px solid var(--nk-border); display:grid; gap:4px;">
+        <div class="flex justify-between text-[11.5px]" style="color:var(--nk-text-tertiary);"><span>Concrete Volume</span><span style="color:var(--nk-text); font-weight:600;">${r.volumeM3.toFixed(2)} m³</span></div>
+        <div class="flex justify-between text-[11.5px]" style="color:var(--nk-text-tertiary);"><span>Dry Volume</span><span style="color:var(--nk-text); font-weight:600;">${r.dryVolumeM3.toFixed(2)} m³</span></div>
+      </div>`;
+    $('res-breakdown').innerHTML = breakdown;
+    $('res-extra').innerHTML = `<p>Estimated quantities include ${r.wastagePct}% wastage. Mix ${r.ratio.join(':')} with dry factor 1.54.</p>`;
+  }
+
+  function renderBrickwork(r) {
+    if(!r) return null;
+    $('res-kicker').textContent = 'Brickwork';
+    $('res-hero').textContent = r.bricks.toLocaleString('en-IN') + ' bricks';
+    $('res-sub').textContent = `${r.areaM2.toFixed(2)} m² • ${r.volumeM3.toFixed(2)} m³ • ${r.wastagePct}% wastage`;
+    $('res-breakdown').innerHTML = `
+      <div class="flex justify-between"><span>Estimated Bricks</span><strong>${r.bricks.toLocaleString('en-IN')} pcs</strong></div>
+      <div class="flex justify-between"><span>Cement</span><strong>${Math.ceil(r.cementBags)} bags (${r.cementKg.toFixed(0)} kg)</strong></div>
+      <div class="flex justify-between"><span>Sand (mortar)</span><strong>${r.sandM3.toFixed(2)} m³</strong></div>
+      <div class="pt-2 mt-2 text-[11px]" style="border-top:1px solid var(--nk-border); color:var(--nk-text-tertiary);">Wall Area ${r.areaSqFt.toFixed(1)} sq ft • Volume ${r.volumeCuFt.toFixed(1)} cu ft • Brick ${r.brick.lengthM*1000}×${r.brick.widthM*1000}×${r.brick.heightM*1000} mm</div>`;
+    $('res-extra').innerHTML = '';
+  }
+
+  function renderPlaster(r) {
+    if(!r) return null;
+    $('res-kicker').textContent = 'Plaster';
+    $('res-hero').textContent = r.areaM2.toFixed(1) + ' m²';
+    $('res-sub').textContent = `${r.walls} wall(s) • ${ (r.thicknessM*1000).toFixed(0)} mm • ${r.wastagePct}% wastage`;
+    $('res-breakdown').innerHTML = `
+      <div class="flex justify-between"><span>Plaster Area</span><strong>${r.areaM2.toFixed(2)} m² (${r.areaSqFt.toFixed(1)} sq ft)</strong></div>
+      <div class="flex justify-between"><span>Wet Volume</span><strong>${r.wetVolumeM3.toFixed(2)} m³</strong></div>
+      <div class="flex justify-between"><span>Cement</span><strong>${Math.ceil(r.cementBags)} bags</strong></div>
+      <div class="flex justify-between"><span>Sand</span><strong>${r.sandM3.toFixed(2)} m³</strong></div>`;
+    $('res-extra').innerHTML = '';
+  }
+
+  function renderFlooring(r){
+    if(!r) return null;
+    $('res-kicker').textContent='Flooring';
+    $('res-hero').textContent = r.tilesCeiledWithWastage.toLocaleString('en-IN') + ' tiles';
+    $('res-sub').textContent = `${r.areaSqFt.toFixed(1)} sq ft • ${r.wastagePct}% wastage`;
+    $('res-breakdown').innerHTML = `
+      <div class="flex justify-between"><span>Floor Area</span><strong>${r.areaSqFt.toFixed(1)} sq ft (${r.areaM2.toFixed(2)} m²)</strong></div>
+      <div class="flex justify-between"><span>Tiles Required</span><strong>${r.tiles.toLocaleString('en-IN')} pcs</strong></div>
+      <div class="flex justify-between"><span>Tiles including wastage</span><strong>${r.tilesCeiledWithWastage.toLocaleString('en-IN')} pcs</strong></div>
+      <div class="text-[11px] pt-2 mt-2" style="border-top:1px solid var(--nk-border); color:var(--nk-text-tertiary);">Tile ${ (r.tile.lengthM*39.3701).toFixed(0)}×${ (r.tile.widthM*39.3701).toFixed(0)} in</div>`;
+    $('res-extra').innerHTML='';
+  }
+
+  function renderSteel(r){
+    if(!r) return null;
+    $('res-kicker').textContent='Steel';
+    $('res-hero').textContent = r.weightKg.toFixed(1) + ' kg';
+    $('res-sub').textContent = `${r.totalLengthM.toFixed(1)} m total • ${r.kgPerM.toFixed(2)} kg/m for ${r.diaMm} mm • d²/162`;
+    $('res-breakdown').innerHTML = `
+      <div class="flex justify-between"><span>Total Length</span><strong>${r.totalLengthM.toFixed(1)} m</strong></div>
+      <div class="flex justify-between"><span>Estimated Weight</span><strong>${r.weightKg.toFixed(1)} kg (${r.weightTon.toFixed(2)} ton)</strong></div>`;
+    $('res-extra').innerHTML = `<p style="background:var(--nk-hover); border:1px solid var(--nk-border); padding:8px; border-radius:8px;">Use structural drawings or an engineer&apos;s bar bending schedule for actual reinforcement requirements.</p>`;
+    // if multi rows exist, show aggregated
+    const rows = Array.from(document.querySelectorAll('#steel-rows > div'));
+    if(rows.length>0){
+      const bars = rows.map(row=>({ diaMm: row.querySelector('.s-dia2').value, lengthM: row.querySelector('.s-len2').value, count: row.querySelector('.s-cnt2').value })).filter(b=> Number(b.count)>0);
+      if(bars.length>0){
+        const agg = calcSteelFromBars(bars);
+        $('res-extra').innerHTML = `<p>Multi-bar total: ${agg.totalLengthM.toFixed(1)} m • ${agg.totalWeightKg.toFixed(1)} kg</p>` + $('res-extra').innerHTML;
+      }
+    }
+  }
+
+  function renderFull(r){
+    if(!r) return null;
+    $('res-kicker').textContent='Full Project Estimate';
+    $('res-hero').textContent = r.totalAreaSqft.toFixed(0) + ' sq ft';
+    $('res-sub').textContent = `${r.floors} floor(s) • ${r.buildingType} • ${r.quality} • preliminary`;
+    $('res-breakdown').innerHTML = `
+      <div class="flex justify-between"><span>Cement</span><strong>${r.cementBagsCeiled.toLocaleString('en-IN')} bags</strong></div>
+      <div class="flex justify-between"><span>Sand</span><strong>${r.sandM3.toFixed(1)} m³</strong></div>
+      <div class="flex justify-between"><span>Aggregate</span><strong>${r.aggregateM3.toFixed(1)} m³</strong></div>
+      <div class="flex justify-between"><span>Bricks</span><strong>${r.bricks.toLocaleString('en-IN')} pcs</strong></div>
+      <div class="flex justify-between"><span>Steel</span><strong>${r.steelKg.toFixed(0)} kg</strong></div>
+      <div class="pt-2 mt-2 text-[11px]" style="border-top:1px solid var(--nk-border); color:var(--nk-text-tertiary);">Based on ${r.totalAreaSqft.toFixed(0)} sq ft total • ${r.multiplier.toFixed(2)}× multiplier</div>`;
+    $('res-extra').innerHTML = `<p style="background:var(--nk-accent-subtle); border:1px solid var(--nk-border); padding:8px; border-radius:8px;">This is a preliminary planning estimate. Actual quantities should be calculated from architectural and structural drawings.</p>`;
+  }
+
+  function doCalculate(){
+    const hint=$('calc-hint'); if(hint){hint.classList.add('hidden'); hint.textContent='';}
+    let result=null;
+    try{
+      if(activeTab==='concrete'){
+        const grade=$('c-grade').value;
+        const customRatio = grade==='CUSTOM' ? [num('c-cust-c'), num('c-cust-s'), num('c-cust-a')] : null;
+        const r=calcConcrete({ length:val('c-length'), width:val('c-width'), depth:val('c-depth'), unit:val('c-unit'), grade, customRatio, wastagePct:numOr('c-wastage', 5) });
+        if(!r) throw new Error('Enter length, width and depth greater than 0.');
+        result=r; renderConcrete(r);
+      } else if(activeTab==='brickwork'){
+        const mortarRatioStr=$('b-mortar-ratio').value; const [c,s]=mortarRatioStr.split(':').map(Number);
+        const r=calcBrickwork({ length:val('b-length'), height:val('b-height'), thickness:val('b-thick'), unit:val('b-unit'), brickSize:val('b-brick'), customBrick: val('b-brick')==='custom'? {lengthM:num('b-bl')/1000, widthM:num('b-bw')/1000, heightM:num('b-bh')/1000}:null, mortarThicknessM:numOr('b-mortar', 10)/1000, wastagePct:numOr('b-wastage', 5), mortarRatio:{cement:c,sand:s} });
+        if(!r) throw new Error('Enter wall length and height greater than 0.');
+        result=r; renderBrickwork(r);
+      } else if(activeTab==='plaster'){
+        const mix=$('p-mix').value; const customRatio = mix==='custom'? {cement:num('p-cust-c'), sand:num('p-cust-s')}:null;
+        const r=calcPlaster({ length:val('p-length'), height:val('p-height'), unit:val('p-unit'), numWalls:numOr('p-walls', 1), thicknessM:numOr('p-thick', 12)/1000, mixKey:mix, customRatio, wastagePct:numOr('p-wastage', 5) });
+        if(!r) throw new Error('Enter wall length and height greater than 0.');
+        result=r; renderPlaster(r);
+      } else if(activeTab==='flooring'){
+        const tileId=$('f-tile').value; const customTile = tileId==='custom'? {lengthM:num('f-tl')*0.0254, widthM:num('f-tw')*0.0254}:null;
+        const r=calcFlooring({ length:val('f-length'), width:val('f-width'), unit:val('f-unit'), tileId, customTile, wastagePct:numOr('f-wastage', 7) });
+        if(!r) throw new Error('Enter floor length and width greater than 0.');
+        result=r; renderFlooring(r);
+      } else if(activeTab==='steel'){
+        const dia=val('s-dia'), len=val('s-len'), n=val('s-num'), tot=val('s-totallen');
+        const r=calcSteel({ diaMm:dia||12, barLengthM:len||12, numBars:n||0, totalLengthM: tot? Number(tot): null, wastagePct:numOr('s-wastage', 3) });
+        if(r.totalLengthM<=0) throw new Error('Enter bar length and number of bars, or total length.');
+        result=r; renderSteel(r);
+      } else if(activeTab==='full'){
+        const area=val('fp-area'), unit=val('fp-unit'), floors=val('fp-floors');
+        if(!area || Number(area)<=0) throw new Error('Enter built-up area greater than 0.');
+        const selected={ concrete:$('fp-concrete').checked, brickwork:$('fp-brickwork').checked, plaster:$('fp-plaster').checked, flooring:$('fp-flooring').checked, steel:$('fp-steel').checked };
+        const r=calcFullProject({ builtUpArea:area, areaUnit:unit, floors:numOr('fp-floors', 1), buildingType:val('fp-type'), quality:val('fp-quality'), selected });
+        result=r; renderFull(r);
+      }
+    } catch(e){
+      if(hint){hint.textContent=e.message; hint.classList.remove('hidden');}
+      return;
+    }
+    if(result){
+      $('res-empty')?.classList.add('hidden');
+      $('res-body')?.classList.remove('hidden');
+      if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}),80);
+      window.__lastResult=result;
+    }
+  }
+
+  function doReset(){
+    // Clear every text input (wastage included) back to the initial placeholder-only state.
+    document.querySelectorAll('.cm-input, .nk-input').forEach(el=>{ if(el.id && el.type!=='checkbox' && el.tagName!=='SELECT'){ el.value=''; } });
+    $('c-unit').value='ft'; $('b-unit').value='ft'; $('p-unit').value='ft'; $('f-unit').value='ft';
+    $('c-grade').value='M15'; $('c-custom-row')?.classList.add('hidden');
+    $('b-brick').value='standard'; $('b-custom-brick')?.classList.add('hidden');
+    $('p-mix').value='1:4'; $('p-custom-row')?.classList.add('hidden');
+    $('f-tile').value='12x12'; $('f-custom-tile')?.classList.add('hidden');
+    $('s-dia').value='12'; $('s-num').value=''; $('s-totallen').value='';
+    $('steel-rows').innerHTML='';
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+    const hint=$('calc-hint'); if(hint){hint.classList.add('hidden'); hint.textContent='';}
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalculate);
+  $('reset-btn')?.addEventListener('click', doReset);
+  document.addEventListener('keydown', e=>{ if(e.key==='Enter' && e.target.matches('.cm-input, .nk-input')) doCalculate(); });
+  $('copy-btn')?.addEventListener('click', async ()=>{
+    const hero=$('res-hero')?.textContent || '';
+    const sub=$('res-sub')?.textContent || '';
+    const breakdown=$('res-breakdown')?.innerText || '';
+    const text=`Construction Material Estimate (${activeTab})\n${hero}\n${sub}\n${breakdown}\nAssumption: 50 kg cement bag, 1 m³=35.3147 cu ft, steel d²/162`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const o=b.textContent; b.textContent='Copied!'; setTimeout(()=>b.textContent=o,1500);}catch{}
+  });
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+  setTab('concrete');
+</script>
+

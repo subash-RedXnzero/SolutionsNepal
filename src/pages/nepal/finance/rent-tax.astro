@@ -1,0 +1,983 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+
+const relatedTools = [
+  { title: 'Nepal Salary Calculator', description: 'Calculate take-home salary', href: '/nepal/finance/salary-checker' },
+  { title: 'EMI Calculator', description: 'Calculate loan EMI', href: '/nepal/finance/emi-calculator' },
+  { title: 'NEA Electricity Bill', description: 'Estimate your electricity bill', href: '/nepal/utilities/electricity-bill' },
+  { title: 'Vehicle Tax, Fine & Renewal', description: 'Calculate vehicle renewal cost', href: '/nepal/transport/vehicle-tax' },
+];
+
+const faqItems = [
+  {
+    question: 'What is rental income?',
+    answer: 'Rental income is the money you receive from renting out your property — such as a house, apartment, room, shop, or office. In Nepal, this is classified as "Income from House/Property" under the Income Tax Act 2058.',
+  },
+  {
+    question: 'How is rental income taxed in Nepal?',
+    answer: 'Rental income is included in your total taxable income and taxed at the same progressive rates as salary income: 1% up to NPR 500,000, 10% up to NPR 700,000, 20% up to NPR 1,000,000, 30% up to NPR 2,000,000, and 36% above that. This is based on Finance Act 2083.',
+  },
+  {
+    question: 'How do I calculate house rent tax?',
+    answer: 'To calculate house rent tax: (1) Determine your annual rental income, (2) Subtract any allowable deductions (property tax, insurance, repairs), (3) Apply the progressive tax rates to the taxable amount. This calculator does this automatically.',
+  },
+  {
+    question: 'Is rental income taxable in Nepal?',
+    answer: 'Yes, rental income is taxable in Nepal. It is classified as "Income from House/Property" under Section 14 of the Income Tax Act 2058 and must be included in your annual tax return.',
+  },
+  {
+    question: 'What is rental income TDS?',
+    answer: 'TDS (Tax Deducted at Source) on rent is a 5% withholding that applies when rent is paid by government bodies, companies, or other specified entities. The tenant deducts this amount and pays it to the government on your behalf.',
+  },
+  {
+    question: 'Can I deduct property expenses from rental income?',
+    answer: 'Under Nepal tax rules, certain expenses may be deductible from rental income, including property tax, insurance premiums, and repair/maintenance costs. The exact deductions and their limits should be verified with IRD Nepal.',
+  },
+  {
+    question: 'Does rental tax differ by municipality?',
+    answer: 'The income tax on rental income is a national tax and does not vary by municipality. However, local/municipal governments may levy separate property taxes. This calculator focuses on national income tax on rental income.',
+  },
+  {
+    question: 'How is monthly rent converted into annual income?',
+    answer: 'Simply multiply your monthly rent by 12 to get your annual gross rental income. For example, NPR 25,000/month × 12 = NPR 300,000/year.',
+  },
+  {
+    question: 'Can I calculate tax for multiple properties?',
+    answer: 'Yes, you can add multiple properties in the Detailed Calculator mode. Each property\'s rent is calculated separately, and the total is used for tax calculation.',
+  },
+  {
+    question: 'Why can my actual tax differ from this calculator?',
+    answer: 'This calculator provides estimates. Your actual tax may differ due to other income sources, special exemptions, changes in tax rules, or the specific treatment of deductions. Always verify with IRD Nepal or a tax professional.',
+  },
+];
+
+const educationalContent = [
+  {
+    title: 'How is rental income taxed in Nepal?',
+    content: 'Rental income in Nepal is classified as "Income from House/Property" under Section 14 of the Income Tax Act 2058. For individual taxpayers, rental income is included in total taxable income and taxed at the same progressive rates as salary income. The current rates under Finance Act 2083 start at 1% for income up to NPR 500,000 and increase to 36% for income above NPR 2,000,000.',
+  },
+  {
+    title: 'How do I calculate rental income?',
+    answer: 'To calculate your rental income: (1) Multiply monthly rent by 12 for annual gross income, (2) Subtract any allowable deductions (property tax, insurance, repairs), (3) The remaining amount is your taxable rental income, (4) Apply progressive tax rates to determine tax liability. This calculator automates this process.',
+  },
+  {
+    title: 'What is taxable rental income?',
+    content: 'Taxable rental income is your gross rental income minus any deductions allowed under Nepal tax law. For example, if your annual rent is NPR 300,000 and you have NPR 20,000 in allowable deductions, your taxable rental income is NPR 280,000.',
+  },
+  {
+    title: 'What deductions are allowed from rental income?',
+    content: 'Under Nepal Income Tax Act 2058, allowable deductions from rental income may include: property tax paid to municipality, insurance premiums for the property, and repair/maintenance expenses (subject to caps). The exact deductions and their limits should be verified with IRD Nepal.',
+  },
+  {
+    title: 'What is rental TDS?',
+    content: 'TDS (Tax Deducted at Source) on rent is a 5% withholding that applies when rent is paid by government bodies, companies, or other specified entities. The tenant deducts this amount and deposits it with the government. This is not an additional tax — it is a pre-payment against your tax liability.',
+  },
+  {
+    title: 'Do landlords have to pay rental tax?',
+    answer: 'Yes, landlords in Nepal must pay income tax on rental income. The rental income is added to other income sources and taxed at progressive rates. Landlords must file annual tax returns declaring their rental income.',
+  },
+];
+
+const fiscalYears = [
+  { value: '2083/84', label: '2083/84 (2026/27)' },
+  { value: '2082/83', label: '2082/83 (2025/26)' },
+];
+---
+
+<BaseLayout
+  title="Nepal Rental Income Tax Calculator 2083/84 | SolutionsNepal"
+  description="Calculate rental income, taxable rent, applicable deductions, tax, TDS, and estimated net rental income in Nepal."
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Nepal Rental Income Tax Calculator",
+    "description": "Calculate rental income, taxable rent, applicable deductions, tax, TDS, and estimated net rental income in Nepal.",
+    "url": "https://solutionsnepal.com/nepal/finance/rent-tax",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+  }}
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'Rent & Rental Tax' },
+    ]} />
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">Nepal Rent & Rental Income Tax Calculator</h1>
+      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Estimate rental income, applicable tax, deductions, and your take-home rental income in Nepal.</p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CALCULATOR                                  -->
+    <!-- ============================================ -->
+    <div class="rounded-xl border overflow-hidden" style="background-color: var(--nk-surface); border-color: var(--nk-border);">
+      <div class="px-5 sm:px-6 pt-6 pb-6 space-y-6">
+
+        <!-- MODE TOGGLE -->
+        <div>
+          <p class="text-xs font-medium mb-2" style="color: var(--nk-text-secondary);">Calculator mode</p>
+          <div class="flex rounded-lg overflow-hidden border" style="border-color: var(--nk-border);">
+            <button
+              id="mode-quick"
+              class="flex-1 py-2.5 text-sm font-medium transition-all duration-200"
+              style="background-color: var(--nk-accent); color: white;"
+              role="tab"
+              aria-selected="true"
+            >
+              Quick Calculator
+            </button>
+            <button
+              id="mode-detailed"
+              class="flex-1 py-2.5 text-sm font-medium transition-all duration-200"
+              style="background-color: var(--nk-surface); color: var(--nk-text-secondary);"
+              role="tab"
+              aria-selected="false"
+            >
+              Detailed Calculator
+            </button>
+          </div>
+        </div>
+
+        <!-- RENT INPUT MODE -->
+        <div>
+          <p class="text-xs font-medium mb-2" style="color: var(--nk-text-secondary);">Rent input</p>
+          <div class="flex rounded-lg overflow-hidden border" style="border-color: var(--nk-border);">
+            <button
+              id="rent-monthly"
+              class="flex-1 py-2 text-xs font-medium transition-all duration-200"
+              style="background-color: var(--nk-accent); color: white;"
+              role="tab"
+              aria-selected="true"
+            >
+              Monthly Rent
+            </button>
+            <button
+              id="rent-annual"
+              class="flex-1 py-2 text-xs font-medium transition-all duration-200"
+              style="background-color: var(--nk-surface); color: var(--nk-text-secondary);"
+              role="tab"
+              aria-selected="false"
+            >
+              Annual Rent
+            </button>
+          </div>
+        </div>
+
+        <hr style="border-color: var(--nk-border);" />
+
+        <!-- ============================================ -->
+        <!-- QUICK MODE                                   -->
+        <!-- ============================================ -->
+        <div id="quick-mode">
+          <!-- Monthly/Annual Rent -->
+          <div class="mb-4">
+            <label for="quick-rent" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+              <span id="rent-label">Monthly Rent</span>
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+              <input inputmode="decimal"
+                id="quick-rent"
+                type="number"
+                min="0"
+                step="1000"
+                placeholder="25,000"
+                class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+            </div>
+            <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">Enter the rent you receive each month.</p>
+          </div>
+
+          <!-- Auto-calculated equivalent -->
+          <div id="rent-equivalent" class="p-3 rounded-lg mb-4" style="background-color: var(--nk-muted);">
+            <div class="flex justify-between text-sm">
+              <span style="color: var(--nk-text-secondary);">Annual equivalent</span>
+              <span id="rent-equivalent-amount" class="font-medium" style="color: var(--nk-text);">NPR 0</span>
+            </div>
+          </div>
+
+          <!-- Property Type -->
+          <div class="mb-4">
+            <label for="quick-property-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Type</label>
+            <div class="relative">
+              <select
+                id="quick-property-type"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="residential">🏠 Residential — Home / apartment / room</option>
+                <option value="commercial">🏪 Commercial — Shop / office / business</option>
+                <option value="other">🏢 Other rental property</option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <!-- Taxpayer Type -->
+          <div class="mb-4">
+            <label for="quick-taxpayer-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Taxpayer Type</label>
+            <div class="relative">
+              <select
+                id="quick-taxpayer-type"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="individual">Individual</option>
+                <option value="couple">Couple (Joint)</option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <!-- Fiscal Year -->
+          <div class="mb-4">
+            <label for="quick-fiscal-year" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fiscal Year</label>
+            <div class="relative">
+              <select
+                id="quick-fiscal-year"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                {fiscalYears.map(fy => (
+                  <option value={fy.value}>{fy.label}</option>
+                ))}
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- DETAILED MODE                                -->
+        <!-- ============================================ -->
+        <div id="detailed-mode" class="hidden space-y-4">
+          <!-- Property 1 -->
+          <div id="properties-container">
+            <div class="property-card p-4 rounded-lg" style="background-color: var(--nk-muted);" data-property-index="0">
+              <div class="flex items-center justify-between mb-3">
+                <p class="text-sm font-semibold" style="color: var(--nk-text);">Property 1</p>
+                <button class="remove-property text-xs font-medium px-2 py-1 rounded transition-colors" style="color: var(--nk-text-secondary); display: none;">
+                  Remove
+                </button>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Monthly Rent</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+                    <input inputmode="decimal"
+                      type="number"
+                      min="0"
+                      step="1000"
+                      placeholder="25,000"
+                      class="property-rent w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                      style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Type</label>
+                  <div class="relative">
+                    <select
+                      class="property-type w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                      style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                    >
+                      <option value="residential">🏠 Residential</option>
+                      <option value="commercial">🏪 Commercial</option>
+                      <option value="other">🏢 Other</option>
+                    </select>
+                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Another Property -->
+          <button
+            id="add-property-btn"
+            class="w-full py-2.5 px-4 text-sm font-medium rounded-lg border border-dashed transition-colors duration-150"
+            style="border-color: var(--nk-border); color: var(--nk-text-secondary);"
+          >
+            + Add Another Property
+          </button>
+
+          <!-- Total Rent Preview -->
+          <div id="total-rent-preview" class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <div class="flex justify-between text-sm mb-1">
+              <span style="color: var(--nk-text-secondary);">Total Monthly Rent</span>
+              <span id="total-monthly-rent" class="font-semibold" style="color: var(--nk-text);">NPR 0</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span style="color: var(--nk-text-secondary);">Total Annual Rent</span>
+              <span id="total-annual-rent" class="font-semibold" style="color: var(--nk-text);">NPR 0</span>
+            </div>
+          </div>
+
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- Deductions -->
+          <div>
+            <p class="text-sm font-medium mb-3" style="color: var(--nk-text);">Rental Income Deductions</p>
+
+            <!-- Deduction Mode Toggle -->
+            <div class="flex rounded-lg overflow-hidden border mb-3" style="border-color: var(--nk-border);">
+              <button
+                id="deduction-standard"
+                class="flex-1 py-2 text-xs font-medium transition-all duration-200"
+                style="background-color: var(--nk-accent); color: white;"
+                role="radio"
+                aria-checked="true"
+              >
+                Use Standard Deduction
+              </button>
+              <button
+                id="deduction-itemized"
+                class="flex-1 py-2 text-xs font-medium transition-all duration-200"
+                style="background-color: var(--nk-surface); color: var(--nk-text-secondary);"
+                role="radio"
+                aria-checked="false"
+              >
+                Enter Allowable Expenses
+              </button>
+            </div>
+
+            <!-- Standard Deduction Info -->
+            <div id="standard-deduction-info" class="p-3 rounded-lg" style="background-color: var(--nk-muted);">
+              <p class="text-xs" style="color: var(--nk-text-secondary);">
+                <strong>Note:</strong> Standard deduction availability is being verified against current Nepal tax rules. If not available, no deduction will be applied.
+              </p>
+            </div>
+
+            <!-- Itemized Deductions -->
+            <div id="itemized-deductions" class="hidden space-y-3">
+              <div class="p-3 rounded-lg" style="background-color: var(--nk-muted);">
+                <p class="text-xs mb-2" style="color: var(--nk-text-secondary);">
+                  Only enter expenses allowed under applicable tax rules. Deductions need verification with IRD Nepal.
+                </p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Tax Paid</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+                  <input inputmode="decimal"
+                    id="deduction-property-tax"
+                    type="number"
+                    min="0"
+                    step="100"
+                    placeholder="0"
+                    class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Insurance Premium</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+                  <input inputmode="decimal"
+                    id="deduction-insurance"
+                    type="number"
+                    min="0"
+                    step="100"
+                    placeholder="0"
+                    class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Repair & Maintenance</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+                  <input inputmode="decimal"
+                    id="deduction-repair"
+                    type="number"
+                    min="0"
+                    step="100"
+                    placeholder="0"
+                    class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  />
+                </div>
+                <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">Only enter expenses allowed under applicable tax rules.</p>
+              </div>
+            </div>
+          </div>
+
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- Taxpayer Type -->
+          <div>
+            <label for="detailed-taxpayer-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Taxpayer Type</label>
+            <div class="relative">
+              <select
+                id="detailed-taxpayer-type"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="individual">Individual</option>
+                <option value="couple">Couple (Joint)</option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <!-- Fiscal Year -->
+          <div>
+            <label for="detailed-fiscal-year" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fiscal Year</label>
+            <div class="relative">
+              <select
+                id="detailed-fiscal-year"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                {fiscalYears.map(fy => (
+                  <option value={fy.value}>{fy.label}</option>
+                ))}
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- CALCULATE BUTTON -->
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Calculate Rental Income
+        </button>
+
+        <!-- ============================================ -->
+        <!-- RESULTS                                      -->
+        <!-- ============================================ -->
+        <div id="result" class="hidden">
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- NET RENTAL INCOME HERO -->
+          <div class="text-center py-6">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Estimated Net Rental Income</p>
+            <p id="result-net" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+            <p id="result-net-period" class="text-sm mt-1" style="color: var(--nk-text-secondary);">per month</p>
+          </div>
+
+          <!-- MONTHLY BREAKDOWN -->
+          <div class="p-4 rounded-lg mb-3" style="background-color: var(--nk-muted);">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-secondary);">Monthly Breakdown</p>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Gross Rent</span>
+                <span id="bd-monthly-gross" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Estimated Tax</span>
+                <span id="bd-monthly-tax" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-monthly-tds-row" class="flex justify-between text-sm" style="display: none;">
+                <span style="color: var(--nk-text-secondary);">TDS / Withholding</span>
+                <span id="bd-monthly-tds" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <hr style="border-color: var(--nk-border);" />
+              <div class="flex justify-between text-base font-bold">
+                <span style="color: var(--nk-text);">Net Rental Income</span>
+                <span id="bd-monthly-net" style="color: var(--nk-accent);"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ANNUAL BREAKDOWN -->
+          <div class="p-4 rounded-lg mb-3" style="background-color: var(--nk-muted);">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-secondary);">Annual Breakdown</p>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Annual Gross Rental Income</span>
+                <span id="bd-annual-gross" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-deductions-row" class="flex justify-between text-sm" style="display: none;">
+                <span style="color: var(--nk-text-secondary);">Allowable Deductions</span>
+                <span id="bd-deductions" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Taxable Rental Income</span>
+                <span id="bd-taxable" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Estimated Tax</span>
+                <span id="bd-annual-tax" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-annual-tds-row" class="flex justify-between text-sm" style="display: none;">
+                <span style="color: var(--nk-text-secondary);">TDS / Withholding</span>
+                <span id="bd-annual-tds" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <hr style="border-color: var(--nk-border);" />
+              <div class="flex justify-between text-base font-bold">
+                <span style="color: var(--nk-text);">Estimated Annual Net Rental Income</span>
+                <span id="bd-annual-net" style="color: var(--nk-accent);"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HOW IS THIS CALCULATED? -->
+          <details class="mb-4 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <summary class="text-xs font-semibold uppercase tracking-wider cursor-pointer" style="color: var(--nk-text-secondary);">How is this calculated?</summary>
+            <div id="calc-details" class="mt-3 space-y-2">
+              <!-- Populated by JS -->
+            </div>
+          </details>
+
+          <!-- ACTIONS -->
+          <div class="flex gap-2">
+            <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copy Result
+            </button>
+            <button id="recalculate-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+              Recalculate
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="mt-6 px-5 py-4 rounded-lg text-xs" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color: var(--nk-text);">Disclaimer</p>
+      <p>This calculator provides an estimate based on the information provided and applicable tax rules. Actual tax or rental-related charges may differ depending on your taxpayer status, property, location, deductions, and current government rules.</p>
+      <p class="mt-1.5">Rental tax rules last verified: <strong>2026-08-19</strong> · Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Inland Revenue Department</a>, Income Tax Act 2058, Finance Act 2083</p>
+      <p class="mt-1"><strong>Note:</strong> Deduction rules and TDS applicability need verification against current official IRD guidance.</p>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">How Rental Income Tax Works in Nepal</h2>
+      <div class="space-y-4 text-sm" style="color: var(--nk-text-secondary);">
+        {educationalContent.map(item => (
+          <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <p class="font-semibold mb-1" style="color: var(--nk-text);">{item.title}</p>
+            <p>{item.content}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg overflow-hidden" style="background-color: var(--nk-muted);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color: var(--nk-text);">{item.question}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color: var(--nk-text-secondary);">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <script>
+    import { calculateRentalTax, formatNPR, formatNumber } from '../../../lib/calculators/rental-tax.js';
+
+    // DOM refs
+    const modeQuick = document.getElementById('mode-quick');
+    const modeDetailed = document.getElementById('mode-detailed');
+    const rentMonthly = document.getElementById('rent-monthly');
+    const rentAnnual = document.getElementById('rent-annual');
+    const quickMode = document.getElementById('quick-mode');
+    const detailedMode = document.getElementById('detailed-mode');
+    const quickRent = document.getElementById('quick-rent');
+    const rentLabel = document.getElementById('rent-label');
+    const rentEquivalent = document.getElementById('rent-equivalent');
+    const rentEquivalentAmount = document.getElementById('rent-equivalent-amount');
+    const quickPropertyType = document.getElementById('quick-property-type');
+    const quickTaxpayerType = document.getElementById('quick-taxpayer-type');
+    const quickFiscalYear = document.getElementById('quick-fiscal-year');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const copyBtn = document.getElementById('copy-btn');
+    const recalcBtn = document.getElementById('recalculate-btn');
+    const addPropertyBtn = document.getElementById('add-property-btn');
+    const propertiesContainer = document.getElementById('properties-container');
+    const deductionStandard = document.getElementById('deduction-standard');
+    const deductionItemized = document.getElementById('deduction-itemized');
+    const standardDeductionInfo = document.getElementById('standard-deduction-info');
+    const itemizedDeductions = document.getElementById('itemized-deductions');
+
+    let currentMode = 'quick';
+    let isAnnualRent = false;
+    let deductionMode = 'standard';
+    let propertyCount = 1;
+    let lastResult = null;
+
+    // === MODE TOGGLE ===
+    function setMode(mode) {
+      currentMode = mode;
+      const isQuick = mode === 'quick';
+
+      modeQuick.style.backgroundColor = isQuick ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      modeQuick.style.color = isQuick ? 'white' : 'var(--nk-text-secondary)';
+      modeQuick.setAttribute('aria-selected', isQuick ? 'true' : 'false');
+
+      modeDetailed.style.backgroundColor = !isQuick ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      modeDetailed.style.color = !isQuick ? 'white' : 'var(--nk-text-secondary)';
+      modeDetailed.setAttribute('aria-selected', !isQuick ? 'true' : 'false');
+
+      quickMode.classList.toggle('hidden', !isQuick);
+      detailedMode.classList.toggle('hidden', isQuick);
+    }
+
+    modeQuick?.addEventListener('click', () => setMode('quick'));
+    modeDetailed?.addEventListener('click', () => setMode('detailed'));
+
+    // === RENT INPUT MODE TOGGLE ===
+    function setRentMode(annual) {
+      isAnnualRent = annual;
+
+      rentMonthly.style.backgroundColor = !annual ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      rentMonthly.style.color = !annual ? 'white' : 'var(--nk-text-secondary)';
+      rentMonthly.setAttribute('aria-selected', !annual ? 'true' : 'false');
+
+      rentAnnual.style.backgroundColor = annual ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      rentAnnual.style.color = annual ? 'white' : 'var(--nk-text-secondary)';
+      rentAnnual.setAttribute('aria-selected', annual ? 'true' : 'false');
+
+      if (rentLabel) {
+        rentLabel.textContent = annual ? 'Annual Rent' : 'Monthly Rent';
+      }
+
+      updateRentEquivalent();
+    }
+
+    rentMonthly?.addEventListener('click', () => setRentMode(false));
+    rentAnnual?.addEventListener('click', () => setRentMode(true));
+
+    // === RENT EQUIVALENT ===
+    function updateRentEquivalent() {
+      const rent = parseFloat(quickRent?.value) || 0;
+      if (isAnnualRent) {
+        const monthly = Math.round(rent / 12);
+        rentEquivalentAmount.textContent = formatNPR(monthly) + ' / month';
+      } else {
+        const annual = rent * 12;
+        rentEquivalentAmount.textContent = formatNPR(annual) + ' / year';
+      }
+    }
+
+    quickRent?.addEventListener('input', updateRentEquivalent);
+
+    // === DEDUCTION MODE TOGGLE ===
+    function setDeductionMode(mode) {
+      deductionMode = mode;
+      const isStandard = mode === 'standard';
+
+      deductionStandard.style.backgroundColor = isStandard ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      deductionStandard.style.color = isStandard ? 'white' : 'var(--nk-text-secondary)';
+      deductionStandard.setAttribute('aria-checked', isStandard ? 'true' : 'false');
+
+      deductionItemized.style.backgroundColor = !isStandard ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      deductionItemized.style.color = !isStandard ? 'white' : 'var(--nk-text-secondary)';
+      deductionItemized.setAttribute('aria-checked', !isStandard ? 'true' : 'false');
+
+      standardDeductionInfo.classList.toggle('hidden', !isStandard);
+      itemizedDeductions.classList.toggle('hidden', isStandard);
+    }
+
+    deductionStandard?.addEventListener('click', () => setDeductionMode('standard'));
+    deductionItemized?.addEventListener('click', () => setDeductionMode('itemized'));
+
+    // === ADD PROPERTY ===
+    addPropertyBtn?.addEventListener('click', () => {
+      propertyCount++;
+      const index = propertyCount - 1;
+
+      const card = document.createElement('div');
+      card.className = 'property-card p-4 rounded-lg mb-3';
+      card.style.backgroundColor = 'var(--nk-muted)';
+      card.dataset.propertyIndex = index;
+      card.innerHTML = `
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-sm font-semibold" style="color: var(--nk-text);">Property ${propertyCount}</p>
+          <button class="remove-property text-xs font-medium px-2 py-1 rounded transition-colors" style="color: var(--nk-text-secondary);">
+            Remove
+          </button>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Monthly Rent</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+              <input inputmode="decimal"
+                type="number"
+                min="0"
+                step="1000"
+                placeholder="0"
+                class="property-rent w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Type</label>
+            <div class="relative">
+              <select
+                class="property-type w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="residential">🏠 Residential</option>
+                <option value="commercial">🏪 Commercial</option>
+                <option value="other">🏢 Other</option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+      `;
+
+      propertiesContainer?.appendChild(card);
+
+      // Add remove listener
+      card.querySelector('.remove-property')?.addEventListener('click', () => {
+        card.remove();
+        propertyCount--;
+        updatePropertyNumbers();
+        updateTotalRent();
+      });
+
+      // Add input listeners
+      card.querySelector('.property-rent')?.addEventListener('input', updateTotalRent);
+
+      updateTotalRent();
+    });
+
+    function updatePropertyNumbers() {
+      const cards = propertiesContainer?.querySelectorAll('.property-card');
+      cards?.forEach((card, i) => {
+        const title = card.querySelector('p');
+        if (title) title.textContent = `Property ${i + 1}`;
+        card.dataset.propertyIndex = i;
+      });
+    }
+
+    function updateTotalRent() {
+      const rents = propertiesContainer?.querySelectorAll('.property-rent');
+      let totalMonthly = 0;
+      rents?.forEach(input => {
+        totalMonthly += parseFloat(input.value) || 0;
+      });
+
+      const totalAnnual = totalMonthly * 12;
+      const totalMonthlyEl = document.getElementById('total-monthly-rent');
+      const totalAnnualEl = document.getElementById('total-annual-rent');
+      if (totalMonthlyEl) totalMonthlyEl.textContent = formatNPR(totalMonthly);
+      if (totalAnnualEl) totalAnnualEl.textContent = formatNPR(totalAnnual);
+    }
+
+    // === CALCULATE ===
+    function calculate() {
+      let rentAmount = 0;
+      let propertyType = 'residential';
+      let taxpayerType = 'individual';
+      let fiscalYear = '2083/84';
+      let deductions = {};
+
+      if (currentMode === 'quick') {
+        rentAmount = parseFloat(quickRent?.value) || 0;
+        if (rentAmount <= 0) return;
+        propertyType = quickPropertyType?.value || 'residential';
+        taxpayerType = quickTaxpayerType?.value || 'individual';
+        fiscalYear = quickFiscalYear?.value || '2083/84';
+      } else {
+        // Detailed mode - sum all properties
+        const rents = propertiesContainer?.querySelectorAll('.property-rent');
+        const types = propertiesContainer?.querySelectorAll('.property-type');
+        rents?.forEach((input, i) => {
+          rentAmount += parseFloat(input.value) || 0;
+        });
+        // Use first property type (or could average them)
+        propertyType = types?.[0]?.value || 'residential';
+        taxpayerType = document.getElementById('detailed-taxpayer-type')?.value || 'individual';
+        fiscalYear = document.getElementById('detailed-fiscal-year')?.value || '2083/84';
+
+        if (deductionMode === 'itemized') {
+          deductions = {
+            propertyTax: parseFloat(document.getElementById('deduction-property-tax')?.value) || 0,
+            insurance: parseFloat(document.getElementById('deduction-insurance')?.value) || 0,
+            repairMaintenance: parseFloat(document.getElementById('deduction-repair')?.value) || 0,
+          };
+        }
+      }
+
+      if (rentAmount <= 0) return;
+
+      const r = calculateRentalTax({
+        rentAmount,
+        isAnnual: isAnnualRent,
+        propertyType,
+        taxpayerType,
+        fiscalYear,
+        deductionMode,
+        deductions,
+      });
+
+      lastResult = r;
+
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+      // Net income hero
+      set('result-net', formatNPR(r.monthly.net));
+      document.getElementById('result-net-period').textContent = 'per month';
+
+      // Monthly breakdown
+      set('bd-monthly-gross', formatNPR(r.monthly.gross));
+      set('bd-monthly-tax', formatNPR(r.monthly.tax));
+
+      // TDS row
+      const tdsRow = document.getElementById('bd-monthly-tds-row');
+      if (r.tds.applicable) {
+        tdsRow.style.display = '';
+        set('bd-monthly-tds', formatNPR(r.tds.monthlyAmount));
+      } else {
+        tdsRow.style.display = 'none';
+      }
+
+      set('bd-monthly-net', formatNPR(r.monthly.net));
+
+      // Annual breakdown
+      set('bd-annual-gross', formatNPR(r.annual.gross));
+
+      // Deductions row
+      const dedRow = document.getElementById('bd-deductions-row');
+      if (r.annual.deductions > 0) {
+        dedRow.style.display = '';
+        set('bd-deductions', formatNPR(r.annual.deductions));
+      } else {
+        dedRow.style.display = 'none';
+      }
+
+      set('bd-taxable', formatNPR(r.annual.taxableIncome));
+      set('bd-annual-tax', formatNPR(r.annual.tax));
+
+      // TDS row
+      const annualTdsRow = document.getElementById('bd-annual-tds-row');
+      if (r.tds.applicable) {
+        annualTdsRow.style.display = '';
+        set('bd-annual-tds', formatNPR(r.tds.amount));
+      } else {
+        annualTdsRow.style.display = 'none';
+      }
+
+      set('bd-annual-net', formatNPR(r.annual.net));
+
+      // Calculation details
+      const calcDetails = document.getElementById('calc-details');
+      if (calcDetails) {
+        let html = '';
+
+        html += `<div class="flex justify-between text-sm">
+          <span style="color: var(--nk-text-secondary);">Gross rental income</span>
+          <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.annual.gross)}</span>
+        </div>`;
+
+        if (r.annual.deductions > 0) {
+          html += `<div class="flex justify-between text-sm">
+            <span style="color: var(--nk-text-secondary);">Less: allowable deductions</span>
+            <span class="font-medium" style="color: var(--nk-text);">-${formatNPR(r.annual.deductions)}</span>
+          </div>`;
+        }
+
+        html += `<div class="flex justify-between text-sm">
+          <span style="color: var(--nk-text-secondary);">Taxable rental income</span>
+          <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.annual.taxableIncome)}</span>
+        </div>`;
+
+        // Tax slab breakdown
+        r.taxCalculation.slabs.forEach(slab => {
+          html += `<div class="flex justify-between text-xs pl-4">
+            <span style="color: var(--nk-text-secondary);">${slab.ratePercent}% on ${formatNPR(slab.taxableAmount)}</span>
+            <span style="color: var(--nk-text);">${formatNPR(slab.tax)}</span>
+          </div>`;
+        });
+
+        html += `<div class="flex justify-between text-sm font-semibold pt-2" style="border-top: 1px solid var(--nk-border);">
+          <span style="color: var(--nk-text);">Applicable tax</span>
+          <span style="color: var(--nk-text);">${formatNPR(r.annual.tax)}</span>
+        </div>`;
+
+        if (r.tds.applicable) {
+          html += `<div class="flex justify-between text-sm">
+            <span style="color: var(--nk-text-secondary);">TDS / Withholding (${r.tds.ratePercent}%)</span>
+            <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.tds.amount)}</span>
+          </div>`;
+        }
+
+        html += `<div class="flex justify-between text-sm font-semibold pt-2" style="border-top: 1px solid var(--nk-border);">
+          <span style="color: var(--nk-text);">Estimated net rental income</span>
+          <span style="color: var(--nk-accent);">${formatNPR(r.annual.net)}</span>
+        </div>`;
+
+        calcDetails.innerHTML = html;
+      }
+
+      resultDiv?.classList.remove('hidden');
+      resultDiv?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+
+    // Enter key support
+    quickRent?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+
+    // === COPY RESULT ===
+    copyBtn?.addEventListener('click', async () => {
+      if (!lastResult) return;
+      const r = lastResult;
+
+      const lines = [
+        `Nepal Rental Income Tax Estimate`,
+        `Fiscal Year: ${r.input.fiscalYearLabel}`,
+        ``,
+        `Monthly rent: ${formatNPR(r.input.monthlyRent)}`,
+        `Annual rent: ${formatNPR(r.annual.gross)}`,
+        `Allowable deductions: ${formatNPR(r.annual.deductions)}`,
+        `Taxable rental income: ${formatNPR(r.annual.taxableIncome)}`,
+        `Estimated tax: ${formatNPR(r.annual.tax)}`,
+        r.tds.applicable ? `TDS / Withholding: ${formatNPR(r.tds.amount)}` : null,
+        `---------------------------------`,
+        `Estimated net rental income: ${formatNPR(r.annual.net)}`,
+      ].filter(Boolean).join('\n');
+
+      try {
+        await navigator.clipboard.writeText(lines);
+        if (copyBtn) copyBtn.textContent = 'Copied!';
+        setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy Result'; }, 2000);
+      } catch {}
+    });
+
+    // === RECALCULATE ===
+    recalcBtn?.addEventListener('click', () => {
+      resultDiv?.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // === INIT ===
+    updateRentEquivalent();
+  </script>
+</BaseLayout>

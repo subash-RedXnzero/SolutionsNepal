@@ -1,0 +1,654 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: '+2 GPA Calculator', description: 'Calculate NEB +2 GPA', href: '/nepal/education/neb-gpa-calculator' },
+];
+
+const SEE_COMPULSORY = [
+  { id: 'nepali', name: 'Nepali' },
+  { id: 'english', name: 'English' },
+  { id: 'math', name: 'Mathematics' },
+  { id: 'science', name: 'Science & Technology' },
+  { id: 'social', name: 'Social Studies' },
+];
+
+const SEE_OPTIONAL_1 = [
+  { id: 'opt-math', name: 'Optional Mathematics' },
+  { id: 'cs', name: 'Computer Science' },
+  { id: 'accountancy', name: 'Accountancy' },
+  { id: 'economics', name: 'Economics' },
+  { id: 'env', name: 'Environment Science' },
+  { id: 'population', name: 'Population Studies' },
+];
+
+const SEE_OPTIONAL_2 = [
+  { id: 'cs2', name: 'Computer Science' },
+  { id: 'accountancy2', name: 'Accountancy' },
+  { id: 'economics2', name: 'Economics' },
+  { id: 'env2', name: 'Environment Science' },
+  { id: 'population2', name: 'Population Studies' },
+];
+
+const GRADES = ['', 'A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'NG'];
+---
+
+<BaseLayout>
+  <!-- Confirm Dialog -->
+  <div id="confirm-dialog" class="fixed inset-0 z-50 flex items-center justify-center hidden" style="background:rgba(0,0,0,0.45);backdrop-filter:blur(4px)">
+    <div class="bg-white rounded-2xl p-6 mx-4 w-full max-w-sm shadow-xl">
+      <p id="confirm-msg" class="text-sm text-gray-600 mb-5 leading-relaxed"></p>
+      <div class="flex gap-3">
+        <button id="confirm-cancel" class="flex-1 py-2.5 text-sm font-semibold rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition">Cancel</button>
+        <button id="confirm-ok" class="flex-1 py-2.5 text-sm font-semibold rounded-xl text-white transition" style="background:var(--primary-red)">Switch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Dialog -->
+  <div id="reset-dialog" class="fixed inset-0 z-50 flex items-center justify-center hidden" style="background:rgba(0,0,0,0.45);backdrop-filter:blur(4px)">
+    <div class="bg-white rounded-2xl p-6 mx-4 w-full max-w-sm shadow-xl">
+      <p class="text-base font-semibold text-gray-900 mb-1">Clear all grades?</p>
+      <p class="text-sm text-gray-500 mb-5">This will reset all selected grades and subject choices.</p>
+      <div class="flex gap-3">
+        <button id="reset-cancel" class="flex-1 py-2.5 text-sm font-semibold rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition">Cancel</button>
+        <button id="reset-confirm" class="flex-1 py-2.5 text-sm font-semibold rounded-xl bg-red-600 text-white hover:bg-red-700 transition">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-[1080px] mx-auto px-4 sm:px-6 py-4 sm:py-6" style="background:var(--bg-canvas,#F8FAFC);min-height:100vh">
+    <Breadcrumbs items={[{label:"Nepal",href:"/nepal"},{label:"Education",href:"/nepal/education"},{label:"SEE GPA Calculator"}]} />
+
+    <!-- Header -->
+    <header class="mb-2">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color:var(--text-primary)">SEE GPA Calculator</h1>
+    </header>
+
+    <!-- Progress (compact inline) -->
+    <div class="mb-3 flex items-center gap-3">
+      <div class="flex-1 h-1 rounded-full overflow-hidden" style="background:var(--interactive-tint)">
+        <div id="progress-bar" class="h-full rounded-full transition-all duration-300" style="width:0%;background:var(--primary-red)"></div>
+      </div>
+      <span id="progress-text" class="text-xs font-semibold tabular-nums whitespace-nowrap" style="color:var(--primary-red)">0 / 0</span>
+    </div>
+
+    <!-- Two-Column Grid -->
+    <div class="gpa-grid">
+      <!-- Left: Subject Rows -->
+      <div class="gpa-main">
+        <!-- Compulsory Subjects -->
+        <div class="mb-2 text-[11px] font-semibold uppercase tracking-wider" style="color:var(--text-muted)">Compulsory Subjects</div>
+        <div class="subj-cols" aria-hidden="true">
+          <span>Subject</span><span>Theory</span><span>Practical</span><span class="subj-cols-gp">GP</span>
+        </div>
+        <div id="compulsory-list" style="display:flex;flex-direction:column;gap:6px"></div>
+
+        <!-- Optional 1 -->
+        <div class="mt-3 mb-2 text-[11px] font-semibold uppercase tracking-wider" style="color:var(--text-muted)">Optional Subject 1</div>
+        <div id="optional-1-area"></div>
+
+        <!-- Optional 2 -->
+        <div class="mt-3 mb-2 text-[11px] font-semibold uppercase tracking-wider" style="color:var(--text-muted)">Optional Subject 2</div>
+        <div id="optional-2-area"></div>
+
+        <!-- Buttons -->
+        <div class="mt-3 flex items-center gap-2">
+          <button id="calc-btn" class="flex-1 py-2 text-sm font-semibold rounded-lg text-white active:scale-[0.98] transition" style="background:var(--primary-red);box-shadow:0 2px 4px rgba(185,28,28,0.15)">Calculate GPA</button>
+          <button id="reset-btn-left" class="py-2 px-4 text-sm font-semibold rounded-lg transition" style="border:1px solid var(--card-border);color:var(--text-muted);background:var(--card-bg)">Reset</button>
+        </div>
+        <p class="mt-2 text-[11px]" style="color:var(--text-muted)">Result updates automatically as you pick grades.</p>
+      </div>
+
+      <!-- Right: Sticky Result -->
+      <div class="result-right">
+        <div id="result-card" class="rounded-2xl overflow-hidden shadow-lg" style="background:var(--card-bg);border:1px solid var(--card-border)">
+          <!-- Circular Gauge -->
+          <div class="pt-5 pb-3 flex flex-col items-center" style="background:linear-gradient(180deg,var(--interactive-tint) 0%,var(--card-bg) 100%)">
+            <div class="relative w-32 h-32">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 160 160">
+                <circle cx="80" cy="80" r="68" fill="none" stroke="var(--interactive-tint)" stroke-width="4"/>
+                <circle id="gauge-ring" cx="80" cy="80" r="68" fill="none" stroke="var(--primary-red)" stroke-width="4" stroke-linecap="round" stroke-dasharray="427.3" stroke-dashoffset="427.3" class="transition-all duration-500"/>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span id="result-gpa" class="text-4xl font-extrabold tabular-nums leading-none" style="color:var(--text-primary)">—</span>
+                <span class="text-xs mt-1 font-medium" style="color:var(--text-muted)">GPA</span>
+              </div>
+            </div>
+          </div>
+          <!-- Status -->
+          <div class="px-4 py-3 text-center" style="border-top:1px solid var(--card-border)">
+            <div id="result-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style="background:var(--bg-canvas);color:var(--text-muted)">
+              <span id="badge-dot" class="w-1.5 h-1.5 rounded-full" style="background:var(--text-muted)"></span>
+              <span id="badge-text">Complete subjects to see result</span>
+            </div>
+            <p id="result-classification" class="text-sm font-semibold mt-2 hidden" style="color:var(--text-primary)"></p>
+          </div>
+          <!-- Stats Row -->
+          <div class="px-4 py-2 flex justify-around text-center" style="border-top:1px solid var(--card-border)">
+            <div>
+              <span id="result-percentage" class="text-sm font-bold tabular-nums hidden" style="color:var(--primary-red)">0%</span>
+              <span class="block text-[10px]" style="color:var(--text-muted)">Percentage</span>
+            </div>
+            <div>
+              <span id="result-subjects" class="text-sm font-bold tabular-nums" style="color:var(--text-primary)">0</span>
+              <span class="block text-[10px]" style="color:var(--text-muted)">Subjects</span>
+            </div>
+          </div>
+          <!-- Subject Breakdown -->
+          <div id="result-breakdown" class="px-4 py-3 hidden" style="border-top:1px solid var(--card-border)">
+            <div id="breakdown-list" class="space-y-1.5"></div>
+          </div>
+          <!-- Actions -->
+          <div class="px-4 pb-4 pt-2 flex gap-1.5">
+            <button id="copy-btn" class="flex-1 py-2 text-xs font-semibold rounded-lg transition" style="border:1px solid var(--card-border);color:var(--text-muted);background:var(--card-bg)">Copy Result</button>
+            <button id="reset-btn" class="flex-1 py-2 text-xs font-semibold rounded-lg transition" style="border:1px solid var(--card-border);color:var(--text-muted);background:var(--card-bg)">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grade Reference Accordion -->
+    <details class="mt-4 rounded-xl" style="background:var(--card-bg);border:1px solid var(--card-border)">
+      <summary class="px-5 py-3 text-sm font-semibold cursor-pointer transition rounded-xl" style="color:var(--text-primary)">Official SEE Grade Point Table</summary>
+      <div class="px-5 pb-4 pt-4" style="border-top:1px solid var(--card-border)">
+        <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center">
+          <div class="py-2 rounded-lg" style="background:var(--interactive-tint)"><span class="block text-sm font-bold" style="color:var(--primary-red)">A+</span><span class="block text-[10px]" style="color:var(--text-muted)">90–100%</span><span class="block text-xs font-semibold" style="color:var(--text-primary)">4.0</span></div>
+          <div class="py-2 rounded-lg bg-emerald-50"><span class="block text-sm font-bold text-emerald-600">A</span><span class="block text-[10px] text-gray-500">80–89%</span><span class="block text-xs font-semibold text-gray-700">3.6</span></div>
+          <div class="py-2 rounded-lg bg-blue-50"><span class="block text-sm font-bold text-blue-600">B+</span><span class="block text-[10px] text-gray-500">70–79%</span><span class="block text-xs font-semibold text-gray-700">3.2</span></div>
+          <div class="py-2 rounded-lg bg-violet-50"><span class="block text-sm font-bold text-violet-600">B</span><span class="block text-[10px] text-gray-500">60–69%</span><span class="block text-xs font-semibold text-gray-700">2.8</span></div>
+          <div class="py-2 rounded-lg bg-amber-50"><span class="block text-sm font-bold text-amber-600">C+</span><span class="block text-[10px] text-gray-500">50–59%</span><span class="block text-xs font-semibold text-gray-700">2.4</span></div>
+          <div class="py-2 rounded-lg bg-orange-50"><span class="block text-sm font-bold text-orange-600">C</span><span class="block text-[10px] text-gray-500">40–49%</span><span class="block text-xs font-semibold text-gray-700">2.0</span></div>
+          <div class="py-2 rounded-lg bg-yellow-50"><span class="block text-sm font-bold text-yellow-600">D+</span><span class="block text-[10px] text-gray-500">30–39%</span><span class="block text-xs font-semibold text-gray-700">1.6</span></div>
+          <div class="py-2 rounded-lg bg-red-50"><span class="block text-sm font-bold text-red-600">D</span><span class="block text-[10px] text-gray-500">20–29%</span><span class="block text-xs font-semibold text-gray-700">1.0</span></div>
+          <div class="py-2 rounded-lg bg-gray-100"><span class="block text-sm font-bold text-gray-500">NG</span><span class="block text-[10px] text-gray-500">&lt;20%</span><span class="block text-xs font-semibold text-gray-700">0.0</span></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- FAQ Accordion -->
+    <details class="mt-2 rounded-xl" style="background:var(--card-bg);border:1px solid var(--card-border)">
+      <summary class="px-5 py-3 text-sm font-semibold cursor-pointer transition rounded-xl" style="color:var(--text-primary)">Frequently Asked Questions</summary>
+      <div class="px-5 pb-4 pt-4 space-y-4" style="border-top:1px solid var(--card-border)">
+        <div><p class="text-sm font-medium mb-1" style="color:var(--text-primary)">How is SEE GPA calculated?</p><p class="text-xs leading-relaxed" style="color:var(--text-muted)">GPA = Sum of all grade points ÷ Number of subjects. Each subject earns a letter grade which converts to a grade point (A+ = 4.0, A = 3.6, etc.).</p></div>
+        <div><p class="text-sm font-medium mb-1" style="color:var(--text-primary)">What does NG mean?</p><p class="text-xs leading-relaxed" style="color:var(--text-muted)">NG (Not Graded) means the student scored below 20%. NG counts as 0.0 grade points in the GPA calculation.</p></div>
+        <div><p class="text-sm font-medium mb-1" style="color:var(--text-primary)">Are optional subjects included?</p><p class="text-xs leading-relaxed" style="color:var(--text-muted)">Optional subjects you select are included in the GPA calculation. If you don't select an optional subject, only compulsory subjects are counted.</p></div>
+      </div>
+    </details>
+
+    <div class="mt-4"><Disclaimer variant="education" />
+    <RelatedTools tools={relatedTools} /></div>
+  </div>
+
+  <!-- ================= STYLES (global) ================= -->
+  <style is:global>
+    /* ── High-Contrast Professional Palette ── */
+    :root {
+      --bg-canvas: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --card-border: #E2E8F0;
+      --text-primary: #0F172A;
+      --text-muted: #64748B;
+      --primary-red: #B91C1C;
+      --primary-red-hover: #991B1B;
+      --interactive-tint: #FEF2F2;
+      --success-emerald: #047857;
+    }
+
+    .gpa-grid { display: grid; grid-template-columns: 1fr 280px; gap: 16px; align-items: start; }
+    .gpa-main { min-width: 0; overflow: hidden; }
+
+    /* Faculty Chips */
+    .fac-chip { padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 7px; border: 1.5px solid var(--card-border); background: var(--card-bg); color: var(--text-muted); cursor: pointer; transition: all .15s; font-family: var(--font-sans); }
+    .fac-chip.fac-active { background: var(--primary-red); color: white; border-color: var(--primary-red); box-shadow: 0 2px 4px rgba(185,28,28,0.15); }
+    .fac-chip:not(.fac-active):hover { background: var(--interactive-tint); color: var(--primary-red); border-color: var(--primary-red); }
+
+    /* Subject Row: name | theory | practical | GP chip */
+    .subj-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 8px 12px; transition: border-color .2s, box-shadow .2s; display: grid; grid-template-columns: minmax(0, 1.25fr) 1fr 1fr 64px; gap: 8px 10px; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.03); min-width: 0; }
+    .subj-card:hover { border-color: var(--primary-red); box-shadow: 0 2px 8px rgba(185,28,28,0.08); }
+
+    /* Column titles, aligned with the row grid */
+    .subj-cols { display: grid; grid-template-columns: minmax(0, 1.25fr) 1fr 1fr 64px; gap: 8px 10px; padding: 0 12px; margin-bottom: 4px; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .subj-cols-gp { text-align: center; }
+
+    .subj-card-head { display: flex; align-items: center; gap: 6px; min-width: 0; }
+    .subj-name { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+    /* Final subject grade chip */
+    .subj-gp { justify-self: center; min-width: 56px; text-align: center; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-primary); background: var(--bg-canvas); border: 1px solid var(--card-border); border-radius: 999px; padding: 4px 8px; white-space: nowrap; }
+    .subj-gp.g-empty { font-weight: 400; }
+
+    .grade-select { width: 100%; min-width: 0; height: 32px; padding: 0 28px 0 10px; border: 1px solid var(--card-border); border-radius: 8px; background-color: var(--bg-canvas); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; color: var(--text-primary); font-size: 12px; font-weight: 500; appearance: none; cursor: pointer; transition: all .2s; font-family: var(--font-sans); }
+    .grade-select:hover:not(:focus) { border-color: var(--primary-red); background-color: var(--interactive-tint); }
+    .grade-select:focus { outline: none; border-color: var(--primary-red); background-color: var(--card-bg); box-shadow: 0 0 0 3px var(--interactive-tint); }
+    .grade-select option[value=""] { color: var(--text-muted); }
+    .grade-select.ng-selected { border-color: #DC2626; background-color: var(--interactive-tint); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+
+    .g-empty { color: var(--card-border); font-weight: 400; }
+
+    .subj-remove { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 14px; line-height: 1; color: var(--text-muted); background: transparent; border: none; cursor: pointer; transition: all .2s; flex-shrink: 0; }
+    .subj-remove:hover { background: var(--interactive-tint); color: var(--primary-red); transform: scale(1.1); }
+
+    .slot-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1.5px dashed var(--card-border); border-radius: 8px; background: var(--bg-canvas); transition: border-color .2s, box-shadow .2s; }
+    .slot-row:hover { border-color: var(--primary-red); box-shadow: 0 2px 8px rgba(185,28,28,0.06); }
+    .slot-select { flex: 1; min-width: 0; padding: 6px 26px 6px 10px; border: 1px solid var(--card-border); border-radius: 8px; font-size: 12px; font-weight: 500; color: var(--text-primary); background: var(--card-bg); appearance: none; cursor: pointer; font-family: var(--font-sans); transition: all .15s; }
+    .slot-select:focus { outline: none; border-color: var(--primary-red); box-shadow: 0 0 0 3px var(--interactive-tint); }
+
+    @media (max-width: 900px) { .gpa-grid { grid-template-columns: 1fr; gap: 20px; } }
+    @media (max-width: 640px) {
+      .subj-card, .subj-cols { grid-template-columns: minmax(0, 1fr) 1fr 1fr 56px; gap: 6px 8px; padding-left: 10px; padding-right: 10px; }
+      .subj-cols { padding-top: 0; padding-bottom: 0; }
+      .subj-name { font-size: 12px; }
+      .grade-select { height: 34px; font-size: 12px; }
+    }
+  </style>
+
+  <!-- ================= CLIENT SCRIPT ================= -->
+  <script>
+    import { calculateGPA, getGpaLabel, GRADE_POINTS } from "../../../lib/calculators/gpa.js";
+
+    var GRADE_OPTIONS = ["", "A+", "A", "B+", "B", "C+", "C", "D+", "D", "NG"];
+    var GRADE_MAP = GRADE_POINTS;
+
+    var compulsoryList = [
+      { id: "nepali", name: "Nepali" },
+      { id: "english", name: "English" },
+      { id: "math", name: "Mathematics" },
+      { id: "science", name: "Science & Technology" },
+      { id: "social", name: "Social Studies" }
+    ];
+
+    var optional1Choices = [
+      { id: "opt-math", name: "Optional Mathematics" },
+      { id: "cs", name: "Computer Science" },
+      { id: "accountancy", name: "Accountancy" },
+      { id: "economics", name: "Economics" },
+      { id: "env", name: "Environment Science" },
+      { id: "population", name: "Population Studies" }
+    ];
+
+    var optional2Choices = [
+      { id: "cs2", name: "Computer Science" },
+      { id: "accountancy2", name: "Accountancy" },
+      { id: "economics2", name: "Economics" },
+      { id: "env2", name: "Environment Science" },
+      { id: "population2", name: "Population Studies" }
+    ];
+
+    var gradeStore = {};
+    var opt1Selection = null;
+    var opt2Selection = null;
+
+    function renderSubjects() {
+      var compList = document.getElementById("compulsory-list");
+      compList.innerHTML = "";
+      compulsoryList.forEach(function (sub) {
+        compList.appendChild(buildSubjectCard(sub));
+      });
+
+      var opt1Area = document.getElementById("optional-1-area");
+      opt1Area.innerHTML = "";
+      if (opt1Selection) {
+        var sub = optional1Choices.find(function (c) { return c.id === opt1Selection; });
+        if (sub) opt1Area.appendChild(buildSubjectCard(sub, true));
+      } else {
+        opt1Area.appendChild(buildSlotDropdown(optional1Choices, 1));
+      }
+
+      var opt2Area = document.getElementById("optional-2-area");
+      opt2Area.innerHTML = "";
+      if (opt2Selection) {
+        var sub2 = optional2Choices.find(function (c) { return c.id === opt2Selection; });
+        if (sub2) opt2Area.appendChild(buildSubjectCard(sub2, true));
+      } else {
+        opt2Area.appendChild(buildSlotDropdown(optional2Choices, 2));
+      }
+
+      updateProgress();
+      updateResult();
+    }
+
+    function buildSubjectCard(sub, isOptional) {
+      var stored = gradeStore[sub.id] || {};
+      var card = document.createElement("div");
+      card.className = "subj-card";
+      card.dataset.subjectId = sub.id;
+
+      var head = document.createElement("div");
+      head.className = "subj-card-head";
+      var nameEl = document.createElement("span");
+      nameEl.className = "subj-name";
+      nameEl.textContent = sub.name;
+      nameEl.title = sub.name;
+      head.appendChild(nameEl);
+
+      if (isOptional) {
+        var rm = document.createElement("button");
+        rm.className = "subj-remove";
+        rm.textContent = "×";
+        rm.title = "Remove subject";
+        rm.setAttribute("aria-label", "Remove " + sub.name);
+        rm.addEventListener("click", function () {
+          if (sub.id.startsWith("opt-") || sub.id === "opt-math") opt1Selection = null;
+          else opt2Selection = null;
+          delete gradeStore[sub.id];
+          renderSubjects();
+        });
+        head.appendChild(rm);
+      }
+      card.appendChild(head);
+
+      // Theory + Practical dropdowns (single row)
+      ["Theory", "Practical"].forEach(function (compType) {
+        var sel = document.createElement("select");
+        sel.className = "grade-select";
+        sel.dataset.subjectId = sub.id;
+        sel.dataset.compType = compType;
+        sel.setAttribute("aria-label", sub.name + " " + compType + " grade");
+        GRADE_OPTIONS.forEach(function (g) {
+          var o = document.createElement("option");
+          o.value = g;
+          o.textContent = g === "" ? "Grade" : g;
+          if (stored[compType] === g) o.selected = true;
+          sel.appendChild(o);
+        });
+        sel.addEventListener("change", function () {
+          if (!gradeStore[sub.id]) gradeStore[sub.id] = {};
+          gradeStore[sub.id][compType] = sel.value;
+          sel.classList.toggle("ng-selected", sel.value === "NG");
+          updateCardGrade(sub.id);
+          updateProgress();
+          updateResult();
+        });
+        if (stored[compType] === "NG") sel.classList.add("ng-selected");
+        card.appendChild(sel);
+      });
+
+      // Subject grade chip (final = lower of Theory/Practical)
+      var chip = document.createElement("span");
+      chip.className = "subj-gp g-empty";
+      chip.dataset.role = "subject-grade";
+      chip.textContent = "—";
+      card.appendChild(chip);
+      updateCardGradeEl(card, sub.id);
+
+      return card;
+    }
+
+    function buildSlotDropdown(choices, slotIndex) {
+      var wrap = document.createElement("div");
+      wrap.className = "slot-row";
+      var selectWrap = document.createElement("div");
+      selectWrap.style.position = "relative";
+      selectWrap.style.flex = "1";
+      var select = document.createElement("select");
+      select.className = "slot-select";
+      var ph = document.createElement("option");
+      ph.value = "";
+      ph.textContent = "+ Add optional subject";
+      ph.disabled = true;
+      ph.selected = true;
+      select.appendChild(ph);
+      choices.forEach(function (c) {
+        var o = document.createElement("option");
+        o.value = c.id;
+        o.textContent = c.name;
+        select.appendChild(o);
+      });
+      select.addEventListener("change", function () {
+        if (select.value) {
+          if (slotIndex === 1) opt1Selection = select.value;
+          else opt2Selection = select.value;
+          renderSubjects();
+        }
+      });
+      selectWrap.appendChild(select);
+      wrap.appendChild(selectWrap);
+      return wrap;
+    }
+
+    function updateCardGradeEl(card, subjectId) {
+      var stored = gradeStore[subjectId] || {};
+      var el = card.querySelector('[data-role="subject-grade"]');
+      if (!el) return;
+      var thG = stored["Theory"] || "";
+      var prG = stored["Practical"] || "";
+      if (thG && prG && GRADE_MAP[thG] !== undefined && GRADE_MAP[prG] !== undefined) {
+        var fg = Math.min(GRADE_MAP[thG], GRADE_MAP[prG]);
+        var fgGrade = GRADE_MAP[thG] <= GRADE_MAP[prG] ? thG : prG;
+        el.textContent = fgGrade + " " + fg.toFixed(1);
+        el.classList.remove("g-empty");
+        el.title = "Theory: " + thG + " · Practical: " + prG;
+      } else {
+        el.textContent = "—";
+        el.classList.add("g-empty");
+        el.title = "";
+      }
+    }
+
+    function updateCardGrade(subjectId) {
+      var card = document.querySelector('[data-subject-id="' + subjectId + '"]');
+      if (!card) return;
+      updateCardGradeEl(card, subjectId);
+    }
+
+    function updateProgress() {
+      var allSubjects = compulsoryList.slice();
+      if (opt1Selection) {
+        var s1 = optional1Choices.find(function (c) { return c.id === opt1Selection; });
+        if (s1) allSubjects.push(s1);
+      }
+      if (opt2Selection) {
+        var s2 = optional2Choices.find(function (c) { return c.id === opt2Selection; });
+        if (s2) allSubjects.push(s2);
+      }
+      var total = allSubjects.length;
+      var filled = 0;
+      allSubjects.forEach(function (sub) {
+        var s = gradeStore[sub.id] || {};
+        var allFilled = ["Theory", "Practical"].every(function (c) { return (s[c] || "") !== ""; });
+        if (allFilled) filled++;
+      });
+      var pct = total > 0 ? Math.round((filled / total) * 100) : 0;
+      document.getElementById("progress-text").textContent = filled + " / " + total;
+      document.getElementById("progress-bar").style.width = pct + "%";
+    }
+
+    function updateResult() {
+      var allSubjects = compulsoryList.slice();
+      if (opt1Selection) {
+        var s1 = optional1Choices.find(function (c) { return c.id === opt1Selection; });
+        if (s1) allSubjects.push(s1);
+      }
+      if (opt2Selection) {
+        var s2 = optional2Choices.find(function (c) { return c.id === opt2Selection; });
+        if (s2) allSubjects.push(s2);
+      }
+
+      var filledSubjects = [];
+      allSubjects.forEach(function (sub) {
+        var s = gradeStore[sub.id] || {};
+        var thG = s["Theory"] || "";
+        var prG = s["Practical"] || "";
+        if (thG === "" || prG === "") return;
+        // NG rule: if either is NG, subject is NG
+        var thGp = GRADE_MAP[thG] !== undefined ? GRADE_MAP[thG] : 0;
+        var prGp = GRADE_MAP[prG] !== undefined ? GRADE_MAP[prG] : 0;
+        var finalGp = Math.min(thGp, prGp);
+        var finalGrade = thGp <= prGp ? thG : prG;
+        filledSubjects.push({ name: sub.name, grade: finalGrade, gp: finalGp, th: thG, pr: prG });
+      });
+
+      var gpaEl = document.getElementById("result-gpa");
+      var ring = document.getElementById("gauge-ring");
+      var badge = document.getElementById("result-badge");
+      var badgeDot = document.getElementById("badge-dot");
+      var badgeText = document.getElementById("badge-text");
+      var classEl = document.getElementById("result-classification");
+      var circ = 2 * Math.PI * 68;
+
+      if (filledSubjects.length < 1) {
+        gpaEl.textContent = "—";
+        gpaEl.style.color = "var(--text-primary)";
+        ring.style.strokeDashoffset = circ;
+        badge.style.background = "var(--bg-canvas)";
+        badge.style.color = "var(--text-muted)";
+        badgeDot.style.background = "var(--text-muted)";
+        badgeText.textContent = "Complete subjects to see result";
+        classEl.classList.add("hidden");
+        document.getElementById("result-subjects").textContent = "0";
+        var pctEl = document.getElementById("result-percentage");
+        if (pctEl) { pctEl.textContent = "—"; pctEl.classList.add("hidden"); }
+        var bdEl = document.getElementById("result-breakdown");
+        if (bdEl) bdEl.classList.add("hidden");
+        return;
+      }
+
+      var totalGp = 0;
+      filledSubjects.forEach(function (s) { totalGp += s.gp; });
+      var gpa = Math.round((totalGp / filledSubjects.length) * 100) / 100;
+
+      gpaEl.textContent = gpa.toFixed(2);
+
+      var pct = Math.min(gpa / 4.0, 1);
+      ring.style.strokeDashoffset = circ - (circ * pct);
+
+      var hasNG = filledSubjects.some(function (s) { return s.grade === "NG"; });
+
+      if (hasNG) {
+        ring.style.stroke = "#DC2626";
+        gpaEl.style.color = "#DC2626";
+        badge.style.background = "#FEF2F2";
+        badge.style.color = "#DC2626";
+        badgeDot.style.background = "#DC2626";
+        badgeText.textContent = "Non-Graded";
+        classEl.textContent = "Supplementary Required";
+        classEl.style.color = "#DC2626";
+        classEl.classList.remove("hidden");
+      } else {
+        ring.style.stroke = "var(--primary-red)";
+        gpaEl.style.color = "var(--text-primary)";
+        badge.style.background = "var(--interactive-tint)";
+        badge.style.color = "var(--primary-red)";
+        badgeDot.style.background = "var(--primary-red)";
+        badgeText.textContent = "Passed";
+        classEl.textContent = getGpaLabel(gpa);
+        classEl.style.color = "var(--text-primary)";
+        classEl.classList.remove("hidden");
+      }
+
+      document.getElementById("result-subjects").textContent = filledSubjects.length;
+
+      var pctVal = hasNG ? 0 : ((gpa / 4.0) * 100);
+      var pctDisplay = document.getElementById("result-percentage");
+      if (pctDisplay) { pctDisplay.textContent = pctVal.toFixed(1) + "%"; pctDisplay.classList.remove("hidden"); }
+
+      var breakdownEl = document.getElementById("result-breakdown");
+      var breakdownList = document.getElementById("breakdown-list");
+      if (breakdownEl && breakdownList && filledSubjects.length > 0) {
+        breakdownEl.classList.remove("hidden");
+        breakdownList.innerHTML = "";
+        filledSubjects.forEach(function (s) {
+          var row = document.createElement("div");
+          row.className = "flex items-center justify-between text-xs";
+          var nameSpan = document.createElement("span");
+          nameSpan.style.color = "var(--text-muted)";
+          nameSpan.textContent = s.name;
+          var detailSpan = document.createElement("span");
+          detailSpan.style.fontSize = "10px";
+          detailSpan.style.color = "var(--text-muted)";
+          detailSpan.textContent = "T:" + s.th + " P:" + s.pr;
+          var gradeSpan = document.createElement("span");
+          gradeSpan.style.fontWeight = "600";
+          gradeSpan.textContent = s.grade + " (" + s.gp.toFixed(1) + ")";
+          if (s.grade === "NG") gradeSpan.style.color = "#DC2626";
+          else gradeSpan.style.color = "var(--text-primary)";
+          var rightWrap = document.createElement("div");
+          rightWrap.style.textAlign = "right";
+          rightWrap.appendChild(detailSpan);
+          var br = document.createElement("div");
+          br.appendChild(gradeSpan);
+          rightWrap.appendChild(br);
+          row.appendChild(nameSpan);
+          row.appendChild(rightWrap);
+          breakdownList.appendChild(row);
+        });
+      }
+    }
+
+    /* ── Copy ── */
+    document.getElementById("copy-btn").addEventListener("click", function () {
+      var allSubjects = compulsoryList.slice();
+      if (opt1Selection) { var s1 = optional1Choices.find(function (c) { return c.id === opt1Selection; }); if (s1) allSubjects.push(s1); }
+      if (opt2Selection) { var s2 = optional2Choices.find(function (c) { return c.id === opt2Selection; }); if (s2) allSubjects.push(s2); }
+      var totalGp = 0;
+      var count = 0;
+      var lines = [];
+      allSubjects.forEach(function (sub) {
+        var s = gradeStore[sub.id] || {};
+        var thG = s["Theory"] || "";
+        var prG = s["Practical"] || "";
+        if (thG === "" || prG === "") return;
+        var thGp = GRADE_MAP[thG] !== undefined ? GRADE_MAP[thG] : 0;
+        var prGp = GRADE_MAP[prG] !== undefined ? GRADE_MAP[prG] : 0;
+        var fg = Math.min(thGp, prGp);
+        var fgGrade = thGp <= prGp ? thG : prG;
+        totalGp += fg;
+        count++;
+        lines.push(sub.name + ": T:" + thG + " P:" + prG + " → " + fgGrade + " (" + fg.toFixed(1) + ")");
+      });
+      if (count < 1) return;
+      var gpa = Math.round((totalGp / count) * 100) / 100;
+      var text = "SEE GPA Result\nGPA: " + gpa.toFixed(2) + "\n" + getGpaLabel(gpa) + "\n\n" + lines.join("\n");
+      navigator.clipboard.writeText(text).catch(function () {});
+    });
+
+    /* ── Calculate ── */
+    document.getElementById("calc-btn").addEventListener("click", function () {
+      updateResult();
+      var rc = document.getElementById("result-card");
+      if (rc) rc.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    /* ── Reset ── */
+    document.getElementById("reset-btn-left").addEventListener("click", function () {
+      document.getElementById("reset-dialog").classList.remove("hidden");
+    });
+    document.getElementById("reset-btn").addEventListener("click", function () {
+      document.getElementById("reset-dialog").classList.remove("hidden");
+    });
+    document.getElementById("reset-cancel").addEventListener("click", function () {
+      document.getElementById("reset-dialog").classList.add("hidden");
+    });
+    document.getElementById("reset-confirm").addEventListener("click", function () {
+      gradeStore = {};
+      opt1Selection = null;
+      opt2Selection = null;
+      document.getElementById("reset-dialog").classList.add("hidden");
+      renderSubjects();
+      var gpaEl = document.getElementById("result-gpa");
+      var ring = document.getElementById("gauge-ring");
+      var circ = 2 * Math.PI * 68;
+      gpaEl.textContent = "—";
+      ring.style.strokeDashoffset = circ;
+      document.getElementById("result-subjects").textContent = "0";
+      var pctEl = document.getElementById("result-percentage");
+      if (pctEl) { pctEl.textContent = "—"; pctEl.classList.add("hidden"); }
+      document.getElementById("result-breakdown").classList.add("hidden");
+      document.getElementById("result-badge").style.background = "var(--bg-canvas)";
+      document.getElementById("result-badge").style.color = "var(--text-muted)";
+      document.getElementById("badge-dot").style.background = "var(--text-muted)";
+      document.getElementById("badge-text").textContent = "Complete subjects to see result";
+      document.getElementById("result-classification").classList.add("hidden");
+    });
+    document.getElementById("confirm-cancel").addEventListener("click", function () {
+      document.getElementById("confirm-dialog").classList.add("hidden");
+    });
+
+    /* ── Init ── */
+    renderSubjects();
+  </script>
+</BaseLayout>

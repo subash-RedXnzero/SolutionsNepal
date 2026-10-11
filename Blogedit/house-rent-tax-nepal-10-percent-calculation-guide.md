@@ -1,0 +1,130 @@
+---
+title: "House Rent Tax Nepal 2026: 10% Rule, Who Pays & How to Calculate"
+description: Who actually pays house rent tax in Nepal in 2026. Federal 10% TDS vs 10% municipal ghar bahal kar, individual vs company landlord/tenant, Supreme Court 2025 rule, calculation examples and ward payment guide.
+category: Finance
+author: SolutionsNepal Team
+authorCredential: Nepal tax and property researchers
+date: September 27, 2026
+readTime: 12 min read
+image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop"
+tags: [House Rent Tax Nepal, Ghar Bahal Kar, Rent TDS Nepal, IRD Nepal, Finance]
+relatedTools: [house-rent-tax, rent-tax, vat-calculator, salary-checker]
+headings:
+  - id: tldr
+    text: "Quick Answer (TL;DR)"
+    level: 2
+  - id: two-taxes
+    text: "Two Different Taxes — Same 10% Name"
+    level: 2
+  - id: who-pays
+    text: Who Pays Which Tax?
+    level: 2
+  - id: supreme-court
+    text: "2025 Supreme Court Rule — No Double Tax"
+    level: 2
+  - id: how-calc
+    text: How to Calculate (Both Paths)
+    level: 2
+  - id: example30k
+    text: "Example: Rs 30,000/month in Kathmandu"
+    level: 3
+  - id: ward-vs-ird
+    text: "Where & How to Pay: Ward vs IRD"
+    level: 2
+  - id: final-vs-advance
+    text: Final vs Adjustable
+    level: 2
+  - id: mistakes
+    text: Common Mistakes to Avoid
+    level: 2
+  - id: checklist
+    text: Checklist
+    level: 2
+  - id: sources
+    text: Official Sources & Final Note
+    level: 2
+faqs:
+  - q: What is the house rent tax rate in Kathmandu?
+    a: "10% of annual rent. Kathmandu Metropolitan City levies 10% municipal ghar bahal kar on individual-to-individual rent. Other municipalities set their own rate in each municipal Economic Act — varies by municipality, confirm at the ward where the property sits."
+  - q: "Who pays house rent tax — landlord or tenant?"
+    a: "Municipal tax: landlord is statutorily liable (tenant only if the lease assigns it). Federal TDS: the business/company tenant withholds 10% and deposits to IRD; the landlord receives net rent + TDS certificate."
+  - q: Do I pay both municipal tax and federal TDS?
+    a: "On the same rent, generally only one applies: individual tenant → municipal tax (landlord pays at ward); business/company tenant → federal 10% TDS (tenant withholds to IRD). Per the 2025 Adhikari ruling, federal tax covers legal persons and local tax covers natural persons — but a follow-on division-bench decision reopened aspects with cases pending, so keep both receipts where relevant and check current status on ird.gov.np / at your ward before paying."
+  - q: Is individual-to-individual rent subject to TDS?
+    a: "No. Under Income Tax Act 2058 Sec 88 proviso, an individual paying house rent to a natural person does not withhold TDS (per IRD reading — verify current notice). The landlord declares the rent in the annual return; for final-withholding cases the 10% at ward is the full tax."
+  - q: Is rent to a company taxed differently?
+    a: "Yes. Rent paid to a company/firm/entity is 10% federal withholding (withholder = payer). That municipality does not levy ghar bahal kar on the same company-to-company rent — federal TDS applies alone (per the 2025 ruling logic — confirm current status as follow-on litigation is pending)."
+  - q: How do I calculate it?
+    a: "Individual→individual (KMC): Rs 30,000×12 = Rs 3,60,000 ×10% = Rs 36,000 municipal tax at ward. Company tenant: same gross, tenant withholds Rs 36,000 to IRD, pays landlord Rs 3,24,000."
+  - q: Where do I pay?
+    a: "Municipal tax: ward office of the property's municipality (self-declaration, monthly/quarterly/annual). Federal TDS: tenant deposits via IRD portal (connectIPS/eSewa) within 25 days of Nepali month-end and issues e-TDS certificate within 15 days — per IRD notice, verify current deadlines on ird.gov.np."
+---
+
+<h2 id="tldr">Quick Answer (TL;DR)</h2>
+
+The 10% you hear about is <strong>two separate taxes</strong>. <strong>Individual tenant → individual landlord</strong>: landlord pays <strong>10% municipal ghar bahal kar at the ward</strong> (KMC =10%; other municipalities vary — confirm your ward's Economic Act). <strong>Company/business tenant → any landlord</strong>: tenant withholds <strong>10% federal TDS to IRD</strong>. You <strong>generally pay only one</strong> on the same rent — per the 2025 Adhikari ruling — but a follow-on division-bench decision reopened aspects with cases pending, so keep all receipts and check current status before paying.
+
+<h2 id="two-taxes">Two Different Taxes — Same 10% Name</h2>
+
+- **Municipal ghar bahal kar** — Local Government Operation Act 2074 — landlord's rental income, collected at the ward. Rate set by each municipality in its Economic Act (10% KMC; elsewhere varies — confirm at ward). Self-declaration (swaghoshana).
+- **Federal TDS on rent** — Income Tax Act 2058 Sec 88 — payer withholds at source when a business/entity pays rent. Generally 10% to a natural-person landlord; rent to a company-entity also ~10% but mutually exclusive with municipal tax under the 2025 ruling logic (pending follow-on litigation — verify current status).
+
+<h2 id="who-pays">Who Pays Which Tax?</h2>
+
+- **Individual tenant → individual landlord (family renting a flat)** — Municipal tax — landlord declares and pays 10% (KMC) at the ward. Federal TDS = 0 (Sec 88 proviso: individual house rent to a natural person not withheld).
+- **Company / NGO / government tenant → individual landlord** — Federal 10% TDS — tenant withholds 10%, deposits to IRD, gives landlord an e-TDS certificate. No municipal tax on that rent.
+- **Any tenant → company/firm landlord** — Federal 10% withholding (payer withholds to IRD). Municipal ghar bahal kar does not apply to company-to-company rent.
+- **Liability default** — Municipal tax: landlord liable unless lease assigns to tenant. Federal TDS: business tenant liable as withholding agent.
+
+<h2 id="supreme-court">2025 Supreme Court Rule — No Double Tax</h2>
+
+Overlapping claims (ward asking for 10% while IRD already withheld 10% on company-to-company rent) were addressed by the 2025 Supreme Court (Adhikari ruling): <strong>local house-rent tax applies only where the lessor is a natural person; rent to a company is federal withholding only</strong>. However, a follow-on division-bench decision reopened aspects of this split with cases pending — so treat the exclusivity as the current working rule, not a final settled guarantee. If a ward demands municipal tax on a company-to-company lease already under TDS, cite the ruling and the Income Tax Act exclusion of natural-person house rent from "rent" definition, keep the federal TDS proof, <strong>keep both receipts where both are demanded, and check current status on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a> / at your ward before paying</strong>.
+
+<h2 id="how-calc">How to Calculate (Both Paths)</h2>
+
+```text
+Municipal tax = Annual Rent × Municipal Rate (e.g., 10% in KMC)
+Federal TDS = Rent Payment × 10% (withheld by business tenant at payment)
+```
+
+<h3 id="example30k">Example: Rs 30,000/month in Kathmandu</h3>
+
+- **Annual gross rent** — 30,000 ×12 = Rs 3,60,000
+- **Path A — Individual tenant (municipal)** — Tax = 3,60,000 ×10% = Rs 36,000. Landlord pays at ward; net keeps Rs 3,60,000 gross but owes Rs 36,000 to ward. If lease says “tenant deducts”, tenant pays landlord Rs 3,24,000 + Rs 36,000 to ward.
+- **Path B — Company tenant (federal)** — TDS = Rs 36,000 withheld by company, deposited to IRD. Landlord receives Rs 3,24,000 + e-TDS certificate for Rs 36,000; no municipal payment (per 2025 ruling logic — confirm current status as follow-on litigation is pending).
+- **Other municipality** — Path A uses your municipality's own Economic Act rate (varies — confirm at ward), e.g. 3,60,000 × local rate
+
+> **Try it:** Use SolutionsNepal’s <a href="/nepal/finance/house-rent-tax">House Rent Tax Calculator</a> — pick landlord type (individual vs entity) and enter your municipality rate to see both paths side-by-side.
+
+<h2 id="ward-vs-ird">Where &amp; How to Pay: Ward vs IRD</h2>
+
+- **Municipal ghar bahal kar** — At the ward office of the property's municipality. Bring lease agreement + landlord ID. Payable monthly/quarterly/annually per ward notice; keep the ward receipt.
+- **Federal TDS** — Withholding tenant deposits via <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">taxpayerportal.ird.gov.np</a> (connectIPS/eSewa) within 25 days of the Nepali month-end, files e-TDS return, and issues e-TDS certificate to landlord within 15 days — per IRD notice, verify current deadlines on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a>.
+
+<h2 id="final-vs-advance">Final vs Adjustable</h2>
+
+- **Final withholding** — Municipal tax (individual→individual) and 10% TDS withheld from a natural-person landlord under Sec 92 (final withholding on rent to non-business individuals, per IRD reading — verify current circular) — no further return addition; the 10% is the full tax on that rent.
+- **Adjustable** — Not applicable to the two paths above as final; other rent-to-entity cases per IRD circular may be adjustable — confirm on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a> for your specific counterparty.
+
+<h2 id="mistakes">Common Mistakes to Avoid</h2>
+
+- Paying both taxes on the same rent without checking — generally only one applies (2025 Adhikari ruling), but follow-on litigation is pending, so keep both receipts where both are demanded and check current status
+- Withholding TDS as an individual tenant to a natural-person landlord (Sec 88 proviso says no — per IRD reading, verify current notice)
+- Assuming 10% is universal — each municipality sets its own rate in its Economic Act; always check the local Economic Act at the ward
+- Treating a ward receipt and an IRD e-TDS certificate as interchangeable (different collectors, different ledgers)
+- Forgetting the landlord still declares municipal-taxed rent nowhere else vs TDS landlord who needs the e-TDS certificate for proof
+
+<h2 id="checklist">Checklist</h2>
+
+- Identify landlord (individual vs company/firm) and tenant (individual vs business) — that picks the path
+- Confirm municipality rate (10% KMC; elsewhere your ward's Economic Act rate) vs federal 10%
+- Calculate annual rent × rate; decide net-to-landlord per lease wording
+- Municipal path: declare at ward with lease + ID; keep receipt
+- Federal path: tenant withholds at payment, deposits by 25th next Nepali month (per IRD notice — verify current deadline), issues e-TDS certificate within 15 days (per IRD notice — verify)
+- Keep both the lease and the tax receipt/certificate for the whole fiscal year; where both taxes are demanded, keep both receipts and check current ruling status
+
+<h2 id="sources">Official Sources &amp; Final Note</h2>
+
+Sources: Income Tax Act 2058 Sec 88 (and proviso on house rent to natural persons) + Sec 92 (final withholding) — full text via <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">lawcommission.gov.np</a>; Local Government Operation Act 2074; Kathmandu Metropolitan City Finance Act (10%); <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">IRD notices (ird.gov.np)</a> and <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">Taxpayer Portal</a>; and the 2025 Supreme Court Adhikari ruling on municipal vs federal rent tax (Pioneer Law summary) plus the follow-on division-bench decision (cases pending). Verify your municipality's current rate at the ward where the property sits.
+
+<strong>Last updated: September 27, 2026. Rechecked as of October 2026.</strong> Municipal rates are set per local Economic Act each FY and can change; federal withholding follows the annual Finance Act. Verify at your ward / ird.gov.np before paying. SolutionsNepal is an educational guide, not a tax advisor.

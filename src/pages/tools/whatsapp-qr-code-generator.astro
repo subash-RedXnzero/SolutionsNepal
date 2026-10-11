@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import QrCodeGenerator from '../../components/tools/QrCodeGenerator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'WhatsApp QR Code Generator – wa.me Links as QR | SolutionsNepal';
+const description = 'Create a WhatsApp QR code that opens a chat with your number — optionally with a pre-filled message. Uses the official wa.me format. Free and private.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'WhatsApp QR Generator' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">WhatsApp QR Code Generator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Customers scan → chat opens with your number and your pre-written message.</p>
+    </div>
+
+    <QrCodeGenerator initialType="whatsapp" />
+
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">How it works</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          The QR encodes the official WhatsApp <code class="text-[12px] px-1 rounded" style="background-color:var(--nk-bg);">wa.me</code>
+          deep link — your number in full international format without spaces or symbols, plus an optional
+          URL-encoded greeting. Scanning opens WhatsApp directly on the chat screen; if you added a message,
+          it's already typed for the customer to press send.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Great for Nepali businesses</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• Shop counters — "Scan to order on WhatsApp"</li>
+          <li>• Delivery vehicles — pre-filled "I want to place an order"</li>
+          <li>• Service providers — bookings with a ready-made inquiry template</li>
+          <li>• Social media graphics — followers jump straight into chat</li>
+        </ul>
+        <p class="mt-2 text-[11.5px]" style="color:var(--nk-text-tertiary);">
+          Include the country code (e.g. +977) so the number works for international customers too.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Write a message that converts</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          A pre-filled message lowers friction: "Hi! I'd like to know the price of…" gives hesitant customers
+          a starting point. Keep it short — the message becomes part of the QR data, and shorter payloads
+          produce simpler, easier-to-scan codes.
+        </p>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        Also see: <a class="underline hover:opacity-80" href="/tools/qr-code-generator" style="color:var(--nk-accent);">all QR types</a> ·
+        <a class="underline hover:opacity-80" href="/tools/url-qr-code-generator" style="color:var(--nk-accent);">URL QR</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

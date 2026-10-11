@@ -1,0 +1,1032 @@
+---
+/**
+ * PassportPhotoResizer — reusable passport/visa photo tool component.
+ *
+ * Flow: Upload → Choose requirement → Crop → Choose target size → Generate → Download
+ * Everything runs client-side; photos never leave the browser.
+ *
+ * Props:
+ *   initialPreset   Requirement id to preselect ('nepal-passport', 'dv-lottery', …)
+ *   initialTargetKB Target file size in KB to preselect (null = none)
+ */
+import { PHOTO_REQUIREMENTS, getRequirement, toPixels, convertUnit, DEFAULT_DPI } from '../../data/photo-requirements.js';
+
+interface Props {
+  initialPreset?: string;
+  initialTargetKB?: number | null;
+}
+const { initialPreset = null, initialTargetKB = null } = Astro.props;
+---
+
+  <div id="ppr-root" data-presets={JSON.stringify(PHOTO_REQUIREMENTS)} data-initial-preset={initialPreset} data-initial-target-kb={initialTargetKB ?? ''}>
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-3">
+
+    <!-- ══════════ LEFT: CONTROLS ══════════ -->
+    <div class="lg:col-span-3 space-y-3">
+
+      <!-- Step 1 · Upload -->
+      <section class="rounded-2xl border overflow-hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+        <div class="px-4 py-2.5 flex items-center justify-between" style="border-bottom:1px solid var(--nk-border);">
+          <h2 class="text-[13px] font-semibold" style="color:var(--nk-text);"><span class="inline-flex items-center justify-center w-4.5 h-4.5 mr-1.5 rounded-full text-[9px] font-bold align-middle" style="background-color:var(--nk-accent);color:#fff;">1</span> Upload your photo</h2>
+        </div>
+
+        <div id="ppr-upload" class="p-4 text-center cursor-pointer transition-all" tabindex="0" role="button" aria-label="Upload photo">
+          <input type="file" id="ppr-file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-label="Choose photo file" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;" />
+          <div class="w-12 h-12 mx-auto mb-3 rounded-2xl flex items-center justify-center transition-transform duration-200 hover:scale-110" style="background-color:var(--nk-bg);box-shadow:inset 0 0 0 1px var(--nk-border);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color:var(--nk-accent);"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          </div>
+          <p class="text-sm font-semibold mb-0.5" style="color:var(--nk-text);">Drop your photo here</p>
+          <p class="text-[11px] inline-flex px-2.5 py-1 rounded-full" style="color:var(--nk-text-secondary);background-color:var(--nk-bg);">JPG · PNG · WEBP — or click to browse</p>
+        </div>
+
+        <!-- File info (after upload) -->
+        <div id="ppr-fileinfo" class="hidden px-4 py-3">
+          <div class="flex items-center gap-3">
+            <img id="ppr-thumb" class="w-11 h-11 rounded-md object-cover flex-shrink-0" style="box-shadow:inset 0 0 0 1px var(--nk-border);" alt="Photo thumbnail" />
+            <div class="flex-1 min-w-0">
+              <p id="ppr-fname" class="text-[13px] font-medium truncate" style="color:var(--nk-text);"></p>
+              <p class="text-[11px] mt-0.5" style="color:var(--nk-text-secondary);"><span id="ppr-fdims"></span> · <span id="ppr-fsize"></span></p>
+            </div>
+            <button id="ppr-replace" class="text-[10px] font-medium px-2 py-1 rounded-md border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Replace</button>
+            <button id="ppr-remove" class="p-1.5 rounded-md transition-opacity hover:opacity-70" style="color:var(--nk-text-secondary);" aria-label="Remove photo">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Boot failure notice (revealed only if the tool script never starts) -->
+        <div id="ppr-boot-error" class="hidden mx-4 mb-4 px-4 py-3 rounded-lg text-[12px] leading-relaxed" style="border:1px solid #f0c36d;background-color:#fef7e7;color:#7a4b00;">
+          The photo tool could not start. Please check your connection and refresh the page — if it still does not respond, update your browser to the latest version.
+        </div>
+      </section>
+
+      <!-- Step 2 · Requirement -->
+      <section id="ppr-step-req" class="rounded-2xl border p-3 hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+        <h2 class="text-[13px] font-semibold mb-3" style="color:var(--nk-text);"><span class="inline-flex items-center justify-center w-4.5 h-4.5 mr-1.5 rounded-full text-[9px] font-bold align-middle" style="background-color:var(--nk-accent);color:#fff;">2</span> Photo requirement</h2>
+        <!-- Single preset card (dedicated pages) -->
+        <div id="ppr-single-preset" class="hidden rounded-xl border px-4 py-3" style="border-color:var(--nk-accent);background-color:var(--nk-surface);">
+          <div class="flex items-center justify-between gap-2">
+            <p class="text-[13px] font-semibold" style="color:var(--nk-text);" id="ppr-single-label"></p>
+            <span id="ppr-single-tag" class="flex-shrink-0 inline-block text-[8.5px] font-semibold px-1.5 py-px rounded-full"></span>
+          </div>
+          <p class="text-[11px] mt-0.5" style="color:var(--nk-text-secondary);" id="ppr-single-short"></p>
+        </div>
+        <!-- Preset grid (generic page) -->
+        <div id="ppr-presets" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+        <p id="ppr-preset-note" class="hidden mt-2.5 text-[10.5px] leading-relaxed px-3 py-2 rounded-lg" style="color:var(--nk-text-secondary);background-color:var(--nk-bg);"></p>
+      </section>
+
+      <!-- Step 3 · Crop -->
+      <section id="ppr-step-crop" class="rounded-2xl border hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+        <div class="px-4 py-2.5 flex items-center justify-between" style="border-bottom:1px solid var(--nk-border);">
+          <h2 class="text-[13px] font-semibold" style="color:var(--nk-text);"><span class="inline-flex items-center justify-center w-4.5 h-4.5 mr-1.5 rounded-full text-[9px] font-bold align-middle" style="background-color:var(--nk-accent);color:#fff;">3</span> Crop &amp; position</h2>
+          <button id="ppr-guide-toggle" class="text-[10px] font-medium px-2 py-1 rounded-md border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Guide: off</button>
+        </div>
+        <div class="p-3">
+          <div id="ppr-stage-wrap" class="mx-auto relative select-none touch-none overflow-hidden" style="max-width:280px;">
+            <canvas id="ppr-canvas" class="block w-full rounded-lg cursor-move" style="background:
+              repeating-conic-gradient(var(--nk-border) 0% 25%, transparent 0% 50%) 50%/16px 16px;"></canvas>
+            <svg id="ppr-guides" class="absolute inset-0 w-full h-full pointer-events-none hidden" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true">
+              <ellipse cx="50" cy="47" rx="23" ry="27" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="0.7" stroke-dasharray="3 2"/>
+              <line x1="50" y1="0" x2="50" y2="130" stroke="rgba(255,255,255,0.55)" stroke-width="0.4" stroke-dasharray="2 2"/>
+              <line x1="0" y1="42" x2="100" y2="42" stroke="rgba(255,255,255,0.7)" stroke-width="0.5" stroke-dasharray="3 2"/>
+              <line x1="0" y1="76" x2="100" y2="76" stroke="rgba(255,255,255,0.5)" stroke-width="0.4" stroke-dasharray="2 2"/>
+              <text x="51.5" y="41" fill="rgba(255,255,255,0.9)" font-size="3.2">eye line</text>
+              <text x="51.5" y="75" fill="rgba(255,255,255,0.8)" font-size="3.2">chin</text>
+            </svg>
+          </div>
+          <div class="mt-2 flex flex-wrap items-center gap-2 max-w-[320px] mx-auto">
+            <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--nk-text-secondary);"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            <input id="ppr-zoom" type="range" min="0.4" max="3" step="0.01" value="1" class="flex-1 min-w-[120px]" aria-label="Zoom" />
+            <button id="ppr-rot-left" class="flex items-center gap-1 px-2 py-1.5 rounded-md border text-[11px] font-medium transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" aria-label="Rotate left 90 degrees">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 10a8 8 0 1 1 2.34 6.34"/><path d="M2 16v-6h6"/></svg>
+              ↺ -90°
+            </button>
+            <button id="ppr-rot-right" class="flex items-center gap-1 px-2 py-1.5 rounded-md border text-[11px] font-medium transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" aria-label="Rotate right 90 degrees">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10a8 8 0 1 0-2.34 6.34"/><path d="M22 16v-6h-6"/></svg>
+              ↻ +90°
+            </button>
+            <button id="ppr-center" class="text-[10px] font-medium px-2 py-1.5 rounded-md border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Center</button>
+            <button id="ppr-reset" class="text-[10px] font-medium px-2 py-1.5 rounded-md border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Reset</button>
+          </div>
+          <p class="mt-1.5 text-center text-[10px]" style="color:var(--nk-text-secondary);">Drag to reposition · pinch or scroll to zoom · the guide is never saved in your photo</p>
+        </div>
+      </section>
+
+      <!-- Step 4 · Target size -->
+      <section id="ppr-step-target" class="rounded-2xl border p-3 hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+        <h2 class="text-[13px] font-semibold mb-3" style="color:var(--nk-text);"><span class="inline-flex items-center justify-center w-4.5 h-4.5 mr-1.5 rounded-full text-[9px] font-bold align-middle" style="background-color:var(--nk-accent);color:#fff;">4</span> Target file size</h2>
+        <div class="flex flex-wrap gap-1.5 mb-2" id="ppr-targets"></div>
+        <div id="ppr-custom-target" class="hidden items-center gap-1.5 mt-1">
+          <input id="ppr-custom-kb" type="number" min="5" max="10240" placeholder="e.g. 240" class="px-2 py-1 rounded-md border text-[12px] w-24" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" />
+          <span class="text-[11px]" style="color:var(--nk-text-secondary);">KB</span>
+        </div>
+        <p id="ppr-target-note" class="hidden mt-2 text-[10px]" style="color:var(--nk-text-secondary);"></p>
+      </section>
+
+      <!-- Advanced options -->
+      <section id="ppr-step-gen" class="rounded-2xl border hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+        <details>
+          <summary class="px-4 py-2.5 text-[12px] font-semibold cursor-pointer" style="color:var(--nk-text);">
+            <span class="inline-flex items-center justify-center w-4.5 h-4.5 mr-1.5 rounded-full text-[9px] font-bold align-middle" style="background-color:var(--nk-accent);color:#fff;">5</span> Advanced options
+          </summary>
+          <div class="px-4 pb-4 pt-1 space-y-3" style="border-top:1px solid var(--nk-border);">
+            <!-- Dimensions -->
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-widest mb-1.5" style="color:var(--nk-text-secondary);">Dimensions</p>
+              <div class="flex flex-wrap items-center gap-2">
+                <input id="ppr-w" type="number" min="20" step="any" class="px-2 py-1 rounded-md border text-[12px] w-20" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" aria-label="Width" />
+                <span class="text-[11px]" style="color:var(--nk-text-secondary);">×</span>
+                <input id="ppr-h" type="number" min="20" step="any" class="px-2 py-1 rounded-md border text-[12px] w-20" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" aria-label="Height" />
+                <select id="ppr-unit" class="px-1.5 py-1 rounded-md border text-[11px]" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);">
+                  <option value="mm">mm</option>
+                  <option value="inch">inch</option>
+                  <option value="px">px</option>
+                </select>
+                <label class="inline-flex items-center gap-1.5 text-[11px] cursor-pointer" style="color:var(--nk-text-secondary);">
+                  <input id="ppr-lock" type="checkbox" checked class="accent-current" /> Lock ratio
+                </label>
+              </div>
+              <p id="ppr-px-info" class="mt-1 text-[10px]" style="color:var(--nk-text-secondary);"></p>
+            </div>
+
+            <!-- Format + Background + Quality -->
+            <div class="grid sm:grid-cols-3 gap-3">
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-widest mb-1.5" style="color:var(--nk-text-secondary);">Format</p>
+                <div class="flex gap-1.5" id="ppr-formats">
+                  <button class="fmt-btn text-[11px] py-1 px-3 rounded-md border font-medium transition-all" data-format="image/jpeg">JPG</button>
+                  <button class="fmt-btn text-[11px] py-1 px-3 rounded-md border font-medium transition-all" data-format="image/png">PNG</button>
+                </div>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-widest mb-1.5" style="color:var(--nk-text-secondary);">Background</p>
+                <select id="ppr-bg" class="w-full px-2 py-1 rounded-md border text-[11px]" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);">
+                  <option value="white">White</option>
+                  <option value="#f2f2f2">Light gray</option>
+                  <option value="#dbeafe">Light blue</option>
+                  <option value="#1d4ed8">Blue</option>
+                  <option value="#dc2626">Red</option>
+                  <option value="#fef9c3">Cream</option>
+                  <option value="original">Original</option>
+                  <option value="transparent">Transparent (PNG)</option>
+                  <option value="#ffffff" id="ppr-bg-custom-opt">Custom…</option>
+                </select>
+                <label class="mt-1.5 flex items-center gap-2 cursor-pointer">
+                  <input type="color" id="ppr-bg-custom" value="#ffffff" class="w-7 h-7 p-0 rounded-md cursor-pointer" style="border:1px solid var(--nk-border);background:none;" aria-label="Pick a custom background color" />
+                  <span class="text-[10px]" style="color:var(--nk-text-secondary);">Custom color</span>
+                </label>
+                <p class="mt-1 text-[9.5px] leading-snug" style="color:var(--nk-text-secondary);">Fills transparent areas and rotated corners — it does not remove an existing background.</p>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-widest mb-1.5" style="color:var(--nk-text-secondary);">Quality</p>
+                <select id="ppr-quality" class="w-full px-2 py-1 rounded-md border text-[11px]" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);">
+                  <option value="auto" selected>Auto (recommended)</option>
+                  <option value="0.92">High</option>
+                  <option value="0.8">Medium</option>
+                  <option value="0.6">Small file</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+    </div>
+
+    <!-- ══════════ RIGHT: LIVE PREVIEW ══════════ -->
+    <div class="lg:col-span-2">
+      <div class="lg:sticky lg:top-4 space-y-3">
+
+        <!-- Empty state -->
+        <div id="ppr-result-empty" class="rounded-2xl border p-6 text-center" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+          <div class="w-16 h-20 mx-auto mb-3 rounded-lg flex items-center justify-center" style="background-color:var(--nk-bg);box-shadow:inset 0 0 0 1px var(--nk-border);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" style="color:var(--nk-text-secondary);"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <p class="text-[12px] font-medium" style="color:var(--nk-text);">Your photo preview</p>
+          <p class="text-[10.5px] mt-1" style="color:var(--nk-text-secondary);">Upload a photo to get started</p>
+        </div>
+
+        <!-- Working state -->
+        <div id="ppr-result-working" class="hidden rounded-2xl border p-6 text-center" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+          <p class="text-[12px] font-medium animate-pulse" style="color:var(--nk-text);">Optimizing your photo…</p>
+          <p class="text-[10.5px] mt-1" style="color:var(--nk-text-secondary);">Finding the size closest to your target</p>
+        </div>
+
+        <!-- Result -->
+        <div id="ppr-result" class="hidden rounded-2xl border overflow-hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+          <div class="px-4 py-2.5" style="border-bottom:1px solid var(--nk-border);">
+            <h2 class="text-[13px] font-semibold" style="color:var(--nk-text);">Your Photo</h2>
+          </div>
+          <div class="p-3">
+            <div class="mx-auto mb-2.5" style="max-width:170px;">
+              <img id="ppr-result-img" class="w-full rounded-lg" style="box-shadow:inset 0 0 0 1px var(--nk-border);" alt="Processed photo preview" />
+            </div>
+
+            <dl class="space-y-1 text-[11.5px] mb-2.5">
+              <div class="flex justify-between"><dt style="color:var(--nk-text-secondary);">Dimensions</dt><dd id="ppr-res-dims" class="font-medium" style="color:var(--nk-text);"></dd></div>
+              <div class="flex justify-between"><dt style="color:var(--nk-text-secondary);">Format</dt><dd id="ppr-res-format" class="font-medium" style="color:var(--nk-text);"></dd></div>
+              <div class="flex justify-between"><dt style="color:var(--nk-text-secondary);">File size</dt><dd id="ppr-res-size" class="font-semibold" style="color:var(--nk-text);"></dd></div>
+            </dl>
+
+            <ul id="ppr-checks" class="space-y-1 mb-2.5 text-[11px]"></ul>
+
+            <a id="ppr-download" class="block text-center py-2.5 text-[13px] font-semibold rounded-lg transition-all hover:opacity-90 active:scale-[0.99]" style="background-color:var(--nk-accent);color:#fff;text-decoration:none;" download aria-label="Download photo">Download Photo</a>
+            <button id="ppr-startover" class="w-full mt-2 py-2 text-[11.5px] font-medium rounded-lg border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Start Over</button>
+          </div>
+        </div>
+
+        <p class="text-center text-[10px] px-2" style="color:var(--nk-text-secondary);">🔒 Your photo is processed entirely in your browser and is never uploaded to any server.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  // Watchdog: if the tool module below never boots (blocked/failed download,
+  // too-old browser), diagnose WHY and say so instead of a dead upload box.
+  window.__pprBoot = window.__pprBoot || { need: 0, ok: 0 };
+  window.__pprBoot.need++;
+  setTimeout(function () {
+    if ((window.__pprBoot.ok || 0) >= window.__pprBoot.need) return;
+    var done = function (msg) {
+      if ((window.__pprBoot.ok || 0) >= window.__pprBoot.need) return;
+      var e = document.getElementById('ppr-boot-error');
+      if (!e) return;
+      if (msg) e.textContent = msg;
+      e.classList.remove('hidden');
+    };
+    var mod = document.querySelector('script[type="module"][src*="PassportPhotoResizer"]');
+    if (!mod || !mod.src) {
+      done('The photo tool script is missing from this page (incomplete deployment?). Please refresh — if it persists, the site needs redeploying.');
+      return;
+    }
+    try {
+      fetch(mod.src, { cache: 'no-store' }).then(function (r) {
+        if (!r.ok) done('The photo tool could not be downloaded (server error ' + r.status + '). Check your connection and refresh.');
+        else done('The tool downloaded but your browser could not run it. Please update to the latest Chrome, Safari, Edge or Firefox and try again.');
+      }).catch(function () {
+        done('The photo tool could not be downloaded. Check your connection, disable any ad-blocker for this site, and refresh.');
+      });
+    } catch (e) { done(); }
+  }, 3500);
+</script>
+
+<style>
+  /* Dropzone affordance + drag / focus states (static markup, scoped OK) */
+  #ppr-upload {
+    margin: 12px;
+    border: 1.5px dashed var(--nk-border);
+    border-radius: 12px;
+  }
+  #ppr-upload:hover {
+    border-color: var(--nk-accent);
+  }
+  #ppr-upload.ppr-dragging {
+    border-color: var(--nk-accent);
+    background-color: var(--nk-bg);
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+  }
+  #ppr-upload:focus-visible {
+    outline: 2px solid var(--nk-accent);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #ppr-upload { transition: none; }
+  }
+</style>
+
+<script>
+  import { compressToTarget, validatePhoto } from '../../lib/converters/photo-resize.js';
+  import { saveFileAs } from '../../lib/utils/save-file.js';
+  import { formatBytes } from '../../lib/converters/image-compress.js';
+  import { toPixels, convertUnit, DEFAULT_DPI } from '../../data/photo-requirements.js';
+
+  const root = document.getElementById('ppr-root')!;
+  const presetsData = JSON.parse(root.dataset.presets || '[]');
+  const el = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  const uploadArea = el<HTMLDivElement>('ppr-upload');
+  const fileInput = el<HTMLInputElement>('ppr-file');
+  const fileInfo = el<HTMLDivElement>('ppr-fileinfo');
+  const thumbImg = el<HTMLImageElement>('ppr-thumb');
+  const fnameEl = el<HTMLParagraphElement>('ppr-fname');
+  const fdimsEl = el<HTMLSpanElement>('ppr-fdims');
+  const fsizeEl = el<HTMLSpanElement>('ppr-fsize');
+  const presetsBox = el<HTMLDivElement>('ppr-presets');
+  const presetNote = el<HTMLParagraphElement>('ppr-preset-note');
+  const stageWrap = el<HTMLDivElement>('ppr-stage-wrap');
+  const canvas = el<HTMLCanvasElement>('ppr-canvas');
+  const guidesSvg = el<SVGElement>('ppr-guides');
+  const guideToggle = el<HTMLButtonElement>('ppr-guide-toggle');
+  const zoomSlider = el<HTMLInputElement>('ppr-zoom');
+  const targetsBox = el<HTMLDivElement>('ppr-targets');
+  const customTargetRow = el<HTMLDivElement>('ppr-custom-target');
+  const customKbInput = el<HTMLInputElement>('ppr-custom-kb');
+  const targetNote = el<HTMLParagraphElement>('ppr-target-note');
+  const wInput = el<HTMLInputElement>('ppr-w');
+  const hInput = el<HTMLInputElement>('ppr-h');
+  const unitSelect = el<HTMLSelectElement>('ppr-unit');
+  const lockCheck = el<HTMLInputElement>('ppr-lock');
+  const pxInfo = el<HTMLParagraphElement>('ppr-px-info');
+  const bgSelect = el<HTMLSelectElement>('ppr-bg');
+  const qualitySelect = el<HTMLSelectElement>('ppr-quality');
+  const resultEmpty = el<HTMLDivElement>('ppr-result-empty');
+  const resultWorking = el<HTMLDivElement>('ppr-result-working');
+  const resultPanel = el<HTMLDivElement>('ppr-result');
+  const resultImg = el<HTMLImageElement>('ppr-result-img');
+  const resDims = el<HTMLElement>('ppr-res-dims');
+  const resFormat = el<HTMLElement>('ppr-res-format');
+  const resSize = el<HTMLElement>('ppr-res-size');
+  const checksList = el<HTMLUListElement>('ppr-checks');
+  const downloadBtn = el<HTMLAnchorElement>('ppr-download');
+
+  // ── State ──────────────────────────────────────────────────
+  let img: HTMLImageElement | null = null;
+  let originalBytes = 0;
+  let originalName = '';
+  let req = presetsData[presetsData.length - 1]; // custom
+  let rot = 0;                    // quarter turns
+  let zoom = 1;
+  let offX = 0, offY = 0;
+  let targetKB: number | null = null;
+  let format = 'image/jpeg';
+  let guideOn = false;
+  let resultUrl: string | null = null;
+  let updateTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // ── Preset cards ───────────────────────────────────────────
+  const singlePresetCard = document.getElementById('ppr-single-preset')!;
+  const singleLabel = document.getElementById('ppr-single-label')!;
+  const singleShort = document.getElementById('ppr-single-short')!;
+  const singleTag = document.getElementById('ppr-single-tag')!;
+  const hasInitialPreset = !!root.dataset.initialPreset;
+
+  function renderPresets() {
+    if (hasInitialPreset) {
+      // Dedicated page: show a single compact card instead of the grid
+      const r = req;
+      singleLabel.textContent = r.label;
+      singleShort.textContent = r.short;
+      if (r.verified) {
+        singleTag.textContent = '✓ Official spec';
+        (singleTag as HTMLElement).style.backgroundColor = 'rgba(22,163,74,0.1)';
+        (singleTag as HTMLElement).style.color = '#16A34A';
+      } else {
+        singleTag.textContent = 'verify officially';
+        (singleTag as HTMLElement).style.backgroundColor = 'var(--nk-bg)';
+        (singleTag as HTMLElement).style.color = 'var(--nk-text-secondary)';
+      }
+      singlePresetCard.classList.remove('hidden');
+      presetsBox.classList.add('hidden');
+      return;
+    }
+    // Generic page: show all presets in a selectable grid
+    singlePresetCard.classList.add('hidden');
+    presetsBox.classList.remove('hidden');
+    presetsBox.innerHTML = '';
+    for (const r of presetsData) {
+      const b = document.createElement('button');
+      b.className = 'preset-card text-left p-2.5 rounded-lg border transition-all';
+      b.dataset.preset = r.id;
+      b.innerHTML =
+        '<span class="block text-[11.5px] font-semibold leading-tight">' + r.label + '</span>' +
+        '<span class="block text-[10px] mt-0.5 leading-tight">' + r.short + '</span>' +
+        (r.verified ? '' : '<span class="inline-block mt-1 text-[8.5px] px-1.5 py-px rounded-full" style="background-color:var(--nk-bg);color:var(--nk-text-secondary);">verify officially</span>');
+      b.addEventListener('click', () => selectPreset(r.id));
+      presetsBox.appendChild(b);
+    }
+  }
+
+  function markActivePreset() {
+    presetsBox.querySelectorAll('.preset-card').forEach((c) => {
+      const active = (c as HTMLElement).dataset.preset === req.id;
+      (c as HTMLElement).style.borderColor = active ? 'var(--nk-accent)' : '';
+      (c as HTMLElement).style.boxShadow = active ? 'inset 0 0 0 1px var(--nk-accent)' : '';
+    });
+  }
+
+  function selectPreset(id: string) {
+    req = presetsData.find((r) => r.id === id) || req;
+    markActivePreset();
+
+    presetNote.textContent = req.note + (req.verified
+      ? ''
+      : ' This preset uses a commonly used value — please verify against the official source.');
+    presetNote.classList.remove('hidden');
+
+    format = req.format === 'PNG' ? 'image/png' : 'image/jpeg';
+    markActiveFormat();
+    if (!bgSelect.value || req.format !== 'PNG' && bgSelect.value === 'transparent') {
+      bgSelect.value = 'white';
+    }
+
+    // Dimensions in the preset's own unit
+    unitSelect.value = req.unit;
+    wInput.value = String(req.width);
+    hInput.value = String(req.height);
+
+    // Auto-select official size limit as target when known
+    if (req.maxSizeKB) {
+      setTarget(req.maxSizeKB, true);
+      targetNote.textContent = 'Using this requirement’s official limit of ' + req.maxSizeKB + ' KB.';
+      targetNote.classList.remove('hidden');
+    } else if (targetKB === null && root.dataset.initialTargetKb) {
+      setTarget(parseInt(root.dataset.initialTargetKb, 10), false);
+    }
+
+    applyStageAspect();
+    scheduleUpdate();
+  }
+
+  // ── Stage / crop rendering ────────────────────────────────
+  function dimsPx() {
+    return toPixels(
+      { ...req, width: parseFloat(wInput.value) || req.width, height: parseFloat(hInput.value) || req.height, unit: unitSelect.value },
+      DEFAULT_DPI,
+    );
+  }
+
+  // --- Stage aspect-ratio helpers ------------------------------------
+  // The canvas element has no intrinsic height; we must set it explicitly
+  // via CSS so the crop frame matches the selected preset's ratio.
+  // getBoundingClientRect() returns 0 right after un-hiding the section,
+  // so we use requestAnimationFrame to wait for layout, and a
+  // ResizeObserver to keep the height in sync on resize.
+
+  function applyStageAspect() {
+    const { width, height } = dimsPx();
+    stageWrap.style.aspectRatio = width + ' / ' + height;
+    _syncCanvasHeight();
+  }
+
+  let _canvasSized = false;
+  let _rafId = 0;
+  function _syncCanvasHeight() {
+    cancelAnimationFrame(_rafId);
+    _rafId = requestAnimationFrame(() => {
+      const { width, height } = dimsPx();
+      const wrapW = stageWrap.getBoundingClientRect().width;
+      if (wrapW > 0) {
+        canvas.style.height = Math.round(wrapW * height / width) + 'px';
+        _canvasSized = true;
+        draw();
+      } else if (stageWrap.offsetWidth > 0) {
+        // Fallback: use offsetWidth (works even when getBoundingClientRect hasn't updated)
+        const ow = stageWrap.offsetWidth;
+        canvas.style.height = Math.round(ow * height / width) + 'px';
+        _canvasSized = true;
+        draw();
+      }
+    });
+  }
+
+  // Keep canvas height correct when the viewport resizes (guarded: older
+  // browsers without ResizeObserver still get a working tool, just no
+  // auto-resize of the crop frame).
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => {
+      if (img) _syncCanvasHeight();
+    }).observe(stageWrap);
+  }
+
+  function fitScale() {
+    if (!img) return 1;
+    const box = canvas.getBoundingClientRect();
+    const swapped = rot % 180 !== 0;
+    const iw = swapped ? img.naturalHeight : img.naturalWidth;
+    const ih = swapped ? img.naturalWidth : img.naturalHeight;
+    return Math.max(box.width / iw, box.height / ih);
+  }
+
+  function draw() {
+    if (!img) return;
+    const box = canvas.getBoundingClientRect();
+    if (box.width === 0 || !_canvasSized) {
+      // Canvas hasn't been laid out yet or height hasn't been set.
+      _syncCanvasHeight();
+      return;
+    }
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(box.width * dpr);
+    canvas.height = Math.round(box.height * dpr);
+    const ctx = canvas.getContext('2d')!;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, box.width, box.height);
+    ctx.translate(box.width / 2 + offX, box.height / 2 + offY);
+    ctx.rotate((rot * Math.PI) / 180);
+    const s = fitScale() * zoom;
+    ctx.scale(s, s);
+    ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+  }
+
+  // Compose the final full-resolution canvas for export.
+  // Computes transforms from image natural size + output target size,
+  // NOT from the preview canvas getBoundingClientRect (which can lag or
+  // be zero-sized on first render).
+  function buildOutputCanvas(): HTMLCanvasElement {
+    const { width: outW, height: outH } = dimsPx();
+    const out = document.createElement('canvas');
+    out.width = outW;
+    out.height = outH;
+    const ctx = out.getContext('2d')!;
+
+    // Fill background
+    const bg = bgSelect.value;
+    if (!(format === 'image/png' && bg === 'transparent') && bg !== 'original') {
+      ctx.fillStyle = bg === 'white' ? '#ffffff' : bg;
+      ctx.fillRect(0, 0, outW, outH);
+    } else if (format === 'image/jpeg') {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, outW, outH);
+    }
+
+    // Compute how the image fits inside the crop frame at output resolution.
+    // The crop frame IS the output canvas — so we scale the image to fill it.
+    const swapped = rot % 180 !== 0;
+    const imgW = swapped ? img!.naturalHeight : img!.naturalWidth;
+    const imgH = swapped ? img!.naturalWidth : img!.naturalHeight;
+    const fitS = Math.max(outW / imgW, outH / imgH) * zoom;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.translate(outW / 2 + offX * (outW / (canvas.getBoundingClientRect().width || outW)),
+                 outH / 2 + offY * (outH / (canvas.getBoundingClientRect().height || outH)));
+    ctx.rotate((rot * Math.PI) / 180);
+    ctx.scale(fitS, fitS);
+    ctx.drawImage(img!, -imgW / 2, -imgH / 2);
+    return out;
+  }
+
+  // ── Pointer interaction (pan / pinch) ─────────────────────
+  const pointers = new Map<number, { x: number; y: number }>();
+  let pinchStartDist = 0;
+  let pinchStartZoom = 1;
+
+  canvas.addEventListener('pointerdown', (e) => {
+    if (!img) return;
+    canvas.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      pinchStartDist = Math.hypot(a.x - b.x, a.y - b.y);
+      pinchStartZoom = zoom;
+    }
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!pointers.has(e.pointerId)) return;
+    const prev = pointers.get(e.pointerId)!;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 1) {
+      offX += e.clientX - prev.x;
+      offY += e.clientY - prev.y;
+      draw();
+    } else if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (pinchStartDist > 0) {
+        zoom = clamp(pinchStartZoom * (d / pinchStartDist), 0.4, 3);
+        zoomSlider.value = String(zoom);
+        draw();
+      }
+    }
+  });
+  const endPointer = (e: PointerEvent) => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinchStartDist = 0;
+    if (pointers.size === 0) scheduleUpdate();
+  };
+  canvas.addEventListener('pointerup', endPointer);
+  canvas.addEventListener('pointercancel', endPointer);
+  canvas.addEventListener('wheel', (e) => {
+    if (!img) return;
+    e.preventDefault();
+    zoom = clamp(zoom * (e.deltaY < 0 ? 1.08 : 0.93), 0.4, 3);
+    zoomSlider.value = String(zoom);
+    draw();
+    scheduleUpdate();
+  }, { passive: false });
+
+  const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+
+  // ── Controls ──────────────────────────────────────────────
+  zoomSlider.addEventListener('input', () => { zoom = parseFloat(zoomSlider.value); draw(); });
+  zoomSlider.addEventListener('change', () => scheduleUpdate());
+  el<HTMLButtonElement>('ppr-rot-left').addEventListener('click', () => { rot = (rot + 270) % 360; resetOffsets(); });
+  el<HTMLButtonElement>('ppr-rot-right').addEventListener('click', () => { rot = (rot + 90) % 360; resetOffsets(); });
+  el<HTMLButtonElement>('ppr-center').addEventListener('click', () => { resetOffsets(); });
+  el<HTMLButtonElement>('ppr-reset').addEventListener('click', () => { rot = 0; zoom = 1; zoomSlider.value = '1'; resetOffsets(); });
+
+  function resetOffsets() { offX = 0; offY = 0; draw(); scheduleUpdate(); }
+
+  guideToggle.addEventListener('click', () => {
+    guideOn = !guideOn;
+    guidesSvg.classList.toggle('hidden', !guideOn);
+    guideToggle.textContent = 'Guide: ' + (guideOn ? 'on' : 'off');
+    guideToggle.style.borderColor = guideOn ? 'var(--nk-accent)' : '';
+    guideToggle.style.color = guideOn ? 'var(--nk-accent)' : '';
+  });
+
+  // ── Target size chips ─────────────────────────────────────
+  const TARGETS = [
+    { label: '20 KB', kb: 20 },
+    { label: '50 KB', kb: 50 },
+    { label: '100 KB', kb: 100 },
+    { label: '200 KB', kb: 200 },
+    { label: '500 KB', kb: 500 },
+    { label: '1 MB', kb: 1024 },
+  ];
+
+  function renderTargets() {
+    targetsBox.innerHTML = '';
+    for (const t of TARGETS) {
+      const b = document.createElement('button');
+      b.className = 'target-chip text-[11px] py-1.5 px-3 rounded-md border font-semibold transition-all';
+      b.dataset.kb = String(t.kb);
+      b.textContent = t.label;
+      b.addEventListener('click', () => setTarget(t.kb, false));
+      targetsBox.appendChild(b);
+    }
+    const c = document.createElement('button');
+    c.id = 'ppr-custom-target-btn';
+    c.className = 'text-[11px] py-1.5 px-3 rounded-md border font-semibold transition-all';
+    c.textContent = 'Custom';
+    c.addEventListener('click', () => {
+      customTargetRow.classList.toggle('hidden');
+      customTargetRow.classList.add('flex');
+      setTarget(customKbInput.value ? parseInt(customKbInput.value, 10) : null, true);
+    });
+    targetsBox.appendChild(c);
+  }
+
+  function setTarget(kb: number | null, isCustom: boolean) {
+    targetKB = kb;
+    if (!isCustom) customTargetRow.classList.add('hidden');
+    targetsBox.querySelectorAll('.target-chip').forEach((chip) => {
+      const active = kb !== null && (chip as HTMLElement).dataset.kb === String(kb);
+      (chip as HTMLElement).style.borderColor = active ? 'var(--nk-accent)' : '';
+      (chip as HTMLElement).style.boxShadow = active ? 'inset 0 0 0 1px var(--nk-accent)' : '';
+    });
+    if (isCustom) {
+      customTargetBtnStyle();
+    }
+    scheduleUpdate();
+  }
+
+  function customTargetBtnStyle() {
+    const btn = document.getElementById('ppr-custom-target-btn');
+    if (btn) {
+      btn.style.borderColor = targetKB !== null && ![20, 50, 100, 200, 500, 1024].includes(targetKB) ? 'var(--nk-accent)' : '';
+    }
+  }
+
+  customKbInput.addEventListener('input', () => {
+    const v = parseInt(customKbInput.value, 10);
+    targetKB = Number.isFinite(v) && v > 0 ? v : null;
+    customTargetBtnStyle();
+    scheduleUpdate();
+  });
+
+  // ── Advanced inputs ───────────────────────────────────────
+  function markActiveFormat() {
+    document.querySelectorAll('.fmt-btn').forEach((b) => {
+      const active = (b as HTMLElement).dataset.format === format;
+      (b as HTMLElement).style.borderColor = active ? 'var(--nk-accent)' : '';
+      (b as HTMLElement).style.boxShadow = active ? 'inset 0 0 0 1px var(--nk-accent)' : '';
+    });
+  }
+  document.querySelectorAll('.fmt-btn').forEach((b) => {
+    (b as HTMLElement).addEventListener('click', () => {
+      format = (b as HTMLElement).dataset.format!;
+      markActiveFormat();
+      if (format === 'image/png' && bgSelect.value === 'transparent') { /* ok */ }
+      if (format === 'image/jpeg' && bgSelect.value === 'transparent') bgSelect.value = 'white';
+      scheduleUpdate();
+    });
+  });
+
+  let lastUnit = 'mm';
+  unitSelect.addEventListener('change', () => {
+    const from = lastUnit, to = unitSelect.value;
+    const w = parseFloat(wInput.value), h = parseFloat(hInput.value);
+    if (Number.isFinite(w)) wInput.value = String(convertUnit(w, from, to));
+    if (Number.isFinite(h)) hInput.value = String(convertUnit(h, from, to));
+    lastUnit = to;
+    applyStageAspect();
+    scheduleUpdate();
+  });
+
+  wInput.addEventListener('input', () => {
+    if (lockCheck.checked) {
+      const ratio = req.width / req.height;
+      const w = parseFloat(wInput.value);
+      if (Number.isFinite(w) && ratio > 0) hInput.value = String(round2(w / ratio));
+    }
+    applyStageAspect(); scheduleUpdate();
+  });
+  hInput.addEventListener('input', () => {
+    if (lockCheck.checked) {
+      const ratio = req.width / req.height;
+      const h = parseFloat(hInput.value);
+      if (Number.isFinite(h) && ratio > 0) wInput.value = String(round2(h * ratio));
+    }
+    applyStageAspect(); scheduleUpdate();
+  });
+  bgSelect.addEventListener('change', () => { draw(); scheduleUpdate(); });
+
+  // Custom background color: picking a color points the "Custom…" preset
+  // at it and selects it, so the existing fill logic picks it up unchanged.
+  const bgCustom = el<HTMLInputElement>('ppr-bg-custom');
+  const bgCustomOpt = el<HTMLOptionElement>('ppr-bg-custom-opt');
+  bgCustom.addEventListener('input', () => {
+    bgCustomOpt.value = bgCustom.value;
+    bgSelect.value = bgCustom.value;
+    draw(); scheduleUpdate();
+  });
+  qualitySelect.addEventListener('change', () => scheduleUpdate());
+
+  const round2 = (v: number) => Math.round(v * 100) / 100;
+
+  // Update pixel-equivalent hint under dimensions
+  function updatePxInfo() {
+    const { width, height, exact } = dimsPx();
+    pxInfo.textContent = exact
+      ? 'Output: ' + width + ' × ' + height + ' px'
+      : 'Output: ≈ ' + width + ' × ' + height + ' px at ' + DEFAULT_DPI + ' DPI print quality';
+  }
+
+  // ── Upload handling ───────────────────────────────────────
+  function handleFile(file: File) {
+    const v = validatePhoto(file);
+    if (!v.valid) { alert(v.error); return; }
+    originalBytes = file.size;
+    originalName = file.name;
+
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      img = image;
+      fdimsEl.textContent = image.naturalWidth + ' × ' + image.naturalHeight + ' px';
+      fsizeEl.textContent = formatBytes(file.size);
+      fnameEl.textContent = file.name;
+      thumbImg.src = url;
+      uploadArea.classList.add('hidden');
+      fileInfo.classList.remove('hidden');
+      ['ppr-step-req', 'ppr-step-crop', 'ppr-step-target', 'ppr-step-gen'].forEach(showSection);
+      selectPreset(root.dataset.initialPreset || req.id);
+      centerAndFit();
+      // Defer first render so the browser has time to lay out the un-hidden sections.
+      requestAnimationFrame(() => {
+        applyStageAspect();
+        centerAndFit();
+        showResultStates('working');
+        scheduleUpdate();
+      });
+    };
+    image.src = url;
+  }
+
+  const sectionIds = ['ppr-step-req', 'ppr-step-crop', 'ppr-step-target', 'ppr-step-gen'];
+  function showSection(id: string) { el<HTMLElement>(id).classList.remove('hidden'); }
+
+  function centerAndFit() { rot = 0; zoom = 1; zoomSlider.value = '1'; resetOffsets(); }
+
+  uploadArea.addEventListener('click', () => fileInput.click());
+  uploadArea.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('click', () => { fileInput.value = ''; });
+  fileInput.addEventListener('change', () => { if (fileInput.files![0]) handleFile(fileInput.files![0]); });
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('ppr-dragging'); });
+  uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('ppr-dragging'); });
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('ppr-dragging');
+    if (e.dataTransfer!.files![0]) handleFile(e.dataTransfer!.files![0]);
+  });
+  el<HTMLButtonElement>('ppr-replace').addEventListener('click', () => fileInput.click());
+  el<HTMLButtonElement>('ppr-remove').addEventListener('click', startOver);
+  el<HTMLButtonElement>('ppr-startover').addEventListener('click', startOver);
+
+  function startOver() {
+    img = null;
+    originalBytes = 0;
+    _canvasSized = false;
+    fileInput.value = '';
+    fileInfo.classList.add('hidden');
+    uploadArea.classList.remove('hidden');
+    sectionIds.forEach((id) => el<HTMLElement>(id).classList.add('hidden'));
+    resultPanel.classList.add('hidden');
+    resultWorking.classList.add('hidden');
+    resultEmpty.classList.remove('hidden');
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+  }
+
+  window.addEventListener('resize', () => draw());
+
+  // ── Generate (debounced) ──────────────────────────────────
+  function scheduleUpdate() {
+    updatePxInfo();
+    if (!img) return;
+    showResultStates('working');
+    if (updateTimer) clearTimeout(updateTimer);
+    updateTimer = setTimeout(generate, 350);
+  }
+
+  async function generate() {
+    if (!img) return;
+    try {
+      const src = buildOutputCanvas();
+      const manualQ = qualitySelect.value !== 'auto' ? parseFloat(qualitySelect.value) : null;
+
+      let blob: Blob;
+      if (manualQ !== null && format === 'image/jpeg') {
+        blob = await new Promise<Blob>((res, rej) =>
+          src.toBlob((b) => (b ? res(b) : rej(new Error('export failed'))), 'image/jpeg', manualQ));
+        // Never return larger than the original
+        if (!allowLargerCheck(blob.size)) {
+          blob = await fallbackSmaller(src, manualQ);
+        }
+      } else {
+        const result = await compressToTarget(src, {
+          targetBytes: targetKB ? targetKB * 1024 : null,
+          format,
+          originalBytes,
+        });
+        if (!result) {
+          renderAlreadyOptimized();
+          return;
+        }
+        finishWithBlob(result.blob, result.width, result.height, result.reachedTarget);
+        return;
+      }
+
+      finishWithBlob(blob, src.width, src.height, targetKB ? blob.size <= targetKB * 1024 * 1.05 : true);
+    } catch (err) {
+      console.error(err);
+      renderChecks([{ ok: false, msg: 'Something went wrong while generating. Try again.' }]);
+    }
+  }
+
+  function allowLargerCheck(size: number) { return size <= originalBytes; }
+
+  async function fallbackSmaller(src: HTMLCanvasElement, q: number): Promise<Blob> {
+    // Halve dimensions until it fits under the original size.
+    let w = src.width, h = src.height, quality = q;
+    for (let i = 0; i < 6; i++) {
+      w = Math.round(w * 0.7); h = Math.round(h * 0.7);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d')!;
+      ctx.drawImage(src, 0, 0, w, h);
+      const blob = await new Promise<Blob>((res) => c.toBlob(res, 'image/jpeg', quality));
+      if (blob && allowLargerCheck(blob.size)) return blob;
+      quality = Math.max(0.4, quality - 0.15);
+    }
+    return new Promise<Blob>((res) => src.toBlob(res, 'image/jpeg', 0.4));
+  }
+
+  function renderAlreadyOptimized() {
+    // Build the actual cropped/resized canvas so we show the real output
+    const src = buildOutputCanvas();
+    src.toBlob((blob) => {
+      if (!blob) {
+        renderChecks([{ ok: false, msg: 'We could not process this image. Please try another photo.' }]);
+        return;
+      }
+      showResultStates('result');
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+      resultUrl = URL.createObjectURL(blob);
+      resultImg.src = resultUrl;
+      resDims.textContent = src.width + ' × ' + src.height + ' px';
+      resFormat.textContent = format === 'image/png' ? 'PNG' : 'JPG';
+      resSize.textContent = formatBytes(blob.size);
+      const checks = [];
+      if (blob.size >= originalBytes) {
+        checks.push({ ok: true, msg: 'Your photo is already optimized — the cropped/resized version is ' + formatBytes(blob.size) + '.' });
+      } else {
+        checks.push({ ok: true, msg: '✓ Cropped and resized to ' + formatBytes(blob.size) + '.' });
+      }
+      checks.push({ ok: true, msg: '✓ Ready to download' });
+      renderChecks(checks);
+      const ext = format === 'image/png' ? 'png' : 'jpg';
+      setupDownload(resultUrl, (req.id === 'custom' ? 'photo' : req.id) + '-photo.' + ext);
+    }, format, 0.92);
+  }
+
+  function finishWithBlob(blob: Blob, w: number, h: number, reached: boolean) {
+    showResultStates('result');
+    if (resultUrl) URL.revokeObjectURL(resultUrl);
+    resultUrl = URL.createObjectURL(blob);
+    resultImg.src = resultUrl;
+
+    // Dimensions display in current UI unit
+    const unit = unitSelect.value;
+    const dpi = DEFAULT_DPI;
+    const mmW = (w / dpi) * 25.4;
+    const mmH = (h / dpi) * 25.4;
+    if (unit === 'px') resDims.textContent = w + ' × ' + h + ' px';
+    else if (unit === 'mm') resDims.textContent = round2(mmW) + ' × ' + round2(mmH) + ' mm';
+    else resDims.textContent = round2(mmW / 25.4) + ' × ' + round2(mmH / 25.4) + ' inch';
+
+    resFormat.textContent = format === 'image/png' ? 'PNG' : 'JPG';
+    resSize.textContent = formatBytes(blob.size) + (targetKB ? ' / ' + formatBytes(targetKB * 1024) + ' target' : '');
+
+    // Validation checks
+    const checks: { ok: boolean; msg: string }[] = [];
+    const { width: reqW, height: reqH } = dimsPx();
+    const ratioOk = Math.abs(w / h - reqW / reqH) / (reqW / reqH) < 0.02;
+    checks.push(ratioOk ? { ok: true, msg: '✓ Correct aspect ratio' } : { ok: false, msg: '⚠ Aspect ratio differs from the selected requirement' });
+
+    // Dimension match check — block download if output doesn't match preset
+    const dimsMatch = w === reqW && h === reqH;
+    if (!dimsMatch && req.id !== 'custom') {
+      checks.push({ ok: false, msg: '⚠ Output ' + w + '×' + h + ' px does not match required ' + reqW + '×' + reqH + ' px' });
+    }
+
+    if (targetKB) {
+      checks.push(reached ? { ok: true, msg: '✓ Close to ' + targetKB + ' KB target (' + formatBytes(blob.size) + ')' } : { ok: false, msg: '⚠ Above target size — smallest achievable result shown' });
+    }
+    if (format === 'image/jpeg' && hasAlpha(img)) {
+      checks.push({ ok: false, msg: '⚠ PNG transparency was filled with white for JPG export' });
+    }
+    if (req.id === 'custom') checks.push({ ok: false, msg: '⚠ Custom dimensions selected — verify before submitting' });
+    if (!req.verified && req.id !== 'custom') {
+      checks.push({ ok: true, msg: '✓ Using commonly used ' + req.label.toLowerCase() + ' size (verify officially)' });
+    }
+    checks.push({ ok: true, msg: '✓ Ready to download' });
+    renderChecks(checks);
+
+    // Disable download if output dimensions don't match preset requirements
+    const canDownload = dimsMatch || req.id === 'custom';
+    downloadBtn.style.opacity = canDownload ? '1' : '0.4';
+    downloadBtn.style.pointerEvents = canDownload ? 'auto' : 'none';
+    downloadBtn.title = canDownload ? '' : 'Output dimensions (' + w + '×' + h + ' px) do not match required (' + reqW + '×' + reqH + ' px). Adjust crop or dimensions.';
+
+    const ext = format === 'image/png' ? 'png' : 'jpg';
+    setupDownload(resultUrl, (req.id === 'custom' ? 'photo' : req.id) + '-photo.' + ext);
+  }
+
+  function hasAlpha(image: HTMLImageElement): boolean {
+    void image; return false; // uploads are JPG/PNG/WEBP; alpha handled at export
+  }
+
+  function renderChecks(checks: { ok: boolean; msg: string }[]) {
+    checksList.innerHTML = '';
+    for (const c of checks) {
+      const li = document.createElement('li');
+      li.className = 'flex items-start gap-1.5';
+      li.innerHTML = '<span>' + (c.ok ? '✓' : '⚠') + '</span><span style="color:' +
+        (c.ok ? 'var(--nk-text-secondary)' : '#d97706') + ';">' + c.msg + '</span>';
+      li.style.color = c.ok ? 'inherit' : '';
+      checksList.appendChild(li);
+    }
+  }
+
+  function setupDownload(url: string | null, name: string) {
+    if (url) downloadBtn.href = url;
+    downloadBtn.download = name;
+    // Save As: on click, open the native picker (File System Access API)
+    // instead of the browser's default download location. Falls back to the
+    // normal anchor download where the API isn't available.
+    downloadBtn.onclick = (e) => {
+      const href = downloadBtn.getAttribute('href');
+      const supportsPicker = typeof (window as any).showSaveFilePicker === 'function';
+      if (!href || !href.startsWith('blob:') || !supportsPicker) return;
+      e.preventDefault();
+      fetch(href)
+        .then((r) => r.blob())
+        .then((b) => saveFileAs(b, name))
+        .catch(() => {});
+    };
+    // Dynamic download label based on preset
+    const presetLabels: Record<string, string> = {
+      'nepal-passport': 'Download Nepal Passport Photo',
+      'passport': 'Download Passport Size Photo',
+      'visa': 'Download Visa Photo',
+      'dv-lottery': 'Download DV Lottery Photo',
+      'citizenship': 'Download Citizenship Photo',
+      'custom': 'Download Photo',
+    };
+    downloadBtn.textContent = presetLabels[req.id] || 'Download Photo';
+  }
+
+  function showResultStates(state: 'empty' | 'working' | 'result') {
+    resultEmpty.classList.toggle('hidden', state !== 'empty');
+    resultWorking.classList.toggle('hidden', state !== 'working');
+    resultPanel.classList.toggle('hidden', state !== 'result');
+  }
+
+  // ── Init ──────────────────────────────────────────────────
+  try {
+    renderPresets();
+    renderTargets();
+    selectPreset(root.dataset.initialPreset || 'nepal-passport');
+    (window as any).__pprBoot = (window as any).__pprBoot || { need: 1, ok: 0 };
+    (window as any).__pprBoot.ok++;
+    var bootEl = document.getElementById('ppr-boot-error');
+    if (bootEl) bootEl.classList.add('hidden');
+  } catch (err) {
+    console.error(err);
+    var bootErr = document.getElementById('ppr-boot-error');
+    if (bootErr) bootErr.classList.remove('hidden');
+  }
+</script>

@@ -1,0 +1,720 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { MapPin, Layers, BedDouble, Bath, Sofa, ChefHat, Car, Home, Hammer, Wallet, Calculator, Share2, Printer, Info, TrendingUp, Clock, Building2, Users } from '@lucide/astro';
+import {
+  LOCATION_OPTIONS,
+  FLOOR_OPTIONS,
+  PARKING_OPTIONS,
+  ROOF_OPTIONS,
+  QUALITY_OPTIONS,
+  CONTINGENCY_OPTIONS,
+  BUDGET_PRESETS,
+  MONTH_OPTIONS,
+  ADDITIONAL_COST_DEFS,
+  INCLUDED_ITEMS,
+  NOT_INCLUDED_ITEMS,
+  BREAKDOWN,
+} from '../../../../data/construction/house-cost.js';
+
+const title = 'House Construction Cost Calculator Nepal | SolutionsNepal';
+const description = 'Estimate house construction cost in Nepal by location, house size, floors, and construction quality. Calculate cost per sq.ft., total budget, contingency, and what you can build with your budget.';
+
+const faqItems = [
+  { q: 'How much does it cost to build a house in Nepal?', a: 'It depends on location, total built up area, floors, roof type, parking, construction quality and current material and labour rates. Enter your size and quality above to see a planning estimate for your case.' },
+  { q: 'What is the construction cost per sq.ft. in Nepal?', a: 'It varies by city, quality and finish level. The calculator shows the effective rate for your selected location and quality, and lets you enter a custom rate from a contractor quote.' },
+  { q: 'How much does it cost to build a 1,000 sq.ft. house?', a: 'Multiply 1,000 by your effective rate. For example at Rs. 3,625 per sq.ft. the base estimate is about Rs. 36,25,000 before contingency and any additional project costs.' },
+  { q: 'How much does it cost to build a 1,500 sq.ft. house?', a: 'At Rs. 3,625 per sq.ft. the base estimate is about Rs. 54,37,500. Adjust location, quality and contingency to see your range.' },
+  { q: 'How much does it cost to build a 2.5 storey house?', a: 'Enter your per floor area and select 2.5 floors. The calculator multiplies exactly, for example 1,000 sq.ft. times 2.5 equals 2,500 sq.ft., then applies your rate.' },
+  { q: 'Can I build a house in Nepal with Rs. 50 lakh?', a: 'At around Rs. 3,625 per sq.ft. about 1,350 to 1,380 sq.ft. is a common planning range for a standard finish. The budget planner shows an approximate area and room suggestion for your rate.' },
+  { q: 'Does the calculator include labour costs?', a: 'Yes, within the construction estimate. Labour is one of the breakdown categories. Land cost, architect and approval fees are shown as additional project costs you can add separately.' },
+  { q: 'Does it include land cost?', a: 'No. Land purchase is listed under May Not Be Included. Add it as an additional cost if you want it inside the total project budget.' },
+  { q: 'How much contingency should I keep for house construction?', a: 'Common planning choices are 5 percent, 10 percent or 15 percent. The calculator defaults to 5 percent and lets you switch. A larger contingency is prudent when prices are volatile or the design is not yet fixed.' },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'House Construction Cost Calculator Nepal',
+      description: 'Estimate house construction cost in Nepal by location, house size, floors, and construction quality.',
+      url: 'https://solutionsnepal.com/nepal/construction/house-construction-cost',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-3 house-wrap">
+    <Breadcrumbs items={[{ label: 'Nepal', href: '/nepal' }, { label: 'Construction', href: '/nepal/construction' }, { label: 'House Construction Cost' }]} />
+
+    <div class="mb-3 flex flex-wrap items-start justify-between gap-3">
+      <div class="min-w-0">
+        <h1 class="text-[22px] sm:text-[26px] font-bold tracking-[-0.025em] leading-[1.1] mb-1" style="color: var(--nk-text);">House Construction Cost Calculator Nepal</h1>
+        <p class="text-[12.5px] leading-relaxed" style="color: var(--nk-text-secondary);">Estimate how much it may cost to build your house based on location, size, floors, and quality.</p>
+      </div>
+      <span class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-medium px-3 py-1.5 rounded-full shrink-0" style="background: var(--nk-accent-subtle); color: var(--nk-accent); border: 1px solid var(--nk-border);"><Info size={12} /> Planning estimate, not a quotation</span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4 items-start">
+
+      <!-- LEFT: INPUTS -->
+      <div class="min-w-0 flex flex-col house-left-wrap">
+        <div class="space-y-2.5 house-left flex-1 min-h-0">
+
+        <!-- Step 1: Location -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><MapPin size={14} /> Where are you building?</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label for="location" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Location</label>
+              <select id="location" class="nk-input text-[14px]">
+                {LOCATION_OPTIONS.map((loc) => (
+                  <optgroup label={loc.label}>
+                    {loc.children ? loc.children.map((c) => <option value={c.id}>{c.label}</option>) : <option value={loc.id}>{loc.label}</option>}
+                  </optgroup>
+                ))}
+                {LOCATION_OPTIONS.filter((l) => !l.children).map((loc) => <option value={loc.id}>{loc.label}</option>)}
+              </select>
+              <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);" id="location-note"></p>
+            </div>
+            <div id="custom-location-row" class="hidden">
+              <label for="custom-location-name" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Custom location name</label>
+              <input id="custom-location-name" type="text" placeholder="e.g. My site area" class="nk-input text-[14px]" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 2: House Size -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Layers size={14} /> House size</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="land-area" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Land area <span class="text-[11px]" style="color: var(--nk-text-tertiary);">sq.ft. · info only</span></label>
+              <input id="land-area" type="text" inputmode="decimal" placeholder="1,200" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="per-floor" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Built up area per floor</label>
+              <div class="relative">
+                <input id="per-floor" type="text" inputmode="decimal" placeholder="1000" class="nk-input text-[14px] tabular-nums pr-12" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px]" style="color: var(--nk-text-tertiary);">sq.ft.</span>
+              </div>
+            </div>
+            <div>
+              <label for="floors" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Number of floors</label>
+              <select id="floors" class="nk-input text-[14px]">
+                <option value="" disabled selected>Select floors</option>
+                {FLOOR_OPTIONS.map((f) => <option value={String(f.value)}>{f.label}</option>)}
+              </select>
+            </div>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <label class="flex items-center gap-1.5 text-[12px]" style="color: var(--nk-text);"><input type="checkbox" id="manual-total" /> Enter total built up area manually</label>
+            <span class="text-[11px] px-2 py-1 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">Total = per floor × floors</span>
+          </div>
+          <div id="manual-total-row" class="hidden mt-2">
+            <label for="total-area" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Total built up area</label>
+            <div class="relative max-w-[220px]">
+              <input id="total-area" type="text" inputmode="decimal" placeholder="2,500" class="nk-input text-[14px] tabular-nums pr-12" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px]" style="color: var(--nk-text-tertiary);">sq.ft.</span>
+            </div>
+          </div>
+          <p class="text-[12px] mt-2 tabular-nums" style="color: var(--nk-text-secondary);">Total built up area: <strong id="total-area-preview" style="color: var(--nk-text);">—</strong></p>
+        </section>
+
+        <!-- Step 3: House Requirements -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Home size={14} /> House requirements</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Bedrooms</label>
+              <div class="flex items-center gap-1.5">
+                <button type="button" class="step-btn" data-step="bedrooms" data-dir="-1">−</button>
+                <input id="bedrooms" type="text" inputmode="numeric" placeholder="2" class="nk-input text-[14px] tabular-nums text-center" style="max-width: 70px;" />
+                <button type="button" class="step-btn" data-step="bedrooms" data-dir="1">+</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Bathrooms</label>
+              <div class="flex items-center gap-1.5">
+                <button type="button" class="step-btn" data-step="bathrooms" data-dir="-1">−</button>
+                <input id="bathrooms" type="text" inputmode="numeric" placeholder="2" class="nk-input text-[14px] tabular-nums text-center" style="max-width: 70px;" />
+                <button type="button" class="step-btn" data-step="bathrooms" data-dir="1">+</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Living rooms</label>
+              <div class="flex items-center gap-1.5">
+                <button type="button" class="step-btn" data-step="living" data-dir="-1">−</button>
+                <input id="living" type="text" inputmode="numeric" placeholder="1" class="nk-input text-[14px] tabular-nums text-center" style="max-width: 70px;" />
+                <button type="button" class="step-btn" data-step="living" data-dir="1">+</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Kitchen</label>
+              <div class="flex items-center gap-1.5">
+                <button type="button" class="step-btn" data-step="kitchen" data-dir="-1">−</button>
+                <input id="kitchen" type="text" inputmode="numeric" placeholder="1" class="nk-input text-[14px] tabular-nums text-center" style="max-width: 70px;" />
+                <button type="button" class="step-btn" data-step="kitchen" data-dir="1">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            <div>
+              <label for="parking" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Parking</label>
+              <select id="parking" class="nk-input text-[14px]">
+                {PARKING_OPTIONS.map((p) => <option value={p.id}>{p.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label for="roof" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Roof type</label>
+              <select id="roof" class="nk-input text-[14px]">
+                {ROOF_OPTIONS.map((r) => <option value={r.id}>{r.label}</option>)}
+              </select>
+            </div>
+          </div>
+          <p class="text-[11px] mt-2" style="color: var(--nk-text-tertiary);">Room counts are for context and do not precisely determine cost on their own.</p>
+        </section>
+
+        <!-- Step 4: Construction Quality -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Hammer size={14} /> Construction quality</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="quality-row">
+            {QUALITY_OPTIONS.filter((q) => q.id !== 'custom').map((q) => (
+              <button type="button" class={`quality-card${q.recommended ? ' quality-recommended' : ''}${q.id === 'standard' ? ' quality-active' : ''}`} data-quality={q.id}>
+                <span class="quality-name">{q.label} {q.recommended ? '★' : ''}</span>
+                <span class="quality-desc">{q.desc}</span>
+                <span class="quality-rate">Rs. {q.baseRate.toLocaleString('en-IN')} / sq.ft.</span>
+              </button>
+            ))}
+          </div>
+          <button type="button" id="custom-quality-btn" class="mt-2 text-[12px] font-medium underline" style="color: var(--nk-accent);">Custom — enter your own rate per sq.ft.</button>
+          <div id="custom-rate-row" class="hidden mt-2">
+            <label for="custom-rate" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Custom rate per sq.ft. <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs</span></label>
+            <input id="custom-rate" type="text" inputmode="decimal" placeholder="3625" class="nk-input text-[14px] tabular-nums max-w-[220px]" />
+            <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">Custom estimate — enter a contractor quote to use it.</p>
+          </div>
+        </section>
+
+        <!-- Contingency + Timeline -->
+        <section class="nk-card p-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text);">Contingency</h3>
+              <div class="flex flex-wrap gap-1.5" id="contingency-row">
+                {CONTINGENCY_OPTIONS.map((p) => (
+                  <button type="button" class={`pill-btn${p === 5 ? ' pill-active' : ''}`} data-contingency={String(p)}>{p}%</button>
+                ))}
+              </div>
+              <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">Default 5%. A larger contingency is prudent when design is not yet fixed.</p>
+            </div>
+            <div>
+              <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text);">Construction period</h3>
+              <div class="flex flex-wrap gap-1.5" id="months-row">
+                {MONTH_OPTIONS.map((m) => (
+                  <button type="button" class={`pill-btn${m === 60 ? ' pill-active' : ''}`} data-months={String(m)}>{m} mo</button>
+                ))}
+                <button type="button" class="pill-btn" data-months="custom">Custom</button>
+              </div>
+              <div id="custom-months-row" class="hidden mt-2">
+                <input id="custom-months" type="text" inputmode="numeric" placeholder="e.g. 48" class="nk-input text-[14px] tabular-nums max-w-[120px]" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Advanced: Additional Project Costs -->
+        <section class="nk-card p-4">
+          <button type="button" id="additional-toggle" class="w-full flex items-center justify-between text-left">
+            <span class="text-[13px] font-semibold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--nk-text);"><Wallet size={14} /> Additional project costs</span>
+            <span class="text-[11px] px-2 py-1 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">Optional</span>
+          </button>
+          <div id="additional-panel" class="hidden mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {ADDITIONAL_COST_DEFS.map((c) => (
+              <div>
+                <label for={`add-${c.key}`} class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">{c.label} <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs</span></label>
+                <input id={`add-${c.key}`} data-add={c.key} type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums" />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Material sensitivity -->
+        <section class="nk-card p-4">
+          <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><TrendingUp size={14} /> What if material prices increase?</h3>
+          <div class="flex items-center gap-3">
+            <input id="sensitivity" type="range" min="0" max="20" value="0" class="flex-1" />
+            <span class="text-[13px] font-semibold tabular-nums min-w-[40px] text-right" style="color: var(--nk-text);" id="sensitivity-val">0%</span>
+          </div>
+          <p class="text-[12px] mt-2 tabular-nums" style="color: var(--nk-text-secondary);">Adjusted estimate: <strong id="sensitivity-result" style="color: var(--nk-text);">—</strong></p>
+          <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">Scenario only, not a prediction.</p>
+        </section>
+
+        <!-- What can I build -->
+        <section class="nk-card p-4">
+          <h2 class="text-[14px] font-semibold mb-2" style="color: var(--nk-text);">What can I build with my budget?</h2>
+          <p class="text-[11px] mb-2" style="color: var(--nk-text-tertiary);">Approximate planning estimate</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="budget-input" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">My budget <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs</span></label>
+              <input id="budget-input" type="text" inputmode="decimal" placeholder="50,00,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div class="flex items-end gap-1.5 flex-wrap" id="budget-presets">
+              {BUDGET_PRESETS.map((b) => (
+                <button type="button" class="pill-btn" data-budget={String(b)}>{b >= 10000000 ? '1 Cr' : `${b/100000} Lakh`}</button>
+              ))}
+            </div>
+          </div>
+          <div class="mt-3 p-3 rounded-lg text-[12.5px] leading-relaxed" style="background: var(--nk-hover); border: 1px solid var(--nk-border);" id="budget-result">
+            <p style="color: var(--nk-text-tertiary);">Enter a budget to see an approximate area and suggestion.</p>
+          </div>
+          <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11.5px]" id="budget-scenarios"></div>
+        </section>
+
+        </div>
+        <div class="house-actions">
+          <button type="button" id="calculate-btn" class="nk-btn nk-btn-primary w-full justify-center text-[14px] py-3 shadow-md"><Calculator size={16} /> Calculate construction cost</button>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <button type="button" id="share-btn" class="nk-btn nk-btn-secondary nk-btn-sm"><Share2 size={14} /> Share estimate</button>
+            <button type="button" id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm"><Printer size={14} /> Print estimate</button>
+          </div>
+          <p id="share-status" class="hidden text-[11.5px] mt-1" style="color: var(--nk-text-tertiary);" role="status"></p>
+        </div>
+      </div>
+
+      <!-- RIGHT: STICKY SUMMARY -->
+      <div class="lg:sticky lg:top-4 space-y-3">
+        <div class="nk-card p-4 hidden" id="summary-card">
+          <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Estimated construction cost</p>
+          <p class="text-[26px] font-bold tabular-nums mt-1" style="color: var(--nk-text);" id="s-construction">—</p>
+          <p class="text-[11px] tabular-nums" style="color: var(--nk-text-tertiary);" id="s-construction-sub"></p>
+          <div class="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+            <div class="p-2.5 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+              <p style="color: var(--nk-text-tertiary);">Cost per sq.ft.</p>
+              <p class="text-[13px] font-bold tabular-nums" style="color: var(--nk-text);" id="s-rate">—</p>
+            </div>
+            <div class="p-2.5 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+              <p style="color: var(--nk-text-tertiary);">Contingency</p>
+              <p class="text-[13px] font-bold tabular-nums" style="color: var(--nk-text);" id="s-contingency">—</p>
+            </div>
+          </div>
+          <div class="mt-3 p-3 rounded-lg" style="background: var(--nk-accent-subtle); border: 1px solid var(--nk-border);">
+            <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Estimated total budget</p>
+            <p class="text-[20px] font-bold tabular-nums" style="color: var(--nk-text);" id="s-total">—</p>
+            <p class="text-[11px]" style="color: var(--nk-text-tertiary);">Construction + contingency + additional costs</p>
+          </div>
+          <div class="mt-3">
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-1" style="color: var(--nk-text-tertiary);">Estimated cost range</p>
+            <p class="text-[12px] tabular-nums" style="color: var(--nk-text);" id="s-range">—</p>
+            <p class="text-[11px] tabular-nums" style="color: var(--nk-text-tertiary);" id="s-range-mid"></p>
+          </div>
+          <div class="mt-3 p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Estimated monthly budget</p>
+            <p class="text-[16px] font-bold tabular-nums" style="color: var(--nk-text);" id="s-monthly">—</p>
+            <p class="text-[11px]" style="color: var(--nk-text-tertiary);" id="s-monthly-sub"></p>
+          </div>
+          <p class="text-[11px] mt-2 leading-relaxed" style="color: var(--nk-text-tertiary);">Construction rates vary by location, material prices, design, labour, structure, and finish level.</p>
+        </div>
+
+        <div class="nk-card p-4">
+          <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">Cost breakdown</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-[12px]">
+              <thead>
+                <tr style="color: var(--nk-text-tertiary);">
+                  <th class="text-left font-medium py-1 pr-2">Category</th>
+                  <th class="text-right font-medium py-1 pl-2">Estimated cost</th>
+                </tr>
+              </thead>
+              <tbody id="breakdown-body" class="tabular-nums"></tbody>
+              <tfoot>
+                <tr style="border-top: 2px solid var(--nk-border-strong); font-weight: 700;">
+                  <td class="py-2 pr-2" style="color: var(--nk-text);">Total</td>
+                  <td class="text-right py-2 pl-2" style="color: var(--nk-text);" id="breakdown-total">—</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div id="breakdown-bars" class="mt-3 space-y-1.5"></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[720px]">
+      <div class="nk-card p-4">
+        <h3 class="text-[13px] font-semibold mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Building2 size={14} /> Usually included</h3>
+        <ul class="text-[12.5px] leading-relaxed space-y-1 list-disc list-inside" style="color: var(--nk-text-secondary);">
+          {INCLUDED_ITEMS.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <div class="nk-card p-4">
+        <h3 class="text-[13px] font-semibold mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Wallet size={14} /> May not be included</h3>
+        <ul class="text-[12.5px] leading-relaxed space-y-1 list-disc list-inside" style="color: var(--nk-text-secondary);">
+          {NOT_INCLUDED_ITEMS.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <details class="mt-4 max-w-[720px] border rounded-lg" style="border-color: var(--nk-border); background: var(--nk-card-bg);">
+      <summary class="cursor-pointer px-4 py-3 text-[13px] font-semibold" style="color: var(--nk-text);">How we estimate</summary>
+      <div class="px-4 pb-4 text-[12.5px] leading-relaxed space-y-2" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);">
+        <p class="pt-3">Cost per sq.ft. is a planning estimate that moves with location, roof type, parking, construction quality, structural design, soil conditions, floor count, material prices and finish choices. Larger houses can benefit from some economies of scale, while complex structures cost more.</p>
+        <p>Numbers here are editable assumptions, not official market prices or a contractor quotation. Always obtain current quotations and professional estimates before beginning construction.</p>
+      </div>
+    </details>
+
+    <section class="mt-8 max-w-[720px]">
+      <h2 class="text-[18px] font-semibold mb-3" style="color: var(--nk-text);">Frequently asked questions</h2>
+      <div class="space-y-2">
+        {faqItems.map((item) => (
+          <details class="group border rounded-lg" style="border-color: var(--nk-border); background: var(--nk-card-bg);">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3 text-[13.5px] font-medium" style="color: var(--nk-text);">
+              <span>{item.q}</span>
+              <span class="text-[11px] px-2 py-1 rounded-full shrink-0" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">+</span>
+            </summary>
+            <div class="px-4 pb-3 text-[13px] leading-relaxed" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);">
+              <p class="pt-3">{item.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <p class="mt-6 max-w-[720px] text-[11px] leading-relaxed p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">
+      <strong style="color: var(--nk-text);">Disclaimer:</strong> Construction costs are estimates for planning purposes only. Actual costs vary by location, structural design, soil conditions, material prices, labour rates, contractor pricing, finishing choices, government requirements, and site conditions. Always obtain current quotations and professional estimates before beginning construction.
+    </p>
+
+    <RelatedTools tools={[
+      { title: 'Land Registration Fee', description: 'Estimate land registration costs', href: '/nepal/property/land-registration' },
+      { title: 'Property Registration Cost', description: 'Estimate property registration costs', href: '/nepal/property/property-registration-cost' },
+      { title: 'Ropani to Aana', description: 'Convert land area units', href: '/nepal/land/ropani-to-aana' },
+    ]} />
+  </div>
+
+  <style>
+    .house-wrap { --house-tight: 12px; }
+    .house-wrap .nk-card { border-radius: 12px; padding: 12px !important; }
+    .house-wrap section.nk-card { padding: 12px !important; }
+    .house-wrap h2 { font-size: 12px !important; margin-bottom: 6px !important; }
+    .house-wrap .nk-input { padding: 7px 10px !important; font-size: 13px !important; }
+    .house-left-wrap { max-height: calc(100vh - 140px); display: flex; flex-direction: column; }
+    .house-left { overflow-y: auto; padding-right: 4px; scrollbar-width: thin; flex: 1; min-height: 0; }
+    .house-actions { position: sticky; bottom: 0; background: var(--nk-bg); padding-top: 10px; border-top: 1px solid var(--nk-border); margin-top: 8px; }
+    .house-left::-webkit-scrollbar { width: 4px; }
+    .house-left::-webkit-scrollbar-thumb { background: var(--nk-border); border-radius: 9999px; }
+    @media (max-width: 1024px) { .house-left-wrap { max-height: none; } .house-left { max-height: none; overflow: visible; } .house-actions { position: static; } }
+    .step-btn {
+      width: 28px; height: 28px; border-radius: 8px;
+      border: 1px solid var(--nk-border); background: var(--nk-card-bg);
+      color: var(--nk-text); font-size: 14px; font-weight: 600;
+      display: grid; place-items: center; cursor: pointer;
+    }
+    .step-btn:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+    .quality-card {
+      padding: 12px; border-radius: 12px; border: 1px solid var(--nk-border);
+      background: var(--nk-card-bg); text-align: left; cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .quality-card:hover { border-color: var(--nk-border-strong); }
+    .quality-card.quality-active { border-color: var(--nk-accent); background: var(--nk-accent-subtle); box-shadow: 0 2px 10px rgba(230,43,30,0.08); }
+    .quality-name { display: block; font-size: 12.5px; font-weight: 700; color: var(--nk-text); }
+    .quality-desc { display: block; font-size: 11px; color: var(--nk-text-secondary); margin-top: 1px; line-height: 1.3; }
+    .quality-rate { display: block; font-size: 11.5px; font-weight: 600; color: var(--nk-accent); margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .pill-btn {
+      padding: 6px 12px; border-radius: 9999px; border: 1px solid var(--nk-border);
+      background: var(--nk-card-bg); color: var(--nk-text-secondary);
+      font-size: 12px; font-weight: 500; cursor: pointer; transition: all 150ms ease;
+    }
+    .pill-btn:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+    .pill-btn.pill-active { background: var(--nk-accent); color: #fff; border-color: var(--nk-accent); font-weight: 600; }
+    .break-bar { height: 6px; border-radius: 9999px; background: var(--nk-hover); overflow: hidden; border: 1px solid var(--nk-border); }
+    .break-fill { height: 100%; border-radius: 9999px; background: var(--nk-accent); transition: width 200ms ease; }
+    #summary-card { border-color: color-mix(in srgb, var(--nk-accent) 18%, var(--nk-border)); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    @media (min-width: 1024px) {
+      .house-wrap .grid { align-items: start; }
+    }
+    @media (max-width: 640px) {
+      #summary-card { position: static !important; }
+    }
+  </style>
+
+  <script>
+    import { calculateTotalBuiltUpArea, getCostPerSqFt, calculateBaseCost, calculateContingency, sumAdditionalCosts, calculateRecommendedBudget, calculateMonthlyBudget, calculateCostRange, calculateBreakdown, calculateAdjustedForMaterialIncrease, calculateBudgetPlanner, formatNPR, formatNumber, sanitizeNumber } from '../../../../lib/calculators/house-construction.js';
+    import { LOCATION_OPTIONS, QUALITY_OPTIONS, CONTINGENCY_OPTIONS, MONTH_OPTIONS, getLocationMeta } from '../../../../data/construction/house-cost.js';
+
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    let qualityId = 'standard';
+    let contingencyPct = 5;
+    let monthsVal = 60;
+    let sensitivityPct = 0;
+
+    const locationEl = document.getElementById('location');
+    const customLocationRow = document.getElementById('custom-location-row');
+    const locationNote = document.getElementById('location-note');
+    const perFloorEl = document.getElementById('per-floor');
+    const floorsEl = document.getElementById('floors');
+    const manualTotalCheck = document.getElementById('manual-total');
+    const manualTotalRow = document.getElementById('manual-total-row');
+    const totalAreaEl = document.getElementById('total-area');
+    const totalPreview = document.getElementById('total-area-preview');
+    const parkingEl = document.getElementById('parking');
+    const roofEl = document.getElementById('roof');
+    const customRateRow = document.getElementById('custom-rate-row');
+    const customRateEl = document.getElementById('custom-rate');
+    const customQualityBtn = document.getElementById('custom-quality-btn');
+    const sensitivityEl = document.getElementById('sensitivity');
+    const sensitivityVal = document.getElementById('sensitivity-val');
+    const sensitivityResult = document.getElementById('sensitivity-result');
+    const budgetInput = document.getElementById('budget-input');
+    const budgetResult = document.getElementById('budget-result');
+    const budgetScenarios = document.getElementById('budget-scenarios');
+    const customMonthsRow = document.getElementById('custom-months-row');
+    const customMonthsEl = document.getElementById('custom-months');
+
+    function getInputs() {
+      const add = {};
+      $$('[data-add]').forEach((el) => { add[el.dataset.add] = el.value; });
+      return {
+        locationId: locationEl.value,
+        perFloor: perFloorEl.value,
+        floors: floorsEl.value,
+        manualTotal: manualTotalCheck.checked ? totalAreaEl.value : '',
+        parkingId: parkingEl.value,
+        roofId: roofEl.value,
+        qualityId,
+        customRate: customRateEl.value,
+        contingencyPct,
+        monthsVal: monthsVal === 'custom' ? (customMonthsEl.value || 60) : monthsVal,
+        sensitivityPct,
+        budget: budgetInput.value,
+        additionalCosts: add,
+      };
+    }
+
+    function compute() {
+      const inp = getInputs();
+      let totalArea = inp.manualTotal ? sanitizeNumber(inp.manualTotal) : calculateTotalBuiltUpArea(inp.perFloor, inp.floors);
+      const costPerSqFt = getCostPerSqFt({
+        locationId: inp.locationId,
+        qualityId: inp.qualityId,
+        roofId: inp.roofId,
+        parkingId: inp.parkingId,
+        customRate: inp.customRate,
+      });
+      const baseCost = calculateBaseCost(totalArea, costPerSqFt);
+      const contingency = calculateContingency(baseCost, inp.contingencyPct);
+      const additional = sumAdditionalCosts(inp.additionalCosts);
+      const recommended = calculateRecommendedBudget({ baseCost, contingency, additionalCosts: additional });
+      const monthly = calculateMonthlyBudget(recommended, inp.monthsVal);
+      const range = calculateCostRange(baseCost);
+      const breakdown = calculateBreakdown(baseCost);
+      const adjusted = calculateAdjustedForMaterialIncrease(baseCost, inp.sensitivityPct);
+      const planner = inp.budget ? calculateBudgetPlanner({ budget: inp.budget, costPerSqFt, contingencyPercent: inp.contingencyPct, additionalCosts: additional }) : null;
+
+      return { inp, totalArea, costPerSqFt, baseCost, contingency, additional, recommended, monthly, range, breakdown, adjusted, planner };
+    }
+
+    function render() {
+      document.getElementById('summary-card')?.classList.remove('hidden');
+      const { inp, totalArea, costPerSqFt, baseCost, contingency, additional, recommended, monthly, range, breakdown, adjusted, planner } = compute();
+      if (!totalArea || !costPerSqFt) {
+        // Keep card hidden if required inputs missing; will show after valid inputs
+      }
+
+      // Location note
+      const locMeta = getLocationMeta(inp.locationId);
+      locationNote.textContent = locMeta && locMeta.note ? locMeta.note : (inp.locationId === 'custom' ? 'Custom location uses base rate without adjustment.' : '');
+      customLocationRow.classList.toggle('hidden', inp.locationId !== 'custom');
+
+      // Total area preview
+      totalPreview.textContent = totalArea ? `${formatNumber(totalArea)} sq.ft.` : '—';
+      if (inp.manualTotal) {
+        // keep preview as manual value
+      } else {
+        // also reflect perFloor * floors for screen readers
+      }
+
+      // Summary card
+      document.getElementById('s-construction').textContent = baseCost ? formatNPR(baseCost) : '—';
+      document.getElementById('s-construction-sub').textContent = totalArea && costPerSqFt ? `${formatNumber(totalArea)} sq.ft. × Rs. ${formatNumber(costPerSqFt)}/sq.ft.` : '';
+      document.getElementById('s-rate').textContent = costPerSqFt ? `Rs. ${formatNumber(costPerSqFt)}` : '—';
+      document.getElementById('s-contingency').textContent = formatNPR(contingency);
+      document.getElementById('s-total').textContent = formatNPR(recommended);
+      document.getElementById('s-range').textContent = `${formatNPR(range.low)} – ${formatNPR(range.high)}`;
+      document.getElementById('s-range-mid').textContent = `Mid estimate ${formatNPR(range.mid)} · -5% to +5% around base`;
+      document.getElementById('s-monthly').textContent = monthly ? `${formatNPR(monthly)}/month` : '—';
+      document.getElementById('s-monthly-sub').textContent = inp.monthsVal ? `${inp.monthsVal} months · Recommended total ÷ period` : '';
+
+      // Breakdown table
+      const tbody = document.getElementById('breakdown-body');
+      tbody.innerHTML = breakdown.map((row) => `
+        <tr style="border-top: 1px solid var(--nk-border);">
+          <td class="py-1.5 pr-2" style="color: var(--nk-text-secondary);">${row.label} <span style="color: var(--nk-text-tertiary);">${(row.pct*100).toFixed(0)}%</span></td>
+          <td class="text-right py-1.5 pl-2" style="color: var(--nk-text);">${formatNPR(row.amount)}</td>
+        </tr>
+      `).join('');
+      document.getElementById('breakdown-total').textContent = formatNPR(baseCost);
+      const bars = document.getElementById('breakdown-bars');
+      bars.innerHTML = breakdown.slice(0, 6).map((row) => `
+        <div>
+          <div class="flex justify-between text-[11px] mb-1"><span style="color: var(--nk-text-secondary);">${row.label}</span><span class="tabular-nums" style="color: var(--nk-text);">${(row.pct*100).toFixed(0)}%</span></div>
+          <div class="break-bar"><div class="break-fill" style="width: ${(row.pct*100).toFixed(0)}%"></div></div>
+        </div>
+      `).join('');
+
+      // Sensitivity
+      sensitivityVal.textContent = `${inp.sensitivityPct}%`;
+      sensitivityResult.textContent = formatNPR(adjusted + contingency + additional);
+
+      // Budget planner
+      if (planner && planner.area > 0) {
+        budgetResult.innerHTML = `
+          <p><strong style="color: var(--nk-text);">About ${formatNumber(planner.areaLow)} to ${formatNumber(planner.areaHigh)} sq.ft.</strong> · ${planner.floors} floor${planner.floors !== 1 ? 's' : ''} · ${planner.bedrooms} bedrooms · ${planner.bathrooms} bath · ${planner.finish}</p>
+          <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">Approximate planning estimate at Rs. ${formatNumber(costPerSqFt)}/sq.ft.</p>
+        `;
+      } else if (inp.budget) {
+        budgetResult.innerHTML = `<p style="color: var(--nk-text-secondary);">Budget too small for a meaningful estimate at this rate. Try a higher budget or a lower rate.</p>`;
+      } else {
+        budgetResult.innerHTML = `<p style="color: var(--nk-text-tertiary);">Enter a budget to see an approximate area and suggestion.</p>`;
+      }
+
+      // Budget scenarios
+      budgetScenarios.innerHTML = [2000000, 3000000, 5000000, 10000000].map((b) => {
+        const p = calculateBudgetPlanner({ budget: b, costPerSqFt, contingencyPercent: inp.contingencyPct, additionalCosts: additional });
+        return `
+          <div class="p-2.5 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <p class="text-[12px] font-semibold" style="color: var(--nk-text);">${formatNPR(b)}</p>
+            <p class="text-[11px] tabular-nums" style="color: var(--nk-text-secondary);">${p.area ? `${formatNumber(p.area)} sq.ft. · ${p.floors} floor${p.floors !== 1 ? 's' : ''} · ${p.bedrooms} bed · ${p.bathrooms} bath · ${p.finish}` : '—'}</p>
+          </div>
+        `;
+      }).join('');
+
+      window.__lastHouseResult = { inp, totalArea, costPerSqFt, baseCost, contingency, additional, recommended, monthly, range, breakdown };
+    }
+
+    // Quality selection
+    document.getElementById('quality-row')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-quality]');
+      if (!btn) return;
+      qualityId = btn.dataset.quality;
+      $$('.quality-card').forEach((b) => b.classList.toggle('quality-active', b.dataset.quality === qualityId));
+      customRateRow.classList.add('hidden');
+    });
+    customQualityBtn.addEventListener('click', () => {
+      qualityId = 'custom';
+      $$('.quality-card').forEach((b) => b.classList.remove('quality-active'));
+      customRateRow.classList.remove('hidden');
+      customRateEl.focus();
+    });
+
+    // Contingency
+    document.getElementById('contingency-row')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-contingency]');
+      if (!btn) return;
+      contingencyPct = Number(btn.dataset.contingency);
+      $$('[data-contingency]').forEach((b) => b.classList.toggle('pill-active', Number(b.dataset.contingency) === contingencyPct));
+    });
+
+    // Months
+    document.getElementById('months-row')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-months]');
+      if (!btn) return;
+      const v = btn.dataset.months;
+      monthsVal = v === 'custom' ? 'custom' : Number(v);
+      $$('[data-months]').forEach((b) => {
+        b.classList.toggle('pill-active', b.dataset.months === String(v));
+      });
+      customMonthsRow.classList.toggle('hidden', monthsVal !== 'custom');
+    });
+
+    // Steppers
+    $$('.step-btn').forEach((btn) => btn.addEventListener('click', () => {
+      const id = btn.dataset.step;
+      const dir = Number(btn.dataset.dir);
+      const el = document.getElementById(id);
+      if (!el) return;
+      const cur = Number(el.value) || 0;
+      const next = Math.max(0, cur + dir);
+      el.value = String(next);
+    }));
+
+    // Toggles
+    document.getElementById('additional-toggle')?.addEventListener('click', () => {
+      document.getElementById('additional-panel').classList.toggle('hidden');
+    });
+    document.getElementById('manual-total')?.addEventListener('change', (e) => {
+      manualTotalRow.classList.toggle('hidden', !e.target.checked);
+      render();
+    });
+
+    // Live inputs - only update preview, not full results
+    const liveIds = ['location','per-floor','floors','parking','roof','land-area','total-area','budget-input'];
+    // No auto-render; results only on calculate click
+
+    // Calculate button
+    document.getElementById('calculate-btn')?.addEventListener('click', () => {
+      render();
+      document.getElementById('summary-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // Share / Print
+    document.getElementById('share-btn')?.addEventListener('click', async () => {
+      const r = window.__lastHouseResult;
+      if (!r) return;
+      const text = [
+        'My House Construction Estimate',
+        `Location: ${locationEl.options[locationEl.selectedIndex]?.text || r.inp.locationId}`,
+        `Built up area: ${formatNumber(r.totalArea)} sq.ft.`,
+        `Floors: ${r.inp.floors}`,
+        `Quality: ${r.inp.qualityId}`,
+        `Estimated construction: ${formatNPR(r.baseCost)}`,
+        `Contingency: ${formatNPR(r.contingency)}`,
+        `Estimated total budget: ${formatNPR(r.recommended)}`,
+        '',
+        'Calculated on SolutionsNepal - https://solutionsnepal.com/nepal/construction/house-construction-cost',
+      ].join('\n');
+      const status = document.getElementById('share-status');
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'House Construction Estimate', text });
+          status.textContent = 'Shared.';
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(text);
+          status.textContent = 'Copied to clipboard.';
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+          status.textContent = 'Copied to clipboard.';
+        }
+      } catch {
+        status.textContent = 'Could not share. Copy manually.';
+      }
+      status.classList.remove('hidden');
+      setTimeout(() => status.classList.add('hidden'), 3000);
+    });
+    document.getElementById('print-btn')?.addEventListener('click', () => window.print());
+
+    // Init defaults
+    locationEl.value = 'kathmandu-valley';
+  </script>
+</BaseLayout>

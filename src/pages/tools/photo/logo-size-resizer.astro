@@ -1,0 +1,668 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  {title:'Image Compressor',description:'Compress JPG, PNG and WebP to a target file size',href:'/tools/image-compressor'},
+  {title:'Image → WebP',description:'Convert JPG and PNG images to WebP format',href:'/tools/webp-converter'},
+  {title:'JPG → PNG',description:'Convert JPG images to lossless PNG format',href:'/tools/jpg-to-png'},
+  {title:'Passport Size Photo',description:'2×2 inch standard passport photo maker',href:'/tools/passport-photo-resizer'},
+];
+
+const faqItems = [
+  {q:'Will resizing reduce my logo quality?',a:'Reducing dimensions keeps edges crisp because pixels are merged, not invented. Enlarging a small raster logo can soften edges — start from the largest original you have. PNG export is lossless; JPEG and WebP use the quality setting you choose.'},
+  {q:'How do I keep the transparent background?',a:'Choose PNG or WebP output with the Transparent background option. JPEG has no transparency — transparent areas become white, and the tool tells you when that happens.'},
+  {q:'What size should my website logo be?',a:'Common header sizes are 250×80 px (standard), 160×50 px (compact), and 400×120 px (large). Favicons are 48×48 px and app icons 192×192 px. These are suggestions, not rules — match your theme and test on mobile.'},
+  {q:'Can I resize an SVG logo?',a:'Yes. SVGs are sanitized (scripts, event handlers and external references removed) and rendered safely — rasterization cannot execute embedded code. You can export PNG, JPG or WebP at any size, or download the sanitized original vector. Resizing does not create a new vector file.'},
+  {q:'Will the tool distort or crop my logo?',a:'Not by default. Contain mode fits the whole logo inside your dimensions without cropping or distortion. Cover fills the canvas and clearly warns what percentage gets cropped. Stretch is only applied when you explicitly select it.'},
+  {q:'Is my logo uploaded to a server?',a:'No. All processing happens directly in your browser using the Canvas API. Your logo is never uploaded, stored, or seen by anyone.'},
+];
+---
+
+<BaseLayout
+  title="Logo Size Resizer Online – Resize Logos for Websites | SolutionsNepal"
+  description="Resize logos for website headers, favicons, and app icons online. Set custom dimensions, preserve aspect ratio, preview your logo, and download PNG, JPG, or WebP files."
+  jsonLd={[{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Logo Size Resizer",
+    "description": "Resize logos to custom dimensions with aspect-ratio lock, presets, transparent backgrounds and PNG, JPEG or WebP export.",
+    "url": "https://solutionsnepal.com/tools/photo/logo-size-resizer",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "NPR" }
+  }, {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }]}
+>
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{label:"Tools",href:"/tools"},{label:"Logo Size Resizer"}]} />
+
+    <!-- Header -->
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color:var(--nk-text);">Logo Size Resizer</h1>
+      <p class="mt-1 text-xs sm:text-sm" style="color:var(--nk-text-secondary);">Resize your logo for website headers, favicons, and app icons. Preview and download in seconds.</p>
+    </div>
+
+    <!-- Upload card -->
+    <div class="rounded-xl border overflow-hidden mb-4" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+      <div id="upload-area" class="p-6 sm:p-8 text-center cursor-pointer transition-colors" tabindex="0" role="button" aria-label="Upload logo image">
+        <input type="file" id="file-input" accept="image/png,image/jpeg,image/webp,image/svg+xml,.png,.jpg,.jpeg,.webp,.svg" aria-label="Choose logo file" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;" />
+        <p class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--nk-accent);">Step 1 — Upload your logo</p>
+        <div class="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center" style="background-color:var(--nk-bg);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--nk-text-secondary);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        </div>
+        <p class="text-sm font-medium mb-0.5" style="color:var(--nk-text);">Click to upload or drag and drop your logo</p>
+        <p class="text-[11px]" style="color:var(--nk-text-secondary);">PNG • JPG • WebP • SVG (max 20 MB, processed in your browser)</p>
+      </div>
+      <div id="file-bar" class="hidden px-4 py-3" style="border-top:1px solid var(--nk-border);">
+        <div class="flex items-center gap-3">
+          <div class="flex-shrink-0 rounded-md overflow-hidden checker-sm" style="width:48px;height:48px;background-color:var(--nk-bg);">
+            <img id="file-thumb" class="w-full h-full" style="object-fit:contain;" alt="Uploaded logo thumbnail" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <p id="file-name" class="text-[13px] font-medium truncate" style="color:var(--nk-text);"></p>
+            <p class="text-[11px] mt-0.5" style="color:var(--nk-text-secondary);"><span id="file-size"></span> · <span id="file-dims"></span> · <span id="file-format"></span></p>
+          </div>
+          <button id="replace-btn" class="flex-shrink-0 px-2.5 py-1.5 text-[11px] font-medium rounded-md border transition-all" style="border-color:var(--nk-border);color:var(--nk-text);" aria-label="Replace logo">Replace</button>
+          <button id="remove-btn" class="flex-shrink-0 p-1.5 rounded-md transition-colors hover:opacity-70" style="color:var(--nk-text-secondary);" aria-label="Remove logo">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <p id="error-box" class="hidden mx-4 mb-3 px-3 py-2 text-[12px] rounded-lg border" role="alert" style="color:#b42318;background-color:#fef3f2;border-color:#fecdca;"></p>
+    </div>
+
+    <!-- Main grid: settings + preview -->
+    <div class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-4 items-start">
+
+      <!-- Settings -->
+      <fieldset id="settings" class="rounded-xl border p-4 space-y-4" style="border-color:var(--nk-border);background-color:var(--nk-surface);" disabled>
+        <legend class="sr-only">Resize settings</legend>
+        <p class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--nk-accent);">Step 2 — Choose a size</p>
+
+        <!-- Presets -->
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--nk-text-secondary);">Pick a use</p>
+          <div id="preset-grid" class="grid grid-cols-2 gap-1.5" role="group" aria-label="Size presets">
+            <button type="button" class="preset-btn" data-preset="header" data-w="250" data-h="80">Header<small>250 × 80</small></button>
+            <button type="button" class="preset-btn" data-preset="header-compact" data-w="160" data-h="50">Compact<small>160 × 50</small></button>
+            <button type="button" class="preset-btn" data-preset="logo-large" data-w="400" data-h="120">Large logo<small>400 × 120</small></button>
+            <button type="button" class="preset-btn" data-preset="square" data-w="512" data-h="512">Square<small>512 × 512</small></button>
+            <button type="button" class="preset-btn" data-preset="app-icon" data-w="192" data-h="192">App icon<small>192 × 192</small></button>
+            <button type="button" class="preset-btn" data-preset="favicon" data-w="48" data-h="48">Favicon<small>48 × 48</small></button>
+          </div>
+          <p class="text-[10px] mt-1.5" style="color:var(--nk-text-tertiary);">Tap a use above, or type exact numbers below.</p>
+        </div>
+
+        <!-- Dimensions -->
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--nk-text-secondary);">Custom dimensions <span id="custom-chip" class="hidden ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold" style="background-color:var(--nk-bg);color:var(--nk-accent);">CUSTOM</span></p>
+          <div class="flex items-end gap-2">
+            <label class="flex-1">
+              <span class="text-[11px] font-medium" style="color:var(--nk-text);">Width (px)</span>
+              <input id="in-w" type="number" min="16" max="4096" step="1" value="250" class="mt-1 w-full px-2.5 py-2 rounded-md border text-[13px]" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" />
+            </label>
+            <button id="swap-btn" type="button" class="p-2 mb-0.5 rounded-md border transition-all hover:opacity-70" style="border-color:var(--nk-border);color:var(--nk-text);" aria-label="Swap width and height" title="Swap width and height">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
+            </button>
+            <label class="flex-1">
+              <span class="text-[11px] font-medium" style="color:var(--nk-text);">Height (px)</span>
+              <input id="in-h" type="number" min="16" max="4096" step="1" value="80" class="mt-1 w-full px-2.5 py-2 rounded-md border text-[13px]" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" />
+            </label>
+          </div>
+            <label class="mt-2 flex items-center gap-2 text-[12px] cursor-pointer select-none" style="color:var(--nk-text);">
+            <input id="lock-check" type="checkbox" checked class="w-4 h-4 shrink-0" style="accent-color: var(--nk-accent);" />
+            <span>Lock proportions <span style="color:var(--nk-text-tertiary);">(recommended — avoids squishing)</span></span>
+          </label>
+          <p class="text-[10px] mt-1.5" style="color:var(--nk-text-tertiary);">Between 16 and 4096 px per side.</p>
+        </div>
+
+        <!-- Advanced (collapsed by default) -->
+        <details id="advanced">
+          <summary class="px-3 py-2 text-[12px] font-semibold rounded-lg border cursor-pointer select-none" style="border-color:var(--nk-border);color:var(--nk-text-secondary);background-color:var(--nk-bg);">Advanced: fit, background &amp; spacing</summary>
+          <div class="pt-3 space-y-4">
+
+        <!-- Fit -->
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--nk-text-secondary);">How the logo fills the size</p>
+          <div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Fit mode">
+            <button type="button" class="fit-btn fit-active" data-fit="contain" role="radio" aria-checked="true">Fit whole logo<small>Recommended</small></button>
+            <button type="button" class="fit-btn" data-fit="cover" role="radio" aria-checked="false">Fill &amp; crop<small>Cuts edges</small></button>
+            <button type="button" class="fit-btn" data-fit="stretch" role="radio" aria-checked="false">Stretch<small>May distort</small></button>
+          </div>
+          <p class="text-[10px] mt-1.5" style="color:var(--nk-text-tertiary);">Fit whole logo never crops or squishes. Only change this if you know why.</p>
+        </div>
+
+        <!-- Background -->
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--nk-text-secondary);">Background</p>
+          <div class="grid grid-cols-4 gap-1.5" role="radiogroup" aria-label="Background">
+            <button type="button" class="bg-btn bg-active" data-bg="transparent" role="radio" aria-checked="true">Clear</button>
+            <button type="button" class="bg-btn" data-bg="white" role="radio" aria-checked="false">White</button>
+            <button type="button" class="bg-btn" data-bg="black" role="radio" aria-checked="false">Black</button>
+            <button type="button" class="bg-btn" data-bg="custom" role="radio" aria-checked="false">Custom</button>
+          </div>
+          <div id="custom-color-row" class="hidden mt-2 flex items-center gap-2">
+            <input id="in-color" type="color" value="#0f172a" class="w-9 h-9 rounded-md border cursor-pointer" style="border-color:var(--nk-border);background-color:var(--nk-bg);" aria-label="Custom background color" />
+            <span id="color-hex" class="text-[11px] font-mono" style="color:var(--nk-text-secondary);">#0f172a</span>
+          </div>
+          <p id="bg-note" class="hidden text-[10px] mt-1.5" style="color:var(--nk-text-secondary);">JPEG has no transparency — transparent areas export as white.</p>
+        </div>
+
+        <!-- Padding -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--nk-text-secondary);">Padding</p>
+            <span id="pad-val" class="text-[11px] font-medium" style="color:var(--nk-text);">0 px</span>
+          </div>
+          <input id="in-pad" type="range" min="0" max="100" step="1" value="0" class="w-full" aria-label="Empty space around logo in pixels" />
+        </div>
+
+          </div>
+        </details>
+
+        <!-- Format -->
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--nk-text-secondary);">File type</p>
+          <div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Export format">
+            <button type="button" class="fmt-btn fmt-active" data-fmt="png" role="radio" aria-checked="true">PNG<small>Keeps transparency</small></button>
+            <button type="button" class="fmt-btn" data-fmt="jpeg" role="radio" aria-checked="false">JPG<small>Smaller file</small></button>
+            <button type="button" class="fmt-btn" data-fmt="webp" role="radio" aria-checked="false">WebP<small>Smallest file</small></button>
+          </div>
+          <div id="quality-row" class="hidden mt-2">
+            <div class="flex items-center justify-between mb-1">
+              <label for="in-quality" class="text-[11px] font-medium" style="color:var(--nk-text);">Quality</label>
+              <span id="quality-val" class="text-[11px] font-medium" style="color:var(--nk-text);">90%</span>
+            </div>
+            <input id="in-quality" type="range" min="10" max="100" step="1" value="90" class="w-full" />
+            <p class="text-[10px] mt-1" style="color:var(--nk-text-tertiary);">Lower quality = smaller file. PNG is always lossless.</p>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-2 pt-1">
+          <button id="download-btn" type="button" class="flex-1 py-2.5 text-[13px] font-semibold rounded-lg transition-all hover:opacity-90" style="background-color:var(--nk-accent);color:white;">Download Logo</button>
+          <button id="reset-btn" type="button" class="px-4 py-2.5 text-[12px] font-medium rounded-lg border transition-all hover:opacity-70" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Reset</button>
+        </div>
+        <button id="svg-btn" type="button" class="hidden w-full py-2 text-[11px] font-medium rounded-lg border transition-all hover:opacity-70" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Download sanitized SVG original</button>
+      </fieldset>
+
+      <!-- Preview -->
+      <div class="rounded-xl border p-4" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--nk-accent);">Step 3 — Preview</p>
+          <div class="flex gap-1" role="group" aria-label="Preview backdrop">
+            <button type="button" class="pv-btn pv-active" data-pv="check" title="Transparency grid">Grid</button>
+            <button type="button" class="pv-btn" data-pv="light" title="White backdrop">Light</button>
+            <button type="button" class="pv-btn" data-pv="dark" title="Dark backdrop">Dark</button>
+          </div>
+        </div>
+
+        <div id="preview-empty" class="py-14 text-center">
+          <div class="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center" style="background-color:var(--nk-bg);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--nk-text-tertiary);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          </div>
+          <p class="text-sm font-medium" style="color:var(--nk-text);">Upload a logo to start</p>
+          <p class="text-[11px] mt-1" style="color:var(--nk-text-secondary);">Your preview appears here at the exact output size.</p>
+        </div>
+
+        <div id="preview-wrap" class="hidden">
+          <div id="preview-stage" class="checker rounded-lg border flex items-center justify-center p-4 mb-3" style="border-color:var(--nk-border);min-height:220px;">
+            <canvas id="preview-canvas" style="max-width:100%;max-height:340px;width:auto;height:auto;"></canvas>
+          </div>
+          <div class="grid grid-cols-3 gap-2 mb-2">
+            <div class="text-center py-2 rounded-md" style="background-color:var(--nk-bg);border:1px solid var(--nk-border);">
+              <p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Original</p>
+              <p id="pv-orig" class="text-[12px] font-bold" style="color:var(--nk-text);"></p>
+            </div>
+            <div class="text-center py-2 rounded-md" style="background-color:var(--nk-bg);border:1px solid var(--nk-border);">
+              <p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Output</p>
+              <p id="pv-out" class="text-[12px] font-bold" style="color:var(--nk-accent);"></p>
+            </div>
+            <div class="text-center py-2 rounded-md" style="background-color:var(--nk-bg);border:1px solid var(--nk-border);">
+              <p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">File size</p>
+              <p id="pv-size" class="text-[12px] font-bold" style="color:var(--nk-text);">…</p>
+            </div>
+          </div>
+          <div id="status-block" class="mt-1">
+            <p id="status-line" class="text-[12px] font-medium" style="color:var(--nk-text);" aria-live="polite"></p>
+            <div id="warn-chips" class="flex flex-wrap gap-1.5 mt-1.5"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy -->
+    <p class="mt-3 text-center text-[10px]" style="color:var(--nk-text-secondary);">Private by design — your logo is processed in your browser and never uploaded anywhere.</p>
+
+    <!-- SEO Content -->
+    <div class="mt-8 space-y-5">
+      <h2 class="text-base font-bold" style="color:var(--nk-text);">How logo resizing works</h2>
+      <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Upload your logo, pick a suggested size such as a 250×80 px website header or a 48×48 px favicon — or type exact custom dimensions. The aspect-ratio lock keeps proportions intact, Contain mode fits the whole logo without cropping, and the live preview shows the exact output before you download.</p>
+
+      <h3 class="text-sm font-semibold" style="color:var(--nk-text);">Formats and transparency</h3>
+      <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+        <li>• <strong style="color:var(--nk-text);">PNG</strong> — Lossless with full transparency. Best default for logos.</li>
+        <li>• <strong style="color:var(--nk-text);">JPG</strong> — Smaller files with adjustable quality. No transparency — pick a background color.</li>
+        <li>• <strong style="color:var(--nk-text);">WebP</strong> — Modern format, roughly 30% smaller than JPG at similar quality, keeps transparency.</li>
+        <li>• <strong style="color:var(--nk-text);">SVG</strong> — Accepted as input, sanitized for safety, and rasterized for export. You can also download the sanitized original vector.</li>
+      </ul>
+
+      <h3 class="text-sm font-semibold" style="color:var(--nk-text);">More image tools</h3>
+      <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+        <li>• <a href="/tools/image-compressor" style="color:var(--nk-accent);">Image Compressor</a> — shrink the resized logo to a target file size.</li>
+        <li>• <a href="/tools/webp-converter" style="color:var(--nk-accent);">Image to WebP Converter</a> — convert photos and graphics to WebP.</li>
+        <li>• <a href="/tools/jpg-to-png" style="color:var(--nk-accent);">JPG to PNG Converter</a> — lossless conversion for editing.</li>
+      </ul>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-8 space-y-3">
+      <h2 class="text-base font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+</BaseLayout>
+
+<style>
+  .preset-btn, .fit-btn, .bg-btn, .fmt-btn {
+    padding: 0.45rem 0.25rem;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.12s;
+    line-height: 1.3;
+  }
+  .preset-btn small, .fit-btn small, .fmt-btn small {
+    display: block;
+    font-size: 9px;
+    font-weight: 500;
+    opacity: 0.75;
+  }
+  .preset-btn:hover, .fit-btn:hover, .bg-btn:hover, .fmt-btn:hover { border-color: var(--nk-border-strong); color: var(--nk-text); }
+  .preset-btn.preset-active, .fit-btn.fit-active, .bg-btn.bg-active, .fmt-btn.fmt-active {
+    border-color: var(--nk-accent);
+    color: var(--nk-accent);
+    background-color: var(--nk-bg);
+  }
+  .pv-btn {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary);
+    cursor: pointer;
+  }
+  .pv-btn.pv-active { border-color: var(--nk-accent); color: var(--nk-accent); }
+  .checker {
+    background-image: conic-gradient(#d7dbe0 0 25%, #f4f5f7 0 50%, #d7dbe0 0 75%, #f4f5f7 0);
+    background-size: 18px 18px;
+  }
+  .checker-sm {
+    background-image: conic-gradient(#d7dbe0 0 25%, #f4f5f7 0 50%, #d7dbe0 0 75%, #f4f5f7 0);
+    background-size: 10px 10px;
+  }
+  #settings:disabled { opacity: 0.55; }
+  #settings:disabled button, #settings:disabled input { cursor: not-allowed; }
+  input[type="number"]::-webkit-inner-spin-button { opacity: 0.4; }
+  .chip {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary);
+    background-color: var(--nk-bg);
+  }
+  .chip-warn { color: #b42318; border-color: #fecdca; background-color: #fef3f2; }
+  .chip-ok { color: var(--nk-accent); border-color: var(--nk-accent); }
+</style>
+
+<script>
+  import {
+    PRESETS, MIN_DIM, MAX_DIM,
+    validateLogoFile, isSvgFile, parseDim, clampDim, maxPadding,
+    lockedSize, coverCropPercent, outputMime, extForFormat,
+    resolveBackground, buildFileName,
+    loadLogoImage, composeLogo, canvasToBlob,
+  } from '../../../lib/converters/logo-resize.js';
+  import { formatBytes } from '../../../lib/converters/image-compress.js';
+  import { saveFileAs } from '../../../lib/utils/save-file.js';
+
+  const $ = (id) => document.getElementById(id);
+  const uploadArea = $('upload-area'), fileInput = $('file-input'), fileBar = $('file-bar');
+  const fileThumb = $('file-thumb'), fileName = $('file-name'), fileSize = $('file-size');
+  const fileDims = $('file-dims'), fileFormat = $('file-format');
+  const errorBox = $('error-box');
+  const settings = $('settings');
+  const inW = $('in-w'), inH = $('in-h'), lockCheck = $('lock-check'), swapBtn = $('swap-btn');
+  const customChip = $('custom-chip');
+  const inPad = $('in-pad'), padVal = $('pad-val');
+  const inColor = $('in-color'), colorHex = $('color-hex'), customColorRow = $('custom-color-row'), bgNote = $('bg-note');
+  const inQuality = $('in-quality'), qualityVal = $('quality-val'), qualityRow = $('quality-row');
+  const downloadBtn = $('download-btn'), resetBtn = $('reset-btn'), replaceBtn = $('replace-btn');
+  const removeBtn = $('remove-btn'), svgBtn = $('svg-btn');
+  const previewEmpty = $('preview-empty'), previewWrap = $('preview-wrap'), stage = $('preview-stage');
+  const canvas = $('preview-canvas');
+  const pvOrig = $('pv-orig'), pvOut = $('pv-out'), pvSize = $('pv-size');
+  const statusLine = $('status-line'), warnChips = $('warn-chips');
+
+  let state = null; // { file, img, srcW, srcH, wasSvg, sanitizedSvg, objectUrl, baseName }
+  let lock = true, fit = 'contain', bg = 'transparent', format = 'png';
+  let sizeTimer = null, lastBlob = null, lastExport = null;
+
+  // ── Errors ───────────────────────────────────────────────────
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.classList.remove('hidden');
+  }
+  function clearError() {
+    errorBox.textContent = '';
+    errorBox.classList.add('hidden');
+  }
+
+  // ── Upload ───────────────────────────────────────────────────
+  function handleFile(file) {
+    clearError();
+    const v = validateLogoFile(file);
+    if (!v.valid) { showError(v.error); return; }
+    loadLogoImage(file).then((loaded) => {
+      if (state?.objectUrl) URL.revokeObjectURL(state.objectUrl);
+      state = {
+        file, img: loaded.img, srcW: loaded.naturalW, srcH: loaded.naturalH,
+        wasSvg: loaded.wasSvg, sanitizedSvg: loaded.sanitizedSvg,
+        objectUrl: loaded.objectUrl,
+        baseName: (file.name || 'logo').replace(/\.[^.]+$/, ''),
+      };
+      if (loaded.sanitized) showError('Note: potentially unsafe SVG content was removed before preview.');
+      paintFileBar(file, loaded);
+      settings.disabled = false;
+      applyPreset('header');
+      previewEmpty.classList.add('hidden');
+      previewWrap.classList.remove('hidden');
+      svgBtn.classList.toggle('hidden', !loaded.wasSvg);
+      refresh();
+    }).catch(() => showError('Could not read that file. Please try a different PNG, JPG, WebP or SVG logo.'));
+  }
+
+  function paintFileBar(file, loaded) {
+    fileThumb.src = state.objectUrl;
+    fileName.textContent = file.name || 'pasted-image';
+    fileSize.textContent = formatBytes(file.size);
+    fileDims.textContent = loaded.naturalW + ' × ' + loaded.naturalH + ' px';
+    fileFormat.textContent = (isSvgFile(file) ? 'SVG' : (file.type || '').replace('image/', '').toUpperCase()) + (loaded.wasSvg ? ' (rasterized)' : '');
+    uploadArea.classList.add('hidden');
+    fileBar.classList.remove('hidden');
+  }
+
+  uploadArea.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
+  uploadArea.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+  fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+  replaceBtn.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--nk-accent)'; });
+  uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = ''; });
+  uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.style.borderColor = ''; if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+  document.addEventListener('paste', (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) { const f = item.getAsFile(); if (f) handleFile(f); break; }
+    }
+  });
+  removeBtn.addEventListener('click', resetAll);
+
+  // ── Presets ──────────────────────────────────────────────────
+  function markPreset(id) {
+    document.querySelectorAll('.preset-btn').forEach((b) => {
+      const on = b.dataset.preset === id;
+      b.classList.toggle('preset-active', on);
+    });
+    customChip.classList.toggle('hidden', id !== 'custom');
+  }
+  function applyPreset(id) {
+    const p = PRESETS.find((x) => x.id === id);
+    if (!p) return;
+    inW.value = p.w;
+    inH.value = p.h;
+    markPreset(id);
+    refresh();
+  }
+  document.querySelectorAll('.preset-btn').forEach((b) => {
+    b.addEventListener('click', () => applyPreset(b.dataset.preset));
+  });
+  function flagCustom() { markPreset('custom'); }
+
+  // ── Dimensions ───────────────────────────────────────────────
+  function currentDims() {
+    const w = parseDim(inW.value), h = parseDim(inH.value);
+    if (w === null || h === null) return { error: 'Enter whole-number dimensions of at least 1 px.' };
+    const cw = clampDim(w), ch = clampDim(h);
+    return { w: cw, h: ch, clamped: cw !== w || ch !== h };
+  }
+  inW.addEventListener('input', () => {
+    if (!state || !lock) { flagCustom(); refresh(); return; }
+    const w = parseDim(inW.value);
+    if (w === null) { refresh(); return; }
+    const s = lockedSize('w', clampDim(w), state.srcW, state.srcH);
+    if (s) { inW.value = s.w; inH.value = Math.min(MAX_DIM, Math.max(MIN_DIM, s.h)); }
+    flagCustom();
+    refresh();
+  });
+  inH.addEventListener('input', () => {
+    if (!state || !lock) { flagCustom(); refresh(); return; }
+    const h = parseDim(inH.value);
+    if (h === null) { refresh(); return; }
+    const s = lockedSize('h', clampDim(h), state.srcW, state.srcH);
+    if (s) { inH.value = s.h; inW.value = Math.min(MAX_DIM, Math.max(MIN_DIM, s.w)); }
+    flagCustom();
+    refresh();
+  });
+  lockCheck.addEventListener('change', () => { lock = lockCheck.checked; });
+  swapBtn.addEventListener('click', () => {
+    const a = inW.value;
+    inW.value = inH.value;
+    inH.value = a;
+    flagCustom();
+    refresh();
+  });
+
+  // ── Fit / bg / format ────────────────────────────────────────
+  function radioGroup(selector, activeClass, attr, cb) {
+    document.querySelectorAll(selector).forEach((b) => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll(selector).forEach((x) => {
+          x.classList.remove(activeClass);
+          x.setAttribute('aria-checked', 'false');
+        });
+        b.classList.add(activeClass);
+        b.setAttribute('aria-checked', 'true');
+        cb(b.dataset[attr]);
+      });
+    });
+  }
+  radioGroup('.fit-btn', 'fit-active', 'fit', (v) => { fit = v; refresh(); });
+  radioGroup('.bg-btn', 'bg-active', 'bg', (v) => {
+    bg = v;
+    customColorRow.classList.toggle('hidden', v !== 'custom');
+    refresh();
+  });
+  radioGroup('.fmt-btn', 'fmt-active', 'fmt', (v) => {
+    format = v;
+    const q = format !== 'png';
+    qualityRow.classList.toggle('hidden', !q);
+    if (format === 'jpeg' && bg === 'transparent') {
+      bg = 'white';
+      document.querySelectorAll('.bg-btn').forEach((x) => {
+        const on = x.dataset.bg === 'white';
+        x.classList.toggle('bg-active', on);
+        x.setAttribute('aria-checked', String(on));
+      });
+    }
+    refresh();
+  });
+  inColor.addEventListener('input', () => { colorHex.textContent = inColor.value; refresh(); });
+  inPad.addEventListener('input', () => { padVal.textContent = inPad.value + ' px'; refresh(); });
+  inQuality.addEventListener('input', () => { qualityVal.textContent = inQuality.value + '%'; scheduleSize(); });
+
+  document.querySelectorAll('.pv-btn').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.pv-btn').forEach((x) => x.classList.remove('pv-active'));
+      b.classList.add('pv-active');
+      const v = b.dataset.pv;
+      stage.classList.toggle('checker', v === 'check');
+      stage.style.background = v === 'light' ? '#ffffff' : v === 'dark' ? '#111318' : '';
+    });
+  });
+
+  // ── Render pipeline ──────────────────────────────────────────
+  function chip(text, cls) {
+    const s = document.createElement('span');
+    s.className = 'chip' + (cls ? ' ' + cls : '');
+    s.textContent = text;
+    warnChips.appendChild(s);
+  }
+
+  function refresh() {
+    warnChips.innerHTML = '';
+    statusLine.textContent = '';
+    if (!state) return;
+    clearError();
+    const d = currentDims();
+    if (d.error) { showError(d.error); return; }
+    const pad = Math.min(parseInt(inPad.value || '0', 10) || 0, maxPadding(d.w, d.h));
+    if (String(pad) !== String(inPad.value)) { inPad.value = pad; padVal.textContent = pad + ' px'; }
+
+    let out;
+    try {
+      out = composeLogo(state.img, state.srcW, state.srcH, {
+        w: d.w, h: d.h, fit, bg, customColor: inColor.value, format, pad,
+      });
+    } catch {
+      showError('Could not render at these dimensions. Try smaller values.');
+      return;
+    }
+    canvas.width = d.w;
+    canvas.height = d.h;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, d.w, d.h);
+    ctx.drawImage(out, 0, 0);
+
+    pvOrig.textContent = state.srcW + ' × ' + state.srcH;
+    pvOut.textContent = d.w + ' × ' + d.h;
+    lastExport = { w: d.w, h: d.h, pad, canvas: out };
+
+    // One friendly status line; warnings only when something needs attention.
+    const bgRes = resolveBackground(format, bg, inColor.value);
+    statusLine.textContent = `Ready to download · ${d.w} × ${d.h} px · ${extForFormat(format).toUpperCase()}`;
+    if (fit === 'cover') {
+      const pct = coverCropPercent(state.srcW, state.srcH, d.w, d.h);
+      if (pct > 0) chip(`Heads up: filling crops ~${pct}% of the edges`, 'chip-warn');
+    }
+    if (fit === 'stretch' && Math.abs(state.srcW / state.srcH - d.w / d.h) > 0.01) chip('Stretching may distort your logo', 'chip-warn');
+    if (bgRes.coerced) chip(`JPG can't be transparent — background exports white`, 'chip-warn');
+    if (d.clamped) chip(`Adjusted to the allowed range (${MIN_DIM}–${MAX_DIM} px)`);
+    bgNote.classList.toggle('hidden', !(format === 'jpeg'));
+
+    scheduleSize();
+  }
+
+  function scheduleSize() {
+    clearTimeout(sizeTimer);
+    pvSize.textContent = '…';
+    sizeTimer = setTimeout(async () => {
+      if (!lastExport) return;
+      try {
+        const q = parseInt(inQuality.value, 10) / 100;
+        lastBlob = await canvasToBlob(lastExport.canvas, format, q);
+        pvSize.textContent = formatBytes(lastBlob.size);
+      } catch {
+        pvSize.textContent = 'n/a';
+      }
+    }, 250);
+  }
+
+  // ── Download / reset ─────────────────────────────────────────
+  downloadBtn.addEventListener('click', async () => {
+    if (!state || !lastExport) return;
+    downloadBtn.disabled = true;
+    const label = downloadBtn.textContent;
+    downloadBtn.textContent = 'Preparing…';
+    try {
+      const q = parseInt(inQuality.value, 10) / 100;
+      const blob = await canvasToBlob(lastExport.canvas, format, q);
+      const name = buildFileName(state.baseName, lastExport.w, lastExport.h, extForFormat(format));
+      await saveFileAs(blob, name);
+    } catch {
+      showError('Export failed. Your browser may not support WebP export — try PNG instead.');
+    } finally {
+      downloadBtn.disabled = false;
+      downloadBtn.textContent = label;
+    }
+  });
+
+  svgBtn.addEventListener('click', async () => {
+    if (!state?.sanitizedSvg) return;
+    const blob = new Blob([state.sanitizedSvg], { type: 'image/svg+xml' });
+    const safe = (state.baseName || 'logo').toLowerCase().replace(/[^a-z0-9-_]+/g, '-').replace(/^-+|-+$/g, '') || 'logo';
+    await saveFileAs(blob, safe + '-sanitized.svg');
+  });
+
+  function resetAll() {
+    if (state?.objectUrl) URL.revokeObjectURL(state.objectUrl);
+    state = null;
+    lastBlob = null;
+    lastExport = null;
+    fileInput.value = '';
+    fileBar.classList.add('hidden');
+    uploadArea.classList.remove('hidden');
+    previewWrap.classList.add('hidden');
+    previewEmpty.classList.remove('hidden');
+    svgBtn.classList.add('hidden');
+    settings.disabled = true;
+    clearError();
+    lock = true;
+    lockCheck.checked = true;
+    fit = 'contain'; bg = 'transparent'; format = 'png';
+    inW.value = 250; inH.value = 80;
+    inPad.value = 0; padVal.textContent = '0 px';
+    inQuality.value = 90; qualityVal.textContent = '90%';
+    qualityRow.classList.add('hidden');
+    customColorRow.classList.add('hidden');
+    bgNote.classList.add('hidden');
+    markPreset('header');
+    ['.fit-btn', '.bg-btn', '.fmt-btn'].forEach((sel) => {
+      const first = document.querySelector(sel);
+      document.querySelectorAll(sel).forEach((x) => {
+        const on = x === first;
+        const cls = sel === '.fit-btn' ? 'fit-active' : sel === '.bg-btn' ? 'bg-active' : 'fmt-active';
+        x.classList.toggle(cls, on);
+        x.setAttribute('aria-checked', String(on));
+      });
+    });
+  }
+  resetBtn.addEventListener('click', resetAll);
+</script>

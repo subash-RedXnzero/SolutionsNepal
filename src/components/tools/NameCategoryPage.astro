@@ -1,0 +1,370 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { nepaliNames, ALL_ALPHABET } from '../../data/nepali-names.js';
+
+const { category, title, description, filterType, filterValue } = Astro.props;
+
+// Pre-filter for initial server render (SEO)
+let baseFiltered = nepaliNames;
+if (filterType === 'gender') {
+  baseFiltered = baseFiltered.filter(n => n.gender === filterValue);
+} else if (filterType === 'category') {
+  baseFiltered = baseFiltered.filter(n => n.categories.includes(filterValue));
+}
+const totalNames = baseFiltered.length;
+
+const namesJSON = JSON.stringify(nepaliNames);
+const alphabetJSON = JSON.stringify(ALL_ALPHABET);
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="names-page">
+    <header class="names-header">
+      <nav class="names-breadcrumb">
+        <a href="/nepal/names">Names</a> → <span>{title.replace('Nepali ', '').replace(' Names', '')}</span>
+      </nav>
+      <h1>{title}</h1>
+      <p class="names-subtitle">{description} ({totalNames} names)</p>
+    </header>
+
+    <!-- Search -->
+    <div class="names-search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <form id="search-form" style="display:flex;flex:1" onsubmit="return false;">
+        <input type="text" id="search-input" placeholder="Search names..." class="names-search-input" />
+        <button type="button" id="search-btn" class="names-search-btn">Search</button>
+      </form>
+    </div>
+
+    <!-- Letter Filter — full A–Z -->
+    <div class="names-letter-section">
+      <div id="letter-grid" class="names-letter-grid">
+        {ALL_ALPHABET.map(l => (
+          <button data-letter={l} class="names-letter-btn" aria-label={`${l}`} disabled>
+            <span class="names-letter-char">{l}</span>
+            <span class="names-letter-count">0</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Clear Filters -->
+    <div id="clear-filters-wrap" class="names-clear-filters" style="display:none">
+      <button id="clear-filters-btn" class="names-clear-btn">Clear Filters</button>
+    </div>
+
+    <!-- Names -->
+    <div class="names-listing">
+      <h2 class="names-section-title">
+        <span id="results-heading">{title}</span>
+        <span class="names-result-count"><span id="results-count">{totalNames}</span> name<span id="results-plural">s</span></span>
+      </h2>
+
+      <div id="names-grid" class="names-grid"></div>
+
+      <div id="names-empty" class="names-empty" style="display:none">
+        <p>No names found.</p>
+        <p class="names-empty-hint">Try another search or letter.</p>
+      </div>
+
+      <!-- Pagination -->
+      <div id="pagination" class="names-pagination" style="display:none">
+        <button id="page-prev" class="names-page-btn" disabled>← Previous</button>
+        <span id="page-info" class="names-page-info"></span>
+        <button id="page-next" class="names-page-btn">Next →</button>
+      </div>
+    </div>
+
+    <!-- Related Links -->
+    <div class="names-related-links">
+      <h3 class="names-section-title">Browse More</h3>
+      <div class="names-related-grid">
+        <a href="/nepal/names/boy" class="names-related-link">Boy Names</a>
+        <a href="/nepal/names/girl" class="names-related-link">Girl Names</a>
+        <a href="/nepal/names/sanskrit" class="names-related-link">Sanskrit Names</a>
+        <a href="/nepal/names/hindu" class="names-related-link">Hindu Names</a>
+        <a href="/nepal/names/modern" class="names-related-link">Modern Names</a>
+        <a href="/nepal/names/traditional" class="names-related-link">Traditional Names</a>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ namesJSON, alphabetJSON, filterType, filterValue, category }}>
+    // ═══════════════════════════════════════════════════════════
+    // CLIENT-SIDE FILTERING ENGINE
+    // ═══════════════════════════════════════════════════════════
+    const ALL_NAMES = JSON.parse(namesJSON);
+    const ALL_LETTERS = JSON.parse(alphabetJSON);
+    const PER_PAGE = 30;
+    const CATEGORY_PATH = '/nepal/names/' + category;
+
+    // ── State ────────────────────────────────────────────────
+    let state = { letter: '', search: '', page: 1 };
+
+    function readStateFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      state.letter = params.get('letter') || '';
+      state.search = params.get('q') || '';
+      state.page = parseInt(params.get('page') || '1', 10);
+    }
+
+    function writeStateToURL() {
+      const params = new URLSearchParams();
+      if (state.letter) params.set('letter', state.letter);
+      if (state.search) params.set('q', state.search);
+      if (state.page > 1) params.set('page', state.page);
+      const qs = params.toString();
+      const url = CATEGORY_PATH + (qs ? '?' + qs : '');
+      history.pushState(null, '', url);
+    }
+
+    // ── Category filter ──────────────────────────────────────
+    function applyCategoryFilter(names) {
+      if (filterType === 'gender') {
+        return names.filter(n => n.gender === filterValue);
+      } else if (filterType === 'category') {
+        return names.filter(n => n.categories.includes(filterValue));
+      }
+      return names;
+    }
+
+    // ── Core filter function ─────────────────────────────────
+    function filterNames() {
+      let results = applyCategoryFilter(ALL_NAMES);
+
+      if (state.letter) {
+        const l = state.letter.toUpperCase();
+        results = results.filter(n => n.name.charAt(0).toUpperCase() === l);
+      }
+
+      if (state.search) {
+        const q = state.search.toLowerCase();
+        results = results.filter(n =>
+          n.name.toLowerCase().includes(q) ||
+          n.meaning.toLowerCase().includes(q) ||
+          n.nepaliName.includes(q) ||
+          n.meaningKeywords.some(k => k.includes(q))
+        );
+      }
+
+      return results;
+    }
+
+    // ── Letter counts (category + search, NOT letter) ────────
+    function getLetterCountsFiltered() {
+      const counts = {};
+      for (const l of ALL_LETTERS) counts[l] = 0;
+      let pool = applyCategoryFilter(ALL_NAMES);
+      if (state.search) {
+        const q = state.search.toLowerCase();
+        pool = pool.filter(n =>
+          n.name.toLowerCase().includes(q) ||
+          n.meaning.toLowerCase().includes(q) ||
+          n.nepaliName.includes(q) ||
+          n.meaningKeywords.some(k => k.includes(q))
+        );
+      }
+      for (const n of pool) {
+        const l = n.name.charAt(0).toUpperCase();
+        if (counts[l] !== undefined) counts[l]++;
+      }
+      return counts;
+    }
+
+    // ── Render ───────────────────────────────────────────────
+    function render() {
+      const filtered = filterNames();
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+      if (state.page > totalPages) state.page = totalPages;
+      if (state.page < 1) state.page = 1;
+
+      const start = (state.page - 1) * PER_PAGE;
+      const displayed = filtered.slice(start, start + PER_PAGE);
+
+      // ── Letter grid ────────────────────────────────────────
+      const lc = getLetterCountsFiltered();
+      const letterBtns = document.querySelectorAll('#letter-grid .names-letter-btn');
+      letterBtns.forEach(btn => {
+        const l = btn.dataset.letter;
+        const count = lc[l] || 0;
+        btn.querySelector('.names-letter-count').textContent = count;
+        btn.classList.toggle('active', l.toUpperCase() === state.letter.toUpperCase());
+        btn.disabled = count === 0;
+        btn.setAttribute('aria-disabled', count === 0);
+        btn.setAttribute('aria-pressed', l.toUpperCase() === state.letter.toUpperCase());
+        btn.tabIndex = count === 0 ? -1 : 0;
+      });
+
+      // ── Heading ────────────────────────────────────────────
+      const heading = document.getElementById('results-heading');
+      if (state.search) {
+        heading.textContent = 'Results for "' + state.search + '"';
+      } else if (state.letter) {
+        heading.textContent = 'Names Starting With ' + state.letter;
+      } else {
+        heading.textContent = title;
+      }
+
+      // ── Count ──────────────────────────────────────────────
+      document.getElementById('results-count').textContent = total;
+      document.getElementById('results-plural').textContent = total !== 1 ? 's' : '';
+
+      // ── Grid ───────────────────────────────────────────────
+      const grid = document.getElementById('names-grid');
+      const empty = document.getElementById('names-empty');
+
+      if (displayed.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = '';
+      } else {
+        empty.style.display = 'none';
+        grid.innerHTML = displayed.map(n => `
+          <a href="/nepal/names/${n.slug}" class="names-card">
+            <div class="names-card-header">
+              <span class="names-card-name">${n.name}</span>
+              <span class="names-card-nepali">${n.nepaliName}</span>
+            </div>
+            <div class="names-card-meaning">${n.meaning}</div>
+            <div class="names-card-meta">
+              <span class="names-card-origin">${n.origin}</span>
+              <span class="names-card-gender">${n.gender}</span>
+            </div>
+          </a>
+        `).join('');
+      }
+
+      // ── Pagination ─────────────────────────────────────────
+      const pag = document.getElementById('pagination');
+      const prev = document.getElementById('page-prev');
+      const next = document.getElementById('page-next');
+      const info = document.getElementById('page-info');
+
+      if (totalPages > 1) {
+        pag.style.display = '';
+        prev.disabled = state.page <= 1;
+        next.disabled = state.page >= totalPages;
+        info.textContent = 'Page ' + state.page + ' of ' + totalPages + ' — Showing ' + (start + 1) + '–' + Math.min(start + PER_PAGE, total) + ' of ' + total + ' names';
+      } else {
+        pag.style.display = 'none';
+      }
+
+      // ── Clear filters ──────────────────────────────────────
+      const hasFilter = state.letter || state.search;
+      document.getElementById('clear-filters-wrap').style.display = hasFilter ? '' : 'none';
+    }
+
+    // ── Events ───────────────────────────────────────────────
+    document.getElementById('letter-grid').addEventListener('click', function(e) {
+      const btn = e.target.closest('.names-letter-btn');
+      if (!btn || btn.disabled) return;
+      const l = btn.dataset.letter;
+      state.letter = state.letter === l ? '' : l;
+      state.page = 1;
+      writeStateToURL();
+      render();
+      window.scrollTo({ top: document.getElementById('names-grid').offsetTop - 80, behavior: 'smooth' });
+    });
+
+    function doSearch() {
+      state.search = document.getElementById('search-input').value.trim();
+      state.page = 1;
+      writeStateToURL();
+      render();
+    }
+    document.getElementById('search-btn').addEventListener('click', doSearch);
+    document.getElementById('search-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
+    });
+
+    document.getElementById('clear-filters-btn').addEventListener('click', function() {
+      state.letter = '';
+      state.search = '';
+      state.page = 1;
+      document.getElementById('search-input').value = '';
+      writeStateToURL();
+      render();
+    });
+
+    document.getElementById('page-prev').addEventListener('click', function() {
+      if (state.page > 1) {
+        state.page--;
+        writeStateToURL();
+        render();
+        window.scrollTo({ top: document.getElementById('names-grid').offsetTop - 80, behavior: 'smooth' });
+      }
+    });
+    document.getElementById('page-next').addEventListener('click', function() {
+      state.page++;
+      writeStateToURL();
+      render();
+      window.scrollTo({ top: document.getElementById('names-grid').offsetTop - 80, behavior: 'smooth' });
+    });
+
+    window.addEventListener('popstate', function() {
+      readStateFromURL();
+      render();
+    });
+
+    // ── Init ─────────────────────────────────────────────────
+    readStateFromURL();
+    render();
+  </script>
+</BaseLayout>
+
+<style>
+  .names-page { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+  .names-header { text-align: center; margin-bottom: 24px; }
+  .names-breadcrumb { font-size: 12px; color: var(--nk-text-tertiary); margin-bottom: 8px; }
+  .names-breadcrumb a { color: var(--nk-accent, #c53030); text-decoration: none; }
+  .names-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 4px; }
+  .names-subtitle { font-size: 14px; color: var(--nk-text-secondary); }
+  .names-search-box { display: flex; align-items: center; gap: 10px; background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; color: var(--nk-text-secondary); }
+  .names-search-input { flex: 1; border: none; background: transparent; font-size: 14px; color: var(--nk-text); outline: none; font-family: inherit; }
+  .names-search-input::placeholder { color: var(--nk-text-tertiary); }
+  .names-search-btn { background: var(--nk-accent, #c53030); color: #fff; border: none; border-radius: 8px; padding: 6px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; }
+  .names-letter-section { margin-bottom: 20px; }
+  .names-letter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; }
+  .names-letter-btn { width: 100%; aspect-ratio: 1; min-height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--nk-text); background: var(--nk-surface); border: 1px solid var(--nk-border); cursor: pointer; transition: all 0.15s; font-family: inherit; padding: 0; }
+  .names-letter-btn:hover:not(:disabled) { border-color: var(--nk-accent, #c53030); }
+  .names-letter-btn.active { background: var(--nk-accent, #c53030); color: #fff; border-color: var(--nk-accent, #c53030); }
+  .names-letter-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .names-letter-char { font-size: 14px; font-weight: 600; line-height: 1; }
+  .names-letter-count { font-size: 8px; font-weight: 400; opacity: 0.7; }
+  .names-letter-btn.active .names-letter-count { opacity: 1; }
+  .names-clear-filters { margin-bottom: 16px; }
+  .names-clear-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--nk-text-secondary); background: var(--nk-surface); border: 1px solid var(--nk-border); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .names-clear-btn:hover { border-color: var(--nk-accent, #c53030); color: var(--nk-accent, #c53030); }
+  .names-section-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .names-result-count { font-size: 12px; font-weight: 400; color: var(--nk-text-tertiary); }
+  .names-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .names-card { display: flex; min-height: 92px; flex-direction: column; padding: 12px; background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 6px; text-decoration: none; transition: border-color 0.15s, transform 0.15s; }
+  .names-card:hover { border-color: var(--nk-accent, #c53030); transform: translateY(-1px); }
+  .names-card-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+  .names-card-name { font-size: 15px; font-weight: 600; color: var(--nk-text); }
+  .names-card-nepali { font-size: 13px; color: var(--nk-text-secondary); }
+  .names-card-meaning { font-size: 13px; color: var(--nk-text-secondary); margin-bottom: 6px; }
+  .names-card-meta { display: flex; gap: 8px; font-size: 11px; color: var(--nk-text-tertiary); }
+  .names-card-origin, .names-card-gender { padding: 2px 6px; background: var(--nk-bg, #f7f7f7); border-radius: 4px; }
+  .names-empty { text-align: center; padding: 40px 20px; color: var(--nk-text-secondary); font-size: 14px; }
+  .names-empty-hint { margin-top: 4px; font-size: 13px; color: var(--nk-text-tertiary); }
+  .names-pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--nk-border); }
+  .names-page-btn { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--nk-text); background: var(--nk-surface); border: 1px solid var(--nk-border); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .names-page-btn:hover:not(:disabled) { border-color: var(--nk-accent, #c53030); color: var(--nk-accent, #c53030); }
+  .names-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .names-page-info { font-size: 13px; color: var(--nk-text-secondary); }
+  .names-related-links { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--nk-border); }
+  .names-related-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .names-related-link { padding: 6px 12px; border-radius: 8px; font-size: 13px; color: var(--nk-text); background: var(--nk-surface); border: 1px solid var(--nk-border); text-decoration: none; transition: all 0.15s; }
+  .names-related-link:hover { border-color: var(--nk-accent, #c53030); color: var(--nk-accent, #c53030); }
+  @media (max-width: 640px) {
+    .names-page { padding: 20px 16px 60px; }
+    .names-header h1 { font-size: 22px; }
+    .names-grid { grid-template-columns: 1fr; }
+    .names-letter-grid { grid-template-columns: repeat(6, 1fr); gap: 3px; }
+    .names-letter-btn { min-height: 30px; font-size: 12px; }
+  }
+  @media (min-width: 641px) and (max-width: 900px) {
+    .names-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  }
+</style>

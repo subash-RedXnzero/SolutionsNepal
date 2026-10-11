@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+import PdfTool from '../../components/tools/PdfTool.astro';
+const title = 'Compress PDF — Reduce PDF Size Online Free | SolutionsNepal';
+const description = 'Reduce PDF file size in your browser while keeping text readable. Free PDF compressor for uploads and email — no signup.';
+const faqs = [
+  { q: 'How much can a PDF be compressed?', a: 'Compression depends on how image-heavy the PDF is. Text-only PDFs compress very little, while image-heavy files can shrink 50–80%. The tool balances image downsampling with text sharpness.' },
+  { q: 'Will text stay selectable after compression?', a: 'Yes. Text remains selectable and searchable. Only images are downsampled and metadata is trimmed.' },
+  { q: 'Is my PDF uploaded to a server?', a: 'No. Everything happens in your browser using pdf-lib. Your files never leave your device.' },
+  { q: 'What is the best size to compress to?', a: 'For email attachments, aim for under 2 MB. For government portals in Nepal, check the specific limit — many accept up to 1 MB or 500 KB.' },
+];
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Compress PDF', description: 'Reduce PDF file size in your browser while keeping text readable.', url: 'https://solutionsnepal.com/tools/compress-pdf', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'PDF Tools', href: '/tools/pdf' }, { label: 'Compress PDF' }]} />
+    <div class="mb-5 text-center"><h1 class="text-[28px] font-bold sm:text-[36px] tracking-tight mx-auto" style="color:var(--nk-text);">Compress PDF</h1><p class="mt-2 text-[15px] sm:text-[16px] mx-auto text-center leading-relaxed" style="color:var(--nk-text-secondary);">Reduce PDF file size while keeping the document as usable as possible.</p></div>
+    <PdfTool mode="compress-pdf" />
+    <p class="mt-5 text-xs" style="color:var(--nk-text-secondary);"><strong>Private by design</strong> — your files are processed directly in your browser.</p>
+
+    <section class="mt-10 space-y-4 text-[15px] leading-relaxed" style="color:var(--nk-text);">
+      <h2 class="text-xl font-semibold mt-6">How to Compress a PDF</h2>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Drag and drop your PDF or click to browse.</li>
+        <li>The tool compresses images and trims metadata automatically.</li>
+        <li>Download the smaller PDF — text stays selectable and sharp.</li>
+      </ol>
+      <h2 class="text-xl font-semibold mt-6">When You Need PDF Compression</h2>
+      <p>Government portals in Nepal (IRD, DoTM, OCR) and job sites often enforce strict file-size limits. Email providers typically cap attachments at 25 MB. Compressing images inside a PDF is the fastest way to meet these limits without retyping or recreating the document.</p>
+      <h2 class="text-xl font-semibold mt-6">Frequently Asked Questions</h2>
+      {faqs.map(f => (
+        <details class="group border-b py-3" style="border-color:var(--nk-border);">
+          <summary class="cursor-pointer font-medium list-none flex justify-between items-center">{f.q}<span class="ml-2 text-lg transition-transform group-open:rotate-45">+</span></summary>
+          <p class="mt-2 text-sm" style="color:var(--nk-text-secondary);">{f.a}</p>
+        </details>
+      ))}
+    </section>
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[{ title: 'Merge PDF', description: 'Combine multiple PDFs into one', href: '/tools/merge-pdf' }, { title: 'PDF to Word', description: 'Convert PDF to editable DOCX', href: '/tools/pdf-to-word' }, { title: 'JPG to PDF', description: 'Turn images into a PDF', href: '/tools/jpg-to-pdf' }, { title: 'PDF to JPG', description: 'Extract pages as images', href: '/tools/pdf-to-jpg' }]} />
+  </div>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+const { title, description } = Astro.props;
+---
+
+<div>
+  <!-- Header -->
+  <div class="mb-5">
+    <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
+      {title}
+    </h1>
+    {description && (
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+        {description}
+      </p>
+    )}
+  </div>
+  
+  <!-- Content -->
+  <div class="nk-card p-5">
+    <slot />
+  </div>
+</div>

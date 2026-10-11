@@ -1,0 +1,75 @@
+---
+/**
+ * CategoryChips — horizontal swipeable category rail for mobile.
+ *
+ * The desktop category sidebar is hidden below 1024px, which left every
+ * category hub page (e.g. /nepal/finance) with NO way to switch categories
+ * on a phone — users had to go back to /nepal first. This rail replaces the
+ * sidebar on small screens, same pattern as the Tools index page chips.
+ *
+ * Props:
+ *   currentId — category id of the hub page it's rendered on ('' on All Tools)
+ */
+import { getActiveCategories } from '../../data/categories.js';
+
+interface Props {
+  currentId?: string;
+}
+const { currentId = '' } = Astro.props;
+
+const cats = getActiveCategories();
+---
+
+<nav class="cat-chips" aria-label="Tool categories">
+  <a href="/nepal" class={`cat-chip${!currentId ? ' is-on' : ''}`}>All</a>
+  {cats.map(cat => (
+    <a
+      href={cat.href}
+      class={`cat-chip${cat.id === currentId ? ' is-on' : ''}`}
+      aria-current={cat.id === currentId ? 'page' : undefined}
+    >{cat.name.replace(' & Calendar', '')}</a>
+  ))}
+</nav>
+
+<style>
+  .cat-chips { display: none; }
+
+  @media (max-width: 1023px) {
+    /* Sidebar hides below lg — show the rail from there down */
+    .cat-chips {
+      display: flex; gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain; /* swipes stay in the rail */
+      margin: 0 -20px 18px;
+      padding: 2px 20px 6px;
+    }
+    .cat-chips::-webkit-scrollbar { display: none; }
+    .cat-chip {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      display: inline-flex; align-items: center;
+      min-height: 44px; padding: 9px 16px;
+      font-size: 13.5px; font-weight: 500;
+      color: var(--nk-text-secondary);
+      background: var(--nk-card-bg);
+      border: 1px solid var(--nk-border);
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .cat-chip:hover { color: var(--nk-text); border-color: var(--nk-border-strong); }
+    .cat-chip:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+    .cat-chip.is-on {
+      background: var(--nk-sidebar-active);
+      border-color: var(--nk-accent);
+      color: var(--nk-accent);
+      font-weight: 600;
+    }
+  }
+  @media (max-width: 479px) {
+    .cat-chips { margin: 0 -16px 16px; padding: 2px 16px 6px; }
+  }
+</style>

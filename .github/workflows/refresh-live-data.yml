@@ -1,0 +1,58 @@
+name: Refresh live data
+
+# NepalKit is a static site: gold/fuel/forex/weather only change when the site
+# rebuilds. This workflow rebuilds on a schedule so "Nepal Today" stays current.
+#
+# REQUIRES a deployment connected to the repo (Netlify/Vercel/Cloudflare Pages
+# git integration picks up the push automatically). Nothing is deployed here —
+# this only commits a fresh live-snapshot.json; your hosting platform deploys.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # every 30 minutes
+  workflow_dispatch: {} # manual trigger button
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-data
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    # Note: scheduled workflows are disabled by default on forks until the
+    # owner enables Actions, so no extra fork guard is needed.
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Force a refetch by clearing the snapshot cache first.
+      - name: Fetch fresh live data
+        run: |
+          rm -f src/data/live-snapshot.json
+          node scripts/fetch-live-data.mjs
+
+      - name: Check snapshot actually updated
+        id: check
+        run: |
+          if git diff --quiet src/data/live-snapshot.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit fresh snapshot
+        if: steps.check.outputs.changed == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh live data snapshot [skip ci]"
+          file_pattern: src/data/live-snapshot.json

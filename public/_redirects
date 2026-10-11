@@ -1,0 +1,15 @@
+# Cloudflare Pages redirects — mirrors `redirects` in astro.config.mjs
+# (Vercel reads vercel.json; Cloudflare needs this file instead).
+# Used only if/when hosting moves to Cloudflare Pages. Keep in sync
+# with astro.config.mjs. Format: <from> <to> <status>
+/tools /nepal 301
+/best-remittance-exchange-rate-nepal-guide /blog/best-remittance-exchange-rate-nepal-guide 301
+/nepal/foreign-job-salary-savings /nepal/finance/foreign-job-salary-savings 301
+/nepal/freelancer-take-home-calculator /nepal/finance/freelancer-take-home-calculator 301
+/nepal/jobs /nepal/utilities/jobs 301
+/nepal/pdf-editor /tools/merge-pdf 301
+/tools/nepal-passport-photo /tools/passport-photo-resizer 301
+/tools/visa-photo-resizer /tools/passport-photo-resizer 301
+/tools/dv-lottery-photo /tools/passport-photo-resizer 301
+/tools/citizenship-photo /tools/passport-photo-resizer 301
+/tools/convert /tools/image-compressor 301

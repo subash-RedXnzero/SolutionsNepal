@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import QrCodeGenerator from '../../components/tools/QrCodeGenerator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'vCard QR Code Generator – Digital Business Card QR | SolutionsNepal';
+const description = 'Turn your contact details into a scannable vCard QR code. Name, phone, email, organization, website and address saved straight to the phone\u2019s contacts.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'vCard QR Generator' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">vCard QR Code Generator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Your business card, but scannable — contact details save straight to a phone.</p>
+    </div>
+
+    <QrCodeGenerator initialType="vcard" />
+
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">A real contact card, not just text</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          This tool generates a proper <strong>vCard 3.0</strong> payload — the same format email clients and
+          phones use natively. When scanned, the phone shows a "Add Contact / Save" prompt with every field
+          structured correctly: first and last name separated, phone typed as mobile, website normalized.
+          No copy-pasting from a plain text blob.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">What belongs on the card?</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <strong>Name</strong> — required; everything else is optional</li>
+          <li>• <strong>Phone & email</strong> — the two fields people actually use back</li>
+          <li>• <strong>Organization & title</strong> — useful for networking events</li>
+          <li>• <strong>Website</strong> — great for portfolios and company pages</li>
+        </ul>
+        <p class="mt-2 text-[11.5px]" style="color:var(--nk-text-tertiary);">
+          Fewer fields also mean a less dense QR that scans more reliably — fill only what matters.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Privacy by default</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Your contact details are encoded locally in your browser and are never transmitted anywhere.
+          Generate, download the SVG, and print it on your actual business card — one card, unlimited saves.
+        </p>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        Related: <a class="underline hover:opacity-80" href="/tools/qr-code-generator" style="color:var(--nk-accent);">all QR types</a> ·
+        <a class="underline hover:opacity-80" href="/tools/email-qr-code-generator" style="color:var(--nk-accent);">Email QR</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

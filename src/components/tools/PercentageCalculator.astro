@@ -1,0 +1,181 @@
+---
+/**
+ * PercentageCalculator — "What is X% of Y?"
+ *
+ * Reads like a natural question. Inputs are inline in the sentence.
+ */
+---
+
+<div id="pc-root" class="nk-card overflow-hidden">
+  <div class="p-5 sm:p-6">
+
+    <!-- Main question sentence -->
+    <div class="mb-6">
+      <p class="text-[13px] font-medium mb-3" style="color:var(--nk-text-secondary);">Fill in the numbers</p>
+      <div class="flex flex-wrap items-center gap-2 text-[18px] sm:text-[20px] font-semibold" style="color:var(--nk-text);">
+        <span>What is</span>
+        <input
+          id="pc-of-pct"
+          type="number"
+          step="any"
+          min="0"
+          placeholder="20"
+          class="pc-inline-input w-20 sm:w-24 text-center"
+        />
+        <span>%</span>
+        <span>of</span>
+        <input
+          id="pc-of-val"
+          type="number"
+          step="any"
+          min="0"
+          placeholder="500"
+          class="pc-inline-input w-24 sm:w-28 text-center"
+        />
+        <span>?</span>
+      </div>
+    </div>
+
+    <!-- Calculate -->
+    <button id="pc-calc" class="w-full py-2.5 rounded-lg text-[14px] font-semibold transition-all hover:opacity-90 active:scale-[0.99]" style="background-color:var(--nk-accent);color:#fff;">
+      Calculate
+    </button>
+
+    <!-- Result -->
+    <div id="pc-result-box" class="mt-5 rounded-lg p-5 text-center hidden" style="background:var(--nk-accent-subtle);">
+      <p class="text-[11px] font-medium mb-1.5" style="color:var(--nk-text-tertiary);">Answer</p>
+      <p id="pc-of-result" class="text-[40px] font-bold tracking-[-0.02em] tabular-nums leading-tight" style="color:var(--nk-accent);">—</p>
+      <p id="pc-of-formula" class="text-[12px] mt-2 font-mono" style="color:var(--nk-text-secondary);"></p>
+    </div>
+
+    <!-- Quick examples -->
+    <div class="mt-5">
+      <p class="text-[11px] font-medium mb-2" style="color:var(--nk-text-tertiary);">Try an example</p>
+      <div class="flex flex-wrap gap-1.5">
+        <button class="pc-preset" data-a="20" data-b="500">20% of 500 = 100</button>
+        <button class="pc-preset" data-a="15" data-b="800">15% of 800 = 120</button>
+        <button class="pc-preset" data-a="25" data-b="1000">25% of 1,000 = 250</button>
+        <button class="pc-preset" data-a="10" data-b="2500">10% of 2,500 = 250</button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-4 flex gap-2">
+      <button id="pc-copy" class="nk-btn nk-btn-secondary nk-btn-sm flex-1 text-[12px]">Copy Result</button>
+      <button id="pc-reset" class="nk-btn nk-btn-ghost nk-btn-sm text-[12px]">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = (sel: string) => document.getElementById(sel);
+
+  const fmt = (n: number) => {
+    if (!Number.isFinite(n)) return '—';
+    if (Number.isInteger(n) && Math.abs(n) < 1e15) return n.toLocaleString('en-US');
+    const s = n.toFixed(10).replace(/\.?0+$/, '');
+    const [int, dec] = s.split('.');
+    const formatted = Number(int).toLocaleString('en-US');
+    return dec ? `${formatted}.${dec}` : formatted;
+  };
+
+  const ofPct = $('pc-of-pct') as HTMLInputElement;
+  const ofVal = $('pc-of-val') as HTMLInputElement;
+  const ofResult = $('pc-of-result')!;
+  const ofFormula = $('pc-of-formula')!;
+  const resultBox = $('pc-result-box')!;
+  const calcBtn = $('pc-calc')!;
+  let lastResultText = '';
+
+  function calculate() {
+    const p = parseFloat(ofPct.value);
+    const v = parseFloat(ofVal.value);
+    if (!Number.isFinite(p) || !Number.isFinite(v)) {
+      resultBox.classList.add('hidden');
+      lastResultText = '';
+      return;
+    }
+    const r = (p / 100) * v;
+    ofResult.textContent = fmt(r);
+    ofFormula.textContent = `${fmt(p)}% × ${fmt(v)} = ${fmt(r)}`;
+    lastResultText = `${fmt(p)}% of ${fmt(v)} = ${fmt(r)}`;
+    resultBox.classList.remove('hidden');
+  }
+
+  calcBtn.addEventListener('click', calculate);
+
+  // Enter key triggers calculation
+  [ofPct, ofVal].forEach((el) => {
+    el?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') calculate();
+    });
+  });
+
+  // Presets — show the answer directly in the button label
+  document.querySelectorAll('#pc-root .pc-preset').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      ofPct.value = (btn as HTMLElement).dataset.a || '';
+      ofVal.value = (btn as HTMLElement).dataset.b || '';
+      calculate();
+    });
+  });
+
+  // Copy
+  $('pc-copy')?.addEventListener('click', async () => {
+    if (!lastResultText) return;
+    try { await navigator.clipboard.writeText(lastResultText); } catch { /* fallback */ }
+    const btn = $('pc-copy');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Result'; }, 2000); }
+  });
+
+  // Reset
+  $('pc-reset')?.addEventListener('click', () => {
+    if (ofPct) ofPct.value = '';
+    if (ofVal) ofVal.value = '';
+    resultBox.classList.add('hidden');
+    lastResultText = '';
+  });
+</script>
+
+<style>
+  .pc-inline-input {
+    padding: 6px 4px;
+    border-radius: 8px;
+    border: 2px solid var(--nk-border);
+    background: var(--nk-bg);
+    font-size: 18px;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    color: var(--nk-text);
+    outline: none;
+    transition: border-color 0.15s ease;
+    -moz-appearance: textfield;
+  }
+  .pc-inline-input::-webkit-outer-spin-button,
+  .pc-inline-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .pc-inline-input:focus {
+    border-color: var(--nk-accent);
+  }
+  .pc-inline-input::placeholder {
+    color: var(--nk-text-tertiary);
+    font-weight: 400;
+  }
+
+  .pc-preset {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--nk-border);
+    cursor: pointer;
+    color: var(--nk-text-secondary);
+    background: var(--nk-bg);
+    font-family: var(--font-sans);
+    transition: all 0.1s ease;
+  }
+  .pc-preset:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+</style>

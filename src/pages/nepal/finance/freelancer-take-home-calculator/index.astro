@@ -1,0 +1,910 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Search, Wallet, Banknote, Receipt, Building2, Calculator, Share2, RotateCcw, Info, TrendingUp, Scale, Clock, Briefcase } from '@lucide/astro';
+import { getAllCurrenciesAsync, getForexMetaAsync } from '../../../../lib/nepal/forex.js';
+import { INCOME_SOURCES, PLATFORMS, CURRENCIES, PAYMENT_METHODS, BUSINESS_EXPENSE_DEFS, ONE_TIME_EXPENSE_DEFS, getPlatformById } from '../../../../data/freelancer-take-home.js';
+
+const title = 'Freelancer Take-home Calculator Nepal | SolutionsNepal';
+const description = 'Calculate your real freelance or remote job income after platform fees, payment charges, taxes, business expenses, and currency conversion to NPR.';
+
+let liveMap = new Map();
+let liveMeta = null;
+try {
+  const [currs, meta] = await Promise.all([getAllCurrenciesAsync(), getForexMetaAsync()]);
+  for (const c of currs) {
+    if (c.sellPerUnit) liveMap.set(c.iso3, c.sellPerUnit);
+  }
+  liveMeta = meta;
+} catch {}
+
+const currencyOptions = CURRENCIES.map((c) => {
+  const live = liveMap.get(c.iso3);
+  return { ...c, liveRate: live || null };
+});
+
+const faqItems = [
+  { q: 'How do I calculate my freelance take home income?', a: 'Add your foreign income, subtract platform and payment fees to get after payment income, subtract your estimated tax, convert to NPR at your exchange rate, then subtract NPR business expenses. The result is your estimated take home.' },
+  { q: 'Does this calculator include Upwork and Fiverr fees?', a: 'Yes, as adjustable percentages. Select a platform to prefill its typical fee, then edit the percentage to match your actual contract. Direct client mode removes the platform fee entirely.' },
+  { q: 'Can I calculate my income in Nepali rupees?', a: 'Yes. Enter an exchange rate or use a live rate when available. The calculator shows both foreign and NPR monthly and yearly take home.' },
+  { q: 'Does the calculator calculate Nepal taxes?', a: 'It estimates tax from the rate or amount you enter. Tax treatment depends on income type and registration status. This is not official tax advice. Verify with current Nepal tax rules or a qualified professional.' },
+  { q: 'What exchange rate does the calculator use?', a: 'The rate you enter. If live NRB data is available you can prefill it, and the result shows the rate, source and time. A manually entered rate is never labeled as live.' },
+  { q: 'Can I calculate my hourly freelance rate?', a: 'Yes. Use What Should I Charge to enter desired take home, hours, fees and tax, then see required gross, hourly, daily and project rates. Billable hours are separate from total working hours.' },
+  { q: 'Can I compare freelance work with a remote job?', a: 'Yes. Use Compare Two Income Options to enter freelance and remote job figures side by side. The comparison highlights which option leaves greater estimated take home based only on the numbers you entered.' },
+  { q: 'Why is my take home income lower than my gross income?', a: 'Platform fees, payment charges, estimated tax and business expenses are subtracted before you see take home. The breakdown and effective deduction rate show exactly where the difference goes.' },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Freelancer Take-home Calculator Nepal',
+      description: 'Calculate your real freelance or remote job income after platform fees, payment charges, taxes, business expenses, and currency conversion to NPR.',
+      url: 'https://solutionsnepal.com/nepal/finance/freelancer-take-home-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-4 sm:py-5">
+    <Breadcrumbs items={[{ label: 'Nepal', href: '/nepal' }, { label: 'Finance', href: '/nepal/finance' }, { label: 'Freelancer Take-home Calculator' }]} />
+
+    <div class="mb-4">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">Freelancer &amp; Remote Worker Take-home Calculator</h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">See how much you actually keep from your foreign freelance or remote income after fees, expenses, and estimated taxes.</p>
+      <p class="text-[12px] mt-1 flex items-center gap-1.5" style="color: var(--nk-text-tertiary);"><Info size={13} /> Calculate your real monthly and yearly income in Nepali rupees.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4 items-start">
+
+      <!-- LEFT: INPUTS -->
+      <div class="space-y-4 min-w-0">
+
+        <!-- Step 1: Income source -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Briefcase size={14} /> How do you earn?</h2>
+          <div class="flex flex-wrap gap-1.5 mb-3" id="source-row">
+            {INCOME_SOURCES.map((s, i) => (
+              <button type="button" class={`src-chip${i === 0 ? ' chip-active' : ''}`} data-source={s.id}>{s.label}</button>
+            ))}
+          </div>
+          <div class="flex flex-wrap gap-1.5" id="platform-row">
+            {PLATFORMS.map((p) => (
+              <button type="button" class="plat-chip" data-platform={p.id} data-fee={p.defaultFee}>{p.label}</button>
+            ))}
+          </div>
+          <label class="flex items-center gap-2 mt-3 text-[13px]" style="color: var(--nk-text);">
+            <input type="checkbox" id="direct-client" /> I work directly with clients
+          </label>
+          <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">Direct mode removes the platform fee from the calculation.</p>
+        </section>
+
+        <!-- Step 2: Income -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Banknote size={14} /> Monthly foreign income</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="income" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Amount</label>
+              <div class="relative">
+                <input id="income" type="text" inputmode="decimal" placeholder="2,000" class="nk-input text-[14px] tabular-nums pr-20" />
+                <span class="field-suffix" id="suffix-income"></span>
+              </div>
+            </div>
+            <div>
+              <label for="currency" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Currency</label>
+              <select id="currency" class="nk-input text-[14px]">
+                {CURRENCIES.map((c) => <option value={c.iso3}>{c.flag} {c.iso3} - {c.name}</option>)}
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </div>
+          <div id="other-currency-row" class="hidden mt-2">
+            <label for="other-currency" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Other currency code</label>
+            <input id="other-currency" type="text" placeholder="e.g. NOK" maxlength="5" class="nk-input text-[14px] uppercase" />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            <div>
+              <label for="exchange-rate" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Exchange rate <span class="text-[11px]" style="color: var(--nk-text-tertiary);">1 unit = NPR</span></label>
+              <input id="exchange-rate" type="text" inputmode="decimal" placeholder="Enter rate or use live" class="nk-input text-[14px] tabular-nums" />
+              <p class="text-[11px] mt-1" id="rate-meta" style="color: var(--nk-text-tertiary);"></p>
+            </div>
+            <div class="flex items-end">
+              <button type="button" id="use-live-rate" class="hidden nk-btn nk-btn-secondary nk-btn-sm"><TrendingUp size={14} /> Use live rate</button>
+            </div>
+          </div>
+          <p class="text-[11px] mt-1" id="rate-used-line" style="color: var(--nk-text-tertiary);"></p>
+        </section>
+
+        <!-- Step 3: Platform & Payment Fees -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Receipt size={14} /> Platform and payment fees</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="platform-fee" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Platform fee %</label>
+              <div class="relative">
+                <input id="platform-fee" type="text" inputmode="decimal" placeholder="10" class="nk-input text-[14px] tabular-nums pr-8" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color: var(--nk-text-tertiary);">%</span>
+              </div>
+            </div>
+            <div>
+              <label for="payment-percent" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Payment fee %</label>
+              <div class="relative">
+                <input id="payment-percent" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-8" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color: var(--nk-text-tertiary);">%</span>
+              </div>
+            </div>
+            <div>
+              <label for="payment-fixed" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Payment fixed fee</label>
+              <div class="relative">
+                <input id="payment-fixed" type="text" inputmode="decimal" placeholder="15" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" id="suffix-payment-fixed"></span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-2">
+            <label class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Payment method <span class="text-[11px]" style="color: var(--nk-text-tertiary);">optional</span></label>
+            <div class="flex flex-wrap gap-1.5" id="paymethod-row">
+              {PAYMENT_METHODS.map((m) => (
+                <button type="button" class="pay-chip" data-paymethod={m.id}>{m.label}</button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 4: Business Expenses -->
+        <section class="nk-card p-4">
+          <button type="button" id="expenses-toggle" class="w-full flex items-center justify-between text-left">
+            <span class="text-[13px] font-semibold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--nk-text);"><Building2 size={14} /> Monthly business expenses</span>
+            <span class="text-[11px] px-2 py-1 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">Optional</span>
+          </button>
+          <div id="expenses-panel" class="hidden mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {BUSINESS_EXPENSE_DEFS.map((e) => (
+              <div>
+                <label for={`biz-${e.key}`} class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">{e.label} <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs</span></label>
+                <input id={`biz-${e.key}`} data-biz={e.key} type="text" inputmode="decimal" placeholder={String(e.example)} class="nk-input text-[14px] tabular-nums" />
+              </div>
+            ))}
+          </div>
+          <p class="text-[12px] mt-2 tabular-nums" style="color: var(--nk-text-secondary);">Total: <strong id="biz-total" style="color: var(--nk-text);">Rs. 0</strong></p>
+        </section>
+
+        <!-- One-time / Annual Expenses -->
+        <section class="nk-card p-4">
+          <button type="button" id="onetime-toggle" class="w-full flex items-center justify-between text-left">
+            <span class="text-[13px] font-semibold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--nk-text);"><Clock size={14} /> One time and annual expenses</span>
+            <span class="text-[11px] px-2 py-1 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">Optional</span>
+          </button>
+          <div id="onetime-panel" class="hidden mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {ONE_TIME_EXPENSE_DEFS.map((e) => (
+              <div>
+                <label for={`ot-${e.key}`} class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">{e.label} <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs · {e.kind === 'oneTime' ? 'one time' : 'annual'}</span></label>
+                <input id={`ot-${e.key}`} data-onetime={e.key} type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums" />
+              </div>
+            ))}
+            <div>
+              <label for="annual-expenses" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Annual expenses <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs</span></label>
+              <input id="annual-expenses" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 5: Tax -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Receipt size={14} /> Estimated tax / other deductions</h2>
+          <div class="flex items-center gap-2 mb-2">
+            <label class="flex items-center gap-1.5 text-[12px]" style="color: var(--nk-text);"><input type="radio" name="tax-mode" value="percent" checked /> Percentage</label>
+            <label class="flex items-center gap-1.5 text-[12px]" style="color: var(--nk-text);"><input type="radio" name="tax-mode" value="fixed" /> Fixed amount</label>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div id="tax-percent-row">
+              <label for="tax-percent" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Tax percent</label>
+              <div class="relative">
+                <input id="tax-percent" type="text" inputmode="decimal" placeholder="5" class="nk-input text-[14px] tabular-nums pr-8" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color: var(--nk-text-tertiary);">%</span>
+              </div>
+            </div>
+            <div id="tax-fixed-row" class="hidden">
+              <label for="tax-fixed" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Tax fixed amount</label>
+              <div class="relative">
+                <input id="tax-fixed" type="text" inputmode="decimal" placeholder="89" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" id="suffix-tax-fixed"></span>
+              </div>
+            </div>
+            <div class="flex items-end">
+              <p class="text-[12px] tabular-nums p-2.5 rounded-lg w-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-secondary);">Estimated tax: <strong id="tax-preview" style="color: var(--nk-text);">—</strong></p>
+            </div>
+          </div>
+          <p class="text-[11px] mt-2 leading-relaxed" style="color: var(--nk-text-tertiary);">Tax treatment depends on your income type, registration status, applicable Nepal tax rules, and other circumstances. Enter the rate you want to use for this estimate.</p>
+        </section>
+
+        <!-- Savings Goal -->
+        <section class="nk-card p-4">
+          <h3 class="text-[13px] font-semibold mb-2" style="color: var(--nk-text);">Can I reach my savings goal?</h3>
+          <label for="savings-goal" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Monthly savings goal <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="savings-goal" type="text" inputmode="decimal" placeholder="150,000" class="nk-input text-[14px] tabular-nums" />
+          <p class="text-[12.5px] mt-2" id="goal-result" style="color: var(--nk-text-secondary);"></p>
+        </section>
+
+        <!-- What should I charge -->
+        <section class="nk-card p-4">
+          <h3 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Calculator size={14} /> What should I charge?</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="desired-takehome" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Desired monthly take home <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs</span></label>
+              <input id="desired-takehome" type="text" inputmode="decimal" placeholder="200,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="working-hours" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Monthly working hours</label>
+              <input id="working-hours" type="text" inputmode="decimal" placeholder="160" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="billable-hours" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Billable hours</label>
+              <input id="billable-hours" type="text" inputmode="decimal" placeholder="100" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="rate-biz-expenses" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Monthly business expenses <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Rs</span></label>
+              <input id="rate-biz-expenses" type="text" inputmode="decimal" placeholder="10,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+          </div>
+          <div class="mt-3 p-3 rounded-lg space-y-1 text-[12.5px] tabular-nums" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">Required monthly gross</span><strong id="req-gross" style="color: var(--nk-text);">—</strong></div>
+            <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">Required hourly rate</span><strong id="req-hourly" style="color: var(--nk-text);">—</strong></div>
+            <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">Daily rate (22 days)</span><strong id="req-daily" style="color: var(--nk-text);">—</strong></div>
+            <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">Effective hourly after fees</span><strong id="req-effective" style="color: var(--nk-text);">—</strong></div>
+          </div>
+        </section>
+
+        <!-- Compare -->
+        <section class="nk-card p-4">
+          <button type="button" id="compare-toggle" class="w-full flex items-center justify-between text-left">
+            <span class="text-[13px] font-semibold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--nk-text);"><Scale size={14} /> Compare two income options</span>
+            <span class="text-[11px] px-2 py-1 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">Optional</span>
+          </button>
+          <div id="compare-panel" class="hidden mt-3 space-y-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="space-y-2 p-3 rounded-lg" style="border: 1px solid var(--nk-border); background: var(--nk-surface);">
+                <p class="text-[12px] font-semibold" style="color: var(--nk-text);">Freelance</p>
+                <input id="cmp-a-income" type="text" inputmode="decimal" placeholder="Income" class="nk-input text-[13px] tabular-nums" />
+                <input id="cmp-a-platform" type="text" inputmode="decimal" placeholder="Platform % e.g. 10" class="nk-input text-[13px] tabular-nums" />
+                <input id="cmp-a-payment" type="text" inputmode="decimal" placeholder="Payment fixed e.g. 15" class="nk-input text-[13px] tabular-nums" />
+                <input id="cmp-a-biz" type="text" inputmode="decimal" placeholder="Business Rs e.g. 9500" class="nk-input text-[13px] tabular-nums" />
+                <input id="cmp-a-tax" type="text" inputmode="decimal" placeholder="Tax % e.g. 5" class="nk-input text-[13px] tabular-nums" />
+              </div>
+              <div class="space-y-2 p-3 rounded-lg" style="border: 1px solid var(--nk-border); background: var(--nk-surface);">
+                <p class="text-[12px] font-semibold" style="color: var(--nk-text);">Remote Job</p>
+                <input id="cmp-b-income" type="text" inputmode="decimal" placeholder="Income" class="nk-input text-[13px] tabular-nums" />
+                <input id="cmp-b-platform" type="text" inputmode="decimal" placeholder="Platform % e.g. 0" class="nk-input text-[13px] tabular-nums" />
+                <input id="cmp-b-payment" type="text" inputmode="decimal" placeholder="Payment fixed e.g. 0" class="nk-input text-[13px] tabular-nums" />
+                <input id="cmp-b-biz" type="text" inputmode="decimal" placeholder="Business Rs e.g. 5000" class="nk-input text-[13px] tabular-nums" />
+                <input id="cmp-b-tax" type="text" inputmode="decimal" placeholder="Tax % e.g. 5" class="nk-input text-[13px] tabular-nums" />
+              </div>
+            </div>
+            <div id="compare-result" class="hidden p-3 rounded-lg text-[12.5px] leading-relaxed" style="background: var(--nk-hover); border: 1px solid var(--nk-border);"></div>
+          </div>
+        </section>
+
+        <div class="flex flex-wrap gap-2">
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary nk-btn-sm"><RotateCcw size={14} /> Reset calculator</button>
+          <button type="button" id="share-btn" class="nk-btn nk-btn-secondary nk-btn-sm"><Share2 size={14} /> Share my results</button>
+        </div>
+        <p id="share-status" class="hidden text-[11.5px]" style="color: var(--nk-text-tertiary);" role="status"></p>
+      </div>
+
+      <!-- RIGHT: RESULTS -->
+      <div class="lg:sticky lg:top-4 space-y-3">
+        <div class="nk-card p-4" id="result-card">
+          <h2 class="text-[13px] font-semibold flex items-center gap-1.5" style="color: var(--nk-text);"><Wallet size={14} /> Estimated take home</h2>
+          <div id="overspend-banner" class="hidden mt-2 p-2.5 rounded-lg text-[12px] leading-relaxed" style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;"></div>
+          <div class="mt-3 space-y-1 text-[12.5px]" style="color: var(--nk-text-secondary);">
+            <div class="flex justify-between"><span>Gross income</span><span class="font-medium tabular-nums" style="color: var(--nk-text);" id="r-gross">—</span></div>
+            <div class="flex justify-between"><span>Platform fee</span><span class="tabular-nums" id="r-platform">—</span></div>
+            <div class="flex justify-between"><span>Payment fee</span><span class="tabular-nums" id="r-payment">—</span></div>
+            <div class="flex justify-between"><span>Estimated tax</span><span class="tabular-nums" id="r-tax">—</span></div>
+            <div class="flex justify-between"><span>Business expenses</span><span class="tabular-nums" id="r-biz">—</span></div>
+            <div class="h-px my-1" style="background: var(--nk-border);"></div>
+            <div class="flex justify-between text-[14px]"><span class="font-semibold" style="color: var(--nk-text);">Monthly take home</span><span class="font-bold tabular-nums" style="color: var(--nk-text);" id="r-monthly">—</span></div>
+            <div class="flex justify-between"><span></span><span class="tabular-nums text-[11px]" id="r-monthly-foreign" style="color: var(--nk-text-tertiary);"></span></div>
+          </div>
+          <div class="mt-3 p-3 rounded-lg" style="background: var(--nk-accent-subtle); border: 1px solid var(--nk-border);">
+            <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">What you actually earn in Nepal</p>
+            <p class="text-[11px] tabular-nums mt-1" style="color: var(--nk-text-tertiary);" id="r-rate-used"></p>
+            <p class="text-[11px] tabular-nums mt-1" style="color: var(--nk-text-tertiary);" id="r-after-fees"></p>
+          </div>
+          <div class="mt-3 p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Yearly take home</p>
+            <p class="text-[16px] font-bold tabular-nums" style="color: var(--nk-text);" id="r-yearly">—</p>
+            <p class="text-[11px] tabular-nums" style="color: var(--nk-text-tertiary);" id="r-yearly-foreign"></p>
+          </div>
+        </div>
+
+        <div class="nk-card p-4">
+          <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">Income breakdown</h3>
+          <div id="breakdown-bars" class="space-y-2"></div>
+          <div class="mt-3 p-2.5 rounded-lg text-[12px]" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">Total deductions</span><strong id="r-deduction-rate" style="color: var(--nk-text);">—</strong></div>
+            <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);" id="r-keep-rate"></p>
+          </div>
+        </div>
+
+        <div class="nk-card p-4">
+          <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">Annual income summary</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-[12px]">
+              <thead>
+                <tr style="color: var(--nk-text-tertiary);">
+                  <th class="text-left font-medium py-1 pr-2">Item</th>
+                  <th class="text-right font-medium py-1 px-2">Monthly</th>
+                  <th class="text-right font-medium py-1 pl-2">Yearly</th>
+                </tr>
+              </thead>
+              <tbody id="annual-table" class="tabular-nums"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="text-[11px] leading-relaxed p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">
+          <strong style="color: var(--nk-text);">Disclaimer:</strong> This calculator is for estimation and planning purposes only. Actual platform fees, payment charges, exchange rates, taxes, banking costs, and business expenses vary. Tax calculations should be verified against current Nepal tax rules or with a qualified tax professional.
+        </p>
+      </div>
+    </div>
+
+    <section class="mt-10 max-w-[720px] space-y-6 text-[13.5px] leading-relaxed" style="color: var(--nk-text-secondary);">
+      <h2 class="text-[18px] font-semibold" style="color: var(--nk-text);">How much do freelancers actually take home?</h2>
+      <p>Gross income is the headline number. Subtract platform and payment fees, then estimated tax, then convert what remains to NPR and subtract your NPR business expenses. The remainder is your estimated take home.</p>
+      <h2 class="text-[18px] font-semibold" style="color: var(--nk-text);">How platform fees affect freelancer income</h2>
+      <p>A $2,000 invoice does not mean you receive $2,000. A 10 percent platform fee leaves $1,800 before payment and tax charges. Even small percentages compound across the chain.</p>
+      <h2 class="text-[18px] font-semibold" style="color: var(--nk-text);">How to calculate freelance income in Nepali rupees</h2>
+      <p>Multiply your foreign take home by your exchange rate. The rate you use matters more than the headline income, so the result always shows the rate, source and time.</p>
+      <h2 class="text-[18px] font-semibold" style="color: var(--nk-text);">What expenses should Nepali freelancers consider?</h2>
+      <p>Internet, electricity, software, hardware, workspace, payment and banking costs, and professional services. One time costs like a laptop or registration can be spread across the year.</p>
+      <h2 class="text-[18px] font-semibold" style="color: var(--nk-text);">How much should I charge as a freelancer?</h2>
+      <p>Start from the take home you want, add business expenses, then work backwards through tax and fees at your exchange rate to find the gross and hourly rate you need to charge.</p>
+    </section>
+
+    <section class="mt-8 max-w-[720px]">
+      <h2 class="text-[18px] font-semibold mb-3" style="color: var(--nk-text);">Frequently asked questions</h2>
+      <div class="space-y-2">
+        {faqItems.map((item) => (
+          <details class="group border rounded-lg" style="border-color: var(--nk-border); background: var(--nk-card-bg);">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3 text-[13.5px] font-medium" style="color: var(--nk-text);">
+              <span>{item.q}</span>
+              <span class="text-[11px] px-2 py-1 rounded-full shrink-0" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">+</span>
+            </summary>
+            <div class="px-4 pb-3 text-[13px] leading-relaxed" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);">
+              <p class="pt-3">{item.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <RelatedTools tools={[
+      { title: 'Foreign Job Salary & Real Savings', description: 'Foreign job savings with NPR conversion', href: '/nepal/foreign-job-salary-savings' },
+      { title: 'Foreign Employment Cost', description: 'Cost of going abroad for work', href: '/nepal/foreign-employment-cost-calculator' },
+      { title: 'Remittance Calculator', description: 'Convert foreign currency to NPR', href: '/nepal/finance/remittance-calculator' },
+    ]} />
+  </div>
+
+  <style>
+    .src-chip, .plat-chip, .pay-chip {
+      padding: 6px 12px;
+      border-radius: 9999px;
+      border: 1px solid var(--nk-border);
+      background: var(--nk-card-bg);
+      color: var(--nk-text-secondary);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .src-chip:hover, .plat-chip:hover, .pay-chip:hover,
+    .src-chip.chip-active, .plat-chip.chip-active, .pay-chip.chip-active {
+      border-color: var(--nk-accent);
+      color: var(--nk-accent);
+      background: var(--nk-accent-subtle);
+    }
+    .field-suffix {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--nk-text-tertiary);
+      pointer-events: none;
+    }
+    .break-bar {
+      height: 10px;
+      border-radius: 9999px;
+      background: var(--nk-hover);
+      overflow: hidden;
+      border: 1px solid var(--nk-border);
+    }
+    .break-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: var(--nk-accent);
+      transition: width 200ms ease;
+    }
+  </style>
+
+  <script type="application/json" id="freelancer-fx-data" set:html={JSON.stringify({ currencyOptions, liveMeta })} />
+  <script>
+    import { calculateTakeHome, calculateRequiredGross, calculateHourlyRate, compareTakeHome, formatNumber, formatNPR, formatCurrency, buildShareText } from '../../../../lib/calculators/freelancer-take-home.js';
+    import { getPlatformById } from '../../../../data/freelancer-take-home.js';
+
+    const { currencyOptions, liveMeta } = JSON.parse(document.getElementById('freelancer-fx-data').textContent);
+
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    const sourceRow = document.getElementById('source-row');
+    const platformRow = document.getElementById('platform-row');
+    const paymethodRow = document.getElementById('paymethod-row');
+    const directClient = document.getElementById('direct-client');
+    const incomeEl = document.getElementById('income');
+    const currencyEl = document.getElementById('currency');
+    const otherCurrencyRow = document.getElementById('other-currency-row');
+    const otherCurrencyEl = document.getElementById('other-currency');
+    const exchangeRateEl = document.getElementById('exchange-rate');
+    const useLiveBtn = document.getElementById('use-live-rate');
+    const rateMeta = document.getElementById('rate-meta');
+    const rateUsedLine = document.getElementById('rate-used-line');
+    const platformFeeEl = document.getElementById('platform-fee');
+    const paymentPercentEl = document.getElementById('payment-percent');
+    const paymentFixedEl = document.getElementById('payment-fixed');
+    const taxPercentEl = document.getElementById('tax-percent');
+    const taxFixedEl = document.getElementById('tax-fixed');
+
+    const suffixIncome = document.getElementById('suffix-income');
+    const suffixPaymentFixed = document.getElementById('suffix-payment-fixed');
+    const suffixTaxFixed = document.getElementById('suffix-tax-fixed');
+
+    let selectedCurrency = 'USD';
+    let liveMap = new Map();
+    for (const c of currencyOptions) {
+      if (c.liveRate) liveMap.set(c.iso3, c.liveRate);
+    }
+
+    function formatCurrencyValue(n, cur) {
+      const c = cur || selectedCurrency;
+      return formatCurrency(n, c);
+    }
+
+    function getTaxMode() {
+      const r = document.querySelector('input[name="tax-mode"]:checked');
+      return r ? r.value : 'percent';
+    }
+
+    function updateSuffixes() {
+      const cur = selectedCurrency;
+      if (suffixIncome) suffixIncome.textContent = cur || '';
+      if (suffixPaymentFixed) suffixPaymentFixed.textContent = cur || '';
+      if (suffixTaxFixed) suffixTaxFixed.textContent = cur || '';
+    }
+
+    function setCurrency(iso3, opts = {}) {
+      selectedCurrency = iso3 || 'USD';
+      if (currencyEl.value !== selectedCurrency && iso3 !== 'OTHER') {
+        // keep select in sync if called programmatically
+        const hasOpt = Array.from(currencyEl.options).some((o) => o.value === selectedCurrency);
+        if (hasOpt) currencyEl.value = selectedCurrency;
+      }
+      const isOther = selectedCurrency === 'OTHER';
+      otherCurrencyRow.classList.toggle('hidden', !isOther);
+      if (!isOther) {
+        if (liveMap.has(selectedCurrency) && (!exchangeRateEl.value || opts.force)) {
+          const liveRate = liveMap.get(selectedCurrency);
+          exchangeRateEl.value = Number(liveRate).toFixed(2);
+          rateMeta.textContent = liveMeta && liveMeta.isLive
+            ? `Live NRB: 1 ${selectedCurrency} = Rs. ${Number(liveRate).toFixed(2)} · ${liveMeta.publishedDate || ''}`.trim()
+            : `Reference: 1 ${selectedCurrency} = Rs. ${Number(liveRate).toFixed(2)} (sample)`;
+          useLiveBtn.classList.remove('hidden');
+          useLiveBtn.dataset.rate = String(liveRate);
+          useLiveBtn.dataset.iso = selectedCurrency;
+        } else if (liveMap.has(selectedCurrency)) {
+          useLiveBtn.classList.remove('hidden');
+        } else {
+          useLiveBtn.classList.add('hidden');
+          if (!exchangeRateEl.value) rateMeta.textContent = 'Enter your exchange rate.';
+        }
+      } else {
+        useLiveBtn.classList.add('hidden');
+        rateMeta.textContent = 'Enter currency and rate for Other.';
+      }
+      updateSuffixes();
+      recalc();
+    }
+
+    // Source selection
+    $$('.src-chip').forEach((b) => b.addEventListener('click', () => {
+      $$('.src-chip').forEach((x) => x.classList.remove('chip-active'));
+      b.classList.add('chip-active');
+    }));
+    // Platform selection
+    $$('.plat-chip').forEach((b) => b.addEventListener('click', () => {
+      $$('.plat-chip').forEach((x) => x.classList.remove('chip-active'));
+      b.classList.add('chip-active');
+      const fee = b.dataset.fee;
+      if (!directClient.checked && fee !== undefined) {
+        platformFeeEl.value = fee;
+        recalc();
+      }
+    }));
+    $$('.pay-chip').forEach((b) => b.addEventListener('click', () => {
+      $$('.pay-chip').forEach((x) => x.classList.remove('chip-active'));
+      b.classList.add('chip-active');
+    }));
+    directClient.addEventListener('change', () => {
+      if (directClient.checked) {
+        platformFeeEl.value = '0';
+        platformFeeEl.disabled = true;
+      } else {
+        platformFeeEl.disabled = false;
+        const activePlat = document.querySelector('.plat-chip.chip-active');
+        if (activePlat) platformFeeEl.value = activePlat.dataset.fee || '10';
+      }
+      recalc();
+    });
+
+    currencyEl.addEventListener('change', () => {
+      const v = currencyEl.value;
+      if (v === 'OTHER') {
+        selectedCurrency = (otherCurrencyEl.value.trim().toUpperCase() || 'USD');
+      } else {
+        selectedCurrency = v;
+      }
+      setCurrency(v === 'OTHER' ? 'OTHER' : v);
+    });
+    otherCurrencyEl.addEventListener('input', () => {
+      otherCurrencyEl.value = otherCurrencyEl.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 5);
+      selectedCurrency = otherCurrencyEl.value.trim() || 'USD';
+      updateSuffixes();
+      recalc();
+    });
+    useLiveBtn.addEventListener('click', () => {
+      const rate = useLiveBtn.dataset.rate;
+      if (rate) {
+        exchangeRateEl.value = Number(rate).toFixed(2);
+        recalc();
+      }
+    });
+    $$('input[name="tax-mode"]').forEach((el) => el.addEventListener('change', () => {
+      const mode = getTaxMode();
+      document.getElementById('tax-percent-row').classList.toggle('hidden', mode !== 'percent');
+      document.getElementById('tax-fixed-row').classList.toggle('hidden', mode !== 'fixed');
+      recalc();
+    }));
+
+    // Expenses toggle
+    document.getElementById('expenses-toggle')?.addEventListener('click', () => {
+      document.getElementById('expenses-panel').classList.toggle('hidden');
+    });
+    document.getElementById('onetime-toggle')?.addEventListener('click', () => {
+      document.getElementById('onetime-panel').classList.toggle('hidden');
+    });
+    document.getElementById('compare-toggle')?.addEventListener('click', () => {
+      document.getElementById('compare-panel').classList.toggle('hidden');
+      updateComparison();
+    });
+
+    function collectInput() {
+      const biz = {};
+      $$('[data-biz]').forEach((el) => { biz[el.dataset.biz] = el.value; });
+      const oneTime = {};
+      $$('[data-onetime]').forEach((el) => { oneTime[el.dataset.onetime] = el.value; });
+      return {
+        monthlyForeignIncome: incomeEl.value,
+        currency: selectedCurrency,
+        exchangeRate: exchangeRateEl.value,
+        platformFeePercent: platformFeeEl.value,
+        paymentFeePercent: paymentPercentEl.value,
+        paymentFixedFee: paymentFixedEl.value,
+        taxMode: getTaxMode(),
+        taxPercent: taxPercentEl.value,
+        taxFixed: taxFixedEl.value,
+        businessExpenses: biz,
+        oneTimeExpenses: oneTime,
+        annualExpenses: document.getElementById('annual-expenses')?.value || 0,
+      };
+    }
+
+    function collectComparisonOffer(prefix) {
+      return {
+        monthlyForeignIncome: document.getElementById(`${prefix}-income`)?.value || 0,
+        platformFeePercent: document.getElementById(`${prefix}-platform`)?.value || 0,
+        paymentFixedFee: document.getElementById(`${prefix}-payment`)?.value || 0,
+        paymentFeePercent: 0,
+        taxMode: 'percent',
+        taxPercent: document.getElementById(`${prefix}-tax`)?.value || 0,
+        businessExpenses: { other: document.getElementById(`${prefix}-biz`)?.value || 0 },
+        exchangeRate: exchangeRateEl.value,
+      };
+    }
+
+    function recalc() {
+      const input = collectInput();
+      const result = calculateTakeHome(input);
+      const cur = selectedCurrency;
+      const hasRate = result.exchangeRate > 0;
+
+      // Take-home previews
+      const taxPreview = document.getElementById('tax-preview');
+      if (taxPreview) taxPreview.textContent = formatCurrency(result.tax, cur);
+
+      // Biz total
+      const bizTotalEl = document.getElementById('biz-total');
+      if (bizTotalEl) bizTotalEl.textContent = formatNPR(result.businessExpensesNpr);
+
+      // Overspend
+      const banner = document.getElementById('overspend-banner');
+      if (result.isOverspending) {
+        banner.classList.remove('hidden');
+        banner.textContent = `Your estimated deductions and expenses are higher than your income by ${formatNPR(result.overspendNpr)}.`;
+      } else {
+        banner.classList.add('hidden');
+        banner.textContent = '';
+      }
+
+      // Result card
+      document.getElementById('r-gross').textContent = formatCurrency(result.grossIncome, cur);
+      document.getElementById('r-platform').textContent = formatCurrency(result.platformFee, cur);
+      document.getElementById('r-payment').textContent = formatCurrency(result.paymentFee, cur);
+      document.getElementById('r-tax').textContent = formatCurrency(result.tax, cur);
+      document.getElementById('r-biz').textContent = formatNPR(result.businessExpensesNpr);
+      const monthlyEl = document.getElementById('r-monthly');
+      if (result.isOverspending) {
+        monthlyEl.textContent = `-${formatNPR(result.overspendNpr)}`;
+        monthlyEl.style.color = '#dc2626';
+      } else {
+        monthlyEl.textContent = formatNPR(result.finalTakeHomeNpr);
+        monthlyEl.style.color = 'var(--nk-text)';
+      }
+      document.getElementById('r-monthly-foreign').textContent = hasRate ? '' : formatCurrency(result.foreignTakeHome, cur);
+      document.getElementById('r-yearly').textContent = formatNPR(result.yearlyFinalNpr);
+      document.getElementById('r-yearly-foreign').textContent = formatCurrency(result.yearlyForeignTakeHome, cur);
+
+      // Rate used
+      const rateLine = document.getElementById('r-rate-used');
+      if (hasRate) {
+        const srcLabel = liveMeta && liveMeta.isLive ? 'Live NRB' : 'Manual';
+        const ts = liveMeta && liveMeta.publishedDate ? ` · ${liveMeta.publishedDate}` : '';
+        rateLine.textContent = `1 ${cur} = Rs. ${Number(result.exchangeRate).toFixed(2)} · ${srcLabel}${ts}`;
+      } else {
+        rateLine.textContent = 'Enter an exchange rate to see NPR conversion.';
+      }
+      document.getElementById('r-after-fees').textContent = `After fees: ${formatCurrency(result.foreignTakeHome, cur)}`;
+
+      // Breakdown bars
+      const breakdown = document.getElementById('breakdown-bars');
+      const items = [
+        { label: 'Platform + payment', pct: result.platformPct + result.paymentPct, value: result.platformFee + result.paymentFee, color: '#d97706' },
+        { label: 'Estimated tax', pct: result.taxPct, value: result.tax, color: '#2563eb' },
+        { label: 'Business expenses', pct: result.bizPct, value: result.businessExpensesNpr, isNpr: true, color: '#6b7280' },
+        { label: 'Take home', pct: result.takeHomePct, value: result.finalTakeHomeNpr, isNpr: true, color: '#16a34a' },
+      ];
+      breakdown.innerHTML = items.map((it) => `
+        <div>
+          <div class="flex justify-between text-[11.5px] mb-1"><span style="color: var(--nk-text-secondary);">${it.label}</span><span class="tabular-nums font-medium" style="color: var(--nk-text);">${it.isNpr ? formatNPR(it.value) : formatCurrency(it.value, cur)} · ${it.pct.toFixed(1)}%</span></div>
+          <div class="break-bar" role="progressbar" aria-valuenow="${it.pct.toFixed(0)}" aria-valuemin="0" aria-valuemax="100" aria-label="${it.label} ${it.pct.toFixed(0)} percent"><div class="break-fill" style="width: ${Math.max(2, Math.min(100, it.pct)).toFixed(0)}%; background: ${it.color};"></div></div>
+        </div>
+      `).join('');
+
+      document.getElementById('r-deduction-rate').textContent = `${result.effectiveDeductionRate.toFixed(1)}%`;
+      document.getElementById('r-keep-rate').textContent = `You keep approximately ${result.keepRate.toFixed(1)}% of your gross foreign income.`;
+
+      // Annual table
+      const annualTable = document.getElementById('annual-table');
+      annualTable.innerHTML = `
+        <tr style="border-top: 1px solid var(--nk-border);"><td class="py-1.5 pr-2" style="color: var(--nk-text-secondary);">Gross income</td><td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatCurrency(result.grossIncome, cur)}</td><td class="text-right py-1.5 pl-2" style="color: var(--nk-text);">${formatCurrency(result.yearly.grossIncome, cur)}</td></tr>
+        <tr style="border-top: 1px solid var(--nk-border);"><td class="py-1.5 pr-2" style="color: var(--nk-text-secondary);">Platform fees</td><td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatCurrency(result.platformFee, cur)}</td><td class="text-right py-1.5 pl-2" style="color: var(--nk-text);">${formatCurrency(result.yearly.platformFee, cur)}</td></tr>
+        <tr style="border-top: 1px solid var(--nk-border);"><td class="py-1.5 pr-2" style="color: var(--nk-text-secondary);">Payment fees</td><td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatCurrency(result.paymentFee, cur)}</td><td class="text-right py-1.5 pl-2" style="color: var(--nk-text);">${formatCurrency(result.yearly.paymentFee, cur)}</td></tr>
+        <tr style="border-top: 1px solid var(--nk-border);"><td class="py-1.5 pr-2" style="color: var(--nk-text-secondary);">Estimated tax</td><td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatCurrency(result.tax, cur)}</td><td class="text-right py-1.5 pl-2" style="color: var(--nk-text);">${formatCurrency(result.yearly.tax, cur)}</td></tr>
+        <tr style="border-top: 1px solid var(--nk-border);"><td class="py-1.5 pr-2" style="color: var(--nk-text-secondary);">Business expenses</td><td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatNPR(result.businessExpensesNpr)}</td><td class="text-right py-1.5 pl-2" style="color: var(--nk-text);">${formatNPR(result.yearlyBusinessNpr)}</td></tr>
+        <tr style="border-top: 2px solid var(--nk-border-strong); font-weight: 600;"><td class="py-1.5 pr-2" style="color: var(--nk-text);">Take home</td><td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatNPR(result.finalTakeHomeNpr)}</td><td class="text-right py-1.5 pl-2" style="color: var(--nk-text);">${formatNPR(result.yearlyFinalNpr)}</td></tr>
+      `;
+
+      // Savings goal
+      const goalVal = document.getElementById('savings-goal')?.value || '';
+      const goalResult = document.getElementById('goal-result');
+      if (goalVal) {
+        const goal = Number(String(goalVal).replace(/,/g, '')) || 0;
+        const diff = result.finalTakeHomeNpr - goal;
+        if (diff >= 0) {
+          goalResult.textContent = `Estimated take home ${formatNPR(result.finalTakeHomeNpr)} · Savings goal ${formatNPR(goal)} · Remaining after goal ${formatNPR(diff)}`;
+        } else {
+          goalResult.textContent = `Your savings goal is approximately ${formatNPR(Math.abs(diff))} above your estimated take home.`;
+        }
+      } else {
+        goalResult.textContent = '';
+      }
+
+      // What should I charge
+      const desired = document.getElementById('desired-takehome')?.value || '';
+      const workingHours = document.getElementById('working-hours')?.value || '';
+      const billableHours = document.getElementById('billable-hours')?.value || '';
+      const rateBiz = document.getElementById('rate-biz-expenses')?.value || '';
+      if (desired) {
+        const req = calculateRequiredGross({
+          desiredMonthlyTakeHomeNpr: desired,
+          businessExpensesNpr: rateBiz,
+          platformFeePercent: platformFeeEl.value,
+          paymentFeePercent: paymentPercentEl.value,
+          paymentFixedFee: paymentFixedEl.value,
+          taxMode: getTaxMode(),
+          taxPercent: taxPercentEl.value,
+          taxFixed: taxFixedEl.value,
+          exchangeRate: exchangeRateEl.value,
+        });
+        const grossEl = document.getElementById('req-gross');
+        const hourlyEl = document.getElementById('req-hourly');
+        const dailyEl = document.getElementById('req-daily');
+        const effEl = document.getElementById('req-effective');
+        if (req.error) {
+          grossEl.textContent = req.error;
+          hourlyEl.textContent = '—';
+          dailyEl.textContent = '—';
+          effEl.textContent = '—';
+        } else {
+          grossEl.textContent = formatCurrency(req.gross, cur);
+          const bh = Number(billableHours) || Number(workingHours) || 0;
+          const wh = Number(workingHours) || 0;
+          hourlyEl.textContent = bh ? `${formatCurrency(calculateHourlyRate(req.gross, bh), cur)}/hour` : '—';
+          dailyEl.textContent = wh ? formatCurrency(req.gross / 22, cur) : '—';
+          // Effective hourly after fees
+          const effGross = req.gross;
+          const effResult = calculateTakeHome({
+            monthlyForeignIncome: effGross,
+            platformFeePercent: platformFeeEl.value,
+            paymentFeePercent: paymentPercentEl.value,
+            paymentFixedFee: paymentFixedEl.value,
+            taxMode: getTaxMode(),
+            taxPercent: taxPercentEl.value,
+            taxFixed: taxFixedEl.value,
+            businessExpenses: { other: rateBiz },
+            exchangeRate: exchangeRateEl.value,
+          });
+          const effHourly = bh ? effResult.finalTakeHomeNpr / bh : 0;
+          effEl.textContent = effHourly ? formatNPR(effHourly) + '/hour' : '—';
+        }
+      } else {
+        document.getElementById('req-gross').textContent = '—';
+        document.getElementById('req-hourly').textContent = '—';
+        document.getElementById('req-daily').textContent = '—';
+        document.getElementById('req-effective').textContent = '—';
+      }
+
+      updateComparison();
+      window.__lastResult = result;
+      window.__lastCurrency = cur;
+    }
+
+    function updateComparison() {
+      const panel = document.getElementById('compare-result');
+      const hasA = document.getElementById('cmp-a-income')?.value;
+      const hasB = document.getElementById('cmp-b-income')?.value;
+      if (!hasA && !hasB) {
+        panel.classList.add('hidden');
+        panel.innerHTML = '';
+        return;
+      }
+      const a = collectComparisonOffer('cmp-a');
+      const b = collectComparisonOffer('cmp-b');
+      const cmp = compareTakeHome(a, b);
+      const cur = selectedCurrency;
+      panel.classList.remove('hidden');
+      panel.innerHTML = `
+        <div class="grid grid-cols-2 gap-3 text-[12.5px]">
+          <div>
+            <p class="font-semibold mb-1" style="color: var(--nk-text);">Freelance</p>
+            <p>Gross: <strong class="tabular-nums">${formatCurrency(cmp.a.grossIncome, cur)}</strong></p>
+            <p>Take home: <strong class="tabular-nums">${formatNPR(cmp.a.finalTakeHomeNpr)}</strong>/mo</p>
+            <p>Yearly: <span class="tabular-nums">${formatNPR(cmp.a.yearlyFinalNpr)}</span></p>
+          </div>
+          <div>
+            <p class="font-semibold mb-1" style="color: var(--nk-text);">Remote Job</p>
+            <p>Gross: <strong class="tabular-nums">${formatCurrency(cmp.b.grossIncome, cur)}</strong></p>
+            <p>Take home: <strong class="tabular-nums">${formatNPR(cmp.b.finalTakeHomeNpr)}</strong>/mo</p>
+            <p>Yearly: <span class="tabular-nums">${formatNPR(cmp.b.yearlyFinalNpr)}</span></p>
+          </div>
+        </div>
+        ${cmp.winner ? `<p class="mt-2 font-semibold" style="color: var(--nk-accent);">${cmp.winner === 'A' ? 'Freelance' : 'Remote Job'} → ${formatNPR(cmp.diffAbs)} more estimated take home/month</p>` : ''}
+      `;
+    }
+
+    // Live inputs
+    const liveInputs = [
+      incomeEl, exchangeRateEl, platformFeeEl, paymentPercentEl, paymentFixedEl,
+      taxPercentEl, taxFixedEl,
+      ...$$('[data-biz]'), ...$$('[data-onetime]'),
+      document.getElementById('annual-expenses'),
+      document.getElementById('savings-goal'),
+      document.getElementById('desired-takehome'),
+      document.getElementById('working-hours'),
+      document.getElementById('billable-hours'),
+      document.getElementById('rate-biz-expenses'),
+    ];
+    liveInputs.forEach((el) => {
+      if (!el) return;
+      el.addEventListener('input', recalc);
+      el.addEventListener('change', recalc);
+    });
+    $$('#compare-panel input').forEach((el) => {
+      el.addEventListener('input', updateComparison);
+      el.addEventListener('change', updateComparison);
+    });
+
+    // Reset
+    document.getElementById('reset-btn')?.addEventListener('click', () => {
+      incomeEl.value = '';
+      platformFeeEl.value = '10';
+      paymentPercentEl.value = '';
+      paymentFixedEl.value = '15';
+      taxPercentEl.value = '5';
+      taxFixedEl.value = '';
+      $$('[data-biz]').forEach((el) => el.value = '');
+      $$('[data-onetime]').forEach((el) => el.value = '');
+      const annualEl = document.getElementById('annual-expenses');
+      if (annualEl) annualEl.value = '';
+      document.getElementById('savings-goal').value = '';
+      document.getElementById('desired-takehome').value = '';
+      document.getElementById('working-hours').value = '';
+      document.getElementById('billable-hours').value = '';
+      document.getElementById('rate-biz-expenses').value = '';
+      recalc();
+    });
+
+    // Share
+    document.getElementById('share-btn')?.addEventListener('click', async () => {
+      const input = collectInput();
+      const result = window.__lastResult || calculateTakeHome(input);
+      const text = buildShareText(input, result, window.__lastCurrency || selectedCurrency);
+      const status = document.getElementById('share-status');
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'Freelancer Income Estimate', text });
+          status.textContent = 'Shared.';
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(text);
+          status.textContent = 'Copied to clipboard.';
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+          status.textContent = 'Copied to clipboard.';
+        }
+      } catch {
+        status.textContent = 'Could not share. Copy manually.';
+      }
+      status.classList.remove('hidden');
+      setTimeout(() => status.classList.add('hidden'), 3000);
+    });
+
+    // Init
+    if (liveMap.has('USD') && !exchangeRateEl.value) {
+      exchangeRateEl.value = Number(liveMap.get('USD')).toFixed(2);
+      rateMeta.textContent = liveMeta && liveMeta.isLive
+        ? `Live NRB: 1 USD = Rs. ${Number(liveMap.get('USD')).toFixed(2)} · ${liveMeta.publishedDate || ''}`.trim()
+        : `Reference: 1 USD = Rs. ${Number(liveMap.get('USD')).toFixed(2)} (sample)`;
+    }
+    recalc();
+  </script>
+</BaseLayout>

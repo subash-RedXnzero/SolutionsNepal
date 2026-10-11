@@ -1,0 +1,221 @@
+---
+  const NAV_LINKS = [
+  { label: 'Tools', href: '/nepal' },
+  { label: 'Weather', href: '/weather' },
+  { label: 'Guides', href: '/guides' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'About', href: '/about' },
+  ];
+const path = Astro.url.pathname;
+const isActive = (href) => href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
+---
+
+<header class="nk-header">
+  <div class="nk-header-inner">
+    <!-- Logo -->
+    <a href="/" class="nk-logo" aria-label="SolutionsNepal Home">
+      <img src="/navbar.webp" alt="" width="46" height="46" class="nk-logo-mark" fetchpriority="high" />
+      <span class="nk-logo-text">SolutionsNepal</span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="nk-nav-desktop" aria-label="Main navigation">
+      {NAV_LINKS.map(link => (
+        <a href={link.href} class:list={['nk-nav-link', { 'nk-active': isActive(link.href) }]} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>
+      ))}
+    </nav>
+
+    <!-- Right side -->
+    <div class="nk-header-actions">
+      <button id="search-trigger" class="nk-btn-icon" aria-label="Search tools">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button id="theme-toggle" class="nk-btn-icon" aria-label="Toggle dark mode">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+      <button id="mobile-menu-btn" class="nk-btn-icon nk-mobile-only" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav -->
+  <div class="nk-mobile-nav" id="mobile-nav">
+    <nav aria-label="Mobile navigation">
+      {NAV_LINKS.map(link => (
+        <a href={link.href} class:list={['nk-mobile-link', { 'nk-active': isActive(link.href) }]} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nk-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--nk-header-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--nk-border);
+  }
+  .nk-header-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 32px 0 8px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  /* Logo */
+  .nk-logo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--nk-text);
+    flex-shrink: 0;
+    margin-left: -24px;
+  }
+  .nk-logo:hover { color: var(--nk-text); }
+  .nk-logo-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-md);
+    display: block;
+    flex-shrink: 0;
+    object-fit: cover;
+    align-self: center;
+  }
+  .nk-logo-text {
+    font-size: 26px;
+    font-weight: 750;
+    letter-spacing: -0.03em;
+  }
+
+  /* Desktop Nav */
+  .nk-nav-desktop {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nk-nav-link {
+    padding: 8px 14px;
+    font-size: var(--fs-md);
+    font-weight: 550;
+    color: var(--nk-text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all 0.15s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .nk-nav-link:hover {
+    color: var(--nk-text);
+    background: var(--nk-hover);
+  }
+  .nk-nav-link[aria-current="page"], .nk-nav-link.nk-active {
+    color: var(--nk-accent);
+    background: var(--nk-accent-subtle);
+  }
+
+  /* Actions */
+  .nk-header-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nk-header-actions .nk-btn-icon { width: 40px; height: 40px; }
+  .nk-header-actions .nk-btn-icon svg { width: 20px; height: 20px; }
+  .nk-mobile-only { display: none; }
+
+  /* Mobile Nav */
+  .nk-mobile-nav {
+    display: none;
+    border-top: 1px solid var(--nk-border);
+    padding: 8px 24px 12px;
+  }
+  .nk-mobile-nav.open { display: block; }
+  .nk-mobile-nav nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nk-mobile-link {
+    padding: 12px 12px;
+    font-size: 16px;
+    font-weight: 550;
+    color: var(--nk-text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all 0.15s ease;
+  }
+  .nk-mobile-link:hover {
+    color: var(--nk-text);
+    background: var(--nk-hover);
+  }
+  .nk-mobile-link.nk-active { color: var(--nk-accent); }
+
+  /* Theme toggle icons */
+  .icon-sun { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* Tablet: keep horizontal nav but tighten spacing so it fits comfortably */
+  @media (max-width: 900px) and (min-width: 769px) {
+    .nk-header-inner { padding: 0 20px; height: 62px; }
+    .nk-nav-desktop { gap: 2px; }
+    .nk-nav-link { padding: 8px 10px; font-size: var(--fs-body); }
+  }
+
+  @media (max-width: 768px) {
+    .nk-header-inner { padding: 0 16px; gap: 16px; height: 60px; }
+    .nk-logo { margin-left: 0; gap: 6px; }
+    .nk-logo-mark { width: 36px; height: 36px; }
+    .nk-logo-text { font-size: 20px; }
+    .nk-nav-desktop { display: none; }
+    .nk-mobile-only { display: inline-flex; }
+    .nk-mobile-link { min-height: 44px; display: flex; align-items: center; }
+  }
+</style>
+
+<script is:inline>
+(function() {
+  // Theme toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle?.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('nk-theme', isDark ? 'light' : 'dark');
+  });
+
+  // Mobile menu
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileNav = document.getElementById('mobile-nav');
+  menuBtn?.addEventListener('click', () => {
+    mobileNav?.classList.toggle('open');
+  });
+
+  // Close mobile nav on link click
+  mobileNav?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => mobileNav?.classList.remove('open'));
+  });
+
+  // Search trigger
+  const searchTrigger = document.getElementById('search-trigger');
+  searchTrigger?.addEventListener('click', () => {
+    document.getElementById('search-modal')?.classList.add('open');
+    setTimeout(() => document.getElementById('search-input')?.focus(), 100);
+  });
+})();
+</script>

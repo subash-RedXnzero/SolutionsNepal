@@ -1,0 +1,598 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import { getFuelPriceAsync, getLocations, getFuelPriceHistory, formatNPR } from '../../lib/nepal/fuel-price.js';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const priceData = await getFuelPriceAsync('kathmandu');
+const locations = getLocations();
+const history = getFuelPriceHistory();
+
+---
+
+<BaseLayout>
+
+<div class="fp-wrap">
+  <Breadcrumbs items={[
+    { label: 'Nepal', href: '/nepal' },
+    { label: 'Fuel Price' },
+  ]} />
+
+  <!-- HEADER -->
+  <div class="fp-header fp-header--row">
+    <div>
+      <span class="fp-label">FUEL PRICE NEPAL</span>
+      <h1 class="fp-title">Today's Petrol & Diesel Price</h1>
+      <p class="fp-sub">Check the latest fuel prices in Nepal.</p>
+    </div>
+    <span class="fp-live"><span class="fp-live-dot" aria-hidden="true"></span>Live</span>
+  </div>
+
+  <!-- LOCATION SELECTOR -->
+  <div class="fp-section">
+    <label class="fp-loc-label" for="fp-location">Select Location</label>
+    <select id="fp-location" class="fp-loc-select">
+      {locations.map(loc => (
+        <option value={loc.id} selected={loc.id === 'kathmandu'}>{loc.name}</option>
+      ))}
+    </select>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="fp-layout">
+  <div class="fp-main">
+  <!-- MAIN PRICE CARDS -->
+  <div class="fp-prices">
+    <div class="fp-price-card fp-petrol">
+      <div class="fp-price-card-top">
+        <span class="fp-price-type">Petrol</span>
+        <span class="fp-price-change" id="fp-petrol-change">
+          {priceData.petrol.change.direction === 'up' && `↑ Rs. ${priceData.petrol.change.amount}/L`}
+          {priceData.petrol.change.direction === 'down' && `↓ Rs. ${Math.abs(priceData.petrol.change.amount)}/L`}
+          {priceData.petrol.change.direction === 'none' && '— No change'}
+        </span>
+      </div>
+      <div class="fp-price-main" id="fp-petrol-price">{formatNPR(priceData.petrol.price)}</div>
+      <div class="fp-price-unit">/ Litre</div>
+    </div>
+
+    <div class="fp-price-card fp-diesel">
+      <div class="fp-price-card-top">
+        <span class="fp-price-type">Diesel</span>
+        <span class="fp-price-change" id="fp-diesel-change">
+          {priceData.diesel.change.direction === 'up' && `↑ Rs. ${priceData.diesel.change.amount}/L`}
+          {priceData.diesel.change.direction === 'down' && `↓ Rs. ${Math.abs(priceData.diesel.change.amount)}/L`}
+          {priceData.diesel.change.direction === 'none' && '— No change'}
+        </span>
+      </div>
+      <div class="fp-price-main" id="fp-diesel-price">{formatNPR(priceData.diesel.price)}</div>
+      <div class="fp-price-unit">/ Litre</div>
+    </div>
+  </div>
+
+  <!-- EFFECTIVE DATE -->
+  <div class="fp-effective">
+    <div class="fp-effective-row">
+      <span class="fp-effective-label">Last checked</span>
+      <span class="fp-effective-value">Today · {priceData.lastUpdatedTime}</span>
+    </div>
+  </div>
+
+  <!-- QUICK COMPARISON TABLE -->
+  <div class="fp-section">
+    <h2 class="fp-section-title">Fuel Prices</h2>
+    <div class="fp-rate-table">
+      <div class="fp-rate-row">
+        <span class="fp-rate-label">Petrol</span>
+        <span class="fp-rate-value" id="fp-table-petrol">{formatNPR(priceData.petrol.price)}</span>
+        <span class="fp-rate-unit">/ L</span>
+      </div>
+      <div class="fp-rate-row">
+        <span class="fp-rate-label">Diesel</span>
+        <span class="fp-rate-value" id="fp-table-diesel">{formatNPR(priceData.diesel.price)}</span>
+        <span class="fp-rate-unit">/ L</span>
+      </div>
+      <div class="fp-rate-row">
+        <span class="fp-rate-label">Kerosene</span>
+        <span class="fp-rate-value" id="fp-table-kerosene">{formatNPR(priceData.kerosene.price)}</span>
+        <span class="fp-rate-unit">/ L</span>
+      </div>
+      <div class="fp-rate-row">
+        <span class="fp-rate-label">LPG</span>
+        <span class="fp-rate-value" id="fp-table-lpg">{formatNPR(priceData.lpg.price)}</span>
+        <span class="fp-rate-unit">/ Cylinder</span>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /fp-main -->
+  <aside class="fp-side" aria-label="Fuel calculators">
+  <!-- FUEL COST CALCULATOR -->
+  <div class="fp-section">
+    <h2 class="fp-section-title">Fuel Cost Calculator</h2>
+    <div class="fp-calc">
+      <div class="fp-calc-row">
+        <label class="fp-calc-label">Fuel</label>
+        <select id="fp-calc-fuel" class="fp-calc-select">
+          <option value="petrol">Petrol</option>
+          <option value="diesel">Diesel</option>
+        </select>
+      </div>
+      <div class="fp-calc-row">
+        <label class="fp-calc-label">Amount</label>
+        <div class="fp-calc-input-wrap">
+          <input inputmode="decimal" type="number" id="fp-calc-amount" class="fp-calc-input" placeholder="e.g. 10" min="0" step="0.1" />
+          <span class="fp-calc-suffix">Litres</span>
+        </div>
+      </div>
+      <div class="fp-calc-result">
+        <span class="fp-calc-result-label">Estimated Cost</span>
+        <span class="fp-calc-result-value" id="fp-calc-value">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRIP CALCULATOR -->
+  <div class="fp-section">
+    <h2 class="fp-section-title">Trip Fuel Calculator</h2>
+    <div class="fp-calc">
+      <div class="fp-calc-row">
+        <label class="fp-calc-label">Trip Distance</label>
+        <div class="fp-calc-input-wrap">
+          <input inputmode="decimal" type="number" id="fp-trip-distance" class="fp-calc-input" placeholder="e.g. 100" min="0" step="1" />
+          <span class="fp-calc-suffix">km</span>
+        </div>
+      </div>
+      <div class="fp-calc-row">
+        <label class="fp-calc-label">Vehicle Mileage</label>
+        <div class="fp-calc-input-wrap">
+          <input inputmode="decimal" type="number" id="fp-trip-mileage" class="fp-calc-input" placeholder="e.g. 15" min="1" step="0.1" />
+          <span class="fp-calc-suffix">km/L</span>
+        </div>
+      </div>
+      <div class="fp-calc-row">
+        <label class="fp-calc-label">Fuel</label>
+        <select id="fp-trip-fuel" class="fp-calc-select">
+          <option value="petrol">Petrol</option>
+          <option value="diesel">Diesel</option>
+        </select>
+      </div>
+      <div class="fp-calc-results">
+        <div class="fp-calc-result">
+          <span class="fp-calc-result-label">Fuel Needed</span>
+          <span class="fp-calc-result-value fp-calc-small" id="fp-trip-litres">—</span>
+        </div>
+        <div class="fp-calc-result">
+          <span class="fp-calc-result-label">Estimated Cost</span>
+          <span class="fp-calc-result-value" id="fp-trip-cost">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </aside><!-- /fp-side -->
+  </div><!-- /fp-layout -->
+
+  <!-- COMPARISON + HISTORY -->
+  <div class="fp-duo">
+  <!-- LOCATION COMPARISON -->
+  <div class="fp-section">
+    <h2 class="fp-section-title">Fuel Prices Across Nepal</h2>
+    <div class="fp-compare-tabs">
+      <button class="fp-compare-tab active" data-fuel="petrol">Petrol</button>
+      <button class="fp-compare-tab" data-fuel="diesel">Diesel</button>
+    </div>
+    <div class="fp-loc-table" id="fp-loc-table">
+      {priceData.allLocations.map(loc => (
+        <div class={`fp-loc-row ${loc.id === 'kathmandu' ? 'fp-loc-active' : ''}`} data-id={loc.id}>
+          <span class="fp-loc-name">{loc.name}</span>
+          <span class="fp-loc-price" data-petrol={loc.petrol} data-diesel={loc.diesel}>{formatNPR(loc.petrol)}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- PRICE HISTORY -->
+  <div class="fp-section">
+    <h2 class="fp-section-title">Fuel Price History</h2>
+    {history.length > 0 ? (
+      <div class="fp-history">
+        {history.map(h => (
+          <div class="fp-history-row">
+            <span class="fp-history-date">{h.date}</span>
+            <span class="fp-history-price">{formatNPR(h.petrol)}/L</span>
+            <span class={`fp-history-change ${h.change > 0 ? 'fp-up' : h.change < 0 ? 'fp-down' : ''}`}>
+              {h.change > 0 ? `+Rs. ${h.change}` : h.change < 0 ? `-Rs. ${Math.abs(h.change)}` : '—'}
+            </span>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="fp-history-empty">
+        Historic price data isn't available right now. NOC's current price ticker doesn't
+        include previous-day rates — check back soon.
+      </p>
+    )}
+  </div>
+  </div><!-- /fp-duo -->
+
+  <!-- WHY PRICES DIFFER -->
+  <div class="fp-section fp-info">
+    <h3 class="fp-info-title">Why is the price different by location?</h3>
+    <p class="fp-info-text">Nepal Oil Corporation sets retail prices based on the applicable depot/location. Prices can therefore differ between regions.</p>
+  </div>
+
+  <!-- DATA SOURCE -->
+  <div class="fp-section fp-source">
+    <h3 class="fp-source-title">Official Source</h3>
+    <p class="fp-source-text">{priceData.source}</p>
+    <p class="fp-source-detail">Data: {priceData.rateType}</p>
+    <p class="fp-source-detail">Effective date: {priceData.effectiveDate}</p>
+  </div>
+
+  <!-- RELATED -->
+  <div class="fp-section">
+    <h2 class="fp-section-title">Related Tools</h2>
+    <div class="fp-related">
+      <a href="/nepal/vehicle/fuel-cost" class="fp-related-link">Fuel Cost Calculator</a>
+      <a href="/nepal/transport/vehicle-tax" class="fp-related-link">Vehicle Tax</a>
+    </div>
+  </div>
+
+  <!-- HIDDEN DATA -->
+  <Disclaimer variant="fuel" />
+
+  <script is:inline define:vars={{
+    allLocations: JSON.stringify(priceData.allLocations),
+    petrolPrice: priceData.petrol.price,
+    dieselPrice: priceData.diesel.price,
+    kerosenePrice: priceData.kerosene.price,
+    lpgPrice: priceData.lpg.price,
+  }}>
+    window.__fp_data = {
+      allLocations: JSON.parse(allLocations),
+      petrolPrice: petrolPrice,
+      dieselPrice: dieselPrice,
+      kerosenePrice: kerosenePrice,
+      lpgPrice: lpgPrice,
+    };
+  </script>
+</div>
+
+<style>
+  .fp-wrap { max-width: 1080px; margin: 0 auto; padding: 20px 16px 80px; }
+
+  /* ── Two-column layout: content left, sticky calculators right ── */
+  .fp-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 16px;
+    align-items: start;
+  }
+  .fp-main { min-width: 0; }
+  .fp-side { position: sticky; top: 20px; min-width: 0; }
+  /* Comparison + history side by side inside the main column */
+  .fp-duo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .fp-layout { grid-template-columns: 1fr; }
+    .fp-side { position: static; }
+  }
+  @media (max-width: 640px) {
+    .fp-duo { grid-template-columns: 1fr; }
+  }
+
+  /* ── HEADER ── */
+  .fp-header { margin-bottom: 20px; }
+  .fp-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #EA580C; margin-bottom: 4px; display: block; }
+  .fp-title { font-size: 22px; font-weight: 700; color: var(--nk-text); margin: 0 0 4px; }
+  .fp-sub { font-size: 13px; color: var(--nk-text-secondary); }
+
+  /* ── LOCATION ── */
+  .fp-section { margin-bottom: 16px; }
+  .fp-loc-label { display: block; font-size: 12px; font-weight: 500; color: var(--nk-text-secondary); margin-bottom: 6px; }
+  .fp-loc-select {
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--nk-border);
+    background: var(--nk-bg); color: var(--nk-text); font-size: 14px; font-family: var(--font-sans); font-weight: 500; box-sizing: border-box; appearance: auto;
+  }
+
+  /* ── PRICE CARDS ── */
+  .fp-prices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .fp-price-card {
+    background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .fp-price-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .fp-price-type { font-size: 12px; font-weight: 600; color: var(--nk-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+  .fp-price-change { font-size: 11px; font-weight: 600; }
+  .fp-price-main {
+    font-size: 28px; font-weight: 700; color: var(--nk-text);
+    font-family: var(--font-mono); letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 2px;
+  }
+  .fp-price-unit { font-size: 12px; color: var(--nk-text-secondary); }
+  .fp-petrol .fp-price-change { color: var(--nk-text-tertiary); }
+  .fp-diesel .fp-price-change { color: var(--nk-text-tertiary); }
+  .fp-up { color: #16A34A !important; }
+  .fp-down { color: #DC2626 !important; }
+
+  /* ── EFFECTIVE ── */
+  .fp-effective {
+    background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 16px;
+  }
+  .fp-effective-row { display: flex; justify-content: space-between; padding: 4px 0; }
+  .fp-effective-label { font-size: 12px; color: var(--nk-text-tertiary); }
+  .fp-effective-value { font-size: 12px; font-weight: 500; color: var(--nk-text); }
+
+  /* ── RATE TABLE ── */
+  .fp-section-title { font-size: 15px; font-weight: 600; color: var(--nk-text); margin: 0 0 10px; }
+  .fp-rate-table { background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px; overflow: hidden; }
+  .fp-rate-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--nk-border); }
+  .fp-rate-row:last-child { border-bottom: none; }
+  .fp-rate-label { font-size: 13px; color: var(--nk-text-secondary); min-width: 80px; }
+  .fp-rate-value { font-size: 14px; font-weight: 600; color: var(--nk-text); font-family: var(--font-mono); flex: 1; text-align: right; }
+  .fp-rate-unit { font-size: 12px; color: var(--nk-text-tertiary); min-width: 60px; text-align: right; }
+
+  /* ── CALCULATOR ── */
+  .fp-calc { background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px; padding: 16px; }
+  .fp-calc-row { margin-bottom: 12px; }
+  .fp-calc-label { display: block; font-size: 12px; font-weight: 500; color: var(--nk-text-secondary); margin-bottom: 6px; }
+  .fp-calc-select {
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--nk-border);
+    background: var(--nk-bg); color: var(--nk-text); font-size: 13px; font-family: var(--font-sans); box-sizing: border-box; appearance: auto;
+  }
+  .fp-calc-input-wrap { position: relative; }
+  .fp-calc-input {
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--nk-border);
+    background: var(--nk-bg); color: var(--nk-text); font-size: 15px; font-family: var(--font-mono); font-weight: 600; box-sizing: border-box;
+  }
+  .fp-calc-input:focus { outline: none; border-color: var(--nk-accent); }
+  .fp-calc-input::placeholder { color: var(--nk-text-tertiary); opacity: 1; }
+  .fp-header--row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .fp-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #16A34A;
+    background: rgba(22, 163, 74, 0.08);
+    border: 1px solid rgba(22, 163, 74, 0.25);
+    border-radius: 999px;
+    padding: 5px 12px;
+  }
+  .fp-live-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #16A34A;
+  }
+  .fp-live-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(22, 163, 74, 0.45);
+    animation: fp-ping 2s ease-out infinite;
+  }
+  @keyframes fp-ping {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(1.15); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fp-live-dot::after { animation: none; }
+  }
+  .fp-calc-suffix { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--nk-text-tertiary); pointer-events: none; }
+  .fp-calc-result { text-align: center; padding: 14px; background: var(--nk-accent-subtle); border-radius: 8px; margin-top: 4px; }
+  .fp-calc-result-label { display: block; font-size: 11px; font-weight: 600; color: var(--nk-text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .fp-calc-result-value { display: block; font-size: 22px; font-weight: 700; color: var(--nk-accent); font-family: var(--font-mono); line-height: 1.2; }
+  .fp-calc-result-value.fp-calc-small { font-size: 18px; }
+  .fp-calc-results { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* ── LOCATION COMPARISON ── */
+  .fp-compare-tabs { display: flex; gap: 4px; margin-bottom: 10px; border: 1px solid var(--nk-border); border-radius: 8px; padding: 3px; background: var(--nk-muted); }
+  .fp-compare-tab {
+    flex: 1; padding: 6px; font-size: 12px; font-weight: 500; font-family: var(--font-sans);
+    border: none; background: transparent; color: var(--nk-text-secondary); border-radius: 6px; cursor: pointer; transition: all 0.1s ease;
+  }
+  .fp-compare-tab.active { background: var(--nk-surface); color: var(--nk-text); box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+  .fp-loc-table { background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px; overflow: hidden; }
+  .fp-loc-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--nk-border); }
+  .fp-loc-row:last-child { border-bottom: none; }
+  .fp-loc-name { font-size: 13px; color: var(--nk-text-secondary); }
+  .fp-loc-price { font-size: 14px; font-weight: 600; color: var(--nk-text); font-family: var(--font-mono); }
+  .fp-loc-active { background: var(--nk-accent-subtle); }
+  .fp-loc-active .fp-loc-name { color: var(--nk-accent); font-weight: 600; }
+
+  /* ── HISTORY ── */
+  .fp-history { background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px; overflow: hidden; }
+  .fp-history-row { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--nk-border); gap: 12px; }
+  .fp-history-row:last-child { border-bottom: none; }
+  .fp-history-empty { padding: 16px; font-size: 14px; color: var(--nk-text-secondary); margin: 0; }
+  .fp-history-date { font-size: 12px; color: var(--nk-text-secondary); min-width: 90px; font-family: var(--font-mono); }
+  .fp-history-price { font-size: 13px; font-weight: 600; color: var(--nk-text); font-family: var(--font-mono); flex: 1; }
+  .fp-history-change { font-size: 12px; font-weight: 500; min-width: 50px; text-align: right; color: var(--nk-text-tertiary); }
+
+  /* ── INFO ── */
+  .fp-info { background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px; padding: 16px; }
+  .fp-info-title { font-size: 13px; font-weight: 600; color: var(--nk-text); margin: 0 0 6px; }
+  .fp-info-text { font-size: 13px; color: var(--nk-text-secondary); line-height: 1.5; }
+
+  /* ── SOURCE ── */
+  .fp-source { background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px; padding: 16px; }
+  .fp-source-title { font-size: 13px; font-weight: 600; color: var(--nk-text); margin: 0 0 8px; }
+  .fp-source-text { font-size: 13px; color: var(--nk-text-secondary); margin-bottom: 4px; }
+  .fp-source-detail { font-size: 12px; color: var(--nk-text-tertiary); margin-bottom: 2px; }
+
+  /* ── RELATED ── */
+  .fp-related { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fp-related-link {
+    display: inline-flex; align-items: center; padding: 8px 14px; font-size: 12px; font-weight: 500;
+    color: var(--nk-text-secondary); border: 1px solid var(--nk-border); border-radius: 8px;
+    text-decoration: none; transition: all 0.1s ease;
+  }
+  .fp-related-link:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+
+  @media (max-width: 480px) {
+    .fp-wrap { padding: 16px 12px 60px; }
+    .fp-prices { grid-template-columns: 1fr; }
+    .fp-price-main { font-size: 24px; }
+    .fp-calc-results { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script is:inline>
+(function() {
+  var data = window.__fp_data;
+  if (!data) return;
+
+  var currentLocation = 'kathmandu';
+
+  function formatNPR(n) {
+    if (n == null || isNaN(n)) return '—';
+    return 'Rs. ' + n.toLocaleString('en-IN');
+  }
+
+  // ── LIVE NUMBER ANIMATION ──
+  // Counts values up/down on change so updates feel instant and alive.
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var shownNums = {};
+  var numAnims = {};
+  function animateNum(key, el, to, format) {
+    if (numAnims[key]) cancelAnimationFrame(numAnims[key]);
+    var from = shownNums[key];
+    if (from === undefined) from = 0;
+    if (from === to || reduceMotion) {
+      el.textContent = format(to);
+      shownNums[key] = to;
+      numAnims[key] = 0;
+      return;
+    }
+    var t0 = 0;
+    var step = function (ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / 450, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = format(from + (to - from) * eased);
+      if (p < 1) {
+        numAnims[key] = requestAnimationFrame(step);
+      } else {
+        shownNums[key] = to;
+        numAnims[key] = 0;
+      }
+    };
+    numAnims[key] = requestAnimationFrame(step);
+  }
+  function clearNum(key, el) {
+    if (numAnims[key]) cancelAnimationFrame(numAnims[key]);
+    numAnims[key] = 0;
+    delete shownNums[key];
+    el.textContent = '—';
+  }
+
+  function getLocationPrice(locId, fuel) {
+    var loc = data.allLocations.find(function(l) { return l.id === locId; });
+    return loc ? loc[fuel] : 0;
+  }
+
+  function updatePrices() {
+    var locId = document.getElementById('fp-location').value;
+    currentLocation = locId;
+    var loc = data.allLocations.find(function(l) { return l.id === locId; });
+    if (!loc) return;
+
+    // Update main cards (animated)
+    animateNum('petrol', document.getElementById('fp-petrol-price'), loc.petrol, function (v) { return formatNPR(Math.round(v)); });
+    animateNum('diesel', document.getElementById('fp-diesel-price'), loc.diesel, function (v) { return formatNPR(Math.round(v)); });
+
+    // Update table
+    document.getElementById('fp-table-petrol').textContent = formatNPR(loc.petrol);
+    document.getElementById('fp-table-diesel').textContent = formatNPR(loc.diesel);
+    document.getElementById('fp-table-kerosene').textContent = formatNPR(loc.kerosene);
+
+    // Update location comparison highlight
+    var locRows = document.querySelectorAll('.fp-loc-row');
+    locRows.forEach(function(row) {
+      row.classList.toggle('fp-loc-active', row.dataset.id === locId);
+    });
+
+    // Recalculate
+    updateFuelCalc();
+    updateTripCalc();
+  }
+
+  // ── FUEL COST CALCULATOR ──
+  function updateFuelCalc() {
+    var fuel = document.getElementById('fp-calc-fuel').value;
+    var amountRaw = document.getElementById('fp-calc-amount').value;
+    var outEl = document.getElementById('fp-calc-value');
+    if (amountRaw.trim() === '') {
+      clearNum('fuelcost', outEl);
+      return;
+    }
+    var amount = parseFloat(amountRaw) || 0;
+    var price = getLocationPrice(currentLocation, fuel);
+    animateNum('fuelcost', outEl, Math.round(amount * price), function (v) { return formatNPR(Math.round(v)); });
+  }
+
+  document.getElementById('fp-calc-fuel').addEventListener('change', updateFuelCalc);
+  document.getElementById('fp-calc-amount').addEventListener('input', updateFuelCalc);
+
+  // ── TRIP CALCULATOR ──
+  function updateTripCalc() {
+    var distanceRaw = document.getElementById('fp-trip-distance').value;
+    var litresEl = document.getElementById('fp-trip-litres');
+    var costEl = document.getElementById('fp-trip-cost');
+    if (distanceRaw.trim() === '') {
+      clearNum('triplitres', litresEl);
+      clearNum('tripcost', costEl);
+      return;
+    }
+    var distance = parseFloat(distanceRaw) || 0;
+    var mileage = parseFloat(document.getElementById('fp-trip-mileage').value) || 1;
+    var fuel = document.getElementById('fp-trip-fuel').value;
+    var litres = Math.round((distance / mileage) * 100) / 100;
+    var price = getLocationPrice(currentLocation, fuel);
+    var cost = Math.round(litres * price);
+    animateNum('triplitres', litresEl, litres, function (v) { return v.toFixed(2) + ' L'; });
+    animateNum('tripcost', costEl, cost, function (v) { return formatNPR(Math.round(v)); });
+  }
+
+  document.getElementById('fp-trip-distance').addEventListener('input', updateTripCalc);
+  document.getElementById('fp-trip-mileage').addEventListener('input', updateTripCalc);
+  document.getElementById('fp-trip-fuel').addEventListener('change', updateTripCalc);
+
+  // ── LOCATION SELECTOR ──
+  document.getElementById('fp-location').addEventListener('change', updatePrices);
+
+  // ── LOCATION COMPARISON TABS ──
+  var compareTabs = document.querySelectorAll('.fp-compare-tab');
+  compareTabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      compareTabs.forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      var fuel = tab.dataset.fuel;
+      var locPrices = document.querySelectorAll('.fp-loc-price');
+      locPrices.forEach(function(el) {
+        var val = el.dataset[fuel];
+        el.textContent = val ? formatNPR(parseInt(val)) : '—';
+      });
+    });
+  });
+
+  // ── INIT ──
+  updatePrices();
+})();
+</script>
+</BaseLayout>

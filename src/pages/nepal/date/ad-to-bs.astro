@@ -1,0 +1,222 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CalculatorCard from '../../../components/calculator/CalculatorCard.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolSeoContent from '../../../components/seo/ToolSeoContent.astro';
+
+const relatedTools = [
+  { title: 'BS to AD Converter', description: 'Nepali BS to Gregorian AD', href: '/nepal/date/bs-to-ad' },
+  { title: 'Nepali Calendar', description: 'BS patro with tithi and events', href: '/nepal/calendar' },
+  { title: 'Nepali Age Calculator', description: 'Age from BS or AD dob', href: '/nepal/age-calculator' },
+  { title: 'Date Difference', description: 'Days between two dates', href: '/tools/date-difference' },
+];
+---
+
+<BaseLayout>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Date & Calendar', href: '/nepal/date' },
+      { label: 'AD → BS' },
+    ]} />
+
+    <CalculatorCard
+      title="AD to BS Converter"
+      description="Convert any English date to Bikram Sambat — for citizenship, NEB certificates and official Nepali paperwork."
+    >
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">English (AD) Date</label>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label for="ad-year" class="block text-xs mb-1" style="color: var(--nk-text-secondary);">Year</label>
+              <input inputmode="decimal"
+                id="ad-year"
+                type="number"
+                min="1943"
+                max="2033"
+                placeholder="2025"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+            </div>
+            <div>
+              <label for="ad-month" class="block text-xs mb-1" style="color: var(--nk-text-secondary);">Month</label>
+              <select
+                id="ad-month"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="">Month</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+            <div>
+              <label for="ad-day" class="block text-xs mb-1" style="color: var(--nk-text-secondary);">Day</label>
+              <input inputmode="decimal"
+                id="ad-day"
+                type="number"
+                min="1"
+                max="31"
+                placeholder="14"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div id="error-message" class="hidden text-sm px-3 py-2 rounded-lg" style="background-color: var(--nk-accent-subtle); color: var(--nk-accent);"></div>
+
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Convert to BS
+        </button>
+
+        <div id="result" class="hidden">
+          <hr class="my-4" style="border-color: var(--nk-border);" />
+          
+          <div class="text-center py-4">
+            <p class="text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Nepali (BS) Date</p>
+            <p id="result-date" class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+            <p id="result-formatted" class="text-sm mt-2" style="color: var(--nk-text-secondary);"></p>
+          </div>
+
+          <div class="flex justify-center mt-4">
+            <button
+              id="copy-btn"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-colors"
+              style="border-color: var(--nk-border); color: var(--nk-text-secondary);"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copy Result
+            </button>
+          </div>
+        </div>
+      </div>
+    </CalculatorCard>
+
+    <ToolSeoContent
+      intro="English dates map to Bikram Sambat through the official calendar table — essential because the BS new year starts in mid-April, so January to March dates belong to the previous BS year."
+      howTo={[
+        { t: 'Enter AD date', d: 'Pick Gregorian year, month and day, e.g. your passport DOB.' },
+        { t: 'Convert', d: 'Get the exact BS date in YYYY-MM-DD plus Nepali month name.' },
+        { t: 'Use it', d: 'Copy the BS date for citizenship, license and academic forms.' },
+      ]}
+      example={{ t: '1 Jan 2000 AD converts to 17 Poush 2056 BS.', d: '' }}
+      note="The BS year runs mid-April to mid-April, so the simple +57 shortcut fails for January to March dates."
+      faqs={[
+        { q: 'How do I convert an English DOB to Nepali date?', a: 'Enter the AD year, month and day above. Useful for citizenship and SEE certificates that require BS.' },
+        { q: 'Why is my BS year different from AD year plus 57?', a: 'Because the BS new year starts in April. The shortcut fails for January to March dates — use the table-based converter.' },
+        { q: 'Is this accurate for official documents?', a: 'Yes for the supported 1944 to 2033 AD range. Cross-check against existing citizenship or passport dates where available.' },
+      ]}
+      related={relatedTools}
+    />
+  </div>
+
+  <script>
+    import { adToBs, getBsMonthName, getBsMonthNameNp } from '../../../lib/nepal/calendar.js';
+
+    const yearInput = document.getElementById('ad-year');
+    const monthSelect = document.getElementById('ad-month');
+    const dayInput = document.getElementById('ad-day');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const resultDate = document.getElementById('result-date');
+    const resultFormatted = document.getElementById('result-formatted');
+    const errorDiv = document.getElementById('error-message');
+    const copyBtn = document.getElementById('copy-btn');
+
+    let currentResult = null;
+
+    function showError(msg) {
+      if (errorDiv) {
+        errorDiv.textContent = msg;
+        errorDiv.classList.remove('hidden');
+      }
+    }
+
+    function hideError() {
+      errorDiv?.classList.add('hidden');
+    }
+
+    function calculate() {
+      hideError();
+      
+      const year = parseInt(yearInput?.value);
+      const month = parseInt(monthSelect?.value);
+      const day = parseInt(dayInput?.value);
+
+      if (!year || !month || !day) {
+        showError('Please fill in all fields.');
+        return;
+      }
+
+      if (month < 1 || month > 12) {
+        showError('Invalid month.');
+        return;
+      }
+
+      if (day < 1 || day > 31) {
+        showError('Invalid day.');
+        return;
+      }
+
+      const bsDate = adToBs(year, month, day);
+      
+      if (!bsDate) {
+        showError('Could not convert this date. Please check your input.');
+        return;
+      }
+
+      currentResult = bsDate;
+      
+      const monthName = getBsMonthName(bsDate.month);
+      const monthNameNp = getBsMonthNameNp(bsDate.month);
+      
+      if (resultDate) {
+        resultDate.textContent = `${bsDate.year}-${String(bsDate.month).padStart(2, '0')}-${String(bsDate.day).padStart(2, '0')}`;
+      }
+      if (resultFormatted) {
+        resultFormatted.textContent = `${monthName} ${bsDate.day}, ${bsDate.year} BS (${monthNameNp} ${bsDate.day}, ${bsDate.year})`;
+      }
+      
+      resultDiv?.classList.remove('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+
+    [yearInput, monthSelect, dayInput].forEach(el => {
+      el?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') calculate();
+      });
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      if (currentResult) {
+        const text = `${currentResult.year}-${String(currentResult.month).padStart(2, '0')}-${String(currentResult.day).padStart(2, '0')}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          if (copyBtn) copyBtn.textContent = 'Copied!';
+          setTimeout(() => {
+            if (copyBtn) copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy Result';
+          }, 2000);
+        } catch {}
+      }
+    });
+  </script>
+</BaseLayout>

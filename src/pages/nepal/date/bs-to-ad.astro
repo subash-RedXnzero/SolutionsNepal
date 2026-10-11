@@ -1,0 +1,231 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CalculatorCard from '../../../components/calculator/CalculatorCard.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolSeoContent from '../../../components/seo/ToolSeoContent.astro';
+
+const relatedTools = [
+  { title: 'AD to BS Converter', description: 'Gregorian AD to Nepali BS', href: '/nepal/date/ad-to-bs' },
+  { title: 'Nepali Calendar', description: 'BS patro with tithi & events', href: '/nepal/calendar' },
+  { title: 'Nepali Age Calculator', description: 'Age from BS or AD dob', href: '/nepal/age-calculator' },
+  { title: 'Date Difference', description: 'Days between two dates', href: '/tools/date-difference' },
+];
+---
+
+<BaseLayout>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Date & Calendar', href: '/nepal/date' },
+      { label: 'BS → AD' },
+    ]} />
+
+    <CalculatorCard
+      title="BS to AD Converter"
+      description="Convert a Bikram Sambat date to the Gregorian calendar — for passports, certificates, job forms and visa paperwork."
+    >
+      <!-- BS Date Input -->
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Nepali (BS) Date</label>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label for="bs-year" class="block text-xs mb-1" style="color: var(--nk-text-secondary);">Year</label>
+              <input inputmode="decimal"
+                id="bs-year"
+                type="number"
+                min="2000"
+                max="2090"
+                placeholder="2082"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+            </div>
+            <div>
+              <label for="bs-month" class="block text-xs mb-1" style="color: var(--nk-text-secondary);">Month</label>
+              <select
+                id="bs-month"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="">Month</option>
+                <option value="1">Baisakh (1)</option>
+                <option value="2">Jestha (2)</option>
+                <option value="3">Ashadh (3)</option>
+                <option value="4">Shrawan (4)</option>
+                <option value="5">Bhadra (5)</option>
+                <option value="6">Ashwin (6)</option>
+                <option value="7">Kartik (7)</option>
+                <option value="8">Mangsir (8)</option>
+                <option value="9">Poush (9)</option>
+                <option value="10">Magh (10)</option>
+                <option value="11">Falgun (11)</option>
+                <option value="12">Chaitra (12)</option>
+              </select>
+            </div>
+            <div>
+              <label for="bs-day" class="block text-xs mb-1" style="color: var(--nk-text-secondary);">Day</label>
+              <input inputmode="decimal"
+                id="bs-day"
+                type="number"
+                min="1"
+                max="32"
+                placeholder="1"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Error message -->
+        <div id="error-message" class="hidden text-sm px-3 py-2 rounded-lg" style="background-color: var(--nk-accent-subtle); color: var(--nk-accent);"></div>
+
+        <!-- Calculate Button -->
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Convert to AD
+        </button>
+
+        <!-- Result -->
+        <div id="result" class="hidden">
+          <hr class="my-4" style="border-color: var(--nk-border);" />
+          
+          <div class="text-center py-4">
+            <p class="text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">English (AD) Date</p>
+            <p id="result-date" class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+            <p id="result-formatted" class="text-sm mt-2" style="color: var(--nk-text-secondary);"></p>
+          </div>
+
+          <!-- Copy Button -->
+          <div class="flex justify-center mt-4">
+            <button
+              id="copy-btn"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-colors"
+              style="border-color: var(--nk-border); color: var(--nk-text-secondary);"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copy Result
+            </button>
+          </div>
+        </div>
+      </div>
+    </CalculatorCard>
+
+    <ToolSeoContent
+      howTo={[
+        { t: 'Pick BS year, month, day', d: 'Use year 2000–2090 BS with the correct month length (29–32 days vary by year).' },
+        { t: 'Convert', d: 'Get the exact Gregorian date in YYYY-MM-DD plus readable format for forms.' },
+        { t: 'Verify', d: 'Cross-check with the Nepali Calendar page for tithi and weekday if the document needs it.' },
+      ]}
+      example={{ t: '2082-01-01 BS:', d: 'converts to 14 April 2025 AD — Nepali New Year day.' }}
+      note="BS months do not align with Gregorian months and have variable lengths, so manual offset math fails. This tool uses the official BS↔AD mapping table."
+      faqs={[
+        { q: 'How do I convert a BS date to AD?', a: 'Enter the BS year, month and day above. The tool maps it through the official Bikram Sambat calendar table — no manual calculation needed.' },
+        { q: 'What dates are supported?', a: 'BS years 2000–2090, which covers all practical citizenship, academic and passport dates. Earlier historical dates use different tables.' },
+        { q: 'Is the conversion exact?', a: 'Yes within the supported range. BS month lengths are irregular, so always use a table-based converter like this rather than adding 56.7 years.' },
+      ]}
+      related={relatedTools}
+    />
+  </div>
+
+  <script>
+    import { bsToAd, getBsMonthName } from '../../../lib/nepal/calendar.js';
+
+    const yearInput = document.getElementById('bs-year');
+    const monthSelect = document.getElementById('bs-month');
+    const dayInput = document.getElementById('bs-day');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const resultDate = document.getElementById('result-date');
+    const resultFormatted = document.getElementById('result-formatted');
+    const errorDiv = document.getElementById('error-message');
+    const copyBtn = document.getElementById('copy-btn');
+
+    let currentResult = null;
+
+    function showError(msg) {
+      if (errorDiv) {
+        errorDiv.textContent = msg;
+        errorDiv.classList.remove('hidden');
+      }
+    }
+
+    function hideError() {
+      errorDiv?.classList.add('hidden');
+    }
+
+    function calculate() {
+      hideError();
+      
+      const year = parseInt(yearInput?.value);
+      const month = parseInt(monthSelect?.value);
+      const day = parseInt(dayInput?.value);
+
+      if (!year || !month || !day) {
+        showError('Please fill in all fields.');
+        return;
+      }
+
+      if (year < 2000 || year > 2090) {
+        showError('Year must be between 2000 and 2090 BS.');
+        return;
+      }
+
+      if (month < 1 || month > 12) {
+        showError('Invalid month.');
+        return;
+      }
+
+      if (day < 1 || day > 32) {
+        showError('Invalid day.');
+        return;
+      }
+
+      const adDate = bsToAd(year, month, day);
+      
+      if (!adDate) {
+        showError('Could not convert this date. Please check your input.');
+        return;
+      }
+
+      currentResult = adDate;
+      
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      
+      if (resultDate) {
+        resultDate.textContent = `${adDate.year}-${String(adDate.month).padStart(2, '0')}-${String(adDate.day).padStart(2, '0')}`;
+      }
+      if (resultFormatted) {
+        resultFormatted.textContent = `${monthNames[adDate.month - 1]} ${adDate.day}, ${adDate.year}`;
+      }
+      
+      resultDiv?.classList.remove('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+
+    // Also calculate on Enter
+    [yearInput, monthSelect, dayInput].forEach(el => {
+      el?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') calculate();
+      });
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      if (currentResult) {
+        const text = `${currentResult.year}-${String(currentResult.month).padStart(2, '0')}-${String(currentResult.day).padStart(2, '0')}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          if (copyBtn) copyBtn.textContent = 'Copied!';
+          setTimeout(() => {
+            if (copyBtn) copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy Result';
+          }, 2000);
+        } catch {}
+      }
+    });
+  </script>
+</BaseLayout>

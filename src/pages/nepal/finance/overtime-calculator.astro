@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CalculatorCard from '../../../components/calculator/CalculatorCard.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  {title:'Nepal Salary Calculator',description:'Calculate take-home salary',href:'/nepal/finance/salary-checker'},
+  {title:'EMI Calculator',description:'Calculate monthly loan EMI',href:'/nepal/finance/emi-calculator'},
+  {title:'House Rent Tax',description:'Calculate house rent tax',href:'/nepal/finance/house-rent-tax'},
+];
+
+const faqItems = [
+  {q:'How is overtime pay calculated in Nepal?',a:'According to Nepal Labour Act 2074 Section 57, overtime pay is 1.5 times your normal hourly wage. The normal hourly wage is your monthly basic salary divided by working days and normal working hours per day.'},
+  {q:'What salary is used to calculate overtime?',a:'Overtime is calculated on your monthly basic salary only. Allowances, bonuses, and other benefits are typically not included in the overtime calculation base.'},
+  {q:'How many hours are considered normal working hours?',a:'Under Nepal Labour Act 2074 Section 55, normal working hours are 8 hours per day and 48 hours per week.'},
+  {q:'Can I calculate overtime for part-time work?',a:'Yes. Enter your actual working hours per day and working days per month. The calculator derives your hourly rate from these values.'},
+  {q:'Does overtime pay include allowances?',a:'This calculator uses basic salary only. Allowances and other benefits are typically excluded from the overtime calculation base under Nepal labour law.'},
+  {q:'Is this calculator legally binding?',a:'No. This calculator provides an estimate based on Nepal Labour Act 2074 and is intended as a reference tool only. Consult your employer or a legal professional for official payroll matters.'},
+];
+---
+
+    <BaseLayout>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[{label:"Nepal",href:"/nepal"},{label:"Finance",href:"/nepal/finance"},{label:"Overtime Calculator"}]} />
+    <div class="mb-6">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">Nepal Overtime Calculator</h1>
+      <p class="mt-1.5 text-sm" style="color:var(--nk-text-secondary);">Estimate your overtime pay based on Nepal Labour Act 2074.</p>
+    </div>
+
+<div class="rounded-xl border p-5 sm:p-6 space-y-5" style="background-color:var(--nk-surface);border-color:var(--nk-border);">
+      <div>
+        <label for="salary" class="block text-sm font-semibold mb-1.5" style="color:var(--nk-text);">Monthly Basic Salary</label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold" style="color:var(--nk-text-secondary);">NPR</span>
+          <input inputmode="decimal" id="salary" type="number" min="0" step="1000" placeholder="30000" class="w-full pl-12 pr-3 py-3 rounded-lg border text-lg font-medium transition-colors" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label for="hours" class="block text-sm font-semibold mb-1.5" style="color:var(--nk-text);">Working Hours / Day</label>
+          <input inputmode="decimal" id="hours" type="number" min="1" max="16" step="0.5" placeholder="8" class="w-full px-3 py-3 rounded-lg border text-lg font-medium" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" /></div>
+        <div><label for="days" class="block text-sm font-semibold mb-1.5" style="color:var(--nk-text);">Working Days / Month</label>
+          <input inputmode="decimal" id="days" type="number" min="1" max="31" step="1" placeholder="26" class="w-full px-3 py-3 rounded-lg border text-lg font-medium" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" /></div>
+      </div>
+      <p class="text-[11px] -mt-3" style="color:var(--nk-text-secondary);">Used to estimate your normal hourly rate.</p>
+      <div>
+        <label for="overtime" class="block text-sm font-semibold mb-1.5" style="color:var(--nk-text);">Overtime Hours</label>
+        <input inputmode="decimal" id="overtime" type="number" min="0" step="0.5" placeholder="10" class="w-full px-3 py-3 rounded-lg border text-lg font-medium" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" />
+        <p id="hours-note" class="text-[11px] mt-1 hidden" style="color:var(--nk-text-secondary);"></p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button class="preset-btn px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors" data-hours="1" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">1 hr</button>
+        <button class="preset-btn px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors" data-hours="2" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">2 hrs</button>
+        <button class="preset-btn px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors" data-hours="4" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">4 hrs</button>
+        <button class="preset-btn px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors" data-hours="8" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">8 hrs</button>
+        <button class="preset-btn px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors" data-hours="10" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">10 hrs</button>
+        <button class="preset-btn px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors" data-hours="20" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">20 hrs</button>
+      </div>
+      <button id="calculate-btn" class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150" style="background-color:var(--nk-accent);color:white;">Calculate Overtime Pay</button>
+      <p id="error-msg" class="hidden text-sm font-medium" style="color:#DC2626;"></p>
+      <div id="result" class="hidden">
+        <hr style="border-color:var(--nk-border);" />
+        <div class="text-center py-5">
+          <p class="text-xs font-bold uppercase tracking-[0.15em] mb-1" style="color:var(--nk-text-secondary);">Estimated Overtime Pay</p>
+          <p id="ot-pay" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color:var(--nk-accent);"></p>
+        </div>
+        <div class="space-y-2 p-4 rounded-lg" style="background-color:var(--nk-bg);border:1px solid var(--nk-border);">
+          <div class="flex justify-between text-sm"><span style="color:var(--nk-text-secondary);">Monthly basic salary</span><span id="bd-salary" class="font-medium" style="color:var(--nk-text);"></span></div>
+          <div class="flex justify-between text-sm"><span style="color:var(--nk-text-secondary);">Normal hourly rate</span><span id="bd-rate" class="font-medium" style="color:var(--nk-text);"></span></div>
+          <div class="flex justify-between text-sm"><span style="color:var(--nk-text-secondary);">Overtime hours</span><span id="bd-hours" class="font-medium" style="color:var(--nk-text);"></span></div>
+          <div class="flex justify-between text-sm"><span style="color:var(--nk-text-secondary);">Overtime multiplier</span><span id="bd-mult" class="font-medium" style="color:var(--nk-text);"></span></div>
+          <hr style="border-color:var(--nk-border);" />
+          <div class="flex justify-between text-sm font-bold"><span style="color:var(--nk-text);">Estimated overtime pay</span><span id="bd-ot" style="color:var(--nk-accent);"></span></div>
+        </div>
+        <div id="total-section" class="mt-4 p-4 rounded-lg" style="background-color:var(--nk-accent-subtle);border:1px solid var(--nk-border);">
+          <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-2" style="color:var(--nk-text-secondary);">Salary + Overtime</p>
+          <div class="space-y-1 text-sm">
+            <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Regular monthly salary</span><span id="total-salary" class="font-medium" style="color:var(--nk-text);"></span></div>
+            <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Estimated overtime</span><span id="total-ot" class="font-medium" style="color:var(--nk-text);"></span></div>
+            <hr style="border-color:var(--nk-border);" />
+            <div class="flex justify-between font-bold"><span style="color:var(--nk-text);">Estimated total</span><span id="total-total" style="color:var(--nk-accent);"></span></div>
+          </div>
+          <p class="text-[10px] mt-2" style="color:var(--nk-text-secondary);">This is an estimate only. Actual pay may vary.</p>
+        </div>
+        <div class="flex gap-2 mt-4">
+          <button id="copy-btn" class="flex-1 py-2.5 text-xs font-medium rounded-lg border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Copy Result</button>
+          <button id="reset-btn" class="py-2.5 px-4 text-xs font-medium rounded-lg border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Reset</button>
+        </div>
+      </div>
+    </div>
+    <p class="text-[10px] mt-4 text-center" style="color:var(--nk-text-secondary);">Calculation based on Nepal Labour Act 2074 (2017) Section 55 &amp; 57. Estimate only.</p>
+    <div class="mt-10 space-y-6">
+      <h2 class="text-lg font-bold" style="color:var(--nk-text);">How to Calculate Overtime Pay</h2>
+      <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">The formula is simple: <strong>Normal Hourly Rate x Overtime Multiplier x Overtime Hours = Overtime Pay</strong>. Your normal hourly rate is derived by dividing your monthly basic salary by your working days and normal working hours per day.</p>
+
+      <h2 class="text-lg font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-xl border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+      <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqItems.map(i => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) })} />
+    </div>
+    <Disclaimer variant="finance" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <script>
+    import { calculateOvertime, formatHours, formatNPR } from "../../../lib/calculators/overtime.js";
+
+    const salaryInput = document.getElementById("salary");
+    const hoursInput = document.getElementById("hours");
+    const daysInput = document.getElementById("days");
+    const overtimeInput = document.getElementById("overtime");
+    const hoursNote = document.getElementById("hours-note");
+    const calcBtn = document.getElementById("calculate-btn");
+    const resultDiv = document.getElementById("result");
+    const errorMsg = document.getElementById("error-msg");
+    const presetBtns = document.querySelectorAll(".preset-btn");
+
+    function showHoursNote() {
+      const val = parseFloat(overtimeInput.value);
+      if (val > 0 && val !== Math.floor(val)) {
+        const h = Math.floor(val);
+        const m = Math.round((val - h) * 60);
+        hoursNote.textContent = val + " hours = " + h + " hours " + m + " minutes";
+        hoursNote.classList.remove("hidden");
+      } else {
+        hoursNote.classList.add("hidden");
+      }
+    }
+
+    overtimeInput.addEventListener("input", showHoursNote);
+
+    presetBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        overtimeInput.value = btn.dataset.hours;
+        showHoursNote();
+        calculate();
+      });
+    });
+
+    function calculate() {
+      const salary = parseFloat(salaryInput.value) || 0;
+      const wh = parseFloat(hoursInput.value) || 8;
+      const wd = parseFloat(daysInput.value) || 26;
+      const ot = parseFloat(overtimeInput.value) || 0;
+
+      const r = calculateOvertime({ monthlyBasicSalary: salary, workingDays: wd, normalWorkingHours: wh, overtimeHours: ot });
+
+      if (!r.valid) {
+        errorMsg.textContent = r.error;
+        errorMsg.classList.remove("hidden");
+        resultDiv.classList.add("hidden");
+        return;
+      }
+
+      errorMsg.classList.add("hidden");
+      document.getElementById("ot-pay").textContent = formatNPR(r.overtimePay);
+      document.getElementById("bd-salary").textContent = formatNPR(r.monthlyBasicSalary);
+      document.getElementById("bd-rate").textContent = "NPR " + r.normalHourlyRate.toFixed(2);
+      document.getElementById("bd-hours").textContent = r.overtimeHours + " hours";
+      document.getElementById("bd-mult").textContent = r.multiplier + "x";
+      document.getElementById("bd-ot").textContent = formatNPR(r.overtimePay);
+      document.getElementById("total-salary").textContent = formatNPR(r.monthlyBasicSalary);
+      document.getElementById("total-ot").textContent = formatNPR(r.overtimePay);
+      document.getElementById("total-total").textContent = formatNPR(r.totalEstimated);
+      resultDiv.classList.remove("hidden");
+    }
+
+    calcBtn.addEventListener("click", calculate);
+    [salaryInput, hoursInput, daysInput, overtimeInput].forEach(el => {
+      el.addEventListener("keydown", e => { if (e.key === "Enter") calculate(); });
+    });
+
+    document.getElementById("copy-btn").addEventListener("click", async () => {
+      const salary = parseFloat(salaryInput.value) || 0;
+      const wh = parseFloat(hoursInput.value) || 8;
+      const wd = parseFloat(daysInput.value) || 26;
+      const ot = parseFloat(overtimeInput.value) || 0;
+      const r = calculateOvertime({ monthlyBasicSalary: salary, workingDays: wd, normalWorkingHours: wh, overtimeHours: ot });
+      if (!r.valid) return;
+      const text = "Nepal Overtime Calculation\nSalary: " + formatNPR(r.monthlyBasicSalary) + "\nHourly Rate: NPR " + r.normalHourlyRate.toFixed(2) + "\nOT Hours: " + r.overtimeHours + "\nMultiplier: " + r.multiplier + "x\nOT Pay: " + formatNPR(r.overtimePay) + "\nTotal: " + formatNPR(r.totalEstimated);
+      try { await navigator.clipboard.writeText(text); } catch {}
+    });
+
+    document.getElementById("reset-btn").addEventListener("click", () => {
+      salaryInput.value = "";
+      hoursInput.value = "";
+      daysInput.value = "";
+      overtimeInput.value = "";
+      resultDiv.classList.add("hidden");
+      errorMsg.classList.add("hidden");
+      hoursNote.classList.add("hidden");
+    });
+  </script>
+</BaseLayout>

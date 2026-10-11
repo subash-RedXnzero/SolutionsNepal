@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import BusinessDaysCalculator from '../../components/tools/BusinessDaysCalculator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Business Days Calculator Nepal – Working Days & Holidays | SolutionsNepal';
+const description = 'Calculate working days between two dates, excluding Saturdays and Nepal public holidays. Free online business days calculator for Nepal.';
+
+const faqItems = [
+  {
+    q: 'How many working days are there between two dates?',
+    a: 'Enter the start and end dates, choose whether to exclude Saturdays and Nepal public holidays, then click Calculate Working Days. The result shows working days, holidays, and total days.',
+  },
+  {
+    q: 'Are Saturdays excluded in Nepal?',
+    a: 'Saturday is commonly treated as the weekly holiday in Nepal. The calculator excludes Saturdays by default, but you can disable this option if needed.',
+  },
+  {
+    q: 'Are Nepal public holidays excluded?',
+    a: 'Yes. The calculator includes a database of Nepal public holidays for 2080–2084 BS. Public holidays are excluded by default.',
+  },
+  {
+    q: 'How do I calculate working days in Nepal?',
+    a: 'Select BS or AD, enter start and end dates, choose exclusion options, and click Calculate Working Days.',
+  },
+  {
+    q: 'Can I calculate working days using BS dates?',
+    a: 'Yes. Select BS as the calendar system and enter dates in year-month-day format.',
+  },
+  {
+    q: 'Can I calculate working days using AD dates?',
+    a: 'Yes. Select AD as the calendar system and use the date picker.',
+  },
+  {
+    q: 'Can I add custom holidays?',
+    a: 'Yes. Click "Add Custom Holiday" to add company holidays, office closures, or any other non-working day.',
+  },
+  {
+    q: 'Does the calculator count the start and end dates?',
+    a: 'Yes, by default both the start and end dates are included in the count. You can disable this with the "Include start & end dates" option.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Business Days Calculator Nepal',
+      description: 'Calculate working days between two dates, excluding Saturdays and Nepal public holidays.',
+      url: 'https://solutionsnepal.com/tools/business-days-calculator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Date & Calendar', href: '/nepal/date' },
+      { label: 'Business Days' },
+    ]} />
+    <!-- Hero -->
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">Business Days Calculator</h1>
+      <p class="mt-2 text-sm max-w-lg mx-auto" style="color:var(--nk-text-secondary);">Calculate working days between two dates, excluding Saturdays and Nepal public holidays.</p>
+    </div>
+
+    <!-- Calculator -->
+    <BusinessDaysCalculator />
+
+    <!-- SEO Content -->
+    <section class="mt-12 space-y-8 text-sm max-w-3xl" style="color:var(--nk-text-secondary);">
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">Business Days Calculator</h2>
+        <p>SolutionsNepal's business days calculator helps you find the exact number of working days between any two dates. It accounts for Saturdays (Nepal's weekly holiday) and Nepal public holidays, giving you an accurate count for planning, payroll, leave tracking, and project timelines.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">How to Calculate Working Days</h3>
+        <ol class="mt-2 space-y-1.5 list-decimal list-inside">
+          <li>Select BS or AD as the calendar system</li>
+          <li>Enter the start date</li>
+          <li>Enter the end date</li>
+          <li>Choose whether to exclude Saturday</li>
+          <li>Choose whether to exclude Nepal public holidays</li>
+          <li>Click Calculate Working Days</li>
+          <li>View working days, holidays, and total days</li>
+        </ol>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Working Days in Nepal</h3>
+        <p>In Nepal, Saturday is commonly treated as the weekly holiday. Public holidays such as Dashain, Tihar, Buddha Jayanti, and Constitution Day also affect the number of working days. The calculator uses verified Nepal public holiday data for 2080–2084 BS.</p>
+      </div>
+
+      <div>
+        <h2 class="text-base font-semibold mb-3" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <div class="pt-4" style="border-top:1px solid var(--nk-border);">
+        <p class="text-[11px]" style="color:var(--nk-text-tertiary);">SolutionsNepal's business days calculator uses accurate BS calendar data and verified Nepal public holiday data. All calculations happen in your browser — no data is sent to any server.</p>
+      </div>
+    </section>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'Date Difference Calculator', description: 'Exact days between dates', href: '/tools/date-difference' },
+      { title: 'Nepali Calendar', description: 'BS patro with holidays', href: '/nepal/calendar' },
+      { title: 'Overtime Calculator', description: 'OT pay under Labour Act', href: '/nepal/finance/overtime-calculator' },
+      { title: 'All Tools', description: 'Browse every tool', href: '/nepal' },
+    ]} />
+  </main>
+</BaseLayout>

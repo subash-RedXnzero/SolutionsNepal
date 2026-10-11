@@ -1,0 +1,312 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/navigation/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
+import SearchModal from '../components/search/SearchModal.astro';
+import ToolsLayout from '../components/layout/ToolsLayout.astro';
+import Disclaimer from '../components/ui/Disclaimer.astro';
+import { getSeo, SITE_URL } from '../data/seo.js';
+import { tools } from '../data/tools.js';
+
+const seo = getSeo(Astro.url.pathname);
+
+// Normalize canonical: self-referencing, no trailing slash (except root), absolute.
+const normPath = Astro.url.pathname !== '/' ? Astro.url.pathname.replace(/\/+$/, '') : '/';
+const defaultCanonical = `${SITE_URL}${normPath}`;
+
+function absOg(img) {
+  if (!img) return `${SITE_URL}/og-default.png`;
+  if (img.startsWith('http')) return img;
+  return `${SITE_URL}${img.startsWith('/') ? img : '/' + img}`;
+}
+
+const {
+  title = seo.title,
+  description = seo.description,
+  canonical = defaultCanonical,
+  ogImage = seo.ogImage,
+  ogType = 'website',
+  jsonLd = seo.jsonLd,
+  noindex = seo.noindex,
+  author,
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
+
+const absOgImage = absOg(ogImage);
+// If a page passed an explicit canonical with trailing slash, normalize it too.
+const normCanonical = canonical !== defaultCanonical && canonical.startsWith(SITE_URL)
+  ? canonical.replace(/\/+$/, '') || `${SITE_URL}/`
+  : canonical;
+
+// Global structured data for all pages (except homepage which defines its own)
+const isHomepage = Astro.url.pathname === '/';
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const registeredToolPaths = new Set(tools.map(tool => tool.href.replace(/\/+$/, '') || '/'));
+const toolAreaPrefixes = [
+  '/nepal/date/',
+  '/nepal/education/',
+  '/nepal/finance/',
+  '/nepal/gold/',
+  '/nepal/names/',
+  '/nepal/nepse/',
+  '/nepal/property/',
+  '/nepal/tools/',
+  '/nepal/transport/',
+  '/nepal/utilities/',
+  '/nepal/vehicle/',
+  '/nepal/construction/',
+  '/nepal/land/',
+  '/nepal/government-service-cost/',
+  '/tools/',
+];
+const categoryPaths = new Set([
+  '/nepal/date',
+  '/nepal/education',
+  '/nepal/finance',
+  '/nepal/gold',
+  '/nepal/land',
+  '/nepal/names',
+  '/nepal/nepse',
+  '/nepal/tools',
+  '/nepal/transport',
+  '/nepal/utilities',
+  '/nepal/vehicle',
+  '/nepal/construction',
+  '/tools/convert',
+  '/tools/pdf',
+  '/tools/photo',
+]);
+const isCategoryPage = categoryPaths.has(pathname);
+const isToolPage = registeredToolPaths.has(pathname)
+  || toolAreaPrefixes.some(prefix => pathname.startsWith(prefix) && pathname !== '/tools/pdf');
+const useToolsLayout = isToolPage || isCategoryPage;
+/* Sidebar lives only on category hub pages (and the Tools index); individual
+    tools + standalone pages get the single-column layout instead. */
+const showSidebar = isCategoryPage;
+
+// Auto-disclaimer: show a contextual disclaimer on every tool page that doesn't already have a custom one.
+const manualDisclaimerPaths = new Set([
+  '/nepal/construction/house-construction-cost',
+  '/nepal/finance/foreign-job-salary-savings',
+  '/nepal/finance/freelancer-take-home-calculator',
+  '/nepal/finance/house-rent-tax',
+  '/nepal/finance/rent-tax',
+  '/nepal/finance/sip-calculator',
+  '/nepal/land/land-affordability-calculator',
+  '/nepal/property/property-registration-cost',
+  '/nepal/transport/vehicle-tax',
+  '/nepal/utilities/electricity-bill',
+  '/nepal/utilities/kukl-water-bill',
+  '/nepal/vehicle/fuel-cost',
+  '/tools/bmi-calculator',
+  // newly added explicit disclaimers
+  '/nepal/finance/emi-calculator',
+  '/nepal/finance/vat-calculator',
+  '/nepal/finance/salary-checker',
+  '/nepal/finance/overtime-calculator',
+  '/nepal/finance/gold-loan-calculator',
+  '/nepal/ssf-calculator',
+  '/nepal/fuel-price-nepal',
+  '/nepal/gold-price-nepal',
+  '/silver-price-nepal',
+  '/nepal/silver-price-nepal',
+  '/nepal/property/land-registration',
+  '/nepal/nepse/profit-loss',
+  '/nepal/education/cgpa-calculator',
+  '/nepal/education/neb-gpa-calculator',
+  '/nepal/education/see-gpa',
+  '/nepal/education/gpa-percentage',
+  '/nepal/finance/home-loan-down-payment-calculator-nepal',
+  '/nepal/utilities/cost-of-living-calculator',
+  '/nepal/vehicle/ownership-cost-calculator',
+  '/nepal/vehicles/vehicle-resale-value-calculator-nepal',
+  '/nepal/utilities/paint-calculator-nepal',
+  '/nepal/utilities/lpg-gas-cost-duration-calculator-nepal',
+  '/nepal/construction/construction-material-calculator',
+  '/nepal/business/break-even-calculator',
+  '/nepal/finance/online-selling-profit-calculator-nepal',
+  '/nepal/finance/new-baby-cost-calculator-nepal',
+  '/nepal/age-calculator',
+  '/nepal/calendar',
+  '/tools/percentage-calculator',
+  '/tools/discount-calculator',
+  '/tools/date-difference',
+  '/tools/business-days-calculator',
+  '/foreign-exchange-nepal',
+  '/nepal/gold/gram-to-tola',
+  '/nepal/gold/tola-to-gram',
+  '/nepal/land/aana-to-ropani',
+  '/nepal/land/ropani-to-aana',
+]);
+function disclaimerVariantFor(path: string): string {
+  if (path.includes('/finance/') || path.includes('/ssf') || path.includes('/remittance')) {
+    if (path.includes('sip') || path.includes('investment') || path.includes('nepse')) return 'investment';
+    if (path.includes('tax') || path.includes('vat') || path.includes('rent')) return 'tax';
+    return 'finance';
+  }
+  if (path.includes('/gold') || path.includes('silver-price')) return 'gold';
+  if (path.includes('fuel-price') || path.includes('/fuel')) return 'fuel';
+  if (path.includes('/property') || path.includes('/land') || path.includes('/construction')) return 'property';
+  if (path.includes('/education') || path.includes('/gpa') || path.includes('/cgpa')) return 'education';
+  if (path.includes('bmi') || path.includes('health')) return 'health';
+  if (path.includes('/election') || path.includes('/nepse')) return 'investment';
+  return 'general';
+}
+const showAutoDisclaimer = isToolPage && !manualDisclaimerPaths.has(pathname);
+const autoDisclaimerVariant = showAutoDisclaimer ? disclaimerVariantFor(pathname) : 'general';
+
+const globalJsonLd = (isHomepage || noindex) ? null : [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'SolutionsNepal',
+    url: SITE_URL,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'SolutionsNepal',
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon.svg`,
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts: variable woff2 files are declared in global.css; preloading the two
+       first-paint faces removes the render-blocking Google Fonts CSS request and
+       the duplicate static-weight downloads it triggered. -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="preload"
+    as="font"
+    type="font/woff2"
+    crossorigin
+    href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+  />
+  <link
+    rel="preload"
+    as="font"
+    type="font/woff2"
+    crossorigin
+    href="https://fonts.gstatic.com/s/notosansdevanagari/v30/TuG7UUFzXI5FBtUq5a8bjKYTZjtRU6Sgv3NaV_SNmI0b8QQCQmHN5TV_9qo.woff2"
+  />
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={normCanonical} />
+
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  {!noindex && <meta name="robots" content="index, follow, max-image-preview:large" />}
+
+  <!-- Open Graph (unique per page via title/description/canonical) -->
+  <meta property="og:type" content={ogType} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={absOgImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={title} />
+  <meta property="og:url" content={normCanonical} />
+  <meta property="og:site_name" content="SolutionsNepal" />
+  <meta property="og:locale" content="en_US" />
+  {author && <meta name="author" content={author} />}
+  {ogType === 'article' && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+  {ogType === 'article' && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={absOgImage} />
+  <meta name="twitter:image:alt" content={title} />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  {jsonLd && (
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  )}
+
+  {globalJsonLd && (
+    <script type="application/ld+json" set:html={JSON.stringify(globalJsonLd)} />
+  )}
+
+  <!-- Prevent FOUC for dark mode (explicit user choice only — never the system theme) -->
+  <script is:inline>
+    (function() {
+      if (localStorage.getItem('nk-theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+<body class="min-h-screen flex flex-col">
+  <Navbar />
+  <SearchModal />
+  <main class="flex-1">
+    {useToolsLayout ? (
+      <ToolsLayout currentPath={pathname} categoryPage={isCategoryPage} showSidebar={showSidebar}>
+        <slot />
+      </ToolsLayout>
+    ) : (
+      <slot />
+    )}
+    {showAutoDisclaimer && (
+      <div style="max-width:1100px;margin:0 auto;padding:0 24px 24px;">
+        <Disclaimer variant={autoDisclaimerVariant as any} />
+      </div>
+    )}
+  </main>
+  <Footer />
+</body>
+</html>
+
+<style>
+  .nk-tool-back-wrap {
+    width: min(1200px, calc(100% - 48px));
+    margin: 0 auto;
+    padding-top: 20px;
+  }
+  .nk-tool-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 7px 11px 7px 8px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    background: transparent;
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .nk-tool-back:hover {
+    color: var(--nk-text);
+    border-color: var(--nk-border-strong);
+    background: var(--nk-hover);
+  }
+  .nk-tool-back:focus-visible {
+    outline: 2px solid var(--nk-accent);
+    outline-offset: 2px;
+  }
+  @media (max-width: 640px) {
+    .nk-tool-back-wrap {
+      width: min(100% - 32px, 1200px);
+      padding-top: 16px;
+    }
+  }
+</style>

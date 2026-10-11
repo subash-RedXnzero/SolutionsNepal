@@ -1,0 +1,286 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(js|css|woff2|svg|png|jpg|webp|avif)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/tools/logo-size-resizer",
+      "destination": "/tools/photo/logo-size-resizer",
+      "permanent": true
+    },
+    {
+      "source": "/blog/best-remittance-exchange-rate-nepal-guide",
+      "destination": "/guides/best-remittance-exchange-rate-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/bs-to-ad-conversion",
+      "destination": "/guides/bs-to-ad-conversion",
+      "permanent": true
+    },
+    {
+      "source": "/blog/buying-gold-nepal-hallmark-tola-purity-guide",
+      "destination": "/guides/buying-gold-nepal-hallmark-tola-purity-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/calculate-age",
+      "destination": "/guides/calculate-age",
+      "permanent": true
+    },
+    {
+      "source": "/blog/calculate-bmi",
+      "destination": "/guides/calculate-bmi",
+      "permanent": true
+    },
+    {
+      "source": "/blog/calculate-percentage",
+      "destination": "/guides/calculate-percentage",
+      "permanent": true
+    },
+    {
+      "source": "/blog/company-registration-online-nepal-guide",
+      "destination": "/guides/company-registration-online-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/e-passport-online-application-nepal-guide",
+      "destination": "/guides/e-passport-online-application-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/embossed-number-plate-online-application-nepal-guide",
+      "destination": "/guides/embossed-number-plate-online-application-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/gold-weight-calculation",
+      "destination": "/guides/gold-weight-calculation",
+      "permanent": true
+    },
+    {
+      "source": "/blog/home-loan-emi-nepal-calculation-guide",
+      "destination": "/guides/home-loan-emi-nepal-calculation-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/house-property-valuation-land-tax-bhumi-kar-nepal-guide",
+      "destination": "/guides/house-property-valuation-land-tax-bhumi-kar-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/how-salary-calculator-works",
+      "destination": "/guides/how-salary-calculator-works",
+      "permanent": true
+    },
+    {
+      "source": "/blog/how-to-calculate-emi-nepal",
+      "destination": "/guides/how-to-calculate-emi-nepal",
+      "permanent": true
+    },
+    {
+      "source": "/blog/individual-freelancer-income-tax-guide-nepal-2026",
+      "destination": "/guides/individual-freelancer-income-tax-guide-nepal-2026",
+      "permanent": true
+    },
+    {
+      "source": "/blog/international-driving-permit-idp-nepal-guide",
+      "destination": "/guides/international-driving-permit-idp-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/ipo-result-meroshare-nepse-allotment-guide",
+      "destination": "/guides/ipo-result-meroshare-nepse-allotment-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/labour-permit-nepal-first-time-walkthrough",
+      "destination": "/guides/labour-permit-nepal-first-time-walkthrough",
+      "permanent": true
+    },
+    {
+      "source": "/blog/land-measurement-nepal",
+      "destination": "/guides/land-measurement-nepal",
+      "permanent": true
+    },
+    {
+      "source": "/blog/land-registration-fees-malpot-nepal-guide",
+      "destination": "/guides/land-registration-fees-malpot-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/mofa-document-attestation-nepal-online-guide",
+      "destination": "/guides/mofa-document-attestation-nepal-online-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nagarik-app-nepal-registration-digital-id-guide",
+      "destination": "/guides/nagarik-app-nepal-registration-digital-id-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nagarik-app-nepal-registration-digital-services-guide",
+      "destination": "/guides/nagarik-app-nepal-registration-digital-services-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/national-id-card-nepal-status-check-guide",
+      "destination": "/guides/national-id-card-nepal-status-check-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/national-id-card-nepal-who-needs-one-now",
+      "destination": "/guides/national-id-card-nepal-who-needs-one-now",
+      "permanent": true
+    },
+    {
+      "source": "/blog/national-id-card-online-registration-nepal-guide",
+      "destination": "/guides/national-id-card-online-registration-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nepal-citizenship-certificate-documents-by-case",
+      "destination": "/guides/nepal-citizenship-certificate-documents-by-case",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nepal-driving-license-trial-date-route-guide",
+      "destination": "/guides/nepal-driving-license-trial-date-route-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nepal-driving-license-trial-fees-rejections",
+      "destination": "/guides/nepal-driving-license-trial-fees-rejections",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nepal-online-driving-license-edlvrs-portal-guide",
+      "destination": "/guides/nepal-online-driving-license-edlvrs-portal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nepal-police-clearance-certificate-online-pcc-guide",
+      "destination": "/guides/nepal-police-clearance-certificate-online-pcc-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nepali-passport-renewal-process-documents-fees",
+      "destination": "/guides/nepali-passport-renewal-process-documents-fees",
+      "permanent": true
+    },
+    {
+      "source": "/blog/noc-nepal-when-you-need-one-and-how-long-it-takes",
+      "destination": "/guides/noc-nepal-when-you-need-one-and-how-long-it-takes",
+      "permanent": true
+    },
+    {
+      "source": "/blog/open-demat-account-mero-share-nepal-2026",
+      "destination": "/guides/open-demat-account-mero-share-nepal-2026",
+      "permanent": true
+    },
+    {
+      "source": "/blog/open-nepali-bank-account-online-ekyc-vkyc-guide",
+      "destination": "/guides/open-nepali-bank-account-online-ekyc-vkyc-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/pan-vat-online-registration-nepal-guide",
+      "destination": "/guides/pan-vat-online-registration-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/personal-pan-card-online-nepal-registration-guide",
+      "destination": "/guides/personal-pan-card-online-nepal-registration-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/register-company-in-nepal-online-camis-guide",
+      "destination": "/guides/register-company-in-nepal-online-camis-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/register-private-limited-company-online-nepal-guide",
+      "destination": "/guides/register-private-limited-company-online-nepal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/social-security-allowance-senior-citizen-rates-nepal",
+      "destination": "/guides/social-security-allowance-senior-citizen-rates-nepal",
+      "permanent": true
+    },
+    {
+      "source": "/blog/social-security-fund-nepal-checking-balance",
+      "destination": "/guides/social-security-fund-nepal-checking-balance",
+      "permanent": true
+    },
+    {
+      "source": "/blog/ssf-balance-check-nepal-online-portal-guide",
+      "destination": "/guides/ssf-balance-check-nepal-online-portal-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/tax-on-remittance-nepal-is-remittance-taxable",
+      "destination": "/guides/tax-on-remittance-nepal-is-remittance-taxable",
+      "permanent": true
+    },
+    {
+      "source": "/blog/transferring-vehicle-ownership-nepal-namsari",
+      "destination": "/guides/transferring-vehicle-ownership-nepal-namsari",
+      "permanent": true
+    },
+    {
+      "source": "/blog/understanding-loan-interest",
+      "destination": "/guides/understanding-loan-interest",
+      "permanent": true
+    }
+  ]
+}

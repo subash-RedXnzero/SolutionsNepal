@@ -1,0 +1,90 @@
+---
+import { SITE_URL } from '../../data/seo.js';
+
+const { items } = Astro.props;
+
+// Build BreadcrumbList JSON-LD (normalize trailing slashes, absolute URLs)
+function absUrl(href) {
+  if (!href) return SITE_URL + '/';
+  const clean = href !== '/' ? href.replace(/\/+$/, '') : '/';
+  return `${SITE_URL}${clean}`;
+}
+
+const breadcrumbItems = [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+];
+items.forEach((item, index) => {
+  const position = index + 2;
+  if (item.href && index < items.length - 1) {
+    breadcrumbItems.push({
+      '@type': 'ListItem',
+      position,
+      name: item.label,
+      item: absUrl(item.href),
+    });
+  } else {
+    breadcrumbItems.push({
+      '@type': 'ListItem',
+      position,
+      name: item.label,
+    });
+  }
+});
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbItems,
+};
+---
+
+<nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-list">
+    <li>
+      <a href="/" class="breadcrumb-link">Home</a>
+    </li>
+    {items.map((item, index) => (
+      <li class="breadcrumb-sep">
+        <span class="breadcrumb-slash">/</span>
+        {item.href && index < items.length - 1 ? (
+          <a href={item.href} class="breadcrumb-link">{item.label}</a>
+        ) : (
+          <span class="breadcrumb-current">{item.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<style>
+  .breadcrumb-nav {
+    margin-bottom: 20px;
+  }
+  .breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .breadcrumb-link {
+    font-size: 12px;
+    color: var(--nk-text-tertiary);
+    text-decoration: none;
+    transition: color 0.1s ease;
+  }
+  .breadcrumb-link:hover {
+    color: var(--nk-accent);
+  }
+  .breadcrumb-slash {
+    font-size: 12px;
+    color: var(--nk-border-strong);
+  }
+  .breadcrumb-current {
+    font-size: 12px;
+    color: var(--nk-text-secondary);
+    font-weight: 500;
+  }
+</style>

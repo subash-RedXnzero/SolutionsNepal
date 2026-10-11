@@ -1,0 +1,532 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import { nepaliNames, ALL_ALPHABET } from '../../../data/nepali-names.js';
+
+const totalNames = nepaliNames.length;
+const namesJSON = JSON.stringify(nepaliNames);
+const alphabetJSON = JSON.stringify(ALL_ALPHABET);
+---
+
+<BaseLayout
+  title="All Nepali Names A–Z – Browse the Full Directory | SolutionsNepal"
+  description="Browse every Nepali, Sanskrit, Hindu, modern, and traditional baby name with meanings, origins, and pronunciations — filter by letter, gender, and category."
+>
+<div class="pn-page">
+  <div style="max-width:1100px;margin:0 auto;padding:16px 32px 0;">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Names', href: '/nepal/names' },
+      { label: 'All Names A–Z' },
+    ]} />
+  </div>
+
+  <!-- HERO -->
+  <section class="pn-hero">
+    <div class="pn-hero-inner">
+      <h1 class="pn-title">Nepali Baby Names</h1>
+      <p class="pn-sub">Find a beautiful name with meaning</p>
+      <p class="pn-desc">Explore meaningful Nepali, Sanskrit, Hindu, modern, and traditional names.</p>
+      <div class="pn-search">
+        <svg class="pn-search-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="pn-search-input" class="pn-search-input" placeholder="Search names or meanings..." autocomplete="off" aria-label="Search names" />
+        <button id="pn-search-clear" class="pn-search-clear" style="display:none" aria-label="Clear search">&times;</button>
+        <button id="pn-search-btn" class="pn-search-btn" aria-label="Search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENDER NAV -->
+  <nav class="pn-nav" aria-label="Gender filter">
+    <div class="pn-nav-inner">
+      <div id="gender-filter" class="pn-seg-group">
+        <button data-gender="Boy" class="pn-seg active">Boys</button>
+        <button data-gender="Girl" class="pn-seg">Girls</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="pn-main">
+
+    <!-- BROWSE BY LETTER -->
+    <section class="pn-section">
+      <div class="pn-section-head">
+        <h2 class="pn-section-label">Browse by Letter</h2>
+        <div id="clear-wrap" style="display:none">
+          <button id="clear-btn" class="pn-clear">Clear filters</button>
+        </div>
+      </div>
+      <div id="letter-grid" class="pn-alpha-grid">
+        {ALL_ALPHABET.map(l => (
+          <button type="button" data-letter={l} class="pn-alpha" aria-label={`Names starting with ${l}`} disabled>
+            <span class="pn-alpha-l">{l}</span>
+            <span class="pn-alpha-c">0</span>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="pn-section">
+      <h2 class="pn-section-label">Categories</h2>
+      <div id="category-filter" class="pn-cat-group">
+        <button data-category="All" class="pn-cat active">All</button>
+        <button data-category="Nepali" class="pn-cat">Nepali</button>
+        <button data-category="Sanskrit" class="pn-cat">Sanskrit</button>
+        <button data-category="Hindu" class="pn-cat">Hindu</button>
+        <button data-category="Modern" class="pn-cat">Modern</button>
+        <button data-category="Traditional" class="pn-cat">Traditional</button>
+      </div>
+    </section>
+
+    <!-- NAMES -->
+    <section class="pn-section" id="names-section">
+      <div class="pn-names-head">
+        <h2 id="results-heading" class="pn-names-title">Names</h2>
+        <p class="pn-names-count"><span id="results-count">{totalNames}</span> name<span id="results-plural">s</span></p>
+      </div>
+      <div id="letter-sections"></div>
+      <div id="names-empty" class="pn-empty" style="display:none">
+        <p class="pn-empty-title">No names found</p>
+        <p class="pn-empty-hint">Try searching for another name or meaning.</p>
+        <button id="empty-clear-btn" class="pn-clear">Clear filters</button>
+      </div>
+      <!-- Pagination -->
+      <div id="pagination" class="pn-pager" style="display:none">
+        <button id="page-prev" class="pn-page-btn" disabled>&lsaquo; Previous</button>
+        <div id="page-nums" class="pn-page-nums"></div>
+        <button id="page-next" class="pn-page-btn">Next &rsaquo;</button>
+      </div>
+      <p id="page-info" class="pn-page-info" style="display:none"></p>
+    </section>
+  </div>
+
+  <!-- SEO -->
+  <footer class="pn-seo">
+    <div class="pn-seo-inner">
+      <div class="pn-seo-block">
+        <h2>Nepali Names &amp; Meanings</h2>
+        <p>SolutionsNepal helps you discover meaningful Nepali baby names with Sanskrit origins, meanings, and pronunciations. Search, filter, and browse by gender, starting letter, or meaning.</p>
+      </div>
+      <div class="pn-seo-block">
+        <h2>How to Choose a Nepali Name</h2>
+        <ul class="pn-seo-list">
+          <li><strong>Meaning</strong> &mdash; Choose a name that resonates with your values.</li>
+          <li><strong>Pronunciation</strong> &mdash; Consider how the name sounds.</li>
+          <li><strong>Cultural significance</strong> &mdash; Many names carry deep cultural roots.</li>
+          <li><strong>Origin</strong> &mdash; Sanskrit, Nepali, or other heritage.</li>
+        </ul>
+      </div>
+      <div class="pn-seo-block">
+        <h2>Browse by category</h2>
+        <p><a href="/nepal/names/boy">Boy names</a> · <a href="/nepal/names/girl">Girl names</a> · <a href="/nepal/names/unisex">Unisex names</a> · <a href="/nepal/names/modern">Modern</a> · <a href="/nepal/names/traditional">Traditional</a> · <a href="/nepal/names/sanskrit">Sanskrit</a> · <a href="/nepal/names/hindu">Hindu</a> · <a href="/nepal/names">All name categories</a></p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script is:inline define:vars={{ namesJSON, alphabetJSON }}>
+const ALL_NAMES = JSON.parse(namesJSON);
+const ALL_LETTERS = JSON.parse(alphabetJSON);
+const PER_PAGE = 30;
+
+let state = { gender: 'Boy', category: 'All', letter: '', search: '', origin: '', page: 1 };
+
+function readURL() {
+  const p = new URLSearchParams(window.location.search);
+  state.gender = p.get('gender') || 'Boy';
+  state.category = p.get('category') || 'All';
+  state.letter = p.get('letter') || '';
+  state.search = p.get('q') || '';
+  state.origin = p.get('origin') || '';
+  state.page = parseInt(p.get('page') || '1', 10);
+}
+
+function writeURL() {
+  const p = new URLSearchParams();
+  p.set('gender', state.gender);
+  if (state.category !== 'All') p.set('category', state.category);
+  if (state.origin) p.set('origin', state.origin);
+  if (state.letter) p.set('letter', state.letter);
+  if (state.search) p.set('q', state.search);
+  if (state.page > 1) p.set('page', state.page);
+  const qs = p.toString();
+  history.replaceState(history.state, '', '/nepal/names/all' + (qs ? '?' + qs : ''));
+}
+
+function filterNames() {
+  let r = ALL_NAMES;
+  if (state.gender === 'Boy') r = r.filter(n => n.gender === 'Boy' || n.gender === 'Unisex');
+  else if (state.gender === 'Girl') r = r.filter(n => n.gender === 'Girl' || n.gender === 'Unisex');
+  if (state.category !== 'All') r = r.filter(n => n.categories.includes(state.category));
+  if (state.origin) r = r.filter(n => n.origin === state.origin);
+  if (state.search) {
+    // Search is global — search all names, bypass letter filter
+    const q = state.search.toLowerCase();
+    r = r.filter(n => n.name.toLowerCase().includes(q) || n.meaning.toLowerCase().includes(q) || n.nepaliName.includes(q) || n.meaningKeywords.some(k => k.includes(q)));
+  } else if (state.letter) {
+    // Letter filter only applies when NOT searching
+    const l = state.letter.toUpperCase();
+    r = r.filter(n => n.name.charAt(0).toUpperCase() === l);
+  }
+  return r;
+}
+
+function letterCounts() {
+  const c = {}; for (const l of ALL_LETTERS) c[l] = 0;
+  let pool = ALL_NAMES;
+  if (state.gender === 'Boy') pool = pool.filter(n => n.gender === 'Boy' || n.gender === 'Unisex');
+  else if (state.gender === 'Girl') pool = pool.filter(n => n.gender === 'Girl' || n.gender === 'Unisex');
+  if (state.category !== 'All') pool = pool.filter(n => n.categories.includes(state.category));
+  if (state.origin) pool = pool.filter(n => n.origin === state.origin);
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    pool = pool.filter(n => n.name.toLowerCase().includes(q) || n.meaning.toLowerCase().includes(q) || n.nepaliName.includes(q) || n.meaningKeywords.some(k => k.includes(q)));
+  }
+  for (const n of pool) { const l = n.name.charAt(0).toUpperCase(); if (c[l] !== undefined) c[l]++; }
+  return c;
+}
+
+function scrollToNames() {
+  const el = document.getElementById('names-section');
+  if (!el) return;
+  const navH = document.querySelector('.pn-nav')?.offsetHeight || 0;
+  const top = el.getBoundingClientRect().top + window.pageYOffset - navH - 12;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+function render() {
+  const filtered = filterNames();
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+  if (state.page > totalPages) state.page = totalPages;
+  if (state.page < 1) state.page = 1;
+  const start = (state.page - 1) * PER_PAGE;
+  const pageItems = filtered.slice(start, start + PER_PAGE);
+
+  // Gender
+  document.querySelectorAll('#gender-filter .pn-seg').forEach(b => b.classList.toggle('active', b.dataset.gender === state.gender));
+  // Categories
+  document.querySelectorAll('#category-filter .pn-cat').forEach(b => b.classList.toggle('active', b.dataset.category === state.category));
+  // Letter grid
+  const lc = letterCounts();
+  document.querySelectorAll('#letter-grid .pn-alpha').forEach(b => {
+    const l = b.dataset.letter;
+    const count = lc[l] || 0;
+    b.querySelector('.pn-alpha-c').textContent = count;
+    b.classList.toggle('active', l.toUpperCase() === state.letter.toUpperCase());
+    b.disabled = count === 0;
+    b.tabIndex = count === 0 ? -1 : 0;
+  });
+
+  // Heading
+  const h = document.getElementById('results-heading');
+  if (state.search) h.textContent = 'Results for "' + state.search + '"';
+  else if (state.origin) h.textContent = state.origin + ' ' + state.gender.toLowerCase() + ' names';
+  else if (state.letter && state.category !== 'All') h.textContent = state.category + ' ' + state.gender.toLowerCase() + ' names starting with ' + state.letter;
+  else if (state.letter) h.textContent = state.gender + ' names starting with ' + state.letter;
+  else if (state.category !== 'All') h.textContent = state.category + ' ' + state.gender.toLowerCase() + ' names';
+  else h.textContent = state.gender + ' Names';
+
+  document.getElementById('results-count').textContent = total;
+  document.getElementById('results-plural').textContent = total !== 1 ? 's' : '';
+
+  // Letter sections
+  const sectionsEl = document.getElementById('letter-sections');
+  const emptyEl = document.getElementById('names-empty');
+
+  if (total === 0) {
+    sectionsEl.innerHTML = '';
+    emptyEl.style.display = '';
+  } else {
+    emptyEl.style.display = 'none';
+    const groups = {};
+    for (const n of pageItems) {
+      const l = n.name.charAt(0).toUpperCase();
+      if (!groups[l]) groups[l] = [];
+      groups[l].push(n);
+    }
+    const letters = Object.keys(groups).sort();
+
+    sectionsEl.innerHTML = letters.map(letter => {
+      const cards = groups[letter].map(n => {
+        const meta = [n.origin, n.gender === 'Unisex' ? 'Unisex' : n.gender].filter(Boolean).join(' / ');
+        return `<a href="/nepal/names/${n.slug}" class="pn-card" aria-label="${n.name} — ${n.meaning}">
+          <div class="pn-card-row">
+            <span class="pn-card-name">${n.name}</span>
+          </div>
+          <p class="pn-card-meaning">${n.meaning}</p>
+          <span class="pn-card-meta">${meta}</span>
+        </a>`;
+      }).join('');
+      return `<section id="letter-${letter}" class="pn-letter">
+        <h3 class="pn-letter-h">${letter}</h3>
+        <div class="pn-letter-grid">${cards}</div>
+      </section>`;
+    }).join('');
+  }
+
+  // Pagination
+  const pag = document.getElementById('pagination');
+  const info = document.getElementById('page-info');
+  const nums = document.getElementById('page-nums');
+  const prev = document.getElementById('page-prev');
+  const next = document.getElementById('page-next');
+
+  if (totalPages > 1) {
+    pag.style.display = '';
+    prev.disabled = state.page <= 1;
+    next.disabled = state.page >= totalPages;
+    let pages = [];
+    if (totalPages <= 7) { for (let i = 1; i <= totalPages; i++) pages.push(i); }
+    else {
+      pages.push(1);
+      if (state.page > 3) pages.push('...');
+      for (let i = Math.max(2, state.page - 1); i <= Math.min(totalPages - 1, state.page + 1); i++) pages.push(i);
+      if (state.page < totalPages - 2) pages.push('...');
+      pages.push(totalPages);
+    }
+    nums.innerHTML = pages.map(p => {
+      if (p === '...') return '<span class="pn-dots">...</span>';
+      return '<button class="pn-pnum' + (p === state.page ? ' active' : '') + '" data-page="' + p + '">' + p + '</button>';
+    }).join('');
+    info.style.display = '';
+    info.textContent = 'Showing ' + (start + 1) + '-' + Math.min(start + PER_PAGE, total) + ' of ' + total + ' names';
+  } else {
+    pag.style.display = 'none';
+    info.style.display = total > 0 ? '' : 'none';
+    if (total > 0) info.textContent = 'Showing all ' + total + ' name' + (total !== 1 ? 's' : '');
+  }
+
+  // Clear
+  document.getElementById('clear-wrap').style.display = (state.category !== 'All' || state.letter || state.search) ? '' : 'none';
+}
+
+// Events
+document.getElementById('letter-grid').addEventListener('click', function(e) {
+  const btn = e.target.closest('.pn-alpha');
+  if (!btn || btn.disabled) return;
+  state.letter = state.letter === btn.dataset.letter ? '' : btn.dataset.letter;
+  state.origin = ''; state.page = 1;
+  writeURL(); render();
+  if (state.letter) requestAnimationFrame(scrollToNames);
+});
+
+document.getElementById('gender-filter').addEventListener('click', function(e) {
+  const btn = e.target.closest('.pn-seg');
+  if (!btn) return;
+  state.gender = btn.dataset.gender;
+  state.origin = ''; state.page = 1;
+  writeURL(); render();
+});
+
+document.getElementById('category-filter').addEventListener('click', function(e) {
+  const btn = e.target.closest('.pn-cat');
+  if (!btn) return;
+  state.category = btn.dataset.category;
+  state.origin = ''; state.page = 1;
+  writeURL(); render();
+});
+
+function doSearch() {
+  state.search = document.getElementById('pn-search-input').value.trim();
+  state.origin = ''; state.page = 1;
+  writeURL(); render();
+}
+function updateClearBtn() {
+  const v = document.getElementById('pn-search-input').value;
+  document.getElementById('pn-search-clear').style.display = v.length > 0 ? '' : 'none';
+}
+document.getElementById('pn-search-btn').addEventListener('click', doSearch);
+document.getElementById('pn-search-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
+});
+document.getElementById('pn-search-input').addEventListener('input', function() {
+  updateClearBtn();
+  state.search = this.value.trim();
+  state.origin = ''; state.page = 1;
+  writeURL(); render();
+});
+document.getElementById('pn-search-clear').addEventListener('click', function() {
+  document.getElementById('pn-search-input').value = '';
+  updateClearBtn();
+  state.search = '';
+  state.page = 1;
+  writeURL(); render();
+});
+
+function clearAll() {
+  state.gender = 'Boy'; state.category = 'All'; state.letter = ''; state.search = ''; state.origin = ''; state.page = 1;
+  document.getElementById('pn-search-input').value = '';
+  updateClearBtn();
+  writeURL(); render();
+}
+document.getElementById('clear-btn').addEventListener('click', clearAll);
+document.getElementById('empty-clear-btn').addEventListener('click', clearAll);
+
+document.getElementById('page-prev').addEventListener('click', function() {
+  if (state.page > 1) { state.page--; writeURL(); render(); scrollToNames(); }
+});
+document.getElementById('page-next').addEventListener('click', function() {
+  state.page++; writeURL(); render(); scrollToNames();
+});
+document.getElementById('page-nums').addEventListener('click', function(e) {
+  const btn = e.target.closest('.pn-pnum');
+  if (!btn || btn.classList.contains('active')) return;
+  state.page = parseInt(btn.dataset.page, 10);
+  writeURL(); render(); scrollToNames();
+});
+
+window.addEventListener('popstate', function() { readURL(); render(); });
+readURL();
+render();
+</script>
+</BaseLayout>
+
+<style is:global>
+/* ═══ PAGE ═══ */
+.pn-page {
+  --bg: var(--nk-bg, #FAF9F6);
+  --surface: var(--nk-surface, #FFFFFF);
+  --text: var(--nk-text, #171717);
+  --text2: var(--nk-text-secondary, #6B6B6B);
+  --text3: var(--nk-text-tertiary, #9A9A9A);
+  --border: var(--nk-border, #E8E5DF);
+  --accent: var(--nk-accent, #B3261E);
+  --accent-hover: var(--nk-accent-hover, #9A1F19);
+  --accent-subtle: var(--nk-accent-subtle, #FBEAE8);
+  /* Content area of the shared ToolsLayout — NOT a standalone page shell:
+     no min-height/own background, so the site layout shows through once. */
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ HERO ═══ */
+.pn-hero { background: var(--surface); border-bottom: 1px solid var(--border); }
+.pn-hero-inner { max-width: 580px; margin: 0 auto; text-align: center; padding: 64px 24px 48px; }
+.pn-title { font-size: 42px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margin-bottom: 10px; color: var(--text); }
+.pn-sub { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.pn-desc { font-size: 15px; color: var(--text2); line-height: 1.6; margin-bottom: 32px; }
+.pn-search { display: flex; align-items: center; max-width: 520px; margin: 0 auto; height: 52px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 0 5px 0 16px; transition: border-color 0.15s; }
+.pn-search:focus-within { border-color: var(--accent); }
+.pn-search-ico { color: var(--text3); flex-shrink: 0; }
+.pn-search-input { flex: 1; border: none; background: transparent; padding: 0 12px; font-size: 15px; color: var(--text); outline: none; font-family: inherit; min-width: 0; height: 100%; }
+.pn-search-input::placeholder { color: var(--text3); }
+.pn-search-clear { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--text3); cursor: pointer; font-size: 18px; line-height: 1; border-radius: 50%; flex-shrink: 0; transition: color 0.15s, background 0.15s; padding: 0; }
+.pn-search-clear:hover { color: var(--text); background: var(--border); }
+.pn-search-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
+.pn-search-btn:hover { background: var(--accent-hover); }
+
+/* ═══ NAV ═══ */
+/* Sticks below the site navbar (66px desktop, 60/62px tablet/mobile) */
+.pn-nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 66px; z-index: 20; }
+@media (max-width: 900px) and (min-width: 769px) { .pn-nav { top: 62px; } }
+@media (max-width: 768px) { .pn-nav { top: 60px; } }
+.pn-nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 32px; height: 52px; display: flex; align-items: center; justify-content: center; }
+.pn-seg-group { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+.pn-seg { padding: 6px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; background: transparent; color: var(--text3); cursor: pointer; font-family: inherit; transition: all 0.15s; min-width: 72px; text-align: center; }
+.pn-seg:hover { color: var(--text2); }
+.pn-seg.active { background: var(--accent); color: #fff; }
+.pn-cat-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.pn-cat { padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); background: var(--surface); color: var(--text3); cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+.pn-cat:hover { color: var(--text2); border-color: var(--text3); }
+.pn-cat.active { background: var(--accent-subtle); color: var(--accent); border-color: var(--accent); }
+
+/* ═══ MAIN ═══ */
+.pn-main { max-width: 1100px; margin: 0 auto; padding: 40px 32px 64px; }
+.pn-section { margin-bottom: 40px; }
+.pn-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.pn-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); }
+.pn-clear { padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 500; border: 1px solid var(--border); background: var(--surface); color: var(--text3); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.pn-clear:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ ALPHABET ═══ */
+.pn-alpha-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
+.pn-alpha { display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1; min-height: 46px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-family: inherit; padding: 0; transition: all 0.15s; }
+.pn-alpha:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.pn-alpha.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pn-alpha:disabled { opacity: 0.18; cursor: not-allowed; }
+.pn-alpha-l { font-size: 14px; font-weight: 700; line-height: 1; }
+.pn-alpha-c { font-size: 9px; font-weight: 500; opacity: 0.5; line-height: 1; margin-top: 2px; }
+.pn-alpha.active .pn-alpha-c { opacity: 0.8; }
+
+/* ═══ NAMES ═══ */
+.pn-names-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.pn-names-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); line-height: 1.2; }
+.pn-names-count { font-size: 13px; color: var(--text3); font-variant-numeric: tabular-nums; }
+
+/* ═══ LETTER SECTIONS ═══ */
+.pn-letter { margin-bottom: 32px; scroll-margin-top: 68px; }
+.pn-letter-h { font-size: 20px; font-weight: 700; color: var(--accent); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); line-height: 1; }
+.pn-letter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+
+/* ═══ CARDS ═══ */
+.pn-card { display: block; padding: 14px 16px; text-decoration: none; color: var(--text); background: var(--surface); transition: background 0.15s; }
+.pn-card:hover { background: var(--accent-subtle); }
+.pn-card-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-bottom: 2px; }
+.pn-card-name { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pn-card-meaning { font-size: 13px; color: var(--text2); line-height: 1.3; margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pn-card-meta { font-size: 11px; color: var(--text3); font-weight: 500; }
+
+/* ═══ EMPTY ═══ */
+.pn-empty { text-align: center; padding: 56px 24px; }
+.pn-empty-title { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.pn-empty-hint { font-size: 14px; color: var(--text3); margin-bottom: 20px; }
+
+/* ═══ PAGINATION ═══ */
+.pn-pager { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+.pn-page-btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); background: var(--surface); color: var(--text2); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.pn-page-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.pn-page-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.pn-page-nums { display: flex; gap: 3px; }
+.pn-pnum { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 500; border: 1px solid transparent; background: transparent; color: var(--text3); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.pn-pnum:hover { background: var(--bg); color: var(--text); }
+.pn-pnum.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pn-dots { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text3); }
+.pn-page-info { text-align: center; font-size: 12px; color: var(--text3); padding: 12px 0 0; }
+
+/* ═══ SEO ═══ */
+.pn-seo { border-top: 1px solid var(--border); background: var(--surface); padding: 48px 32px; }
+.pn-seo-inner { max-width: 680px; margin: 0 auto; }
+.pn-seo-block { margin-bottom: 28px; }
+.pn-seo-block:last-child { margin-bottom: 0; }
+.pn-seo-block h2 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.pn-seo-block p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+.pn-seo-list { list-style: none; padding: 0; margin: 0; }
+.pn-seo-list li { font-size: 14px; color: var(--text2); line-height: 1.7; padding: 4px 0 4px 18px; position: relative; }
+.pn-seo-list li::before { content: ''; position: absolute; left: 0; top: 12px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); opacity: 0.3; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 900px) {
+  .pn-alpha-grid { grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 6px; }
+  .pn-letter-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .pn-hero-inner { padding: 44px 20px 36px; }
+  .pn-title { font-size: 32px; }
+  .pn-sub { font-size: 16px; }
+  .pn-desc { font-size: 14px; margin-bottom: 28px; }
+  .pn-search { height: 48px; }
+  .pn-search-input { font-size: 14px; }
+  .pn-search-btn { width: 36px; height: 36px; }
+  .pn-nav-inner { padding: 0 20px; height: 48px; }
+  .pn-seg { padding: 6px 14px; min-width: 60px; font-size: 12px; }
+  .pn-cat-group { gap: 5px; }
+  .pn-cat { padding: 5px 12px; font-size: 12px; }
+  .pn-main { padding: 28px 20px 48px; }
+  .pn-alpha-grid { grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); gap: 6px; }
+  .pn-alpha { min-height: 40px; }
+  .pn-alpha-l { font-size: 13px; }
+  .pn-alpha-c { font-size: 8px; }
+  .pn-names-title { font-size: 20px; }
+  .pn-letter-grid { grid-template-columns: 1fr; }
+  .pn-letter { margin-bottom: 24px; }
+  .pn-card { padding: 12px 14px; }
+  .pn-card-name { font-size: 14px; }
+  .pn-pager { gap: 4px; }
+  .pn-pnum { width: 30px; height: 30px; font-size: 12px; }
+  .pn-page-btn { padding: 6px 12px; font-size: 12px; }
+}
+</style>

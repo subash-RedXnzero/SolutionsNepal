@@ -1,0 +1,682 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import { MapPin, Briefcase, Building2, User, Landmark, Compass, Wallet, Calculator, PiggyBank } from '@lucide/astro';
+import {
+  DESTINATIONS,
+  QUICK_DESTINATIONS,
+  JOB_CATEGORIES,
+  RECRUITMENT_METHODS,
+  EXPENSE_FIELDS,
+  HIDDEN_BY_METHOD,
+  METHOD_NOTES,
+  OFFICIAL_SOURCES,
+  LAST_CHECKED,
+  SALARY_CURRENCIES,
+  foreignEmploymentData,
+} from '../../data/foreign-employment.js';
+import { getAllCurrenciesAsync, getForexMetaAsync } from '../../lib/nepal/forex.js';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Foreign Employment Cost Calculator Nepal | SolutionsNepal';
+const description = 'Estimate the cost of going abroad for work from Nepal, including visa, medical, insurance, recruitment, airfare and other expenses.';
+
+const faqItems = [
+  {
+    q: 'How much money do I need to go abroad for work from Nepal?',
+    a: 'It varies by destination, job, employer, recruitment route, and the official charges that apply to you. Enter your own figures above — the calculator adds them up, separates what your employer covers, and shows your out-of-pocket cost.',
+  },
+  {
+    q: 'Does the calculator include manpower fees?',
+    a: 'Only amounts you enter yourself, or amounts SolutionsNepal has verified from an official source. There is no universal manpower fee, so nothing is assumed — empty fields are shown as “Not included”, never guessed.',
+  },
+  {
+    q: 'Can my employer pay some of the costs?',
+    a: 'Yes. Mark any expense as “Employer pays” and it is separated from your out-of-pocket cost while still being shown in the total, so you see both numbers.',
+  },
+  {
+    q: 'Can I calculate how long it takes to recover my migration cost?',
+    a: 'Yes. Enter your monthly salary and estimated monthly expenses abroad. Monthly savings is salary minus expenses, and the recovery period is your out-of-pocket cost divided by monthly savings.',
+  },
+  {
+    q: 'Does this calculate my foreign employment income tax?',
+    a: 'No. This tool estimates the cost of going abroad for employment. It should not be used as an income-tax calculator.',
+  },
+  {
+    q: 'Are these costs official?',
+    a: 'Only amounts explicitly marked as verified/official are based on official sources. Everything else is an estimate from figures you provide. Government rules and fees can change — verify before paying.',
+  },
+];
+
+const METHOD_ICONS = { manpower: Building2, direct: User, government: Landmark, unsure: Compass };
+const QUICK_NAMES = { 'saudi-arabia': 'Saudi Arabia', qatar: 'Qatar', uae: 'UAE', malaysia: 'Malaysia', japan: 'Japan', 'south-korea': 'South Korea' };
+
+// Live NRB selling rates for salary currencies (manual entry where unavailable).
+const FALLBACK_FX = {};
+let fxRates = {};
+for (const code of SALARY_CURRENCIES) fxRates[code] = null;
+let fxNote = 'indicative rates';
+try {
+  const [all, meta] = await Promise.all([getAllCurrenciesAsync(), getForexMetaAsync()]);
+  for (const c of all) {
+    if (c.iso3 in fxRates && c.sellPerUnit) fxRates[c.iso3] = Math.round(c.sellPerUnit * 100) / 100;
+  }
+  if (meta?.isLive) fxNote = 'NRB rates' + (meta.publishedDate ? ' (' + meta.publishedDate + ')' : '');
+} catch { /* manual entry remains available */ }
+const fxDataAttrs = Object.fromEntries(
+  SALARY_CURRENCIES.map((c) => [`data-${c.toLowerCase()}`, fxRates[c] ?? '']),
+);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Foreign Employment Cost Calculator Nepal',
+      description: 'Estimate the cost of going abroad for work from Nepal, including visa, medical, insurance, recruitment, airfare and other expenses.',
+      url: 'https://solutionsnepal.com/nepal/foreign-employment-cost-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1000px] px-4 sm:px-6 py-4 sm:py-5">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Foreign Employment Cost' },
+    ]} />
+
+    <div class="mb-4">
+      <h1 class="text-[22px] sm:text-[26px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Foreign Employment Cost Calculator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Estimate how much you may need to spend to go abroad for work from Nepal.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-4 items-start">
+
+      <!-- ═══ LEFT: INPUTS ═══ -->
+      <div class="nk-card p-4 space-y-4">
+        <!-- Destination + Job -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <p class="flex items-center gap-1.5 text-[13px] font-semibold mb-1.5" style="color:var(--nk-text);"><MapPin size={14} /> Where are you going?</p>
+            <select id="dest" class="nk-input text-[13.5px]">
+              <option value="">Select country</option>
+              {DESTINATIONS.map((d) => (<option value={d.id}>{d.name}</option>))}
+            </select>
+            <p id="err-dest" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+          </div>
+          <div>
+            <p class="flex items-center gap-1.5 text-[13px] font-semibold mb-1.5" style="color:var(--nk-text);"><Briefcase size={14} /> Your job</p>
+            <label for="job" class="sr-only">Job category</label>
+            <select id="job" class="nk-input text-[13.5px]">
+              <option value="">Select job category</option>
+              {JOB_CATEGORIES.map((j) => (<option value={j.id}>{j.label}</option>))}
+            </select>
+            <p id="err-job" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+          </div>
+        </div>
+        <div>
+          <div class="flex flex-wrap gap-1.5">
+            {QUICK_DESTINATIONS.map((id) => (
+              <button type="button" class="quick-btn" data-dest={id}>{QUICK_NAMES[id]}</button>
+            ))}
+          </div>
+          <p id="dest-note" class="hidden text-[11px] mt-1.5 leading-relaxed" style="color:var(--nk-text-secondary);"></p>
+        </div>
+
+        <!-- Salary + living -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="salary" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Monthly salary <span style="color:var(--nk-text-tertiary);">— optional</span></label>
+            <div class="grid grid-cols-5 gap-2">
+              <div class="col-span-3 relative">
+                <input id="salary" type="text" placeholder="45,000" class="nk-input text-[15px] tabular-nums" inputmode="decimal" autocomplete="off" />
+              </div>
+              <select id="salary-cur" aria-label="Salary currency" class="nk-input text-[13.5px] col-span-2" {...fxDataAttrs}>
+                <option value="NPR">Rs. (NPR)</option>
+                {SALARY_CURRENCIES.map((c) => (<option value={c}>{c}</option>))}
+              </select>
+            </div>
+            <div id="salary-rate-row" class="hidden grid grid-cols-2 gap-2 mt-2">
+              <input id="salary-rate" type="text" placeholder="Rate (Rs.)" aria-label="Exchange rate" class="nk-input text-[13.5px] tabular-nums" inputmode="decimal" autocomplete="off" />
+              <p id="salary-rate-note" class="text-[10.5px] leading-snug self-center" style="color:var(--nk-text-tertiary);"></p>
+            </div>
+            <p id="err-salary" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+          </div>
+          <div>
+            <label for="living" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Monthly expenses abroad <span style="color:var(--nk-text-tertiary);">— optional</span></label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="living" type="text" placeholder="18,000" class="nk-input text-[13.5px] tabular-nums" style="padding-left:3rem;" inputmode="numeric" autocomplete="off" />
+            </div>
+            <p id="err-living" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+          </div>
+        </div>
+
+        <!-- Step 3 · Recruitment method -->
+        <div>
+          <p class="flex items-center gap-1.5 text-[13px] font-semibold mb-2" style="color:var(--nk-text);"><Building2 size={14} /> How are you going abroad?</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" role="radiogroup" aria-label="Recruitment method">
+            {RECRUITMENT_METHODS.map((m, i) => {
+              const Icon = METHOD_ICONS[m.id];
+              return (
+                <button type="button" class={`type-card${i === 0 ? ' type-active' : ''}`} data-method={m.id} role="radio" aria-checked={i === 0 ? 'true' : 'false'}>
+                  <span class="type-icon"><Icon size={17} /></span>
+                  <span class="type-text"><strong>{m.title}</strong><small>{m.desc}</small></span>
+                </button>
+              );
+            })}
+          </div>
+          <p id="method-note" class="hidden text-[11px] mt-1.5 leading-relaxed" style="color:var(--nk-text-secondary);"></p>
+        </div>
+
+        <!-- Step 4 · Expenses -->
+        <div>
+          <p class="flex items-center gap-1.5 text-[13px] font-semibold mb-1" style="color:var(--nk-text);"><Wallet size={14} /> Your estimated expenses</p>
+          <p class="text-[11px] mb-2" style="color:var(--nk-text-tertiary);">Leave unknown fields empty — never guessed.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2.5">
+            {EXPENSE_FIELDS.map((f) => (
+              <div class="exp-row" data-exp={f.key}>
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <label for={`exp-${f.key}`} class="text-[12px] font-medium" style="color:var(--nk-text);">{f.label}</label>
+                  <label class="emp-check"><input type="checkbox" class="emp-box" data-key={f.key} /> Employer pays</label>
+                </div>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+                  <input id={`exp-${f.key}`} type="text" placeholder="Enter amount" class="nk-input text-[14px] tabular-nums exp-input" style="padding-left:3rem;" inputmode="decimal" autocomplete="off" data-key={f.key} />
+                </div>
+                <p id={`err-exp-${f.key}`} class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Budget mode -->
+        <div class="rounded-lg border p-3" style="border-color:var(--nk-border);">
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input id="budget-toggle" type="checkbox" class="mt-1" style="width:16px;height:16px;accent-color:var(--nk-accent);" />
+            <span class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);"><strong style="color:var(--nk-text);">I already know my budget.</strong> Compare it against the estimate.</span>
+          </label>
+          <div id="budget-block" class="hidden mt-2.5">
+            <label for="budget" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">How much can you spend to go abroad?</label>
+            <div class="relative max-w-[260px]">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="budget" type="text" placeholder="1,50,000" class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" inputmode="numeric" autocomplete="off" />
+            </div>
+            <p id="err-budget" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+          </div>
+        </div>
+
+        <button type="button" id="calc-btn" class="nk-btn nk-btn-primary w-full">
+          <Calculator size={15} /> Calculate total cost
+        </button>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="md:sticky md:top-4">
+        <div class="nk-card p-4" aria-live="polite">
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">Your estimate</p>
+
+          <div id="res-empty">
+            <div class="rounded-xl px-4 py-6 text-center" style="background-color:var(--nk-accent-subtle);">
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-secondary);">Estimated cost to go abroad</p>
+              <p class="text-[24px] font-bold tracking-tight" style="color:var(--nk-text-tertiary);">—</p>
+              <p class="text-[11.5px] mt-1.5" style="color:var(--nk-text-secondary);">Choose a destination and click <strong>Calculate total cost</strong>.</p>
+            </div>
+          </div>
+
+          <div id="res-body" class="hidden">
+            <div class="rounded-xl px-4 py-3 text-center" style="background-color:var(--nk-accent-subtle);">
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-0.5" style="color:var(--nk-text-secondary);">Estimated cost to go abroad</p>
+              <p class="text-[24px] font-bold tracking-tight leading-tight tabular-nums" style="color:var(--nk-accent);" id="res-total">—</p>
+              <p class="text-[11px] mt-0.5" style="color:var(--nk-text-secondary);" id="res-destline"></p>
+            </div>
+
+            <p class="text-[11px] font-semibold uppercase tracking-wider mt-4 mb-1.5" style="color:var(--nk-text-tertiary);">Cost breakdown</p>
+            <div id="res-rows"></div>
+            <div class="flex items-center justify-between py-1.5 mt-1">
+              <span class="text-[13px] font-semibold" style="color:var(--nk-text);">Total estimated cost</span>
+              <strong class="text-[15px] font-bold tabular-nums" style="color:var(--nk-accent);" id="res-total-2">—</strong>
+            </div>
+
+            <div class="rounded-lg px-3 py-2.5 mt-2 text-[12px] space-y-1" style="background-color:var(--nk-hover);border:1px solid var(--nk-border);">
+              <p class="font-semibold" style="color:var(--nk-text);">Your actual estimated cost</p>
+              <div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">Total employment expenses</span><strong id="res-oop-total" style="color:var(--nk-text);">—</strong></div>
+              <div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">Employer-covered costs</span><strong id="res-oop-emp" style="color:var(--nk-text);">—</strong></div>
+              <hr style="border-color:var(--nk-border);" />
+              <div class="flex justify-between tabular-nums"><span class="font-semibold" style="color:var(--nk-text);">Out-of-pocket cost</span><strong id="res-oop" style="color:var(--nk-accent);">—</strong></div>
+            </div>
+
+            <div class="rounded-lg px-3 py-2.5 mt-2 text-[11.5px] leading-relaxed" style="background-color:var(--nk-hover);border:1px solid var(--nk-border);color:var(--nk-text-secondary);">
+              Never pay more than the amount legally allowed or officially stated for your recruitment route. Always verify employment and recruitment costs with the relevant official authority before making payment.
+            </div>
+
+            <div id="recovery-box" class="hidden mt-3">
+              <p class="flex items-center gap-1.5 text-[12.5px] font-semibold mb-1.5" style="color:var(--nk-text);"><PiggyBank size={14} /> How long to recover your cost?</p>
+              <div id="recovery-rows" class="text-[12.5px] space-y-1 tabular-nums"></div>
+              <div class="rounded-xl px-4 py-3 text-center mt-2" style="background-color:var(--nk-accent-subtle);">
+                <p class="text-[10.5px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Estimated recovery time</p>
+                <p class="text-[22px] font-bold tabular-nums" style="color:var(--nk-accent);" id="res-months">—</p>
+              </div>
+              <p id="recovery-note" class="hidden text-[11.5px] mt-1.5 leading-relaxed" style="color:var(--nk-text-secondary);"></p>
+              <p class="text-[11px] mt-2 leading-relaxed" style="color:var(--nk-text-tertiary);">Numbers only — not advice. Unexpected expenses, exchange-rate changes, unpaid periods, or job changes are not included.</p>
+            </div>
+
+            <div id="budget-plan" class="hidden rounded-lg px-3 py-2.5 mt-3 text-[12.5px]" style="background-color:var(--nk-hover);border:1px solid var(--nk-border);">
+              <p class="font-semibold mb-1" style="color:var(--nk-text);">Your estimated plan</p>
+              <div id="budget-rows" class="space-y-1 tabular-nums"></div>
+            </div>
+
+            <div id="res-warnings" class="hidden mt-3 space-y-1.5"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ OFFICIAL INFO ═══ -->
+    <div class="mt-5 rounded-xl px-4 py-3.5 text-[12px] leading-relaxed nk-card" style="color:var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color:var(--nk-text);">Foreign employment information</p>
+      <ul class="space-y-0.5">
+        {OFFICIAL_SOURCES.map((s) => (
+          <li>Source: <a class="underline hover:opacity-80" href={s.url} target="_blank" rel="noopener" style="color:var(--nk-accent);">{s.name}</a></li>
+        ))}
+      </ul>
+      <p class="mt-1">Last checked: <strong>{LAST_CHECKED}</strong></p>
+      <p class="mt-1.5">SolutionsNepal lists no fixed official fee here because charges vary by destination, employer, job, recruitment route, and fiscal year — every field above starts empty for you to fill from your offer or quotation. Government rules and fees can change. Verify the final amount before making any payment.</p>
+    </div>
+
+    <!-- ═══ EDUCATIONAL CONTENT ═══ -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">How much does it cost to go abroad for work from Nepal?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">There is no single answer — going abroad for work from Nepal (विदेश जान कति पैसा लाग्छ) depends on your case. The total foreign employment cost in Nepal can include visa and work-permit expenses, a medical examination, insurance, orientation training, recruitment or manpower service charges, airfare, documentation, and other personal expenses. The actual overseas job cost depends on the destination country, the employer, the job, the recruitment method, and the current rules — which is why this tool adds up <em>your</em> figures instead of assuming them.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related Nepal calculators</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/salary-checker" style="color:var(--nk-accent);">Salary Calculator</a> — compare foreign earnings with Nepali take-home pay</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/remittance-calculator" style="color:var(--nk-accent);">Remittance Calculator</a> — convert foreign earnings to NPR</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance" style="color:var(--nk-accent);">All finance tools</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'Nepal Salary Calculator', description: 'Take-home salary with SSF & tax', href: '/nepal/finance/salary-checker' },
+      { title: 'Remittance Calculator', description: 'Convert foreign currency to NPR', href: '/nepal/finance/remittance-calculator' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .type-card {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px; border-radius: var(--radius-lg);
+    border: 1px solid var(--nk-border); background: transparent;
+    color: var(--nk-text); cursor: pointer; text-align: left;
+    transition: border-color 150ms ease, background-color 150ms ease;
+    font: inherit;
+  }
+  .type-card:hover { border-color: var(--nk-border-strong); }
+  .type-card.type-active { border-color: var(--nk-accent); background-color: var(--nk-accent-subtle); }
+  .type-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    background-color: var(--nk-hover); color: var(--nk-text-secondary);
+  }
+  .type-active .type-icon { background-color: var(--nk-accent); color: #fff; }
+  .type-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .type-text strong { font-size: 12.5px; font-weight: 600; line-height: 1.3; }
+  .type-text small { font-size: 10.5px; line-height: 1.35; color: var(--nk-text-secondary); }
+  .exp-row .nk-input { padding-top: 7px; padding-bottom: 7px; font-size: 13px; }
+  .quick-btn {
+    font-size: 10.5px; font-weight: 600;
+    padding: 0.25rem 0.6rem; border-radius: 9999px;
+    border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary); background: transparent;
+    cursor: pointer; transition: all 150ms;
+  }
+  .quick-btn:hover, .quick-btn.quick-active { border-color: var(--nk-accent); color: var(--nk-accent); }
+  .quick-btn.quick-active { background-color: var(--nk-accent-subtle); }
+  .emp-check {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 500; white-space: nowrap;
+    color: var(--nk-text-secondary); cursor: pointer;
+  }
+  .emp-check input { width: 14px; height: 14px; accent-color: var(--nk-accent); cursor: pointer; }
+  .result-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; padding: 5px 0; font-size: 12.5px;
+  }
+  .result-row .rv { font-weight: 600; color: var(--nk-text); white-space: nowrap; }
+  .result-row .rv-muted { font-weight: 500; color: var(--nk-text-tertiary); }
+  .kv-row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+    padding: 3px 0; font-size: 12.5px; color: var(--nk-text-secondary);
+  }
+  .kv-row strong { color: var(--nk-text); font-weight: 600; white-space: nowrap; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  /* NOTE: warning lines are created by JS at runtime — keep :global(). */
+  :global(.warn-line) {
+    border-radius: 8px; padding: 8px 12px; font-size: 11px; line-height: 1.55;
+    background-color: #fef3cd; border: 1px solid #ffc107; color: #856404;
+  }
+</style>
+
+<script>
+  import {
+    calculateForeignEmploymentCost, convertSalaryToNPR, computeBudgetPlan,
+    formatNPR, parseAmount,
+  } from '../../lib/calculators/foreign-employment-cost.js';
+  import {
+    HIDDEN_BY_METHOD, METHOD_NOTES, foreignEmploymentData,
+  } from '../../data/foreign-employment.js';
+
+  const $ = (id) => document.getElementById(id);
+
+  let method = 'manpower';
+  const payers = {}; // key -> 'employer' when checked, else worker-paid
+  let lastSalaryNPR = null;
+  let lastLivingNPR = null;
+
+  const destEl = $('dest'), jobEl = $('job'), salaryEl = $('salary'),
+    salaryCur = $('salary-cur'), salaryRate = $('salary-rate'),
+    livingEl = $('living'), budgetToggle = $('budget-toggle'), budgetEl = $('budget');
+
+  // ── Destination: quick buttons + country note ──
+  const quickBtns = [...document.querySelectorAll('.quick-btn')];
+  function setDest(id, focus = false) {
+    destEl.value = id;
+    quickBtns.forEach((b) => b.classList.toggle('quick-active', b.dataset.dest === id));
+    const c = foreignEmploymentData[id];
+    const note = $('dest-note');
+    if (c && id) {
+      note.innerHTML = (c.currency ? `Workers here are usually paid in ${c.currency}. ` : '') +
+        (c.notes[0] || '') + ' Costs depend on your employer and offer — confirm with the Department of Foreign Employment.';
+      note.classList.remove('hidden');
+    } else {
+      note.classList.add('hidden');
+    }
+    if (focus) destEl.focus({ preventScroll: true });
+  }
+  destEl.addEventListener('change', () => setDest(destEl.value));
+  quickBtns.forEach((b) => b.addEventListener('click', () => setDest(b.dataset.dest)));
+
+  // ── Recruitment method cards ──
+  const methodCards = [...document.querySelectorAll('.type-card')];
+  function visibleKeys() {
+    const hidden = new Set(HIDDEN_BY_METHOD[method] || []);
+    return [...document.querySelectorAll('.exp-row')].map((r) => r.dataset.exp).filter((k) => !hidden.has(k));
+  }
+  function setMethod(m) {
+    method = m;
+    methodCards.forEach((c) => {
+      const on = c.dataset.method === m;
+      c.classList.toggle('type-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+    const hidden = new Set(HIDDEN_BY_METHOD[m] || []);
+    document.querySelectorAll('.exp-row').forEach((r) => {
+      r.classList.toggle('hidden', hidden.has(r.dataset.exp));
+    });
+    const note = $('method-note');
+    if (METHOD_NOTES[m]) {
+      note.textContent = METHOD_NOTES[m];
+      note.classList.remove('hidden');
+    } else {
+      note.classList.add('hidden');
+    }
+  }
+  methodCards.forEach((c) => c.addEventListener('click', () => setMethod(c.dataset.method)));
+
+  // ── "Employer pays" checkboxes ──
+  document.querySelectorAll('.emp-box').forEach((cb) => cb.addEventListener('change', () => {
+    if (cb.checked) payers[cb.dataset.key] = 'employer';
+    else delete payers[cb.dataset.key];
+  }));
+
+  // ── Salary currency -> NPR (existing NRB rates, editable) ──
+  function fxAuto(code) {
+    const raw = salaryCur.dataset[(code || '').toLowerCase()];
+    const n = parseFloat(raw);
+    return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null;
+  }
+  function refreshSalaryFx(resetRate) {
+    const code = salaryCur.value || 'NPR';
+    const row = $('salary-rate-row');
+    const note = $('salary-rate-note');
+    if (code === 'NPR') {
+      row.classList.add('hidden');
+      return;
+    }
+    row.classList.remove('hidden');
+    const auto = fxAuto(code);
+    if (resetRate) salaryRate.value = auto != null ? String(auto) : '';
+    const rate = parseFloat(salaryRate.value);
+    if (auto != null) {
+      note.textContent = `1 ${code} = Rs. ${auto} (NRB rate — editable)`;
+    } else if (Number.isFinite(rate) && rate > 0) {
+      note.textContent = `1 ${code} = Rs. ${rate} (your rate)`;
+    } else {
+      note.textContent = 'No automatic rate — enter your bank rate.';
+    }
+  }
+  salaryCur.addEventListener('change', () => refreshSalaryFx(true));
+  salaryRate.addEventListener('input', () => refreshSalaryFx(false));
+
+  // ── Budget mode ──
+  budgetToggle.addEventListener('change', () => {
+    $('budget-block').classList.toggle('hidden', !budgetToggle.checked);
+    if (!budgetToggle.checked) {
+      budgetEl.value = '';
+      setErr('err-budget', null);
+    }
+  });
+
+  // ── Errors ──
+  function setErr(id, msg) {
+    const el = $(id);
+    el.textContent = msg || '';
+    el.classList.toggle('hidden', !msg);
+  }
+  function clearErrors() {
+    ['err-dest', 'err-job', 'err-salary', 'err-living', 'err-budget'].forEach((id) => setErr(id, null));
+    document.querySelectorAll('[id^="err-exp-"]').forEach((el) => setErr(el.id, null));
+  }
+
+  // ── Calculate ──
+  function doCalc() {
+    clearErrors();
+    let hasErr = false;
+    const need = (id, msg) => { if (msg) { setErr(id, msg); hasErr = true; } };
+
+    const counted = visibleKeys();
+    const exp = {};
+    for (const key of counted) {
+      exp[key] = $(`exp-${key}`).value;
+    }
+
+    // Salary: single amount + currency. Convert foreign amounts to NPR here.
+    let salaryToPass = '';
+    if (salaryEl.value.trim() !== '') {
+      const cur = salaryCur.value || 'NPR';
+      if (cur === 'NPR') {
+        salaryToPass = salaryEl.value;
+      } else {
+        const rate = parseFloat(salaryRate.value);
+        if (!Number.isFinite(rate) || rate <= 0) {
+          setErr('err-salary', 'Enter a valid exchange rate.'); hasErr = true;
+        } else {
+          try {
+            salaryToPass = convertSalaryToNPR(salaryEl.value, rate);
+          } catch (e) { setErr('err-salary', e.message); hasErr = true; }
+        }
+      }
+    }
+
+    let budgetVal = null;
+    if (budgetToggle.checked) {
+      const { value, error } = parseAmount(budgetEl.value);
+      if (error || value == null) { setErr('err-budget', error || 'Enter your budget to compare against.'); hasErr = true; }
+      else if (value <= 0) { setErr('err-budget', 'Budget must be above zero.'); hasErr = true; }
+      else budgetVal = value;
+    }
+
+    const result = calculateForeignEmploymentCost({
+      destination: destEl.value,
+      jobCategory: jobEl.value,
+      ...exp,
+      payers,
+      countedKeys: counted,
+      monthlySalary: salaryToPass,
+      monthlyExpenses: livingEl.value,
+    });
+
+    if (!result.valid) {
+      if (result.errors.destination) need('err-dest', result.errors.destination);
+      if (result.errors.jobCategory) need('err-job', result.errors.jobCategory);
+      if (result.errors.salary) need('err-salary', result.errors.salary);
+      if (result.errors.living) need('err-living', result.errors.living);
+      if (result.errors.expenses) {
+        for (const [k, msg] of Object.entries(result.errors.expenses)) {
+          setErr(`err-exp-${k}`, msg); hasErr = true;
+        }
+      }
+      hasErr = true;
+    }
+    if (hasErr) {
+      hideResult();
+      const first = document.querySelector('.nk-card [id^="err-"]:not(.hidden)');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    lastSalaryNPR = parseAmount(salaryToPass === '' ? '' : salaryToPass).value;
+    lastLivingNPR = parseAmount(livingEl.value).value;
+    render(result, budgetVal);
+  }
+
+  function row(label, value, muted) {
+    return `<div class="result-row"><span>${label}</span>` +
+      `<span class="${muted ? 'rv-muted' : 'rv'}">${value}</span></div>`;
+  }
+  function kv(label, value) {
+    return `<div class="kv-row"><span>${label}</span><strong>${value}</strong></div>`;
+  }
+
+  function render(r, budgetVal) {
+    $('res-empty').classList.add('hidden');
+    $('res-body').classList.remove('hidden');
+
+    $('res-total').textContent = formatNPR(r.totalCost);
+    $('res-total-2').textContent = formatNPR(r.totalCost);
+    const destName = (foreignEmploymentData[$('dest').value] || {}).name || '';
+    $('res-destline').textContent = destName ? `for ${destName}` : '';
+
+    // Breakdown shows entered amounts only — nothing guessed.
+    const entered = r.breakdown.filter((b) => b.included);
+    $('res-rows').innerHTML = entered.length > 0
+      ? entered.map((b) => row(b.label + (b.employerCovered ? ' (employer)' : ''), formatNPR(b.amount), false)).join('')
+      : row('No expenses entered yet', 'Enter amounts above', true);
+
+    $('res-oop-total').textContent = formatNPR(r.totalCost);
+    $('res-oop-emp').textContent = r.employerCovered > 0 ? '− ' + formatNPR(r.employerCovered) : '—';
+    $('res-oop').textContent = formatNPR(r.outOfPocketCost);
+
+    // Recovery + snapshot (salary is optional — hide the box without it).
+    const recBox = $('recovery-box');
+    if (r.monthlySavings == null) {
+      recBox.classList.add('hidden');
+    } else {
+      recBox.classList.remove('hidden');
+      $('recovery-rows').innerHTML =
+        kv('Monthly salary', formatNPR(lastSalaryNPR)) +
+        kv('Monthly expenses', formatNPR(lastLivingNPR)) +
+        kv('Possible monthly savings', formatNPR(r.monthlySavings)) +
+        kv('Initial employment cost', formatNPR(r.outOfPocketCost));
+      const note = $('recovery-note');
+      if (r.recoveryMonths == null) {
+        $('res-months').textContent = '—';
+        note.textContent = r.recoveryNote;
+        note.classList.remove('hidden');
+      } else {
+        $('res-months').textContent = `≈ ${r.recoveryMonths} months`;
+        note.classList.add('hidden');
+      }
+    }
+
+    // Budget plan (optional).
+    const planBox = $('budget-plan');
+    if (budgetVal != null) {
+      try {
+        const plan = computeBudgetPlan(r.outOfPocketCost, budgetVal);
+        planBox.classList.remove('hidden');
+        $('budget-rows').innerHTML =
+          kv('Estimated cost', formatNPR(plan.cost)) +
+          (plan.over
+            ? `<div class="kv-row"><span>Over budget by</span><strong style="color:#DC2626;">${formatNPR(Math.abs(plan.remaining))}</strong></div>`
+            : `<div class="kv-row"><span>Remaining budget</span><strong style="color:#059669;">${formatNPR(plan.remaining)}</strong></div>`);
+      } catch (e) {
+        planBox.classList.add('hidden');
+      }
+    } else {
+      planBox.classList.add('hidden');
+    }
+
+    const warnBox = $('res-warnings');
+    warnBox.innerHTML = '';
+    warnBox.classList.toggle('hidden', r.warnings.length === 0);
+    r.warnings.forEach((w) => {
+      const d = document.createElement('div');
+      d.className = 'warn-line';
+      d.textContent = w;
+      warnBox.appendChild(d);
+    });
+  }
+
+  function hideResult() {
+    $('res-body').classList.add('hidden');
+    $('res-empty').classList.remove('hidden');
+  }
+
+  $('calc-btn').addEventListener('click', doCalc);
+  ['salary', 'salary-rate', 'living', 'budget'].forEach((id) => {
+    const el = $(id);
+    if (el) el.addEventListener('keydown', (e) => { if (e.key === 'Enter') doCalc(); });
+  });
+  document.querySelectorAll('.exp-input').forEach((el) => {
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') doCalc(); });
+  });
+
+  // Init
+  setMethod('manpower');
+  refreshSalaryFx(true);
+</script>

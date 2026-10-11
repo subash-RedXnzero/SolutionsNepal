@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import PassportPhotoResizer from '../../components/tools/PassportPhotoResizer.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Compress Photo to 50 KB - Resize Image to 50KB | SolutionsNepal';
+const description = 'Compress a photo to 50 KB online for strict upload limits (signature-size photos, small ID images). Smart dimension + quality search gets as close to 50 KB as quality allows.';
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Compress Photo to 50KB', description: 'Compress a photo to 50 KB for strict upload limits.', url: 'https://solutionsnepal.com/tools/compress-photo-to-50kb', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: [
+    { '@type': 'Question', name: 'How do I get a photo under 50 KB?', acceptedAnswer: { '@type': 'Answer', text: 'Upload your photo — the tool automatically searches for the highest quality that fits under 50 KB. Crop if needed and download.' } },
+    { '@type': 'Question', name: 'Is 50 KB enough for a clear photo?', acceptedAnswer: { '@type': 'Answer', text: 'For small ID photos and signatures, yes. The tool maximises quality within the 50 KB limit.' } },
+  ] },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'Compress Photo to 50 KB' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color:var(--nk-text);">Compress Photo to 50 KB</h1>
+      <p class="mt-1 text-xs sm:text-sm" style="color:var(--nk-text-secondary);">For the strictest upload caps — smart compression keeps your small photo looking its best.</p>
+    </div>
+
+    <PassportPhotoResizer initialPreset="custom" initialTargetKB={50} />
+
+    <div class="mt-10 space-y-8 max-w-3xl">
+      <section>
+        <h2 class="text-base font-bold" style="color:var(--nk-text);">Reaching 50 KB without destroying the image</h2>
+        <p class="text-sm leading-relaxed mt-2" style="color:var(--nk-text-secondary);">
+          50 KB is a demanding target: a full-resolution phone photo cannot reach it at acceptable quality,
+          so honest tools have two options — shrink dimensions or admit defeat. This tool does both properly:
+          first it exhausts JPEG quality reduction at full size, then reduces dimensions step by step
+          (always keeping the required aspect ratio), recompressing and measuring each attempt until it finds
+          the result closest to 50 KB. You'll see exactly what final resolution you got, so there are no surprises.
+        </p>
+        <div class="mt-3 rounded-lg border px-4 py-3 font-mono text-[11px] leading-relaxed overflow-x-auto" style="border-color:var(--nk-border);background-color:var(--nk-bg);color:var(--nk-text-secondary);">
+          3000×4000 → q-search floor 210 KB → ×0.85 dims → 96 KB → ×0.85 dims → 58 KB → ×0.85 dims → 47–52 KB ✓
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold" style="color:var(--nk-text);">Tips for very small targets</h3>
+        <ul class="text-sm leading-relaxed mt-2 space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• Crop tightly first (use an ID preset) — fewer pixels means less aggressive downscaling later.</li>
+          <li>• A plain background compresses far better than a busy one.</li>
+          <li>• For signature-style or tiny ID images, 50 KB at ~600 px wide looks perfectly fine.</li>
+          <li>• If your portal accepts up to 100 KB instead, use that — more quality headroom.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="mt-3 space-y-2">
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">Why did my photo get smaller in resolution?</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">At 50 KB, keeping full resolution would require unusable quality, so dimensions were reduced gradually until the target was reachable. The final pixel size is always shown before you download.</p></div>
+          </details>
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">Can I hit 50 KB with a PNG?</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">Rarely — PNG stores pixels losslessly, so photographs rarely fit small budgets. Use JPG unless transparency is essential.</p></div>
+          </details>
+        </div>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        Other targets: <a class="underline hover:opacity-80" href="/tools/compress-photo-to-100kb" style="color:var(--nk-accent);">100 KB</a> ·
+        <a class="underline hover:opacity-80" href="/tools/compress-passport-photo-to-200kb" style="color:var(--nk-accent);">200 KB</a> ·
+        <a class="underline hover:opacity-80" href="/tools/passport-photo-resizer" style="color:var(--nk-accent);">full resizer</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import DateDifferenceCalculator from '../../components/tools/DateDifferenceCalculator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Date Difference Calculator – BS & AD Date Difference | SolutionsNepal';
+const description = 'Calculate the exact difference between two Bikram Sambat (BS) or AD dates. Find years, months, and total days between any two Nepali or English dates.';
+
+const faqItems = [
+  {
+    q: 'How many days are between two BS dates?',
+    a: 'Enter both BS dates and click "Calculate Difference". The calculator converts both dates to AD using accurate calendar data and returns the exact total number of days.',
+  },
+  {
+    q: 'How do I calculate the difference between two Nepali dates?',
+    a: 'Select "BS" as the calendar system, enter the start and end dates in year-month-day format, and click Calculate Difference. The result shows years, months, days, and total days.',
+  },
+  {
+    q: 'How many days are in a BS year?',
+    a: 'A BS year has either 354 or 355 days depending on the year. Unlike the Gregorian calendar, BS months have varying lengths (29–32 days) that change each year.',
+  },
+  {
+    q: 'How do I convert a BS date to AD?',
+    a: 'The calculator shows the corresponding AD date automatically when you enter a BS date. For example, 2082-01-01 BS ≈ April 14, 2025 AD.',
+  },
+  {
+    q: 'Can I calculate the difference between BS and AD dates?',
+    a: 'Yes. Switch between BS and AD using the calendar system toggle. The calculator shows the converted date in the other calendar system alongside your input.',
+  },
+  {
+    q: 'How many days are between two dates?',
+    a: 'The calculator supports both BS and AD date systems. Enter any two dates, click Calculate Difference, and see the exact number of days between them.',
+  },
+  {
+    q: 'How do I calculate years between two dates?',
+    a: 'The result shows the calendar difference in years, months, and days. For example, 2082-01-01 to 2083-01-01 shows "1 year, 0 months, 0 days".',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Date Difference Calculator',
+      description: 'Calculate the exact difference between two BS or AD dates in years, months, and days.',
+      url: 'https://solutionsnepal.com/tools/date-difference',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Date & Calendar', href: '/nepal/date' },
+      { label: 'Date Difference' },
+    ]} />
+    <!-- Hero -->
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">Date Difference Calculator</h1>
+      <p class="mt-2 text-sm max-w-lg mx-auto" style="color:var(--nk-text-secondary);">Calculate the difference between two dates in Bikram Sambat (BS) or AD.</p>
+    </div>
+
+    <!-- Calculator -->
+    <div class="max-w-md mx-auto">
+      <DateDifferenceCalculator />
+    </div>
+
+    <!-- SEO Content -->
+    <section class="mt-12 space-y-8 text-sm max-w-3xl" style="color:var(--nk-text-secondary);">
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">Date Difference Calculator</h2>
+        <p>SolutionsNepal's date difference calculator lets you find the exact number of days, months, and years between any two Bikram Sambat (BS) or Gregorian (AD) dates. It uses accurate Nepali calendar data — not approximations — so every result is correct.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Calculate Difference Between Two BS Dates</h3>
+        <p>Example: From 2082-01-01 BS to 2083-01-01 BS:</p>
+        <div class="my-2 px-3 py-2 rounded-lg text-[13px]" style="background:var(--nk-bg);">
+          <span class="font-semibold">Result:</span> 1 year · 365 days
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">BS to AD Date Difference</h3>
+        <p>The calculator automatically shows the corresponding AD dates alongside BS dates. For example, 2082-01-01 BS ≈ April 14, 2025 AD. This makes it easy to understand the BS ↔ AD relationship.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">How to Calculate Date Difference</h3>
+        <ol class="mt-2 space-y-1.5 list-decimal list-inside">
+          <li>Select BS or AD as the calendar system</li>
+          <li>Enter the start date</li>
+          <li>Enter the end date</li>
+          <li>Click Calculate Difference</li>
+          <li>View the difference in years, months, and total days</li>
+        </ol>
+      </div>
+
+      <div>
+        <h2 class="text-base font-semibold mb-3" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <div class="pt-4" style="border-top:1px solid var(--nk-border);">
+        <p class="text-[11px]" style="color:var(--nk-text-tertiary);">SolutionsNepal's date difference calculator uses accurate BS calendar data from 2000–2090 BS. All calculations happen in your browser — no data is sent to any server.</p>
+      </div>
+    </section>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'BS to AD Converter', description: 'Bikram Sambat to Gregorian', href: '/nepal/date/bs-to-ad' },
+      { title: 'AD to BS Converter', description: 'Gregorian to Bikram Sambat', href: '/nepal/date/ad-to-bs' },
+      { title: 'Business Days Calculator', description: 'Working days excl. holidays', href: '/tools/business-days-calculator' },
+      { title: 'Nepali Age Calculator', description: 'Age from BS or AD dob', href: '/nepal/age-calculator' },
+    ]} />
+  </main>
+</BaseLayout>

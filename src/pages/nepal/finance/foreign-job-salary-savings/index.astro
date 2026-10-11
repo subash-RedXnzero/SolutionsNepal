@@ -1,0 +1,1190 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Search, ArrowRight, Copy, RotateCcw, Share2, Info, TrendingUp, Wallet, Building2, Utensils, Bus, Smartphone, User, Plus, Receipt, Banknote, Plane, Clock, MapPin, Calculator, Scale } from '@lucide/astro';
+import { getAllCurrenciesAsync, getForexMetaAsync } from '../../../../lib/nepal/forex.js';
+import { COUNTRIES, POPULAR_COUNTRIES, OTHER_CURRENCIES, EXPENSE_DEFS, HIDDEN_COST_KEYS, SAVINGS_BANDS, getCountryById, getCurrencyForCountry, savingsBand } from '../../../../data/foreign-job-savings.js';
+
+const title = 'Foreign Job Salary & Real Savings Calculator Nepal | SolutionsNepal';
+const description = 'See how much you could actually save, send to Nepal, and keep after monthly expenses. Foreign job salary and real savings calculator for Nepali workers.';
+
+// Build currency option list server-side, then enrich with live NRB rates where available.
+const allCurrenciesForPage = await (async () => {
+  let live = [];
+  let meta = null;
+  try {
+    live = await getAllCurrenciesAsync();
+    meta = await getForexMetaAsync();
+  } catch {}
+  const liveMap = new Map(live.map((c) => [c.iso3, c]));
+  const merged = [
+    ...COUNTRIES.filter((c) => c.iso3).map((c) => {
+      const lv = liveMap.get(c.iso3);
+      return {
+        iso3: c.iso3, name: c.currencyName, flag: c.flag,
+        buy: lv ? lv.buy : null, sell: lv ? lv.sell : null,
+        sellPerUnit: lv ? lv.sellPerUnit : null,
+      };
+    }),
+    ...OTHER_CURRENCIES.map((c) => {
+      const lv = liveMap.get(c.iso3);
+      return {
+        iso3: c.iso3, name: c.name, flag: c.flag,
+        buy: lv ? lv.buy : null, sell: lv ? lv.sell : null,
+        sellPerUnit: lv ? lv.sellPerUnit : null,
+      };
+    }),
+  ].filter((v, i, a) => a.findIndex((x) => x.iso3 === v.iso3) === i);
+  return { merged, meta };
+})();
+const currencyOptions = allCurrenciesForPage.merged;
+const forexMeta = allCurrenciesForPage.meta;
+
+const faqItems = [
+  { q: 'How much can I save working abroad?', a: 'Enter your gross salary, deductions, living expenses, remittance fee and exchange rate. The calculator shows take home, total expenses, monthly savings, annual savings and first year net savings after one time migration costs.' },
+  { q: 'How do I calculate my salary after expenses?', a: 'Add salary, overtime and allowances to get gross income. Subtract taxes and deductions for take home. Subtract housing, food, transport, phone, personal and other expenses plus remittance fee. The remainder is your estimated monthly savings.' },
+  { q: 'Should I compare foreign jobs by salary or savings?', a: 'Compare by estimated net savings, not just headline salary. A higher salary can leave less savings if living costs, deductions, fees or migration costs are higher.' },
+  { q: 'Does the calculator include remittance fees?', a: 'Yes. Add your transfer fee and the calculator subtracts it from savings. It also shows exchange rate used, source and time so you know what rate produced the NPR figure.' },
+  { q: 'Can I calculate savings in Nepali rupees?', a: 'Yes. Enter an exchange rate (or use a live rate when available) and the calculator shows NPR monthly, yearly and first year net savings.' },
+  { q: 'Can I compare two foreign job offers?', a: 'Yes. Use Compare Two Job Offers to enter the same fields for Job A and Job B side by side and see which offer leaves greater estimated savings.' },
+  { q: 'Are exchange rates live?', a: 'When live NRB data is available the page can prefill the rate and shows source and time. If live data is unavailable, you enter the rate manually. Stale rates are never presented as live.' },
+  { q: 'Does this calculator include recruitment costs?', a: 'Yes, as an optional one time cost. It reduces first year net savings so you can see whether a higher salary offer still wins after migration costs.' },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Foreign Job Salary & Real Savings Calculator Nepal',
+      description: 'Estimate take home salary, living expenses, remittance costs and real savings for Nepali workers abroad, with NPR conversion.',
+      url: 'https://solutionsnepal.com/nepal/finance/foreign-job-salary-savings',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-4 sm:py-5">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'Foreign Job Salary & Real Savings' },
+    ]} />
+
+    <div class="mb-4">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
+        Foreign Job Salary &amp; Real Savings Calculator
+      </h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+        See how much you could actually save, send to Nepal, and keep after your monthly expenses.
+      </p>
+      <p class="text-[12px] leading-relaxed mt-1 flex items-center gap-1.5" style="color: var(--nk-text-tertiary);">
+        <Info size={13} /> Calculate your estimated take home salary, monthly expenses, remittance amount, and yearly savings.
+      </p>
+    </div>
+
+    <!-- Mode toggle -->
+    <div class="flex items-center gap-2 mb-3">
+      <button type="button" id="mode-simple" class="mode-btn mode-active" aria-pressed="true">Simple</button>
+      <button type="button" id="mode-advanced" class="mode-btn" aria-pressed="false">Advanced</button>
+      <span class="text-[11.5px] ml-1" style="color: var(--nk-text-tertiary);">Simple shows only the essentials.</span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4 items-start">
+
+      <!-- LEFT: INPUTS -->
+      <div class="space-y-4 min-w-0">
+
+        <!-- Step 1: Country -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);">
+            <MapPin size={14} /> Choose country
+          </h2>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style="color: var(--nk-text-tertiary);"><Search size={14} /></span>
+            <input id="country-search" type="text" placeholder="Search country" autocomplete="off" class="nk-input text-[14px]" style="padding-left: 2.25rem;" />
+          </div>
+          <div class="flex flex-wrap gap-1.5 mt-2" id="popular-countries">
+            {POPULAR_COUNTRIES.map((c) => (
+              <button type="button" class="pop-country" data-country={c.id}>{c.flag} {c.name}</button>
+            ))}
+          </div>
+          <div class="relative mt-2">
+            <select id="country-select" class="nk-input text-[14px]">
+              <option value="">Select a country</option>
+              {COUNTRIES.map((c) => (
+                <option value={c.id}>{c.flag} {c.name} {c.currency ? `· ${c.currency}` : ''}</option>
+              ))}
+            </select>
+          </div>
+          <div id="country-other-row" class="hidden mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label for="other-currency" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Currency code</label>
+              <input id="other-currency" type="text" placeholder="e.g. NOK" maxlength="5" class="nk-input text-[14px] uppercase" />
+            </div>
+            <div>
+              <label for="other-currency-name" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Currency name</label>
+              <input id="other-currency-name" type="text" placeholder="e.g. Norwegian Krone" class="nk-input text-[14px]" />
+            </div>
+          </div>
+          <p id="currency-hint" class="text-[11.5px] mt-1.5" style="color: var(--nk-text-tertiary);"></p>
+        </section>
+
+        <!-- Step 2: Salary -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);">
+            <Banknote size={14} /> Salary
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="salary" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Monthly gross salary</label>
+              <div class="relative">
+                <input id="salary" type="text" inputmode="decimal" placeholder="3,000" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" id="suffix-salary"></span>
+              </div>
+            </div>
+            <div>
+              <label for="overtime" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Overtime / allowances <span class="text-[11px]" style="color: var(--nk-text-tertiary);">optional</span></label>
+              <div class="relative">
+                <input id="overtime" type="text" inputmode="decimal" placeholder="500" class="nk-input text-[14px] tabular-nums pr-16 adv-field" />
+                <span class="field-suffix" id="suffix-overtime"></span>
+              </div>
+            </div>
+            <div class="adv-field">
+              <label for="taxes" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Tax / mandatory deductions</label>
+              <div class="relative">
+                <input id="taxes" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" id="suffix-taxes"></span>
+              </div>
+            </div>
+            <div class="adv-field">
+              <label for="deductions" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Other deductions</label>
+              <div class="relative">
+                <input id="deductions" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" id="suffix-deductions"></span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 p-2.5 rounded-lg flex items-center justify-between" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <span class="text-[12px] font-medium" style="color: var(--nk-text-secondary);">Estimated take home salary</span>
+            <span class="text-[14px] font-bold tabular-nums" style="color: var(--nk-text);" id="takehome-preview">—</span>
+          </div>
+          <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">Estimates only. Employer deductions vary by country and contract.</p>
+        </section>
+
+        <!-- Step 3: Monthly expenses -->
+        <section class="nk-card p-4">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <h2 class="text-[13px] font-semibold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--nk-text);">
+              <Receipt size={14} /> Monthly expenses
+            </h2>
+            <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Leave at zero if not applicable</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expense-grid">
+            <div>
+              <label for="exp-housing" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Housing</label>
+              <div class="relative">
+                <input id="exp-housing" data-exp="housing" type="text" inputmode="decimal" placeholder="500" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix="housing"></span>
+              </div>
+            </div>
+            <div>
+              <label for="exp-food" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Food</label>
+              <div class="relative">
+                <input id="exp-food" data-exp="food" type="text" inputmode="decimal" placeholder="400" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix="food"></span>
+              </div>
+            </div>
+            <div>
+              <label for="exp-transportation" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Transportation</label>
+              <div class="relative">
+                <input id="exp-transportation" data-exp="transportation" type="text" inputmode="decimal" placeholder="150" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix="transportation"></span>
+              </div>
+            </div>
+            <div>
+              <label for="exp-phone" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Phone / Internet</label>
+              <div class="relative">
+                <input id="exp-phone" data-exp="phone" type="text" inputmode="decimal" placeholder="50" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix="phone"></span>
+              </div>
+            </div>
+            <div>
+              <label for="exp-personal" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Personal expenses</label>
+              <div class="relative">
+                <input id="exp-personal" data-exp="personal" type="text" inputmode="decimal" placeholder="200" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix="personal"></span>
+              </div>
+            </div>
+            <div>
+              <label for="exp-other" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Other</label>
+              <div class="relative">
+                <input id="exp-other" data-exp="other" type="text" inputmode="decimal" placeholder="100" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix="other"></span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 p-2.5 rounded-lg flex items-center justify-between" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <span class="text-[12px] font-medium" style="color: var(--nk-text-secondary);">Total monthly expenses</span>
+            <span class="text-[14px] font-bold tabular-nums" style="color: var(--nk-text);" id="expenses-preview">—</span>
+          </div>
+        </section>
+
+        <!-- Step 4: Remittance -->
+        <section class="nk-card p-4">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);">
+            <Plane size={14} /> Remittance
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Amount sent to Nepal</label>
+              <div class="flex items-center gap-2 mb-1.5">
+                <label class="flex items-center gap-1.5 text-[12px]" style="color: var(--nk-text);">
+                  <input type="radio" name="remit-mode" value="fixed" checked /> Fixed amount
+                </label>
+                <label class="flex items-center gap-1.5 text-[12px]" style="color: var(--nk-text);">
+                  <input type="radio" name="remit-mode" value="all" /> Send all remaining savings
+                </label>
+              </div>
+              <div class="relative" id="remit-fixed-row">
+                <input id="remit-amount" type="text" inputmode="decimal" placeholder="1,000" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" id="suffix-remit"></span>
+              </div>
+              <p class="text-[11px] mt-1 hidden" id="remit-all-hint" style="color: var(--nk-text-tertiary);">Remittance = monthly savings before fee. Shown after calculation.</p>
+            </div>
+            <div>
+              <label for="remit-fee" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Transfer fee</label>
+              <div class="relative">
+                <input id="remit-fee" type="text" inputmode="decimal" placeholder="20" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" id="suffix-fee"></span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="exchange-rate" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Exchange rate <span class="text-[11px]" style="color: var(--nk-text-tertiary);">foreign → NPR</span></label>
+              <div class="relative">
+                <input id="exchange-rate" type="text" inputmode="decimal" placeholder="Enter today's rate" class="nk-input text-[14px] tabular-nums" />
+              </div>
+              <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);" id="rate-meta">Enter today's rate from your remittance provider.</p>
+            </div>
+            <div>
+              <label for="rate-currency" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Rate currency</label>
+              <select id="rate-currency" class="nk-input text-[14px]">
+                <option value="">Select currency</option>
+                {currencyOptions.map((c) => (
+                  <option value={c.iso3}>{c.flag} {c.iso3} · {c.name}</option>
+                ))}
+              </select>
+              <button type="button" id="use-live-rate" class="hidden mt-1.5 text-[12px] font-medium underline" style="color: var(--nk-accent);">Use live NRB rate</button>
+            </div>
+          </div>
+          <p class="text-[11px] mt-2" id="rate-used-line" style="color: var(--nk-text-tertiary);"></p>
+        </section>
+
+        <!-- Hidden costs (advanced) -->
+        <section class="nk-card p-4 adv-field">
+          <button type="button" id="hidden-toggle" class="w-full flex items-center justify-between text-left">
+            <span class="text-[13px] font-semibold flex items-center gap-1.5" style="color: var(--nk-text);">
+              <Plus size={14} class="transition-transform" id="hidden-icon" /> Add other costs
+            </span>
+            <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Optional</span>
+          </button>
+          <div id="hidden-costs" class="hidden mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="hc-recruitment" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Recruitment / agency cost <span class="text-[11px]" style="color: var(--nk-text-tertiary);">one time</span></label>
+              <div class="relative">
+                <input id="hc-recruitment" data-hidden="recruitment" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="recruitment"></span>
+              </div>
+            </div>
+            <div>
+              <label for="hc-accommodationDeposit" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Accommodation deposit <span class="text-[11px]" style="color: var(--nk-text-tertiary);">one time</span></label>
+              <div class="relative">
+                <input id="hc-accommodationDeposit" data-hidden="accommodationDeposit" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="accommodationDeposit"></span>
+              </div>
+            </div>
+            <div>
+              <label for="hc-foodDeposit" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Food deposit <span class="text-[11px]" style="color: var(--nk-text-tertiary);">one time</span></label>
+              <div class="relative">
+                <input id="hc-foodDeposit" data-hidden="foodDeposit" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="foodDeposit"></span>
+              </div>
+            </div>
+            <div>
+              <label for="hc-insurance" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Insurance</label>
+              <div class="relative">
+                <input id="hc-insurance" data-hidden="insurance" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="insurance"></span>
+              </div>
+            </div>
+            <div>
+              <label for="hc-medical" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Medical expenses</label>
+              <div class="relative">
+                <input id="hc-medical" data-hidden="medical" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="medical"></span>
+              </div>
+            </div>
+            <div>
+              <label for="hc-loanRepayment" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Loan repayment</label>
+              <div class="relative">
+                <input id="hc-loanRepayment" data-hidden="loanRepayment" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="loanRepayment"></span>
+              </div>
+            </div>
+            <div>
+              <label for="hc-localTransport" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Local transportation</label>
+              <div class="relative">
+                <input id="hc-localTransport" data-hidden="localTransport" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="localTransport"></span>
+              </div>
+            </div>
+            <div>
+              <label for="hc-phoneInternet" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Phone / internet</label>
+              <div class="relative">
+                <input id="hc-phoneInternet" data-hidden="phoneInternet" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="phoneInternet"></span>
+              </div>
+            </div>
+            <div>
+              <label for="hc-otherRecurring" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Other recurring costs</label>
+              <div class="relative">
+                <input id="hc-otherRecurring" data-hidden="otherRecurring" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums pr-16" />
+                <span class="field-suffix" data-suffix-hidden="otherRecurring"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="flex flex-wrap gap-2">
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary nk-btn-sm"><RotateCcw size={14} /> Reset calculator</button>
+          <button type="button" id="share-btn" class="nk-btn nk-btn-secondary nk-btn-sm"><Share2 size={14} /> Share results</button>
+        </div>
+        <p id="share-status" class="hidden text-[11.5px]" style="color: var(--nk-text-tertiary);" role="status"></p>
+
+        <!-- Job comparison -->
+        <section class="nk-card p-4">
+          <button type="button" id="compare-toggle" class="w-full flex items-center justify-between text-left">
+            <span class="text-[13px] font-semibold flex items-center gap-1.5" style="color: var(--nk-text);">
+              <Scale size={14} class="transition-transform" id="compare-icon" /> Compare two job offers
+            </span>
+            <span class="text-[11px]" style="color: var(--nk-text-tertiary);">Advanced</span>
+          </button>
+          <div id="compare-panel" class="hidden mt-3 space-y-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="space-y-2 p-3 rounded-lg" style="border: 1px solid var(--nk-border); background: var(--nk-surface);">
+                <p class="text-[12px] font-semibold" style="color: var(--nk-text);">Job A</p>
+                <div>
+                  <label for="cmp-a-country" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Country</label>
+                  <select id="cmp-a-country" class="nk-input text-[13px]">
+                    <option value="">Select</option>
+                    {COUNTRIES.filter((c) => c.id !== 'other').map((c) => <option value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Salary</label><input id="cmp-a-salary" type="text" inputmode="decimal" placeholder="3000" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Allowances</label><input id="cmp-a-allowances" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Taxes</label><input id="cmp-a-taxes" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Expenses</label><input id="cmp-a-expenses" type="text" inputmode="decimal" placeholder="1400" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Remit fee</label><input id="cmp-a-fee" type="text" inputmode="decimal" placeholder="20" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Rate (→ NPR)</label><input id="cmp-a-rate" type="text" inputmode="decimal" placeholder="41.5" class="nk-input text-[13px] tabular-nums" /></div>
+                </div>
+              </div>
+              <div class="space-y-2 p-3 rounded-lg" style="border: 1px solid var(--nk-border); background: var(--nk-surface);">
+                <p class="text-[12px] font-semibold" style="color: var(--nk-text);">Job B</p>
+                <div>
+                  <label for="cmp-b-country" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Country</label>
+                  <select id="cmp-b-country" class="nk-input text-[13px]">
+                    <option value="">Select</option>
+                    {COUNTRIES.filter((c) => c.id !== 'other').map((c) => <option value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Salary</label><input id="cmp-b-salary" type="text" inputmode="decimal" placeholder="3200" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Allowances</label><input id="cmp-b-allowances" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Taxes</label><input id="cmp-b-taxes" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Expenses</label><input id="cmp-b-expenses" type="text" inputmode="decimal" placeholder="1600" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Remit fee</label><input id="cmp-b-fee" type="text" inputmode="decimal" placeholder="20" class="nk-input text-[13px] tabular-nums" /></div>
+                  <div><label class="block text-[11px] mb-1" style="color: var(--nk-text-secondary);">Rate (→ NPR)</label><input id="cmp-b-rate" type="text" inputmode="decimal" placeholder="41.5" class="nk-input text-[13px] tabular-nums" /></div>
+                </div>
+              </div>
+            </div>
+            <div id="compare-result" class="hidden p-3 rounded-lg text-[12.5px] leading-relaxed" style="background: var(--nk-hover); border: 1px solid var(--nk-border);"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT: LIVE SUMMARY -->
+      <div class="lg:sticky lg:top-4 space-y-3">
+        <div class="nk-card p-4" id="summary-card">
+          <h2 class="text-[13px] font-semibold flex items-center gap-1.5" style="color: var(--nk-text);">
+            <TrendingUp size={14} /> Your real savings
+          </h2>
+          <div id="overspend-banner" class="hidden mt-2 p-2.5 rounded-lg text-[12px] leading-relaxed" style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;"></div>
+          <div class="mt-3 space-y-1 text-[12.5px]" style="color: var(--nk-text-secondary);">
+            <div class="flex justify-between"><span>Take home salary</span><span class="font-medium tabular-nums" style="color: var(--nk-text);" id="s-takehome">—</span></div>
+            <div class="flex justify-between"><span>Monthly expenses</span><span class="font-medium tabular-nums" style="color: var(--nk-text);" id="s-expenses">—</span></div>
+            <div class="flex justify-between"><span>Remittance fee</span><span class="font-medium tabular-nums" style="color: var(--nk-text);" id="s-fee">—</span></div>
+            <div class="h-px my-1" style="background: var(--nk-border);"></div>
+            <div class="flex justify-between text-[13px]"><span class="font-semibold" style="color: var(--nk-text);">Estimated monthly savings</span><span class="font-bold tabular-nums" style="color: var(--nk-text);" id="s-monthly">—</span></div>
+            <div class="flex justify-between"><span></span><span class="tabular-nums" id="s-monthly-npr" style="color: var(--nk-text-tertiary);"></span></div>
+          </div>
+          <div class="mt-3 p-3 rounded-lg" style="background: var(--nk-accent-subtle); border: 1px solid var(--nk-border);">
+            <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Annual savings</p>
+            <p class="text-[18px] font-bold tabular-nums" style="color: var(--nk-text);" id="s-annual">—</p>
+            <p class="text-[11px] tabular-nums" style="color: var(--nk-text-tertiary);" id="s-annual-npr"></p>
+          </div>
+          <div class="mt-3 p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">First year net savings</p>
+            <p class="text-[14px] font-bold tabular-nums" style="color: var(--nk-text);" id="s-firstyear">—</p>
+            <p class="text-[11px] tabular-nums" style="color: var(--nk-text-tertiary);" id="s-firstyear-npr"></p>
+            <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);" id="s-afterfirst"></p>
+          </div>
+        </div>
+
+        <div class="nk-card p-4" id="breakdown-card">
+          <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">Where does your salary go?</h3>
+          <div id="breakdown-bars" class="space-y-2"></div>
+          <p class="text-[11px] mt-2" style="color: var(--nk-text-tertiary);">Accessible text alternatives are shown alongside each bar.</p>
+        </div>
+
+        <div class="nk-card p-4">
+          <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">Savings rate</h3>
+          <div class="flex items-baseline gap-2">
+            <span class="text-[28px] font-bold tabular-nums" style="color: var(--nk-text);" id="savings-rate">—</span>
+            <span class="text-[13px] font-semibold px-2 py-1 rounded-full" id="savings-band" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">—</span>
+          </div>
+          <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">A calculation indicator only, not financial advice.</p>
+        </div>
+
+        <div class="nk-card p-4">
+          <h3 class="text-[12px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">Monthly vs yearly</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-[12.5px]">
+              <thead>
+                <tr style="color: var(--nk-text-tertiary);">
+                  <th class="text-left font-medium py-1 pr-2">Period</th>
+                  <th class="text-right font-medium py-1 px-2">Income</th>
+                  <th class="text-right font-medium py-1 px-2">Expenses</th>
+                  <th class="text-right font-medium py-1 px-2">Fees</th>
+                  <th class="text-right font-medium py-1 pl-2">Savings</th>
+                </tr>
+              </thead>
+              <tbody id="period-table" class="tabular-nums"></tbody>
+            </table>
+          </div>
+          <p class="text-[11px] mt-2" style="color: var(--nk-text-tertiary);" id="period-npr-note"></p>
+        </div>
+
+        <div class="nk-card p-4" style="background: var(--nk-accent-subtle); border-color: var(--nk-border);">
+          <h3 class="text-[13px] font-semibold flex items-center gap-1.5" style="color: var(--nk-text);">
+            <Wallet size={14} /> Money you could send home
+          </h3>
+          <p class="text-[20px] font-bold tabular-nums mt-1" style="color: var(--nk-text);" id="send-month">—</p>
+          <p class="text-[13px] font-medium tabular-nums" style="color: var(--nk-text);" id="send-year">—</p>
+          <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">Actual NPR amount depends on the exchange rate and remittance provider fees.</p>
+        </div>
+
+        <section class="nk-card p-4" aria-labelledby="reality-check">
+          <h3 id="reality-check" class="text-[13px] font-semibold mb-2 flex items-center gap-1.5" style="color: var(--nk-text);">
+            <Calculator size={14} /> Salary reality check
+          </h3>
+          <ol class="text-[12.5px] leading-relaxed space-y-1 list-decimal list-inside" style="color: var(--nk-text-secondary);">
+            <li>Gross salary</li>
+            <li>Taxes and deductions</li>
+            <li>Take home salary</li>
+            <li>Living expenses</li>
+            <li>Remittance fees</li>
+            <li><strong style="color: var(--nk-text);">Real savings</strong></li>
+          </ol>
+          <p class="text-[11px] mt-2" style="color: var(--nk-text-tertiary);">Headline salary is not the same as what you keep.</p>
+        </section>
+
+        <p class="text-[11px] leading-relaxed p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">
+          <strong style="color: var(--nk-text);">Disclaimer:</strong> This calculator provides estimates for planning purposes only. Actual salary, taxes, living costs, exchange rates, remittance fees, and benefits vary by country, employer, location, and individual circumstances.
+        </p>
+      </div>
+    </div>
+
+    <!-- SEO content -->
+    <section class="mt-10 max-w-[720px] space-y-6 text-[13.5px] leading-relaxed" style="color: var(--nk-text-secondary);">
+      <h2 class="text-[18px] font-semibold" style="color: var(--nk-text);">How to calculate your real savings from a foreign job</h2>
+      <ol class="list-decimal list-inside space-y-1">
+        <li>Start with gross salary.</li>
+        <li>Subtract taxes and mandatory deductions.</li>
+        <li>Add overtime and allowances.</li>
+        <li>Calculate realistic living expenses.</li>
+        <li>Subtract remittance fees.</li>
+        <li>Convert your remaining savings into NPR.</li>
+        <li>Account for one time migration costs.</li>
+      </ol>
+      <h2 class="text-[18px] font-semibold" style="color: var(--nk-text);">Is a higher foreign salary always better?</h2>
+      <p>Not necessarily. A higher headline salary can still leave less savings if housing, food, transport, insurance, loan repayments or migration costs are higher. Compare estimated net savings and first year net savings instead of gross salary alone.</p>
+      <h2 class="text-[18px] font-semibold" style="color: var(--nk-text);">What expenses should Nepali workers consider?</h2>
+      <p>Accommodation, food, transportation, phone, insurance, loan payments, remittance fees, personal expenses, and one time costs such as recruitment, deposits, medical and insurance before departure.</p>
+    </section>
+
+    <section class="mt-8 max-w-[720px]">
+      <h2 class="text-[18px] font-semibold mb-3" style="color: var(--nk-text);">Frequently asked questions</h2>
+      <div class="space-y-2">
+        {faqItems.map((item) => (
+          <details class="group border rounded-lg" style="border-color: var(--nk-border); background: var(--nk-card-bg);">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3 text-[13.5px] font-medium" style="color: var(--nk-text);">
+              <span>{item.q}</span>
+              <span class="text-[11px] px-2 py-1 rounded-full shrink-0" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">+</span>
+            </summary>
+            <div class="px-4 pb-3 text-[13px] leading-relaxed" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);">
+              <p class="pt-3">{item.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <RelatedTools tools={[
+      { title: 'Foreign Employment Cost', description: 'Cost of going abroad for work', href: '/nepal/foreign-employment-cost-calculator' },
+      { title: 'Remittance Calculator', description: 'Convert foreign currency to NPR', href: '/nepal/finance/remittance-calculator' },
+      { title: 'Foreign Exchange Nepal', description: 'Live NRB exchange rates', href: '/foreign-exchange-nepal' },
+    ]} />
+  </div>
+
+  <style>
+    .mode-btn {
+      padding: 7px 16px;
+      border-radius: 9999px;
+      border: 1px solid var(--nk-border);
+      background: var(--nk-card-bg);
+      color: var(--nk-text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .mode-btn.mode-active {
+      background: var(--nk-accent);
+      color: #fff;
+      border-color: var(--nk-accent);
+      font-weight: 600;
+    }
+    .pop-country {
+      padding: 6px 12px;
+      border-radius: 9999px;
+      border: 1px solid var(--nk-border);
+      background: var(--nk-card-bg);
+      color: var(--nk-text-secondary);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .pop-country:hover, .pop-country.pop-active {
+      border-color: var(--nk-accent);
+      color: var(--nk-accent);
+      background: var(--nk-accent-subtle);
+    }
+    .field-suffix {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--nk-text-tertiary);
+      pointer-events: none;
+    }
+    .break-bar {
+      height: 10px;
+      border-radius: 9999px;
+      background: var(--nk-hover);
+      overflow: hidden;
+      border: 1px solid var(--nk-border);
+    }
+    .break-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: var(--nk-accent);
+      transition: width 200ms ease;
+    }
+    .hidden-adv { display: none !important; }
+  </style>
+
+  <script type="application/json" id="foreign-job-fx-data" set:html={JSON.stringify({ currencyOptions, forexMeta })} />
+  <script>
+    import { calculateSavings, compareOffers, formatNumber, formatNPR, buildShareText } from '../../../../lib/calculators/foreign-job-savings.js';
+    import { COUNTRIES, getCountryById, savingsBand } from '../../../../data/foreign-job-savings.js';
+
+    const { currencyOptions, forexMeta } = JSON.parse(document.getElementById('foreign-job-fx-data').textContent);
+
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    const countrySelect = document.getElementById('country-select');
+    const countrySearch = document.getElementById('country-search');
+    const currencyHint = document.getElementById('currency-hint');
+    const otherRow = document.getElementById('country-other-row');
+    const otherCurrency = document.getElementById('other-currency');
+    const otherCurrencyName = document.getElementById('other-currency-name');
+    const rateCurrency = document.getElementById('rate-currency');
+    const exchangeRateInput = document.getElementById('exchange-rate');
+    const useLiveBtn = document.getElementById('use-live-rate');
+    const rateMeta = document.getElementById('rate-meta');
+    const rateUsedLine = document.getElementById('rate-used-line');
+
+    const salaryEl = document.getElementById('salary');
+    const overtimeEl = document.getElementById('overtime');
+    const taxesEl = document.getElementById('taxes');
+    const deductionsEl = document.getElementById('deductions');
+    const expEls = $$('[data-exp]');
+    const remitModeEls = $$('input[name="remit-mode"]');
+    const remitAmountEl = document.getElementById('remit-amount');
+    const remitFixedRow = document.getElementById('remit-fixed-row');
+    const remitAllHint = document.getElementById('remit-all-hint');
+    const remitFeeEl = document.getElementById('remit-fee');
+
+    const hiddenCostsSection = document.getElementById('hidden-costs');
+    const hiddenToggle = document.getElementById('hidden-toggle');
+    const hiddenIcon = document.getElementById('hidden-icon');
+
+    const modeSimpleBtn = document.getElementById('mode-simple');
+    const modeAdvancedBtn = document.getElementById('mode-advanced');
+
+    const takehomePreview = document.getElementById('takehome-preview');
+    const expensesPreview = document.getElementById('expenses-preview');
+
+    const overspendBanner = document.getElementById('overspend-banner');
+    const sTakehome = document.getElementById('s-takehome');
+    const sExpenses = document.getElementById('s-expenses');
+    const sFee = document.getElementById('s-fee');
+    const sMonthly = document.getElementById('s-monthly');
+    const sMonthlyNpr = document.getElementById('s-monthly-npr');
+    const sAnnual = document.getElementById('s-annual');
+    const sAnnualNpr = document.getElementById('s-annual-npr');
+    const sFirstYear = document.getElementById('s-firstyear');
+    const sFirstYearNpr = document.getElementById('s-firstyear-npr');
+    const sAfterFirst = document.getElementById('s-afterfirst');
+    const savingsRateEl = document.getElementById('savings-rate');
+    const savingsBandEl = document.getElementById('savings-band');
+    const periodTable = document.getElementById('period-table');
+    const periodNprNote = document.getElementById('period-npr-note');
+    const sendMonth = document.getElementById('send-month');
+    const sendYear = document.getElementById('send-year');
+    const breakdownBars = document.getElementById('breakdown-bars');
+
+    const shareBtn = document.getElementById('share-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const shareStatus = document.getElementById('share-status');
+
+    let selectedCountryId = '';
+    let selectedCurrency = '';
+    let liveRateMap = new Map();
+    let liveMeta = forexMeta;
+    let advancedMode = false;
+
+    // Build live rate map from server-provided currency options
+    for (const c of currencyOptions) {
+      if (c.sellPerUnit) liveRateMap.set(c.iso3, c.sellPerUnit);
+    }
+
+    function formatCurrencyValue(n, cur) {
+      const c = cur || selectedCurrency || '';
+      const v = formatNumber(n);
+      return c ? `${v} ${c}` : v;
+    }
+
+    function getRemitMode() {
+      const checked = document.querySelector('input[name="remit-mode"]:checked');
+      return checked ? checked.value : 'fixed';
+    }
+
+    function updateSuffixes() {
+      const cur = selectedCurrency || (selectedCountryId === 'other' ? (otherCurrency.value.trim().toUpperCase() || '') : '');
+      const suffixes = ['suffix-salary', 'suffix-overtime', 'suffix-taxes', 'suffix-deductions', 'suffix-remit', 'suffix-fee'];
+      for (const id of suffixes) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = cur || '';
+      }
+      $$('[data-suffix]').forEach((el) => { el.textContent = cur || ''; });
+      $$('[data-suffix-hidden]').forEach((el) => { el.textContent = cur || ''; });
+      // Also reflect in rate currency select if Other
+      if (selectedCountryId === 'other' && cur) {
+        // Ensure custom currency appears as option
+        let opt = Array.from(rateCurrency.options).find((o) => o.value === cur);
+        if (!opt) {
+          opt = document.createElement('option');
+          opt.value = cur;
+          opt.textContent = `${cur} · ${otherCurrencyName.value.trim() || cur}`;
+          rateCurrency.appendChild(opt);
+        }
+      }
+    }
+
+    function setCountry(id, opts = {}) {
+      selectedCountryId = id || '';
+      const country = getCountryById(selectedCountryId);
+      let cur = '';
+      let hint = '';
+      if (country && country.id !== 'other') {
+        cur = country.currency || '';
+        hint = country.currency ? `${country.flag} ${country.name} · ${country.currency} (${country.currencyName})` : '';
+        otherRow.classList.add('hidden');
+      } else if (country && country.id === 'other') {
+        cur = otherCurrency.value.trim().toUpperCase();
+        hint = cur ? `${cur} · ${otherCurrencyName.value.trim() || 'Custom currency'}` : 'Enter currency for Other.';
+        otherRow.classList.remove('hidden');
+      } else {
+        otherRow.classList.add('hidden');
+        hint = '';
+      }
+      selectedCurrency = cur;
+      currencyHint.textContent = hint;
+      // Sync rate currency selector
+      if (cur) {
+        const optExists = Array.from(rateCurrency.options).some((o) => o.value === cur);
+        if (!optExists && cur) {
+          const opt = document.createElement('option');
+          opt.value = cur;
+          opt.textContent = `${cur} · ${country ? country.currencyName : cur}`;
+          rateCurrency.appendChild(opt);
+        }
+        if (!opts.keepRateCurrency) {
+          // Prefer the country's currency for conversion
+          rateCurrency.value = cur;
+        }
+      }
+      updateSuffixes();
+      // Try to prefill exchange rate from live map
+      if (cur && liveRateMap.has(cur)) {
+        const liveRate = liveRateMap.get(cur);
+        // Only auto-fill if user hasn't typed a custom rate (or if forced)
+        if (!exchangeRateInput.value || opts.forceRate) {
+          exchangeRateInput.value = Number(liveRate).toFixed(2);
+        }
+        useLiveBtn.classList.remove('hidden');
+        useLiveBtn.dataset.rate = String(liveRate);
+        useLiveBtn.dataset.iso = cur;
+        rateMeta.textContent = liveMeta && liveMeta.isLive
+          ? `Live NRB rate available: 1 ${cur} = Rs. ${Number(liveRate).toFixed(2)} · ${liveMeta.publishedDate || ''}`.trim()
+          : `Reference rate: 1 ${cur} = Rs. ${Number(liveRate).toFixed(2)} (mock)`;
+      } else {
+        useLiveBtn.classList.add('hidden');
+        if (!cur) rateMeta.textContent = 'Select a country or enter a rate currency to see reference rates.';
+        else rateMeta.textContent = `No reference rate for ${cur}. Enter today's rate from your provider.`;
+      }
+      updateModeVisibility();
+      recalc();
+    }
+
+    function setAdvanced(on) {
+      advancedMode = !!on;
+      modeSimpleBtn.classList.toggle('mode-active', !advancedMode);
+      modeAdvancedBtn.classList.toggle('mode-active', advancedMode);
+      modeSimpleBtn.setAttribute('aria-pressed', String(!advancedMode));
+      modeAdvancedBtn.setAttribute('aria-pressed', String(advancedMode));
+      updateModeVisibility();
+    }
+
+    function updateModeVisibility() {
+      $$('.adv-field').forEach((el) => {
+        el.classList.toggle('hidden-adv', !advancedMode);
+      });
+      // Hidden costs section is advanced-only
+      const hiddenSection = hiddenCostsSection.closest('section');
+      if (hiddenSection) {
+        hiddenSection.classList.toggle('hidden-adv', !advancedMode);
+        // If switching to simple, collapse the inner panel
+        if (!advancedMode) {
+          hiddenCostsSection.classList.add('hidden');
+          hiddenIcon.style.transform = '';
+        }
+      }
+      // Job comparison is advanced
+      const cmpSection = document.getElementById('compare-panel')?.closest('section');
+      if (cmpSection) {
+        cmpSection.classList.toggle('hidden-adv', !advancedMode);
+      }
+    }
+
+    function collectInput() {
+      const hidden = {};
+      $$('[data-hidden]').forEach((el) => {
+        hidden[el.dataset.hidden] = el.value;
+      });
+      const payload = {
+        salary: salaryEl.value,
+        overtime: overtimeEl.value,
+        allowances: 0,
+        taxes: taxesEl.value,
+        deductions: deductionsEl.value,
+        housing: document.getElementById('exp-housing')?.value || 0,
+        food: document.getElementById('exp-food')?.value || 0,
+        transportation: document.getElementById('exp-transportation')?.value || 0,
+        phone: document.getElementById('exp-phone')?.value || 0,
+        personal: document.getElementById('exp-personal')?.value || 0,
+        other: document.getElementById('exp-other')?.value || 0,
+        hiddenCosts: hidden,
+        remittanceFee: remitFeeEl.value,
+        exchangeRate: exchangeRateInput.value,
+        remitMode: getRemitMode(),
+        remitAmount: remitAmountEl.value,
+      };
+      return payload;
+    }
+
+    function collectOffer(prefix) {
+      // prefix like 'cmp-a' or 'cmp-b' for comparison
+      const salary = document.getElementById(`${prefix}-salary`)?.value || 0;
+      const allowances = document.getElementById(`${prefix}-allowances`)?.value || 0;
+      const taxes = document.getElementById(`${prefix}-taxes`)?.value || 0;
+      const expenses = document.getElementById(`${prefix}-expenses`)?.value || 0;
+      const fee = document.getElementById(`${prefix}-fee`)?.value || 0;
+      const rate = document.getElementById(`${prefix}-rate`)?.value || 0;
+      // Map single expenses bucket into totalExpenses approximation
+      // For comparison we treat expenses as totalExpenses directly
+      return {
+        salary, overtime: allowances, taxes, deductions: 0,
+        housing: expenses, food: 0, transportation: 0, phone: 0, personal: 0, other: 0,
+        hiddenCosts: {},
+        remittanceFee: fee,
+        exchangeRate: rate,
+      };
+    }
+
+    function recalc() {
+      const input = collectInput();
+      // Handle "send all remaining" remittance mode
+      // In that mode, remitAmount is ignored; savings is takeHome - expenses - fee
+      // and amount sent is implicitly monthlySavings + fee? Actually spec says
+      // remittance amount is separate from savings; for "all remaining" we treat
+      // remit amount as monthlySavings before fee? Keep simple: savings calc already
+      // subtracts fee; remit amount display will mirror monthlySavings when in 'all' mode.
+      const result = calculateSavings(input);
+      const cur = selectedCurrency || '';
+      const hasRate = result.exchangeRate > 0;
+
+      // Previews
+      takehomePreview.textContent = formatCurrencyValue(result.takeHome, cur);
+      expensesPreview.textContent = formatCurrencyValue(result.totalExpenses, cur);
+
+      // Overspend banner
+      if (result.isOverspending) {
+        overspendBanner.classList.remove('hidden');
+        const nprPart = hasRate ? ` (about ${formatNPR(result.nprOverspend)})` : '';
+        overspendBanner.textContent = `You are spending more than your estimated take home salary by ${formatCurrencyValue(result.overspendAmount, cur)} per month${nprPart}.`;
+      } else {
+        overspendBanner.classList.add('hidden');
+        overspendBanner.textContent = '';
+      }
+
+      sTakehome.textContent = formatCurrencyValue(result.takeHome, cur);
+      sExpenses.textContent = formatCurrencyValue(result.totalExpenses, cur);
+      sFee.textContent = formatCurrencyValue(result.remittanceFee, cur);
+
+      if (result.isOverspending) {
+        sMonthly.textContent = `-${formatCurrencyValue(result.overspendAmount, cur)}`;
+        sMonthly.style.color = '#dc2626';
+      } else {
+        sMonthly.textContent = formatCurrencyValue(result.monthlySavings, cur);
+        sMonthly.style.color = 'var(--nk-text)';
+      }
+      sMonthlyNpr.textContent = hasRate ? (result.isOverspending ? `-${formatNPR(result.nprOverspend)}` : formatNPR(result.nprMonthlySavings)) : '';
+      sAnnual.textContent = result.isOverspending ? `-${formatCurrencyValue(Math.abs(result.annualSavings), cur)}` : formatCurrencyValue(result.annualSavings, cur);
+      sAnnualNpr.textContent = hasRate ? (result.isOverspending ? `-${formatNPR(Math.abs(result.nprAnnualSavings))}` : formatNPR(result.nprAnnualSavings)) : '';
+
+      sFirstYear.textContent = formatCurrencyValue(result.firstYearNetSavings, cur);
+      sFirstYearNpr.textContent = hasRate ? formatNPR(result.nprFirstYearNet) : '';
+      sAfterFirst.textContent = `After the first year: about ${formatCurrencyValue(result.afterFirstYearAnnual, cur)}/year${hasRate ? ` (${formatNPR(result.nprAnnualSavings)}/year)` : ''} estimated.`;
+
+      // Savings rate
+      const rateVal = result.savingsRate;
+      const band = savingsBand(rateVal);
+      savingsRateEl.textContent = `${rateVal.toFixed(1)}%`;
+      savingsBandEl.textContent = band.label;
+      savingsBandEl.style.color = band.color;
+      savingsBandEl.style.borderColor = band.color;
+      savingsBandEl.style.background = `${band.color}12`;
+
+      // Breakdown bars
+      const grossForPct = result.grossIncome > 0 ? result.grossIncome : 1;
+      // Use takeHome as denominator for living/fees? Spec says Salary 100%, living 40%, etc. Use grossIncome as 100%.
+      const items = [
+        { label: 'Salary', value: result.grossIncome, pct: 100, color: 'var(--nk-accent)' },
+        { label: 'Living expenses', value: result.totalExpenses, pct: (result.totalExpenses / grossForPct) * 100, color: 'var(--nk-text-secondary)' },
+        { label: 'Remittance fee', value: result.remittanceFee, pct: (result.remittanceFee / grossForPct) * 100, color: '#d97706' },
+        { label: 'Remaining savings', value: Math.max(0, result.monthlySavings), pct: Math.max(0, (result.monthlySavings / grossForPct) * 100), color: '#16a34a' },
+      ];
+      breakdownBars.innerHTML = items.map((it) => `
+        <div>
+          <div class="flex justify-between text-[11.5px] mb-1"><span style="color: var(--nk-text-secondary);">${it.label}</span><span class="tabular-nums font-medium" style="color: var(--nk-text);">${formatCurrencyValue(it.value, cur)} · ${it.pct.toFixed(0)}%</span></div>
+          <div class="break-bar" role="progressbar" aria-valuenow="${it.pct.toFixed(0)}" aria-valuemin="0" aria-valuemax="100" aria-label="${it.label} ${it.pct.toFixed(0)} percent"><div class="break-fill" style="width: ${Math.max(2, Math.min(100, it.pct)).toFixed(0)}%; background: ${it.color};"></div></div>
+        </div>
+      `).join('');
+
+      // Period table
+      const yearlyIncome = result.grossIncome * 12;
+      const yearlyExpenses = result.totalExpenses * 12;
+      const yearlyFees = result.remittanceFee * 12;
+      const yearlySavings = result.monthlySavings * 12;
+      periodTable.innerHTML = `
+        <tr style="border-top: 1px solid var(--nk-border);">
+          <td class="py-1.5 pr-2" style="color: var(--nk-text-secondary);">Monthly</td>
+          <td class="text-right py-1.5 px-2 font-medium" style="color: var(--nk-text);">${formatCurrencyValue(result.grossIncome, cur)}</td>
+          <td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatCurrencyValue(result.totalExpenses, cur)}</td>
+          <td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatCurrencyValue(result.remittanceFee, cur)}</td>
+          <td class="text-right py-1.5 pl-2 font-semibold" style="color: ${result.isOverspending ? '#dc2626' : 'var(--nk-text)'};">${result.isOverspending ? '-' : ''}${formatCurrencyValue(Math.abs(result.monthlySavings), cur)}</td>
+        </tr>
+        <tr style="border-top: 1px solid var(--nk-border);">
+          <td class="py-1.5 pr-2" style="color: var(--nk-text-secondary);">Yearly</td>
+          <td class="text-right py-1.5 px-2 font-medium" style="color: var(--nk-text);">${formatCurrencyValue(yearlyIncome, cur)}</td>
+          <td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatCurrencyValue(yearlyExpenses, cur)}</td>
+          <td class="text-right py-1.5 px-2" style="color: var(--nk-text);">${formatCurrencyValue(yearlyFees, cur)}</td>
+          <td class="text-right py-1.5 pl-2 font-semibold" style="color: ${result.isOverspending ? '#dc2626' : 'var(--nk-text)'};">${result.isOverspending ? '-' : ''}${formatCurrencyValue(Math.abs(yearlySavings), cur)}</td>
+        </tr>
+      `;
+      periodNprNote.textContent = hasRate ? `In NPR: Monthly savings ${formatNPR(result.nprMonthlySavings)} · Yearly ${formatNPR(result.nprAnnualSavings)} at ${formatNumber(result.exchangeRate)} NPR per ${cur || 'unit'}.` : 'Enter an exchange rate to see NPR values.';
+
+      // Money you could send home
+      // If remit mode is fixed, amount sent is remitAmount; if all, it's monthlySavings
+      const remitMode = getRemitMode();
+      let nprRemitMonthly = 0;
+      let remitForeignMonthly = 0;
+      if (remitMode === 'fixed') {
+        const amt = Number(String(remitAmountEl.value).replace(/,/g, '')) || 0;
+        remitForeignMonthly = amt;
+        nprRemitMonthly = hasRate ? Math.round(amt * result.exchangeRate) : 0;
+      } else {
+        remitForeignMonthly = Math.max(0, result.monthlySavings);
+        nprRemitMonthly = hasRate ? result.nprMonthlySavings > 0 ? result.nprMonthlySavings : 0 : 0;
+      }
+      const nprRemitYearly = nprRemitMonthly * 12;
+      const remitForeignYearly = remitForeignMonthly * 12;
+      sendMonth.textContent = hasRate ? `${formatNPR(nprRemitMonthly)} / month` : (remitForeignMonthly ? `${formatCurrencyValue(remitForeignMonthly, cur)} / month` : '—');
+      sendYear.textContent = hasRate ? `${formatNPR(nprRemitYearly)} / year` : (remitForeignYearly ? `${formatCurrencyValue(remitForeignYearly, cur)} / year` : '—');
+
+      // Rate used line
+      const rateCur = rateCurrency.value || cur || 'unit';
+      if (hasRate) {
+        const srcLabel = liveMeta && liveMeta.isLive ? 'Live NRB' : (liveRateMap.has(rateCur) ? 'Reference (NRB)' : 'Manual');
+        const ts = liveMeta && liveMeta.publishedDate ? ` · ${liveMeta.publishedDate}` : '';
+        rateUsedLine.textContent = `Exchange rate used: 1 ${rateCur} = Rs. ${Number(result.exchangeRate).toFixed(2)} · ${srcLabel}${ts}`;
+      } else {
+        rateUsedLine.textContent = '';
+      }
+
+      // Update comparison if open
+      updateComparison();
+
+      // Store for share
+      window.__lastResult = result;
+      window.__lastCountryName = (getCountryById(selectedCountryId) || {}).name || '';
+      window.__lastCurrency = cur;
+    }
+
+    function updateComparison() {
+      const panel = document.getElementById('compare-result');
+      const aCountry = document.getElementById('cmp-a-country')?.value || '';
+      const bCountry = document.getElementById('cmp-b-country')?.value || '';
+      // Only compute if at least one comparison field has values
+      const aHas = ['cmp-a-salary','cmp-a-expenses','cmp-a-rate'].some((id) => document.getElementById(id)?.value);
+      if (!aHas && !document.getElementById('cmp-b-salary')?.value) {
+        panel.classList.add('hidden');
+        panel.innerHTML = '';
+        return;
+      }
+      const aInput = collectOffer('cmp-a');
+      const bInput = collectOffer('cmp-b');
+      const cmp = compareOffers(aInput, bInput);
+      const aCur = (getCountryById(aCountry)?.currency) || '';
+      const bCur = (getCountryById(bCountry)?.currency) || '';
+      panel.classList.remove('hidden');
+      panel.innerHTML = `
+        <div class="grid grid-cols-2 gap-3 text-[12.5px]">
+          <div>
+            <p class="font-semibold mb-1" style="color: var(--nk-text);">Job A</p>
+            <p>Take home: <strong class="tabular-nums">${formatCurrencyValue(cmp.a.takeHome, aCur)}</strong></p>
+            <p>Expenses: <span class="tabular-nums">${formatCurrencyValue(cmp.a.totalExpenses, aCur)}</span></p>
+            <p>Monthly savings: <strong class="tabular-nums">${formatCurrencyValue(cmp.a.monthlySavings, aCur)}</strong></p>
+            <p>Annual: <span class="tabular-nums">${formatCurrencyValue(cmp.a.annualSavings, aCur)}</span></p>
+            <p>NPR/month: <span class="tabular-nums">${cmp.a.exchangeRate ? formatNPR(cmp.a.nprMonthlySavings) : '—'}</span></p>
+          </div>
+          <div>
+            <p class="font-semibold mb-1" style="color: var(--nk-text);">Job B</p>
+            <p>Take home: <strong class="tabular-nums">${formatCurrencyValue(cmp.b.takeHome, bCur)}</strong></p>
+            <p>Expenses: <span class="tabular-nums">${formatCurrencyValue(cmp.b.totalExpenses, bCur)}</span></p>
+            <p>Monthly savings: <strong class="tabular-nums">${formatCurrencyValue(cmp.b.monthlySavings, bCur)}</strong></p>
+            <p>Annual: <span class="tabular-nums">${formatCurrencyValue(cmp.b.annualSavings, bCur)}</span></p>
+            <p>NPR/month: <span class="tabular-nums">${cmp.b.exchangeRate ? formatNPR(cmp.b.nprMonthlySavings) : '—'}</span></p>
+          </div>
+        </div>
+        ${cmp.winner ? `<p class="mt-2 font-semibold" style="color: var(--nk-accent);">Job ${cmp.winner} saves approximately ${formatNPR(cmp.diffMonthlyAbs)} more per month.</p>` : '<p class="mt-2" style="color: var(--nk-text-tertiary);">Enter rates to compare in NPR.</p>'}
+      `;
+    }
+
+    // Country filtering
+    const countryFilter = (q) => {
+      const query = String(q || '').trim().toLowerCase();
+      const filtered = COUNTRIES.filter((c) => {
+        if (!query) return true;
+        return `${c.name} ${c.currency} ${c.iso3}`.toLowerCase().includes(query);
+      });
+      countrySelect.innerHTML = '<option value="">Select a country</option>' + filtered.map((c) => `<option value="${c.id}">${c.flag} ${c.name} ${c.currency ? `· ${c.currency}` : ''}</option>`).join('');
+      if (filtered.length === 1) {
+        countrySelect.value = filtered[0].id;
+        setCountry(filtered[0].id);
+      }
+    };
+
+    countrySearch.addEventListener('input', () => countryFilter(countrySearch.value));
+    document.getElementById('popular-countries')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-country]');
+      if (!btn) return;
+      $$('.pop-country').forEach((b) => b.classList.remove('pop-active'));
+      btn.classList.add('pop-active');
+      countrySelect.value = btn.dataset.country;
+      countrySearch.value = '';
+      setCountry(btn.dataset.country);
+    });
+    countrySelect.addEventListener('change', () => setCountry(countrySelect.value));
+    otherCurrency.addEventListener('input', () => {
+      otherCurrency.value = otherCurrency.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 5);
+      setCountry('other', { keepRateCurrency: true });
+    });
+    otherCurrencyName.addEventListener('input', () => {
+      // No calc needed, just suffix update
+      updateSuffixes();
+    });
+
+    // Currency for rate
+    rateCurrency.addEventListener('change', () => {
+      const iso = rateCurrency.value;
+      if (liveRateMap.has(iso) && !exchangeRateInput.value) {
+        exchangeRateInput.value = Number(liveRateMap.get(iso)).toFixed(2);
+      }
+      recalc();
+    });
+    useLiveBtn.addEventListener('click', () => {
+      const rate = useLiveBtn.dataset.rate;
+      if (rate) {
+        exchangeRateInput.value = Number(rate).toFixed(2);
+        const iso = useLiveBtn.dataset.iso;
+        if (iso) rateCurrency.value = iso;
+        recalc();
+      }
+    });
+
+    // Inputs live recalc
+    const liveInputs = [
+      salaryEl, overtimeEl, taxesEl, deductionsEl,
+      ...expEls,
+      remitAmountEl, remitFeeEl, exchangeRateInput,
+      ...$$('[data-hidden]'),
+    ];
+    liveInputs.forEach((el) => {
+      if (!el) return;
+      el.addEventListener('input', recalc);
+      el.addEventListener('change', recalc);
+    });
+    remitModeEls.forEach((el) => el.addEventListener('change', () => {
+      const mode = getRemitMode();
+      if (mode === 'fixed') {
+        remitFixedRow.classList.remove('hidden');
+        remitAllHint.classList.add('hidden');
+      } else {
+        remitFixedRow.classList.add('hidden');
+        remitAllHint.classList.remove('hidden');
+      }
+      recalc();
+    }));
+
+    // Hidden costs toggle
+    hiddenToggle.addEventListener('click', () => {
+      const isHidden = hiddenCostsSection.classList.contains('hidden');
+      hiddenCostsSection.classList.toggle('hidden', !isHidden);
+      hiddenIcon.style.transform = isHidden ? 'rotate(45deg)' : '';
+    });
+
+    // Compare toggle
+    document.getElementById('compare-toggle')?.addEventListener('click', () => {
+      const panel = document.getElementById('compare-panel');
+      const icon = document.getElementById('compare-icon');
+      const isHidden = panel.classList.contains('hidden');
+      panel.classList.toggle('hidden', !isHidden);
+      icon.style.transform = isHidden ? 'rotate(45deg)' : '';
+      if (isHidden) updateComparison();
+    });
+    // Comparison live inputs
+    $$('#compare-panel input, #compare-panel select').forEach((el) => {
+      el.addEventListener('input', updateComparison);
+      el.addEventListener('change', updateComparison);
+    });
+
+    // Mode toggle
+    modeSimpleBtn.addEventListener('click', () => setAdvanced(false));
+    modeAdvancedBtn.addEventListener('click', () => setAdvanced(true));
+
+    // Reset
+    resetBtn.addEventListener('click', () => {
+      salaryEl.value = '';
+      overtimeEl.value = '';
+      taxesEl.value = '';
+      deductionsEl.value = '';
+      expEls.forEach((el) => el.value = '');
+      $$('[data-hidden]').forEach((el) => el.value = '');
+      remitAmountEl.value = '';
+      remitFeeEl.value = '';
+      exchangeRateInput.value = '';
+      // Keep country but reset gem? No, keep country
+      shareStatus.classList.add('hidden');
+      shareStatus.textContent = '';
+      recalc();
+    });
+
+    // Share
+    shareBtn.addEventListener('click', async () => {
+      const input = collectInput();
+      const result = window.__lastResult || calculateSavings(input);
+      const text = buildShareText(input, result, window.__lastCountryName || '', window.__lastCurrency || '');
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'Foreign Job Savings Estimate', text });
+          shareStatus.textContent = 'Shared.';
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(text);
+          shareStatus.textContent = 'Copied to clipboard.';
+        } else {
+          // Fallback
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+          shareStatus.textContent = 'Copied to clipboard.';
+        }
+      } catch {
+        shareStatus.textContent = 'Could not share. Copy manually.';
+      }
+      shareStatus.classList.remove('hidden');
+      setTimeout(() => shareStatus.classList.add('hidden'), 3000);
+    });
+
+    // Init
+    setCountry('');
+    setAdvanced(false);
+    recalc();
+  </script>
+</BaseLayout>

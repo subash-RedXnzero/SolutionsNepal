@@ -1,0 +1,112 @@
+---
+/**
+ * Central Image component - use everywhere instead of raw <img>.
+ * - Preserves aspect ratio, lazy/eager handled via props
+ * - Supports Astro sharp optimization for remote domains (images.unsplash.com)
+ * - Referrer policy defaults to no-referrer for external CDN stability
+ * - Wrapper can be disabled for custom containers (e.g. .sidebar-thumb, .post-thumb)
+ */
+const {
+  src,
+  alt = '',
+  width,
+  height,
+  loading = 'lazy',
+  decoding = 'async',
+  fetchpriority,
+  referrerpolicy = 'no-referrer',
+  class: className = '',
+  rounded = true,
+  card = false,
+  wrapper = true,
+  ...rest
+} = Astro.props;
+
+// SEO guard: every image needs meaningful alt text. Empty alt is valid only
+// for purely decorative images — warn in dev so it stays a conscious choice.
+if (import.meta.env.DEV && !alt) {
+  console.warn(`[Image SEO] Missing alt text for: ${src}. Add a descriptive alt prop.`);
+}
+---
+
+{wrapper ? (
+  <div class:list={['nk-image-wrapper', { 'nk-image-card': card }, className]}>
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+      referrerpolicy={referrerpolicy}
+      class="nk-image"
+      {...rest}
+    />
+  </div>
+) : (
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+    referrerpolicy={referrerpolicy}
+    class="nk-image"
+    {...rest}
+  />
+)}
+
+<style>
+  /* Base wrapper - prevents overflow and maintains aspect ratio */
+  .nk-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: var(--nk-muted, #f5f5f5);
+  }
+
+  /* Image - natural aspect ratio, responsive */
+  .nk-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-width: 100%;
+  }
+
+  /* Card mode - consistent card styling while preserving image proportions */
+  .nk-image-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    padding: 1rem;
+  }
+
+  .nk-image-card .nk-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Rounded variants */
+  .nk-image-wrapper[class*="rounded"] {
+    border-radius: 12px;
+  }
+
+  /* Hover effect for interactive images */
+  .nk-image-wrapper:hover .nk-image {
+    opacity: 0.95;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .nk-image-wrapper {
+      border-radius: 8px;
+    }
+  }
+</style>

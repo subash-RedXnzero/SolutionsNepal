@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import BmiCalculator from '../../components/tools/BmiCalculator.astro';
+
+const title = 'BMI Calculator — Body Mass Index Online | SolutionsNepal';
+const description = 'Calculate Body Mass Index from height and weight with healthy-range guidance. Free BMI calculator with metric and imperial units.';
+
+const faqItems = [
+  {
+    q: 'What is BMI?',
+    a: 'BMI (Body Mass Index) is a simple number calculated from your height and weight. It is used as a general screening tool to categorize whether a person is underweight, normal weight, overweight, or obese.',
+  },
+  {
+    q: 'How do I calculate my BMI?',
+    a: 'Enter your height and weight, then click "Calculate BMI". The formula is: BMI = Weight (kg) ÷ Height (m)². For example, if you weigh 65 kg and are 1.70 m tall: 65 ÷ (1.70 × 1.70) = 22.5.',
+  },
+  {
+    q: 'What is a normal BMI?',
+    a: 'A BMI between 18.5 and 24.9 is generally considered normal for adults.',
+  },
+  {
+    q: 'Is a BMI of 22 normal?',
+    a: 'Yes. A BMI of 22 falls within the normal range (18.5–24.9).',
+  },
+  {
+    q: 'Can I calculate BMI using feet and inches?',
+    a: 'Yes. SolutionsNepal\'s BMI calculator supports both feet/inches and centimeters for height.',
+  },
+  {
+    q: 'Can I calculate BMI using pounds?',
+    a: 'Yes. You can switch the weight unit to pounds (lb) and the calculator will convert it to kilograms for the BMI calculation.',
+  },
+  {
+    q: 'What is the BMI formula?',
+    a: 'BMI = Weight (kg) ÷ Height (m)². For imperial units, height in inches is converted to meters (1 inch = 0.0254 m) before applying the formula.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'BMI Calculator',
+      description: 'Calculate your Body Mass Index (BMI) using your height and weight.',
+      url: 'https://solutionsnepal.com/tools/bmi-calculator',
+      applicationCategory: 'HealthApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <Breadcrumbs items={[
+      { label: 'Tools', href: '/tools' },
+      { label: 'BMI Calculator' },
+    ]} />
+    <!-- Hero -->
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">BMI Calculator</h1>
+      <p class="mt-2 text-sm max-w-lg mx-auto" style="color:var(--nk-text-secondary);">Calculate your Body Mass Index using your height and weight.</p>
+    </div>
+
+    <!-- Calculator -->
+    <div class="max-w-sm sm:max-w-md mx-auto">
+      <BmiCalculator />
+    </div>
+
+    <!-- SEO Content -->
+    <section class="mt-12 space-y-8 text-sm max-w-3xl" style="color:var(--nk-text-secondary);">
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">What is BMI?</h2>
+        <p>BMI, or Body Mass Index, is a simple calculation based on your height and weight. It is widely used as a quick screening tool to categorize adults into weight categories: underweight, normal weight, overweight, or obese.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">How is BMI calculated?</h3>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">BMI = Weight (kg) ÷ Height (m)²</div>
+        <p>Example: If you weigh 65 kg and are 1.70 m tall:</p>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">65 ÷ (1.70 × 1.70) = 22.5</div>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">BMI Categories</h3>
+        <div class="space-y-1.5 mt-2">
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#3b82f6;"></span><span class="font-medium" style="color:var(--nk-text);">Below 18.5</span> — Underweight</div>
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#22c55e;"></span><span class="font-medium" style="color:var(--nk-text);">18.5 – 24.9</span> — Normal</div>
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#f59e0b;"></span><span class="font-medium" style="color:var(--nk-text);">25.0 – 29.9</span> — Overweight</div>
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#ef4444;"></span><span class="font-medium" style="color:var(--nk-text);">30.0+</span> — Obesity</div>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-base font-semibold mb-3" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="pt-4" style="border-top:1px solid var(--nk-border);">
+        <p class="text-[11px] leading-relaxed" style="color:var(--nk-text-tertiary);">BMI is a general screening measure and does not directly measure body fat or overall health. BMI categories may not be appropriate for everyone, including children, teenagers, pregnant people, and some athletes. SolutionsNepal's BMI calculator is for informational purposes only and does not provide medical advice.</p>
+      </div>
+    </section>
+
+    <RelatedTools tools={[
+      { title: 'Percentage Calculator', description: 'Percentages and changes', href: '/tools/percentage-calculator' },
+      { title: 'Date Difference Calculator', description: 'Days between two dates', href: '/tools/date-difference' },
+      { title: 'Cost of Living Calculator', description: 'Monthly expenses in Nepal', href: '/nepal/utilities/cost-of-living-calculator' },
+      { title: 'All Tools', description: 'Browse every tool', href: '/nepal' },
+    ]} />
+  </main>
+</BaseLayout>

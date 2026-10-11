@@ -1,0 +1,328 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { JOBS, FILTERS, fmtNPR, LEGAL_MINIMUM_NOTE } from '../../../../data/jobs.js';
+
+const title = 'Nepal Jobs & Earnings Directory — Salaries by Profession | SolutionsNepal';
+const description =
+  'Explore jobs in Nepal, typical salary ranges, required skills, and earning opportunities. Open any profession for estimated monthly and yearly earnings.';
+
+const faqItems = [
+  { q: 'What is the average salary in Nepal?', a: 'There is no single average — pay depends on profession, city, and experience. Entry-level office and service jobs commonly pay Rs 15,000–35,000 per month, skilled trades Rs 25,000–70,000, and experienced professionals Rs 40,000–1,50,000+. Open any profession above for its estimated range.' },
+  { q: 'Do government or private jobs pay more in Nepal?', a: 'Private jobs often pay more at senior and technical levels (IT, banking, engineering), while government jobs offer grade-based pay plus job security, pensions, allowances, and festival expenses. For freshers, starting pay is similar in both — the difference grows with seniority and skills.' },
+  { q: 'How much more can I earn in Kathmandu vs outside?', a: 'Kathmandu Valley typically pays 15–25% more than smaller cities for the same role, especially in IT, hospitality, and private offices — but rent and living costs are also highest there. Outside the Valley the same salary stretches further.' },
+  { q: 'Which skills increase salary the most in Nepal?', a: 'English communication, computer and Excel skills, driving licenses, technical certifications (electrical, plumbing, caregiving, guide licenses), and digital skills (programming, design, SEO, video editing) consistently lift earnings — both for local jobs and foreign employment.' },
+  { q: 'Is foreign employment worth it compared to working in Nepal?', a: 'Gulf and Malaysia contracts typically pay Rs 35,000–80,000 per month equivalent, and caregiver or skilled roles abroad can exceed Rs 1,00,000 — but subtract recruitment, medical, insurance, and living costs first. Use SolutionsNepal’s Foreign Job Salary & Real Savings calculator to compare real savings before deciding.' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Nepal Jobs & Earnings Directory',
+    description,
+    url: 'https://solutionsnepal.com/nepal/utilities/jobs',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: JOBS.length,
+      itemListElement: JOBS.map((j, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `https://solutionsnepal.com/nepal/utilities/jobs/${j.id}`,
+        name: j.title,
+        description: `Typical estimated monthly earnings Rs ${fmtNPR(j.min)} – Rs ${fmtNPR(j.max)}.`,
+      })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-4 sm:py-5 jobs-wrap">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Utilities', href: '/nepal/utilities' },
+      { label: 'Jobs & Earnings' },
+    ]} />
+
+    <!-- Header -->
+    <header class="mb-4">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
+        🇳🇵 Nepal Jobs &amp; Earnings Directory
+      </h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+        Explore jobs in Nepal, typical salary ranges, required skills, and earning opportunities.
+      </p>
+    </header>
+
+    <!-- Search -->
+    <div class="relative mb-3">
+      <span class="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style="color: var(--nk-text-tertiary);" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </span>
+      <input
+        id="job-search"
+        type="search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Search jobs, skills, or professions..."
+        aria-label="Search jobs, skills, or professions"
+        class="nk-input text-[15px]"
+        style="padding-left: 2.75rem; padding-right: 2.75rem;"
+      />
+      <button
+        id="job-clear"
+        type="button"
+        aria-label="Clear search"
+        class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 nk-btn-icon"
+        style="width: 30px; height: 30px;"
+      >✕</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="chip-scroll mb-4" role="radiogroup" aria-label="Filter jobs by work type">
+      {FILTERS.map((f, i) => (
+        <button
+          type="button"
+          class={`chip${i === 0 ? ' chip-active' : ''}`}
+          data-filter={f.id}
+          role="radio"
+          aria-checked={i === 0 ? 'true' : 'false'}
+        >{f.label}</button>
+      ))}
+    </div>
+
+    <!-- Market at a glance (single strip) -->
+    <section class="market-strip" aria-label="Nepal job market at a glance">
+      <p class="market-line">
+        <strong>100+ professions</strong>
+        <span aria-hidden="true"> · </span>Entry <strong>Rs 15–35K</strong>
+        <span aria-hidden="true"> · </span>Skilled <strong>Rs 25–70K</strong>
+        <span aria-hidden="true"> · </span>Experienced <strong>Rs 40K–150K+</strong>
+        <span class="market-unit">/ month · typical estimated earnings</span>
+      </p>
+      <p class="market-note">Estimates from job postings &amp; surveys (2024–2026) — not guaranteed salaries.</p>
+    </section>
+
+    <!-- Job directory -->
+    <section aria-labelledby="dir-h" class="mb-8">
+      <div class="flex items-end justify-between gap-3 mb-2.5">
+        <h2 id="dir-h" class="text-[16px] font-bold" style="color: var(--nk-text);">Job directory</h2>
+        <p id="job-count" class="text-[12px] tabular-nums shrink-0" style="color: var(--nk-text-secondary);" aria-live="polite"></p>
+      </div>
+      <div id="job-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+        {JOBS.map((j) => {
+          const blob = [j.title, ...(j.altTitles || []), ...j.types, ...j.skills, j.exp].join(' ').toLowerCase();
+          return (
+            <a
+              class="job-card"
+              href={`/nepal/utilities/jobs/${j.id}`}
+              data-tags={j.tags.join(' ')}
+              data-search={blob}
+            >
+              <div class="flex-1 min-w-0">
+                <p class="text-[14px] font-semibold leading-snug" style="color: var(--nk-text);">{j.title}</p>
+                <p class="text-[14px] font-bold tabular-nums mt-1" style="color: var(--nk-text);">
+                  Rs {fmtNPR(j.min)} – {fmtNPR(j.max)} <span class="font-normal text-[11.5px]" style="color: var(--nk-text-tertiary);">/ month</span>
+                </p>
+                <p class="text-[12px] mt-1 leading-relaxed" style="color: var(--nk-text-secondary);">
+                  {j.types.join(' · ')}
+                  <span aria-hidden="true" style="color: var(--nk-border-strong);"> · </span>
+                  {j.skills.join(' · ')}
+                </p>
+              </div>
+              <span class="job-go">View Earnings <span aria-hidden="true">→</span></span>
+            </a>
+          );
+        })}
+      </div>
+      <div id="job-empty" class="hidden nk-card p-8 text-center mt-1">
+        <p class="text-[15px] font-semibold mb-1" style="color: var(--nk-text);">No jobs found</p>
+        <p class="text-[13px]" style="color: var(--nk-text-secondary);">
+          Try “teacher”, “driver”, “accountant” — or clear the filter above.
+        </p>
+        <button type="button" id="job-empty-reset" class="nk-btn nk-btn-secondary nk-btn-sm mt-3">Show all jobs</button>
+      </div>
+    </section>
+
+    <!-- Related tools -->
+    <RelatedTools tools={[
+      { title: 'Salary Tax Calculator', description: 'Take-home salary after SSF, tax & deductions', href: '/nepal/finance/salary-checker' },
+      { title: 'Cost of Living Calculator', description: 'Monthly expenses by city & household', href: '/nepal/utilities/cost-of-living-calculator' },
+      { title: 'Overtime Calculator', description: 'Estimate your overtime pay in Nepal', href: '/nepal/finance/overtime-calculator' },
+      { title: 'Freelancer Take-home Calculator', description: 'Foreign & freelance income after fees and tax', href: '/nepal/finance/freelancer-take-home-calculator' },
+      { title: 'Remittance Calculator', description: 'Foreign currency to NPR at NRB rates', href: '/nepal/finance/remittance-calculator' },
+    ]} />
+
+    <!-- SEO content -->
+    <div class="mt-10 max-w-3xl space-y-5">
+      <section>
+        <h2 class="text-[15px] font-bold mb-1.5" style="color: var(--nk-text);">Jobs &amp; Salaries in Nepal</h2>
+        <p class="seo-p">Salaries in Nepal vary widely by profession. Technical and licensed roles — software developers, engineers, nurses, trekking guides — command higher ranges because their skills are scarce and portable. Office support, retail, hospitality, and helper roles start lower but often include meals, accommodation, tips, or overtime that raise real take-home pay. Open any profession above for its typical estimated monthly earnings.</p>
+      </section>
+      <section>
+        <h2 class="text-[15px] font-bold mb-1.5" style="color: var(--nk-text);">Entry-level vs experienced earnings</h2>
+        <p class="seo-p">Freshers in most fields start around Rs 15,000–35,000 per month. The first 2–3 years matter most: workers who add provable skills — English fluency, Excel and computer use, a driving or trade license, or a portfolio — commonly double their starting pay. Senior technicians, specialists, and managers with 5+ years reach Rs 40,000–1,50,000+, particularly in IT, banking, healthcare, and construction supervision.</p>
+      </section>
+      <section>
+        <h2 class="text-[15px] font-bold mb-1.5" style="color: var(--nk-text);">Kathmandu vs outside Kathmandu</h2>
+        <p class="seo-p">Kathmandu Valley pays roughly 15–25% more than smaller cities for the same job, but rent inside the Ring Road can erase that premium. Pokhara and Chitwan sit in the middle, while Terai towns and hill districts pay less in cash yet cost far less to live in. If you can work remotely for Kathmandu or foreign clients while living elsewhere, that gap becomes pure savings.</p>
+      </section>
+      <section>
+        <h2 class="text-[15px] font-bold mb-1.5" style="color: var(--nk-text);">Private vs government jobs</h2>
+        <p class="seo-p">Government jobs — through Lok Sewa, security forces, public schools, and hospitals — offer grade-based salaries plus pensions, allowances, and unmatched job security. Private jobs vary more: entry pay is similar, but high performers in banking, IT, sales, and skilled trades can out-earn government scales within a few years. Many Nepalis prepare for Lok Sewa while working privately — a practical hedge either way.</p>
+      </section>
+      <section>
+        <h2 class="text-[15px] font-bold mb-1.5" style="color: var(--nk-text);">Skills that increase earning potential</h2>
+        <p class="seo-p">Across almost every profession on this page, the same multipliers appear: spoken and written English, computer and smartphone fluency, a two- or four-wheeler license, and one certified trade skill (electrical, plumbing, caregiving, cooking, tailoring, guiding). Digital skills — programming, design, video editing, digital marketing — unlock remote and freelance income on top of a day job.</p>
+      </section>
+      <section>
+        <h2 class="text-[15px] font-bold mb-1.5" style="color: var(--nk-text);">Nepal vs foreign employment</h2>
+        <p class="seo-p">Gulf and Malaysia contracts typically equal Rs 35,000–80,000 per month, while caregiver and skilled roles in Israel, Romania, or similar destinations can exceed Rs 1,00,000. That headline figure is not savings, though — deduct recruitment fees, medical and insurance costs, and living expenses abroad first. Compare the real numbers with SolutionsNepal’s Foreign Job Salary &amp; Real Savings calculator before signing a contract.</p>
+      </section>
+      <section>
+        <h2 class="text-[15px] font-bold mb-1.5" style="color: var(--nk-text);">Frequently asked questions</h2>
+        <div class="space-y-1.5">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color: var(--nk-border); background-color: var(--nk-surface);">
+              <summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color: var(--nk-text);">{item.q}</summary>
+              <div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);"><p class="pt-2">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+      <p class="text-[11.5px] leading-relaxed" style="color: var(--nk-text-tertiary);">
+        Methodology: ranges on this page are typical estimated monthly earnings compiled from public job
+        postings, manpower agencies, and worker surveys in Nepal (2024–2026). They exclude occasional
+        extras like Dashain bonus, tips, overtime, and accommodation unless noted. {LEGAL_MINIMUM_NOTE} Each
+        profession page lists its sources and was last verified in October 2026. Always confirm pay,
+        duties, and contract terms with the employer before accepting a job.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('job-search');
+    const clearBtn = document.getElementById('job-clear');
+    const countEl = document.getElementById('job-count');
+    const emptyEl = document.getElementById('job-empty');
+    const cards = Array.from(document.querySelectorAll('.job-card'));
+    const chipBtns = Array.from(document.querySelectorAll('[data-filter]'));
+    let activeFilter = 'all';
+
+    function applyFilter() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+      const words = q.split(/\s+/).filter(Boolean);
+      let shown = 0;
+      cards.forEach((c) => {
+        const tags = (c.dataset.tags || '').split(' ');
+        const tagOk = activeFilter === 'all' || tags.includes(activeFilter);
+        const blob = c.dataset.search || '';
+        const qOk = words.every((w) => blob.includes(w));
+        const show = tagOk && qOk;
+        c.classList.toggle('hidden', !show);
+        if (show) shown += 1;
+      });
+      const total = cards.length;
+      countEl.textContent = shown === total
+        ? `Showing all ${total} professions`
+        : `Showing ${shown} of ${total} professions`;
+      emptyEl.classList.toggle('hidden', shown !== 0);
+      clearBtn.classList.toggle('hidden', q.length === 0);
+    }
+
+    chipBtns.forEach((b) => b.addEventListener('click', () => {
+      activeFilter = b.dataset.filter;
+      chipBtns.forEach((x) => {
+        const on = x === b;
+        x.classList.toggle('chip-active', on);
+        x.setAttribute('aria-checked', String(on));
+      });
+      applyFilter();
+    }));
+    searchInput.addEventListener('input', applyFilter);
+    clearBtn.addEventListener('click', () => { searchInput.value = ''; searchInput.focus(); applyFilter(); });
+    document.getElementById('job-empty-reset').addEventListener('click', () => {
+      searchInput.value = '';
+      activeFilter = 'all';
+      chipBtns.forEach((x, i) => {
+        const on = i === 0;
+        x.classList.toggle('chip-active', on);
+        x.setAttribute('aria-checked', String(on));
+      });
+      applyFilter();
+    });
+
+    applyFilter();
+  </script>
+
+  <style>
+    .jobs-wrap { overflow-x: clip; }
+
+    /* Filter chips: horizontal scroll on mobile, clean row on desktop */
+    .chip-scroll {
+      display: flex; gap: 6px; overflow-x: auto;
+      padding-bottom: 6px; margin-inline: -16px; padding-inline: 16px;
+      scrollbar-width: thin; -webkit-overflow-scrolling: touch;
+    }
+    @media (min-width: 640px) {
+      .chip-scroll { flex-wrap: wrap; overflow-x: visible; margin-inline: 0; padding-inline: 0; }
+    }
+    .chip {
+      display: inline-flex; align-items: center;
+      font-size: 12px; font-weight: 500; white-space: nowrap; flex-shrink: 0;
+      padding: 7px 14px; border-radius: 9999px;
+      border: 1px solid var(--nk-border);
+      color: var(--nk-text-secondary); background: var(--nk-surface);
+      cursor: pointer; transition: all 150ms ease;
+      font-family: var(--font-sans); min-height: 36px;
+    }
+    .chip:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+    .chip-active { background: var(--nk-accent); color: #fff; border-color: transparent; font-weight: 600; }
+    .chip:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+
+    /* Market at a glance — single strip */
+    .market-strip {
+      border: 1px solid var(--nk-border); border-radius: var(--radius-md);
+      background: var(--nk-surface); padding: 10px 14px; margin-bottom: 20px;
+    }
+    .market-line { font-size: 13px; color: var(--nk-text-secondary); margin: 0; }
+    .market-line strong { color: var(--nk-text); }
+    .market-unit { color: var(--nk-text-tertiary); font-size: 12px; }
+    .market-note { font-size: 11px; color: var(--nk-text-tertiary); margin: 2px 0 0; }
+
+    /* Job cards: whole card links to the detail page */
+    .job-card {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      padding: 13px 14px; border-radius: var(--radius-lg);
+      border: 1px solid var(--nk-border); background-color: var(--nk-card-bg);
+      text-decoration: none; min-width: 0;
+      transition: border-color var(--duration-fast) ease;
+    }
+    .job-card:hover { border-color: var(--nk-border-strong); }
+    .job-card:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+    .job-go {
+      display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
+      font-size: 12px; font-weight: 600; color: var(--nk-accent); white-space: nowrap;
+      padding-top: 2px;
+    }
+    .job-go span { transition: transform var(--duration-fast) ease; }
+    .job-card:hover .job-go span { transform: translateX(2px); }
+
+    .seo-p { font-size: 12.5px; line-height: 1.65; color: var(--nk-text-secondary); margin: 0; }
+
+    @media print {
+      #job-search, .chip-scroll, .job-go { display: none !important; }
+    }
+  </style>
+</BaseLayout>

@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import GpaPercentageConverter from '../../../components/tools/GpaPercentageConverter.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'GPA to Percentage Converter – GPA, Percentage & Division | SolutionsNepal';
+const description = 'Convert GPA to percentage, percentage to GPA, and GPA to division. Supports multiple grading systems used in Nepal.';
+
+const faqItems = [
+  {
+    q: 'How do I convert GPA to percentage?',
+    a: 'Select your grading system, enter your GPA, and click Convert. The formula depends on the grading system — for a 4.0 scale, percentage = (GPA ÷ 4.0) × 100.',
+  },
+  {
+    q: 'How do I convert percentage to GPA?',
+    a: 'Select Percentage → GPA mode, choose your grading system, enter the percentage, and click Convert.',
+  },
+  {
+    q: 'Is GPA × 25 always correct?',
+    a: 'No. There is no universal GPA × 25 rule. Different institutions and grading systems use different conversion methods. Always use the conversion specified by your institution.',
+  },
+  {
+    q: 'What is 3.5 GPA in percentage?',
+    a: 'On a standard 4.0 scale, 3.5 GPA ≈ 87.5%. However, this depends on the specific grading system used by your institution.',
+  },
+  {
+    q: 'What is 80% in GPA?',
+    a: 'On a standard 4.0 scale, 80% ≈ 3.2 GPA. The exact conversion depends on your grading system.',
+  },
+  {
+    q: 'How do I convert GPA to division?',
+    a: 'Select GPA → Division mode, choose your grading system, and enter your GPA. The division boundaries are based on the selected grading system.',
+  },
+  {
+    q: 'Does every university use the same GPA scale?',
+    a: 'No. GPA scales and conversion methods vary between universities, countries, and programs. Always use the grading system that applies to your institution.',
+  },
+  {
+    q: 'Which GPA conversion should I use for official applications?',
+    a: 'Use the conversion method specified by the institution or organization you are applying to. If no specific method is required, use the standard conversion for your grading system.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'GPA to Percentage Converter',
+      description: 'Convert GPA to percentage, percentage to GPA, and GPA to division.',
+      url: 'https://solutionsnepal.com/nepal/education/gpa-percentage',
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <main class="mx-auto px-4 py-10 sm:py-14" style="max-width:900px;">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Education', href: '/nepal/education' },
+      { label: 'GPA to Percentage' },
+    ]} />
+    <div class="mb-6 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">GPA to Percentage Converter</h1>
+      <p class="mt-2 text-sm max-w-lg mx-auto" style="color:var(--nk-text-secondary);">Convert GPA to percentage, percentage to GPA, and GPA to division for grading systems used in Nepal.</p>
+    </div>
+    <!-- Calculator -->
+    <GpaPercentageConverter />
+
+    <!-- SEO Content -->
+    <section class="mt-16 space-y-8 text-sm" style="color:var(--nk-text-secondary);max-width:900px;">
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">GPA to Percentage</h2>
+        <p>GPA-to-percentage conversion depends on the applicable grading system. For a standard 4.0 scale, the formula is: Percentage = (GPA ÷ 4.0) × 100. However, different institutions may use different conversion methods.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Percentage to GPA</h3>
+        <p>The reverse conversion also depends on the grading scale. For a standard 4.0 scale: GPA = (Percentage ÷ 100) × 4.0. Always verify the conversion method with your institution.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">GPA to Division</h3>
+        <p>Division or classification is determined by the relevant academic system. Different institutions define different boundaries for First Division, Second Division, and Third Division.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Is GPA × 25 Always Correct?</h3>
+        <p>There is <strong>no universal GPA × 25 rule</strong>. While some institutions use this simple formula, many others use different conversion methods. Students should always use the conversion method specified by their institution or the organization they are applying to.</p>
+        <div class="my-2 px-3 py-2 rounded-lg text-[13px]" style="background:var(--nk-bg);">
+          <strong>Example:</strong> On a 4.0 scale, GPA × 25 gives 3.6 × 25 = 90%. But the standard formula (GPA ÷ 4.0) × 100 gives 3.6 ÷ 4.0 × 100 = 90%. These happen to match, but this is not always the case with different grading scales.
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-base font-semibold mb-3" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <div class="pt-4" style="border-top:1px solid var(--nk-border);">
+        <p class="text-[11px]" style="color:var(--nk-text-tertiary);">SolutionsNepal's GPA converter supports multiple grading systems. GPA and percentage conversion can vary by institution. Always verify with your institution for official purposes.</p>
+      </div>
+    </section>
+
+    <Disclaimer variant="education" />
+    <RelatedTools tools={[
+      { title: 'SEE GPA Calculator', description: 'SEE GPA from subject grades', href: '/nepal/education/see-gpa' },
+      { title: 'NEB GPA Calculator', description: 'Class 11 & 12 +2 GPA', href: '/nepal/education/neb-gpa-calculator' },
+      { title: 'CGPA Calculator', description: 'Semester GPA to CGPA', href: '/nepal/education/cgpa-calculator' },
+      { title: 'All Education Tools', description: 'Browse education calculators', href: '/nepal/education' },
+    ]} />
+  </main>
+</BaseLayout>

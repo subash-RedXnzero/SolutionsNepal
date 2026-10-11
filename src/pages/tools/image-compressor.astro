@@ -1,0 +1,409 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  {title:'Nepali Unicode',description:'Type Nepali using English letters',href:'/nepal/tools/nepali-unicode'},
+  {title:'Gold Price Nepal',description:"Check today's gold price",href:'/nepal/gold-price-nepal'},
+  {title:'Fuel Price Nepal',description:"Check today's fuel prices",href:'/nepal/fuel-price-nepal'},
+];
+
+const faqItems = [
+  {q:'How does the image compressor work?',a:'Upload your image, select a target file size, and click Compress. The tool automatically optimizes your image using smart compression to reach your target while keeping the best possible visual quality.'},
+  {q:'Will compressing my image reduce its quality?',a:'The compressor tries to preserve as much quality as possible while meeting your target size. For very aggressive targets (like compressing a 2.8 MB photo to 20 KB), some quality reduction is necessary to reach that size.'},
+  {q:'What image formats are supported?',a:'The compressor supports JPG, JPEG, PNG, and WebP images. If the best compression is achieved by converting to a different format (e.g., PNG to WebP), the tool will clearly show the output format.'},
+  {q:'Can I compress a PNG image?',a:'Yes. The compressor first tries lossless PNG optimization, then converts to WebP or JPEG if needed to reach your target size. The output format is clearly shown if it changes.'},
+  {q:'Why was my image not compressed to exactly the target size?',a:'Some images are already very compact, or the target is extremely small. The tool shows the best possible result and explains that further reduction would significantly reduce image quality.'},
+  {q:'Is my image uploaded to a server?',a:'No. All processing happens directly in your browser. Your images are never uploaded to any server. We cannot see, store, or access your images.'},
+];
+---
+
+<BaseLayout
+  title="Smart Image Compressor - Compress Images to 20KB, 50KB, 100KB & More | SolutionsNepal"
+  description="Compress JPG, PNG and WebP images to your target file size. Smart compression automatically optimizes your image while keeping the best possible quality."
+  jsonLd={[{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Image Compressor",
+    "description": "Smart image compression to your target file size. Supports JPG, PNG and WebP.",
+    "url": "https://solutionsnepal.com/tools/image-compressor",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "NPR" }
+  }, {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }]}
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{label:"Tools",href:"/tools"},{label:"Image Compressor"}]} />
+
+    <!-- Header -->
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color:var(--nk-text);">Image Compressor</h1>
+      <p class="mt-1 text-xs sm:text-sm" style="color:var(--nk-text-secondary);">Compress JPG, PNG and WebP images to your target file size.</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="rounded-xl border overflow-hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+
+      <!-- Upload Area (shown when no image) -->
+      <div id="upload-area" class="p-6 sm:p-8 text-center cursor-pointer transition-colors" style="border-bottom:1px dashed var(--nk-border);" tabindex="0" role="button" aria-label="Upload image">
+        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" aria-label="Choose image file" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;" />
+        <div id="upload-content">
+          <div class="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center" style="background-color:var(--nk-bg);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--nk-text-secondary);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          </div>
+          <p class="text-sm font-medium mb-0.5" style="color:var(--nk-text);">Click to upload or drag and drop</p>
+          <p class="text-[11px]" style="color:var(--nk-text-secondary);">JPG • PNG • WebP</p>
+        </div>
+      </div>
+
+      <!-- Image Info (shown after upload) -->
+      <div id="image-info" class="hidden px-4 py-3" style="border-bottom:1px solid var(--nk-border);">
+        <div class="flex items-center gap-3">
+          <div class="flex-shrink-0 rounded-md overflow-hidden" style="background-color:var(--nk-bg);width:48px;height:48px;">
+            <img id="preview-img" class="w-full h-full object-cover" alt="Image preview" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <p id="info-name" class="text-[13px] font-medium truncate" style="color:var(--nk-text);"></p>
+            <p class="text-[11px] mt-0.5" style="color:var(--nk-text-secondary);"><span id="info-size"></span> · <span id="info-dims"></span> · <span id="info-format"></span></p>
+          </div>
+          <button id="remove-btn" class="flex-shrink-0 p-1.5 rounded-md transition-colors hover:opacity-70" style="color:var(--nk-text-secondary);" aria-label="Remove image">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Target Size -->
+      <div id="target-section" class="hidden px-4 py-3" style="border-bottom:1px solid var(--nk-border);">
+        <p class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--nk-text-secondary);">Target Size</p>
+        <div class="grid grid-cols-4 gap-1.5 mb-2">
+          <button class="target-btn text-[11px] py-1.5 rounded-md border font-medium transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" data-size="20480">20 KB</button>
+          <button class="target-btn text-[11px] py-1.5 rounded-md border font-medium transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" data-size="51200">50 KB</button>
+          <button class="target-btn target-active text-[11px] py-1.5 rounded-md border font-medium transition-all" style="border-color:var(--nk-accent);color:var(--nk-accent);background-color:var(--nk-bg);" data-size="102400">100 KB</button>
+          <button class="target-btn text-[11px] py-1.5 rounded-md border font-medium transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" data-size="153600">150 KB</button>
+          <button class="target-btn text-[11px] py-1.5 rounded-md border font-medium transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" data-size="204800">200 KB</button>
+          <button class="target-btn text-[11px] py-1.5 rounded-md border font-medium transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" data-size="307200">300 KB</button>
+          <button class="target-btn text-[11px] py-1.5 rounded-md border font-medium transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" data-size="512000">500 KB</button>
+          <button class="target-btn text-[11px] py-1.5 rounded-md border font-medium transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" data-size="1048576">1 MB</button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="custom-target-btn" class="text-[10px] px-2.5 py-1 rounded-md border font-medium transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Custom</button>
+          <div id="custom-target-input" class="hidden flex items-center gap-1.5">
+            <input inputmode="decimal" id="custom-size" type="number" min="1" max="50000" placeholder="Size" class="px-2 py-1 rounded-md border text-[11px] w-16" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);" />
+            <select id="custom-unit" class="px-1.5 py-1 rounded-md border text-[10px]" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);">
+              <option value="1024">KB</option>
+              <option value="1048576">MB</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compress Button -->
+      <div id="compress-section" class="hidden px-4 py-3">
+        <button id="compress-btn" class="w-full py-2.5 text-[13px] font-semibold rounded-lg transition-all" style="background-color:var(--nk-accent);color:white;">
+          Compress Image
+        </button>
+      </div>
+
+      <!-- Result -->
+      <div id="result" class="hidden px-4 py-3" style="border-top:1px solid var(--nk-border);background-color:var(--nk-bg);">
+        <div class="grid grid-cols-3 gap-2 mb-2">
+          <div class="text-center py-2 rounded-md" style="background-color:var(--nk-surface);border:1px solid var(--nk-border);">
+            <p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Original</p>
+            <p id="res-original" class="text-sm font-bold" style="color:var(--nk-text);"></p>
+          </div>
+          <div class="text-center py-2 rounded-md" style="background-color:var(--nk-surface);border:1px solid var(--nk-border);">
+            <p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Target</p>
+            <p id="res-target" class="text-sm font-bold" style="color:var(--nk-text);"></p>
+          </div>
+          <div class="text-center py-2 rounded-md" style="background-color:var(--nk-surface);border:1px solid var(--nk-border);">
+            <p id="res-result-label" class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Compressed</p>
+            <p id="res-result" class="text-sm font-bold" style="color:var(--nk-accent);"></p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] mb-1" style="color:var(--nk-text-secondary);">
+          <span>Saved <span id="res-saved" class="font-semibold" style="color:var(--nk-text);"></span></span>
+          <span id="res-status" class="font-semibold"></span>
+        </div>
+
+        <!-- Format change -->
+        <p id="res-format-change" class="hidden text-[10px] mb-2" style="color:var(--nk-text-secondary);">↗ <span id="res-format-text"></span></p>
+
+        <!-- Message -->
+        <p id="res-message" class="text-[10px] leading-relaxed mb-2" style="color:var(--nk-text-secondary);"></p>
+
+        <!-- Actions -->
+        <div class="flex gap-2">
+          <a id="download-btn" class="flex-1 text-center py-2 text-[12px] font-semibold rounded-lg transition-all" style="background-color:var(--nk-accent);color:white;text-decoration:none;" aria-label="Download compressed image" download>Download Image</a>
+          <button id="reset-btn" class="px-3 py-2 text-[12px] font-medium rounded-lg border transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" aria-label="Reset and choose another image">Reset</button>
+        </div>
+      </div>
+
+    </div><!-- /main card -->
+
+    <!-- Privacy -->
+    <p class="mt-3 text-center text-[10px]" style="color:var(--nk-text-secondary);">🔒 Your image is processed in your browser and is not uploaded to our server.</p>
+
+    <!-- SEO Content -->
+    <div class="mt-8 space-y-5">
+      <h2 class="text-base font-bold" style="color:var(--nk-text);">How smart image compression works</h2>
+      <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">SolutionsNepal's image compressor uses smart compression to reduce your image to your target file size. It automatically chooses the best compression strategy for your image format — whether that's optimizing JPEG quality, converting PNG to WebP, or adjusting dimensions while preserving aspect ratio.</p>
+
+      <h3 class="text-sm font-semibold" style="color:var(--nk-text);">Supported formats</h3>
+      <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+        <li>• <strong style="color:var(--nk-text);">JPG / JPEG</strong> — Quality optimization with metadata removal</li>
+        <li>• <strong style="color:var(--nk-text);">PNG</strong> — Lossless optimization, then WebP or JPEG conversion if needed</li>
+        <li>• <strong style="color:var(--nk-text);">WebP</strong> — Quality optimization with JPEG fallback</li>
+      </ul>
+
+      <h3 class="text-sm font-semibold" style="color:var(--nk-text);">How it works</h3>
+      <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+        <li>• Upload your image</li>
+        <li>• Select a target file size (20 KB to 1 MB, or custom)</li>
+        <li>• The compressor intelligently optimizes your image</li>
+        <li>• Download the result</li>
+      </ul>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-8 space-y-3">
+      <h2 class="text-base font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+</BaseLayout>
+
+<script>
+  import { compressLosslessToTarget, formatBytes, getExtFromMime, isSupported } from '../../lib/converters/image-compress.js';
+  import { saveFileAs } from '../../lib/utils/save-file.js';
+
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('file-input');
+  const imageInfo = document.getElementById('image-info');
+  const targetSection = document.getElementById('target-section');
+  const compressSection = document.getElementById('compress-section');
+  const previewImg = document.getElementById('preview-img');
+  const infoName = document.getElementById('info-name');
+  const infoSize = document.getElementById('info-size');
+  const infoDims = document.getElementById('info-dims');
+  const infoFormat = document.getElementById('info-format');
+  const removeBtn = document.getElementById('remove-btn');
+  const compressBtn = document.getElementById('compress-btn');
+  const resultDiv = document.getElementById('result');
+  const resOriginal = document.getElementById('res-original');
+  const resTarget = document.getElementById('res-target');
+  const resResult = document.getElementById('res-result');
+  const resResultLabel = document.getElementById('res-result-label');
+  const resSaved = document.getElementById('res-saved');
+  const resStatus = document.getElementById('res-status');
+  const resFormatChange = document.getElementById('res-format-change');
+  const resFormatText = document.getElementById('res-format-text');
+  const resMessage = document.getElementById('res-message');
+  const downloadBtn = document.getElementById('download-btn');
+  const resetBtn = document.getElementById('reset-btn');
+  const customTargetBtn = document.getElementById('custom-target-btn');
+  const customTargetInput = document.getElementById('custom-target-input');
+  const customSizeInput = document.getElementById('custom-size');
+  const customUnitSelect = document.getElementById('custom-unit');
+
+  let currentFile = null;
+  let targetSize = 102400;
+  let resultUrl = null;
+
+  // ── Show / Hide helpers ────────────────────────────────────
+
+  function showUpload() {
+    uploadArea.classList.remove('hidden');
+    imageInfo.classList.add('hidden');
+    targetSection.classList.add('hidden');
+    compressSection.classList.add('hidden');
+    resultDiv.classList.add('hidden');
+  }
+
+  function showControls() {
+    uploadArea.classList.add('hidden');
+    imageInfo.classList.remove('hidden');
+    targetSection.classList.remove('hidden');
+    compressSection.classList.remove('hidden');
+    resultDiv.classList.add('hidden');
+  }
+
+  // ── Upload ─────────────────────────────────────────────────
+
+  function handleFile(file) {
+    if (!isSupported(file)) {
+      alert('Unsupported format. Please upload JPG, PNG, or WebP.');
+      return;
+    }
+    currentFile = file;
+    showPreview(file);
+  }
+
+  function showPreview(file) {
+    const url = URL.createObjectURL(file);
+    previewImg.src = url;
+    infoName.textContent = file.name;
+    infoSize.textContent = formatBytes(file.size);
+    infoFormat.textContent = file.type.replace('image/', '').toUpperCase();
+    previewImg.onload = () => {
+      infoDims.textContent = previewImg.naturalWidth + ' \u00d7 ' + previewImg.naturalHeight;
+    };
+    showControls();
+  }
+
+  uploadArea.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
+  uploadArea.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--nk-accent)'; });
+  uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = ''; });
+  uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.style.borderColor = ''; if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+  document.addEventListener('paste', (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) { if (item.type.startsWith('image/')) { const f = item.getAsFile(); if (f) handleFile(f); break; } }
+  });
+
+  // ── Remove image ───────────────────────────────────────────
+
+  removeBtn.addEventListener('click', () => { resetAll(); });
+
+  // ── Target size ────────────────────────────────────────────
+
+  function selectTarget(bytes) {
+    targetSize = bytes;
+    document.querySelectorAll('.target-btn').forEach(b => { b.style.borderColor = ''; b.style.color = ''; b.style.backgroundColor = ''; });
+    const active = document.querySelector('.target-btn[data-size="' + bytes + '"]');
+    if (active) { active.style.borderColor = 'var(--nk-accent)'; active.style.color = 'var(--nk-accent)'; active.style.backgroundColor = 'var(--nk-bg)'; }
+    customTargetInput.classList.add('hidden');
+    resultDiv.classList.add('hidden');
+  }
+
+  document.querySelectorAll('.target-btn').forEach(btn => {
+    btn.addEventListener('click', () => selectTarget(parseInt(btn.dataset.size)));
+  });
+
+  customTargetBtn.addEventListener('click', () => {
+    customTargetInput.classList.toggle('hidden');
+    document.querySelectorAll('.target-btn').forEach(b => { b.style.borderColor = ''; b.style.color = ''; b.style.backgroundColor = ''; });
+    customTargetBtn.style.borderColor = 'var(--nk-accent)'; customTargetBtn.style.color = 'var(--nk-accent)';
+    if (customSizeInput.value) { targetSize = parseInt(customSizeInput.value) * parseInt(customUnitSelect.value); }
+    resultDiv.classList.add('hidden');
+  });
+
+  function updateCustom() {
+    const v = parseInt(customSizeInput.value);
+    const u = parseInt(customUnitSelect.value);
+    if (v > 0) targetSize = v * u;
+  }
+  customSizeInput.addEventListener('input', updateCustom);
+  customUnitSelect.addEventListener('change', updateCustom);
+
+  // ── Compress ───────────────────────────────────────────────
+
+  compressBtn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    compressBtn.disabled = true;
+    compressBtn.textContent = 'Compressing\u2026';
+    try {
+      const result = await compressLosslessToTarget(currentFile, targetSize);
+      showResult(result);
+    } catch (err) {
+      alert('Compression failed. Please try a different image.');
+    } finally {
+      compressBtn.disabled = false;
+      compressBtn.textContent = 'Compress Image';
+    }
+  });
+
+  function showResult(result) {
+    resOriginal.textContent = formatBytes(result.originalBytes);
+    resTarget.textContent = formatBytes(result.targetBytes);
+    resResult.textContent = formatBytes(result.optimizedBytes);
+
+    const saved = result.originalBytes - result.optimizedBytes;
+    const pct = result.originalBytes > 0 ? ((saved / result.originalBytes) * 100).toFixed(1) : '0.0';
+
+    if (saved > 0) {
+      resSaved.textContent = pct + '% (' + formatBytes(saved) + ' saved)';
+      resSaved.style.color = 'var(--nk-accent)';
+    } else {
+      resSaved.textContent = '0%';
+      resSaved.style.color = 'var(--nk-text-secondary)';
+    }
+
+    if (result.reached) {
+      resStatus.textContent = '\u2713 Compression complete';
+      resStatus.style.color = 'var(--nk-accent)';
+      resResultLabel.textContent = 'Compressed';
+      resResult.style.color = 'var(--nk-accent)';
+    } else {
+      resStatus.textContent = '\u2713 Best possible result';
+      resStatus.style.color = 'var(--nk-accent)';
+      resResultLabel.textContent = 'Best Result';
+      resResult.style.color = 'var(--nk-text)';
+    }
+
+    // Format change
+    if (result.formatChanged) {
+      const origFmt = currentFile.type.replace('image/', '').toUpperCase();
+      const outFmt = (result.outputFormat || '').replace('image/', '').toUpperCase();
+      resFormatText.textContent = origFmt + ' \u2192 ' + outFmt;
+      resFormatChange.classList.remove('hidden');
+    } else {
+      resFormatChange.classList.add('hidden');
+    }
+
+    resMessage.textContent = result.message || '';
+
+    // Download — button keeps href/download as fallback; on click we open the
+    // native Save As picker (File System Access API) where supported.
+    if (resultUrl) URL.revokeObjectURL(resultUrl);
+    resultUrl = URL.createObjectURL(result.blob);
+    const ext = getExtFromMime(result.blob.type || currentFile.type);
+    downloadBtn.href = resultUrl;
+    downloadBtn.download = currentFile.name.replace(/\.[^.]+$/, '') + '-compressed.' + ext;
+    downloadBtn.onclick = (e) => {
+      const href = downloadBtn.getAttribute('href');
+      if (!href || !href.startsWith('blob:') || typeof window.showSaveFilePicker !== 'function') return;
+      e.preventDefault();
+      fetch(href)
+        .then((r) => r.blob())
+        .then((b) => saveFileAs(b, downloadBtn.download || 'download'))
+        .catch(() => {});
+    };
+
+    resultDiv.classList.remove('hidden');
+  }
+
+  // ── Reset ──────────────────────────────────────────────────
+
+  function resetAll() {
+    currentFile = null;
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    fileInput.value = '';
+    selectTarget(102400);
+    showUpload();
+  }
+
+  resetBtn.addEventListener('click', () => { resetAll(); });
+</script>

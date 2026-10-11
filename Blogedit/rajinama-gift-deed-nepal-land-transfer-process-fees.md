@@ -1,0 +1,144 @@
+---
+title: "Rajinama & Gift Deed Nepal 2026: Land Transfer at Malpot — Documents & Fees"
+description: Rajinama (sale) vs gift deed vs inheritance at Malpot in 2026. Documents (Lalpurja, citizenship, tax clearance, map), sale deed steps, gift to family with concessional treatment, CGT, registration vs dakhil kharej, and fees.
+category: Property
+author: SolutionsNepal Team
+authorCredential: Nepal property and land researchers
+date: September 27, 2026
+readTime: 12 min read
+image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop"
+tags: [Rajinama Nepal, Gift Deed Nepal, Bakaspapatra, Lalpurja Transfer, Malpot, Property Nepal]
+relatedTools: [land-registration, property-registration-cost, ropani-to-aana]
+headings:
+  - id: tldr
+    text: "Quick Answer (TL;DR)"
+    level: 2
+  - id: three-routes
+    text: "Three Routes: Rajinama vs Gift vs Inheritance"
+    level: 2
+  - id: where
+    text: Where It Registers
+    level: 2
+  - id: documents
+    text: Required Documents
+    level: 2
+  - id: process-sale
+    text: "Rajinama (Sale) — Step-by-Step"
+    level: 2
+  - id: gift-route
+    text: "Gift Deed to Family — When to Use It"
+    level: 2
+  - id: inheritance-note
+    text: Inheritance Note
+    level: 3
+  - id: registration-vs-mutation
+    text: Registration vs Dakhil Kharej (Do Not Skip the Second Step)
+    level: 2
+  - id: fees-taxes
+    text: Fees & Taxes
+    level: 2
+  - id: mistakes
+    text: Costly Mistakes to Avoid
+    level: 2
+  - id: checklist
+    text: Checklist
+    level: 2
+  - id: sources
+    text: Official Sources & Final Note
+    level: 2
+faqs:
+  - q: What is Rajinama in Nepal?
+    a: "The registered sale deed by which land ownership is transferred from seller to buyer at the Land Revenue Office (Malpot). Under Civil Code Sec 513 (full text at lawcommission.gov.np), ownership of immovable property does not transfer until the deed is registered and the record is updated — a private sale agreement alone is not enough."
+  - q: What is the difference between Rajinama, gift deed and inheritance?
+    a: "Rajinama = sale for consideration (price stated). Gift deed (bakaspatra) = gratuitous transfer, usually to close family with concessional stamp/CGT treatment. Inheritance (Ansha Banda / will-based) uses death/heirship papers instead of a sale deed — all register at Malpot and end with dakhil kharej into the new owner’s name."
+  - q: Where do I register?
+    a: "At the Land Revenue Office (Malpot / Bhumi Prashasan Karyalaya) of the district where the land’s record sits. Kathmandu Valley has multiple offices by area — confirm jurisdiction before visiting."
+  - q: What documents are needed?
+    a: Original Lalpurja, citizenship of buyer & seller (original+copy), cadastral kitta/map (napi naksha), current FY malpot tax receipt (tiro rasid) + municipal tax clearance if a house exists, PAN for larger transactions (PAN is commonly requested at Malpot — a "mandatory since Shrawan 2081" start date is widely repeated but could not be verified against a published circular as of October 2026, so confirm at your office), signed sale/gift deed, 2 witnesses, and loan NOC if mortgaged.
+  - q: Is online transfer possible?
+    a: "Partially: some offices/portals support online form, voucher generation or payment. But deed execution, verification of parties/witnesses, and Lalpurja update remain in-person at Malpot — do not treat any land transfer as fully online unless your office explicitly confirms it."
+  - q: What are the fees?
+    a: "Registration duty is paid by the buyer at deed passing (Bagmati tiers commonly cited as 5.3%/4.8%/3% as of October 2026 — unconfirmed planning figures, confirm the current Finance Act schedule at Malpot; see Land Registration Cost guide). Gift to direct blood relatives gets concessional treatment; CGT on a gift to close family is generally reported as waived. Seller-side CGT on a sale (working figure 10% ≤5y / 7.5% >5y above Rs 10 lakh as of October 2026) applies to a sale, not to a pure gift to close family — confirm both at Malpot/IRD."
+  - q: What is dakhil kharej?
+    a: "After the deed is passed (registration), dakhil kharej (namsari) is the record-update that strikes the old owner and writes the new owner into the field-book/shresta and issues a fresh Lalpurja. Cost is commonly reported as nil/minimal after a passed deed and ~Rs 10 for late inheritance filings — confirm the current fee head at your Malpot, as dakhil-kharej fee practice varies. You are not the recorded owner until this second step is done."
+---
+
+<h2 id="tldr">Quick Answer (TL;DR)</h2>
+
+<strong>Rajinama = registered sale deed at Malpot</strong> — the only way immovable ownership legally moves (<a href="https://lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Civil Code Sec 513 — lawcommission.gov.np</a>). Bring <strong>Lalpurja + citizenship (buyer & seller) + kitta/map + malpot tiro rasid + PAN (commonly requested — confirm at your office)</strong>. <strong>Gift deed (bakaspatra)</strong> to close family gets <strong>concessional stamp/CGT treatment (confirm exact heads at Malpot)</strong>; <strong>inheritance</strong> uses <strong>death + nata pramanit + heir consent</strong>. After the deed is passed, you still need <strong>dakhil kharej</strong> into your name for the new Lalpurja — that second step is what makes you the recorded owner.
+
+<h2 id="three-routes">Three Routes: Rajinama vs Gift vs Inheritance</h2>
+
+- **Rajinama (sale)** — Seller → buyer for a price stated in the deed. Needs sale consideration, full tax/fee chain, seller CGT on gain (>Rs 10 lakh, 10%/7.5% by holding).
+- **Gift deed (bakaspatra)** — Gratuitous transfer, usually to parents/spouse/children/siblings. Concessional stamp duty and CGT generally waived for direct blood relatives — confirm at Malpot with family proof (nata).
+- **Inheritance / will (hakawala)** — Death registration + nata pramanit + consent deed of co-heirs (where multiple) + public notice/sarjomin for distant heirs. No sale price; Rs 10 after 35 days, otherwise free within 35 days.
+
+<h2 id="where">Where It Registers</h2>
+
+At the <strong>Land Revenue Office (Malpot Karyalaya / now often Bhumi Prashasan Karyalaya)</strong> of the <strong>district where the parcel’s record sits</strong>. Kathmandu Valley has several offices by area — confirming jurisdiction before the survey/map step saves a wasted trip. The 2026 rename/deviation to local governments is phased and district-dependent — confirm the office name locally.
+
+<h2 id="documents">Required Documents</h2>
+
+- **Ownership** — Original Lalpurja + latest land-tax (malpot) receipt — must show no arrears
+- **Identity** — Citizenship (original + copy) of buyer & seller; PAN for larger transactions (commonly requested — "since Shrawan 2081" start date unverified, confirm at your office); company docs + board auth if a party is a company
+- **Parcel** — Kitta / napi naksha (cadastral map/field-book record) + Ghar Bato Sifaris (road-access recommendation from the ward) where required
+- **Deed** — Signed Rajinama (sale) or gift deed — with signatures/thumbprints, 2 witnesses, and consideration/relationship stated
+- **Building (if any)** — Municipal building-completion certificate where a house stands on the land
+- **Clearance** — Bank loan/mortgage release NOC if pledged; no rokka/court stay on the parcel
+- **Special cases** — Gift: nata pramanit proving blood relation. Inheritance: death registration + nata + heir consent deed (manjuri). POA if a party cannot attend (notarised; if abroad, via Embassy).
+
+<h2 id="process-sale">Rajinama (Sale) — Step-by-Step</h2>
+
+1. <strong>Verify the parcel:</strong> match Lalpurja (owner/kitta/area/type) vs cadastral map vs ground reality vs tax clearance. Check for joint ownership, rokka, mortgage, or court stay.
+2. <strong>Agree the deal in writing:</strong> price, who bears registration fee vs CGT vs local dues, and payment channel (bank voucher).
+3. <strong>Estimate taxes/fees:</strong> buyer-side registration duty (Bagmati tiers commonly cited as 5.3% metro / 4.8% municipality / 3% rural as of October 2026 — unconfirmed planning figures, confirm the current schedule — see Land Registration Cost guide) + seller-side CGT on gain above Rs 10 lakh (working figure 10% ≤5y / 7.5% >5y as of October 2026).
+4. <strong>Draft the Rajinama:</strong> by a deed writer/lawyer — property details, parties, consideration, witnesses. Print on plain paper/voucher per office practice; sign before witnesses.
+5. <strong>Apply at Malpot:</strong> buyer + seller (+ witnesses/representatives) appear with originals; surveyor verifies map/kitta vs ground.
+6. <strong>Pay at the counter:</strong> registration duty + other official heads via the official counter/bank voucher (keep the receipt — never pay to a broker’s personal wallet).
+7. <strong>Deed passed → waiting for record update:</strong> old Lalpurja is cancelled; keep the registration receipt.
+
+<h2 id="gift-route">Gift Deed to Family — When to Use It</h2>
+
+When ownership moves <strong>without consideration</strong> to a close family member (parents, spouse, children, often siblings), a <strong>gift deed (bakaspatra)</strong> is the correct instrument — not a nominal-price sale. The same Malpot registration applies, but the office applies <strong>concessional treatment</strong> on stamp duty and generally <strong>waives seller CGT</strong> for direct blood relatives. Bring <strong>nata pramanit</strong> to prove the relationship; the concession is denied without it. Gift to a non-relative is treated much like a sale.
+
+<h3 id="inheritance-note">Inheritance Note</h3>
+
+Death-driven transfer uses <strong>death registration + nata pramanit + heir consent (manjuri)</strong>. For heirs beyond spouse/children the office may publish a public notice and conduct a site sarjomin before transferring. See also our <a href="/blog/ansha-banda-property-partition-nepal-process-documents">Ansha Banda guide</a> for joint-family partition vs inheritance.
+
+<h2 id="registration-vs-mutation">Registration vs Dakhil Kharej (Do Not Skip the Second Step)</h2>
+
+- **Registration (rajinama parit)** — Deed is signed/passed at Malpot; registration tax is paid here. Same-day when documents are in order.
+- **Dakhil kharej / namsari** — Office updates the field-book/shresta and issues a fresh Lalpurja in the new owner’s name. Usually same day after a passed deed — no fee after a passed deed, Rs 10 for late inheritance. You are the recorded owner only after this.
+
+> **Real closing:** You are not the recorded owner until the new Lalpurja in your name is in hand. A passed deed without dakhil kharej will block your next sale, mortgage or compensation claim. Do it at purchase time — fixing it years later when the seller is abroad or deceased is painful.
+
+<h2 id="fees-taxes">Fees &amp; Taxes</h2>
+
+- **Registration fee (buyer, at deed pass)** — Province rate on higher of deed price vs government minimum valuation — Bagmati tiers commonly cited as 5.3%/4.8%/3% (unconfirmed planning figures as of October 2026 — confirm at Malpot; see dedicated cost guide + counter schedule)
+- **Gift to close family** — Concessional stamp; seller CGT generally reported as waived with nata proof — confirm the exact concession head at Malpot
+- **CGT (sale, seller)** — On gain > Rs 10 lakh (working figure as of October 2026: 10% if held ≤5y, 7.5% if held >5y, withheld at Malpot — confirm at Malpot/IRD)
+- **Dakhil kharej** — Commonly reported as nil/minimal after a passed deed; inheritance filings after 35 days commonly ~Rs 10 — confirm the current fee head at your Malpot
+
+<h2 id="mistakes">Costly Mistakes to Avoid</h2>
+
+- Using a private sale agreement alone — ownership does not move until registered at Malpot (Civil Code Sec 513)
+- Undervaluing the deed below the government minimum valuation (Malpot recalculates on the higher minimum anyway)
+- Missing a joint owner, heir or company board consent — one missing signature stops registration
+- Land revenue/municipal tax in arrears, hidden bank lien, rokka or court stay on the parcel
+- Paying registration tax/CGT to a broker’s personal wallet — use only the official counter/bank voucher
+- Leaving before dakhil kharej and the new Lalpurja are collected
+
+<h2 id="checklist">Checklist</h2>
+
+- Lalpurja + kitta/map + malpot tiro rasid cleared + citizenships + PAN identified
+- Deed type chosen: Rajinama (price) vs gift deed (family proof) vs inheritance set
+- Correct Malpot office confirmed by district/parcel
+- Tax/fee estimate done: registration fee tier + seller CGT vs gift concession
+- Parties + 2 witnesses + POA where needed appear in person
+- Deed passed → dakhil kharej → new Lalpurja in buyer/new-owner name collected and scanned
+
+<h2 id="sources">Official Sources &amp; Final Note</h2>
+
+Sources: <a href="https://lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Muluki Civil Code 2074 Sec 513 (lawcommission.gov.np)</a>, Land Revenue Act 2034, DoLMA / Malpot Karyalaya (now Bhumi Prashasan Karyalaya) charters, and ward procedure under Local Government Operation Act 2074. Tax rates follow the federal Finance Act and province Economic Acts — confirm the current schedule at your Malpot.
+
+<strong>Last updated: September 27, 2026.</strong> District, municipality and fiscal-year schedules change. Verify the current fee paper at your Malpot before paying — the counter notice prevails over any summary. SolutionsNepal is an educational guide, not a legal authority.

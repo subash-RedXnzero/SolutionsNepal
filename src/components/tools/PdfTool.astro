@@ -1,0 +1,716 @@
+---
+interface Props {
+  mode: 'pdf-to-jpg' | 'jpg-to-pdf' | 'merge-pdf' | 'compress-pdf' | 'pdf-to-word';
+}
+const { mode } = Astro.props;
+---
+
+<div id={`pdf-tool-${mode}`} class="pdf-tool saas-card" data-mode={mode} style="max-width:1020px;margin:0 auto; background:#fff; border:1px solid #EDE9E2; border-radius:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05),0 12px 32px -20px rgba(0,0,0,0.18); overflow:hidden;">
+  <!-- Upload -->
+  <input id="pdf-file-input" class="sr-only" type="file" accept={mode === 'jpg-to-pdf' ? 'image/jpeg,image/png' : 'application/pdf'} multiple={mode === 'jpg-to-pdf' || mode === 'merge-pdf'} aria-label="Choose file" />
+  <label for="pdf-file-input" id="pdf-dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose file or drag and drop" style="width:calc(100% - 32px);margin:16px;min-height:460px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px 36px;cursor:pointer;border:1.5px dashed #DDD8CF;border-radius:20px;background:#FFFEFC;">
+    <span class="drop-icon" aria-hidden="true" style="width:72px;height:72px;border-radius:16px;background:#FDE7E4;color:#E62B1E;border:1px solid #FBD5D0;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M10 13H8"/><path d="M16 13H12"/><path d="M10 17H8"/><path d="M16 17H12"/></svg>
+    </span>
+    <span class="drop-title" style="font-size:clamp(28px,3.6vw,36px);font-weight:700;color:#171717;letter-spacing:-0.015em;line-height:1.2;">{mode === 'jpg-to-pdf' || mode === 'merge-pdf' ? 'Upload your files' : 'Upload your PDF'}</span>
+    <span class="drop-lines" style="margin-top:10px;display:flex;flex-direction:column;gap:2px;font-size:clamp(17px,1.9vw,20px);color:#6B6B6B;line-height:1.45;">
+      <span>Drag & drop your file here</span>
+      <span class="muted">or choose a file</span>
+    </span>
+    <span class="btn-primary drop-cta" aria-hidden="true" style="margin-top:22px;pointer-events:none;min-width:clamp(220px,50%,300px);height:clamp(54px,7vw,62px);padding:0 clamp(24px,3vw,36px);display:inline-flex;align-items:center;justify-content:center;border-radius:9999px;font-size:clamp(18px,2vw,20px);font-weight:700;background:#E62B1E;color:#fff;">{mode === 'jpg-to-pdf' || mode === 'merge-pdf' ? 'Choose files' : 'Choose PDF'}</span>
+    <span class="drop-meta" style="margin-top:18px;font-size:13.5px;color:#A8A29E;letter-spacing:0.01em;">{mode === 'jpg-to-pdf' ? 'JPG, JPEG, or PNG — up to 50 MB' : 'PDF files • Maximum 50 MB'}</span>
+  </label>
+  <p id="pdf-error" class="field-error hidden" role="alert" style="margin:0 16px 16px;padding:10px 12px;border-radius:10px;background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;"></p>
+
+  <!-- Selected files -->
+  <div id="pdf-file-panel" class="hidden" style="border-top:1px solid #F1EDE6;padding:16px;">
+    <div class="mb-2 flex items-center justify-between gap-3">
+      <h2 class="text-xs font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Selected files</h2>
+      <span id="pdf-count" class="text-xs" style="color:var(--nk-text-tertiary);"></span>
+    </div>
+    <div id="pdf-file-list" class="space-y-2"></div>
+  </div>
+
+  <!-- Options -->
+  <div id="pdf-options" class="hidden" style="border-top:1px solid #F1EDE6;padding:16px;"></div>
+
+  <!-- Page selection (pdf-to-jpg only, populated by JS) -->
+  <div id="pdf-pages-panel" class="hidden" style="border-top:1px solid #F1EDE6;padding:16px;"></div>
+
+  <!-- Action -->
+  <div id="pdf-action-wrap" class="hidden" style="border-top:1px solid #F1EDE6;padding:16px;">
+    <button id="pdf-action" type="button" class="btn-primary" style="width:100%;min-width:164px;min-height:46px;padding:0 28px;border-radius:9999px;font-size:15.5px;font-weight:700;background:#E62B1E;color:#fff;border:1px solid #E62B1E;">Process</button>
+  </div>
+
+  <!-- Progress -->
+  <div id="pdf-progress" class="hidden" style="border-top:1px solid #F1EDE6;padding:16px;" aria-live="polite">
+    <p id="pdf-progress-title" class="text-center text-sm font-medium" style="color:var(--nk-text-secondary);">Processing…</p>
+    <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full" style="background:var(--nk-muted);">
+      <div id="pdf-progress-bar" class="h-full rounded-full transition-all duration-200" style="width:0%;background:var(--nk-accent);"></div>
+    </div>
+    <p id="pdf-progress-text" class="mt-1.5 text-center text-xs" style="color:var(--nk-text-tertiary);"></p>
+  </div>
+
+  <!-- Result -->
+  <div id="pdf-result" class="hidden" style="border-top:1px solid #F1EDE6;padding:16px;background:var(--nk-muted);" aria-live="polite">
+    <p id="pdf-result-title" class="font-semibold" style="color:var(--nk-success, #16803C);"></p>
+    <p id="pdf-result-detail" class="mt-1 text-sm" style="color:var(--nk-text-secondary);"></p>
+    <div id="pdf-result-info" class="mt-3"></div>
+    <div id="pdf-result-grid" class="mt-3"></div>
+    <a id="pdf-download" class="hidden" style="display:inline-flex;align-items:center;justify-content:center;min-width:164px;min-height:46px;padding:0 28px;border-radius:9999px;font-size:15.5px;font-weight:700;background:#E62B1E;color:#fff;text-decoration:none;margin-top:12px;width:100%;" download>Download</a>
+    <button id="pdf-reset" type="button" style="display:inline-flex;align-items:center;justify-content:center;width:100%;margin-top:8px;padding:11px 18px;border-radius:9999px;font-size:14px;font-weight:600;background:#fff;color:#171717;border:1px solid #E8E3DC;">Start over</button>
+  </div>
+</div>
+<div class="trust-below" aria-label="benefits" style="max-width:1020px;margin:32px auto 0;display:flex;align-items:center;justify-content:center;gap:20px;font-size:12px;color:#6B6B6B;font-weight:550;">
+  <span class="benefit"><span class="benefit-icon">🔒</span> Private</span>
+  <span class="benefit"><span class="benefit-icon">⚡</span> Fast</span>
+  <span class="benefit"><span class="benefit-icon">✓</span> Free</span>
+</div>
+
+<script>
+  /* ================================================================
+     PDF Tools — Vite-processed script
+     All library imports resolved by Vite at build time.
+     ================================================================ */
+  import { saveFileAs } from '../../lib/utils/save-file.js';
+  // Lazy-load heavy libs only when a file is actually chosen — saves ~1.2 MB initial
+  let _pdfLib = null, _pdfjs = null, _jszip = null, _docx = null;
+  async function getPdfLib(){ if(_pdfLib) return _pdfLib; const m=await import('pdf-lib'); _pdfLib=m; return m; }
+  async function getPdfJs(){ if(_pdfjs) return _pdfjs; const m=await import('pdfjs-dist/legacy/build/pdf.mjs'); m.GlobalWorkerOptions.workerSrc=new URL('pdfjs-dist/legacy/build/pdf.worker.mjs', import.meta.url).toString(); _pdfjs=m; return m; }
+  async function getJSZip(){ if(_jszip) return _jszip; const m=await import('jszip'); _jszip=m.default||m; return _jszip; }
+  async function getDocx(){ if(_docx) return _docx; const m=await import('docx'); _docx=m; return m; }
+  const yieldToMain = () => new Promise(r=>setTimeout(r,0));
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
+  const MAX_FILE_SIZE_LABEL = '50 MB';
+
+  /* ── Copy table ── */
+  const COPY = {
+    'pdf-to-jpg': { action: 'Convert to JPG', accept: 'application/pdf', multiple: false, processing: 'Converting PDF…', success: 'Conversion complete' },
+    'jpg-to-pdf': { action: 'Create PDF', accept: 'image/jpeg,image/png', multiple: true, processing: 'Creating PDF…', success: 'PDF created' },
+    'merge-pdf':  { action: 'Merge PDFs', accept: 'application/pdf', multiple: true, processing: 'Merging PDFs…', success: 'PDFs merged' },
+    'compress-pdf': { action: 'Compress PDF', accept: 'application/pdf', multiple: false, processing: 'Compressing PDF…', success: 'Compression complete' },
+    'pdf-to-word': { action: 'Convert to Word', accept: 'application/pdf', multiple: false, processing: 'Converting…', success: 'Conversion complete' },
+  };
+
+  /* ── Init each tool instance on the page ── */
+  document.querySelectorAll('[data-mode]').forEach((root) => {
+    const mode = root.dataset.mode;
+    const copy = COPY[mode];
+    if (!copy) return;
+
+    /* DOM */
+    const $ = (sel) => root.querySelector(sel);
+    const fileInput = $('#pdf-file-input');
+    const dropzone = $('#pdf-dropzone');
+    const filePanel = $('#pdf-file-panel');
+    const fileList = $('#pdf-file-list');
+    const countEl = $('#pdf-count');
+    const optionsEl = $('#pdf-options');
+    const pagesPanel = $('#pdf-pages-panel');
+    const actionWrap = $('#pdf-action-wrap');
+    const actionBtn = $('#pdf-action');
+    const errorEl = $('#pdf-error');
+    const progressEl = $('#pdf-progress');
+    const progressTitle = $('#pdf-progress-title');
+    const progressBar = $('#pdf-progress-bar');
+    const progressText = $('#pdf-progress-text');
+    const resultEl = $('#pdf-result');
+    const resultTitle = $('#pdf-result-title');
+    const resultDetail = $('#pdf-result-detail');
+    const resultInfo = $('#pdf-result-info');
+    const resultGrid = $('#pdf-result-grid');
+    const downloadBtn = $('#pdf-download');
+    const resetBtn = $('#pdf-reset');
+
+    /* State */
+    let files = [];
+    let busy = false;
+    let resultUrls = [];
+    let selectedPages = new Set();
+    let totalPages = 0;
+    let convertedPages = []; // {pageNum, blob, url, fileName, width, height}
+
+    /* ── Helpers ── */
+    /* Save As: intercept the result button so the file opens the native
+       "Save As" picker (File System Access API). The href/download attrs
+       stay set and remain the fallback on unsupported browsers. */
+    downloadBtn.addEventListener('click', (e) => {
+      const href = downloadBtn.getAttribute('href');
+      if (!href || !href.startsWith('blob:')) return;
+      e.preventDefault();
+      fetch(href)
+        .then((r) => r.blob())
+        .then((b) => saveFileAs(b, downloadBtn.download || 'download'))
+        .catch(() => {});
+    });
+
+    const fmt = (b) => b < 1048576 ? `${Math.max(1, Math.round(b / 1024))} KB` : `${(b / 1048576).toFixed(1)} MB`;
+    const sanitize = (s) => s.replace(/[^a-zA-Z0-9._-]/g, '_').replace(/_+/g, '_');
+    const err = (msg = '') => { errorEl.textContent = msg; errorEl.classList.toggle('hidden', !msg); };
+    const setBusy = (v) => {
+      busy = v;
+      if (actionBtn) { actionBtn.disabled = v; actionBtn.classList.toggle('opacity-60', v); }
+    };
+    const showProgress = (title) => {
+      progressEl.classList.remove('hidden');
+      progressTitle.textContent = title || copy.processing;
+      progressBar.style.width = '0%';
+      progressText.textContent = '';
+    };
+    const setProgress = (cur, total, label) => {
+      progressBar.style.width = `${Math.round((cur / total) * 100)}%`;
+      progressText.textContent = label || `Page ${cur} of ${total}`;
+    };
+    const hideProgress = () => { progressEl.classList.add('hidden'); progressBar.style.width = '0%'; progressText.textContent = ''; };
+    const revokeUrls = () => { resultUrls.forEach(URL.revokeObjectURL); resultUrls = []; };
+    const validate = (list) => {
+      const isPdf = (file) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+      const isImage = (file) => ['image/jpeg', 'image/png'].includes(file.type) || /\.(jpe?g|png)$/i.test(file.name);
+      return [...list].filter((f) => f.size <= MAX_FILE_SIZE && (mode === 'jpg-to-pdf' ? isImage(f) : isPdf(f)));
+    };
+
+    /* ── File list ── */
+    function renderFiles() {
+      fileList.innerHTML = '';
+      countEl.textContent = `${files.length} file${files.length === 1 ? '' : 's'}`;
+      files.forEach((file, idx) => {
+        const row = document.createElement('div');
+        row.className = 'flex min-w-0 items-center gap-2 rounded-md border p-2';
+        row.style.borderColor = 'var(--nk-border)';
+
+        /* thumbnail */
+        if (mode === 'jpg-to-pdf') {
+          const img = document.createElement('img');
+          img.className = 'h-10 w-10 shrink-0 rounded object-cover';
+          img.alt = file.name;
+          img.src = URL.createObjectURL(file);
+          img.onload = () => URL.revokeObjectURL(img.src);
+          row.append(img);
+        } else {
+          const span = document.createElement('span');
+          span.className = 'h-10 w-10 shrink-0 rounded flex items-center justify-center bg-[var(--nk-muted)] text-[10px] font-bold';
+          span.textContent = 'PDF';
+          row.append(span);
+        }
+
+        const info = document.createElement('div');
+        info.className = 'min-w-0 flex-1';
+        info.innerHTML = `<p class="truncate text-sm font-medium" style="color:var(--nk-text)">${file.name}</p><p class="meta text-xs" style="color:var(--nk-text-secondary)">${fmt(file.size)}</p>`;
+        row.append(info);
+
+        /* load page count for PDFs */
+        if (mode !== 'jpg-to-pdf') {
+          (async () => {
+            try {
+              const { getDocument } = await getPdfJs();
+              const data = await file.arrayBuffer();
+              const pdf = await getDocument({ data }).promise;
+              const m = info.querySelector('.meta');
+              if (m) m.textContent = `${fmt(file.size)} · ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`;
+            } catch {}
+          })();
+        }
+
+        /* move buttons for multi-file modes */
+        if (files.length > 1 && (mode === 'merge-pdf' || mode === 'jpg-to-pdf')) {
+          [[-1, '↑'], [1, '↓']].forEach(([d, label]) => {
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = 'nk-btn-icon'; b.textContent = label;
+            b.onclick = () => { const t = idx + d; if (t >= 0 && t < files.length) { [files[idx], files[t]] = [files[t], files[idx]]; renderFiles(); } };
+            info.after(b); // not perfect, but functional
+          });
+        }
+
+        const rm = document.createElement('button');
+        rm.type = 'button'; rm.className = 'nk-btn-icon'; rm.textContent = '×';
+        rm.title = `Remove ${file.name}`;
+        rm.onclick = () => { files.splice(idx, 1); renderFiles(); updateVisibility(); };
+        row.append(rm);
+        fileList.append(row);
+      });
+    }
+
+    function addFiles(list) {
+      const valid = validate(list);
+      if (!valid.length) {
+        err(mode === 'jpg-to-pdf' ? `Choose JPG, JPEG, or PNG images up to ${MAX_FILE_SIZE_LABEL}.` : `Choose a PDF file up to ${MAX_FILE_SIZE_LABEL}.`);
+        return;
+      }
+      err('');
+      files = (mode === 'jpg-to-pdf' || mode === 'merge-pdf') ? [...files, ...valid] : valid.slice(0, 1);
+      renderFiles();
+      updateVisibility();
+      if (mode === 'pdf-to-jpg') setupPagesPanel();
+    }
+
+    function updateVisibility() {
+      const has = files.length > 0;
+      filePanel.classList.toggle('hidden', !has);
+      optionsEl.classList.toggle('hidden', !has);
+      dropzone.classList.toggle('hidden', has && mode !== 'jpg-to-pdf' && mode !== 'merge-pdf');
+
+      if (mode === 'pdf-to-jpg') {
+        actionWrap.classList.add('hidden');
+        pagesPanel.classList.toggle('hidden', !has);
+      } else {
+        actionWrap.classList.toggle('hidden', !has);
+        pagesPanel.classList.add('hidden');
+      }
+    }
+
+    /* ── Dropzone ── label[for] handles click natively — no JS click needed */
+    dropzone.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } };
+    fileInput.onchange = () => { if (fileInput.files.length) addFiles(fileInput.files); fileInput.value = ''; };
+    dropzone.ondragover = (e) => { e.preventDefault(); dropzone.classList.add('border-[var(--nk-accent)]'); };
+    dropzone.ondragleave = () => dropzone.classList.remove('border-[var(--nk-accent)]');
+    dropzone.ondrop = (e) => { e.preventDefault(); dropzone.classList.remove('border-[var(--nk-accent)]'); addFiles(e.dataTransfer.files); };
+
+    /* ── Options per mode ── */
+    function buildOptions() {
+      if (mode === 'pdf-to-jpg') {
+        optionsEl.innerHTML = `
+          <div class="flex flex-wrap items-center gap-3">
+            <label class="text-sm font-medium" for="pdf-quality">Quality</label>
+            <select id="pdf-quality" class="nk-input !w-auto !py-2 text-sm">
+              <option value="standard" selected>Standard (~150 DPI)</option>
+              <option value="high">High (~200 DPI)</option>
+              <option value="print">Print (~300 DPI)</option>
+            </select>
+          </div>`;
+      } else if (mode === 'jpg-to-pdf') {
+        optionsEl.innerHTML = `
+          <div class="grid gap-4 sm:grid-cols-3">
+            <label class="text-sm font-medium">Page size<select id="jpg-page-size" class="nk-input mt-1 !py-2 text-sm"><option value="a4" selected>A4</option><option value="original">Original</option></select></label>
+            <label class="text-sm font-medium">Orientation<select id="jpg-orientation" class="nk-input mt-1 !py-2 text-sm"><option value="auto" selected>Auto</option><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label>
+            <label class="text-sm font-medium">Margin<select id="jpg-margin" class="nk-input mt-1 !py-2 text-sm"><option value="none">None</option><option value="small" selected>Small</option><option value="medium">Medium</option></select></label>
+          </div>`;
+      } else if (mode === 'compress-pdf') {
+        optionsEl.innerHTML = `
+          <fieldset>
+            <legend class="mb-2 text-sm font-medium" style="color:var(--nk-text);">Compression level</legend>
+            <div class="grid gap-2 sm:grid-cols-3">
+              <label class="cursor-pointer rounded-md border p-3 text-sm" style="border-color:var(--nk-border);"><input class="mr-2" type="radio" name="compression" value="maximum" />Maximum<span class="mt-1 block text-xs" style="color:var(--nk-text-secondary);">Smallest file</span></label>
+              <label class="cursor-pointer rounded-md border p-3 text-sm" style="border-color:var(--nk-accent);"><input class="mr-2" type="radio" name="compression" value="balanced" checked />Balanced<span class="mt-1 block text-xs" style="color:var(--nk-text-secondary);">Good balance</span></label>
+              <label class="cursor-pointer rounded-md border p-3 text-sm" style="border-color:var(--nk-border);"><input class="mr-2" type="radio" name="compression" value="high" />High quality<span class="mt-1 block text-xs" style="color:var(--nk-text-secondary);">Best quality</span></label>
+            </div>
+          </fieldset>`;
+      } else if (mode === 'pdf-to-word') {
+        optionsEl.innerHTML = `<p class="text-sm" style="color:var(--nk-text-secondary);">Text and paragraph structure are extracted into an editable .docx. Complex layouts may need cleanup.</p>`;
+      }
+    }
+    buildOptions();
+
+    /* ================================================================
+       PDF-TO-JPG: PAGE SELECTION
+       ================================================================ */
+    async function setupPagesPanel() {
+      if (files.length === 0) return;
+      pagesPanel.innerHTML = '';
+      selectedPages.clear();
+      convertedPages = [];
+      try {
+        const { getDocument } = await getPdfJs();
+        const data = await files[0].arrayBuffer();
+        const pdf = await getDocument({ data }).promise;
+        totalPages = pdf.numPages;
+        for (let i = 1; i <= totalPages; i++) selectedPages.add(i);
+
+        pagesPanel.innerHTML = `
+          <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Pages (${totalPages})</span>
+            <div class="flex gap-2">
+              <button type="button" class="nk-btn-ghost-sm" id="pdf-sel-all">Select all</button>
+              <button type="button" class="nk-btn-ghost-sm" id="pdf-desel-all">Deselect all</button>
+            </div>
+          </div>
+          <div id="pdf-page-chk" class="mb-4 flex flex-wrap gap-2"></div>
+          <button type="button" class="nk-btn nk-btn-primary w-full" id="pdf-convert-btn">Convert ${totalPages} page${totalPages === 1 ? '' : 's'} to JPG</button>
+          <p id="pdf-select-hint" class="mt-2 hidden text-xs text-center" style="color:var(--nk-text-tertiary);">Select at least one page.</p>`;
+
+        const chkContainer = pagesPanel.querySelector('#pdf-page-chk');
+        for (let i = 1; i <= totalPages; i++) {
+          const label = document.createElement('label');
+          label.className = 'flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-medium cursor-pointer transition-colors';
+          label.style.borderColor = 'var(--nk-accent)';
+          label.style.background = 'var(--nk-accent-subtle)';
+          label.style.color = 'var(--nk-text)';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox'; cb.checked = true; cb.className = 'accent-current';
+          cb.onchange = () => { cb.checked ? selectedPages.add(i) : selectedPages.delete(i); syncChk(cb); updateConvertBtn(); };
+          const sp = document.createElement('span');
+          sp.textContent = `Page ${i}`;
+          label.append(cb, sp);
+          chkContainer.append(label);
+        }
+
+        pagesPanel.querySelector('#pdf-sel-all').onclick = () => {
+          for (let i = 1; i <= totalPages; i++) selectedPages.add(i);
+          chkContainer.querySelectorAll('input').forEach((c) => { c.checked = true; syncChk(c); });
+          updateConvertBtn();
+        };
+        pagesPanel.querySelector('#pdf-desel-all').onclick = () => {
+          selectedPages.clear();
+          chkContainer.querySelectorAll('input').forEach((c) => { c.checked = false; syncChk(c); });
+          updateConvertBtn();
+        };
+        pagesPanel.querySelector('#pdf-convert-btn').onclick = runPdfToJpg;
+      } catch {
+        pagesPanel.innerHTML = '<p class="text-xs" style="color:var(--nk-text-tertiary);">Could not read this PDF.</p>';
+      }
+    }
+
+    function syncChk(cb) {
+      const l = cb.closest('label');
+      if (!l) return;
+      l.style.borderColor = cb.checked ? 'var(--nk-accent)' : 'var(--nk-border)';
+      l.style.background = cb.checked ? 'var(--nk-accent-subtle)' : 'transparent';
+    }
+
+    function updateConvertBtn() {
+      const btn = pagesPanel.querySelector('#pdf-convert-btn');
+      const hint = pagesPanel.querySelector('#pdf-select-hint');
+      if (!btn) return;
+      const n = selectedPages.size;
+      btn.textContent = totalPages > 1 ? `Convert ${n} page${n === 1 ? '' : 's'} to JPG` : 'Convert to JPG';
+      btn.disabled = n === 0;
+      btn.classList.toggle('opacity-60', n === 0);
+      if (hint) hint.classList.toggle('hidden', n > 0);
+    }
+
+    /* ================================================================
+       PDF-TO-JPG: CONVERSION
+       ================================================================ */
+    async function runPdfToJpg() {
+      if (busy || !files.length || selectedPages.size === 0) return;
+      err(); setBusy(true); revokeUrls(); convertedPages = [];
+      showProgress('Converting PDF…');
+      try {
+        const { getDocument } = await getPdfJs();
+        const pdf = await getDocument({ data: await files[0].arrayBuffer() }).promise;
+        const quality = root.querySelector('#pdf-quality')?.value || 'standard';
+        const scales = { standard: 1.5, high: 2.0, print: 3.0 };
+        const jpgQ = { standard: 0.82, high: 0.9, print: 0.95 };
+        const scale = scales[quality] || 1.5;
+        const jq = jpgQ[quality] || 0.82;
+        const baseName = sanitize(files[0].name.replace(/\.pdf$/i, ''));
+        const pages = [...selectedPages].sort((a, b) => a - b);
+        const total = pages.length;
+
+        for (let i = 0; i < total; i++) {
+          setProgress(i, total, `Converting page ${i + 1} of ${total}…`);
+          const pageNum = pages[i];
+          try {
+            const page = await pdf.getPage(pageNum);
+            const vp = page.getViewport({ scale });
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.ceil(vp.width);
+            canvas.height = Math.ceil(vp.height);
+            await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+              await yieldToMain();
+            const blob = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', jq));
+            const w = Math.ceil(vp.width);
+            const h = Math.ceil(vp.height);
+            canvas.width = 0; canvas.height = 0;
+            if (blob && blob.type === 'image/jpeg' && blob.size > 0) {
+              const url = URL.createObjectURL(blob);
+              resultUrls.push(url);
+              convertedPages.push({ pageNum, blob, url, fileName: `${baseName}-page-${pageNum}.jpg`, width: w, height: h });
+            } else {
+              convertedPages.push({ pageNum, error: true });
+            }
+          } catch { convertedPages.push({ pageNum, error: true }); }
+        }
+        progressBar.style.width = '100%';
+        hideProgress();
+
+        const ok = convertedPages.filter((p) => !p.error);
+        const fail = convertedPages.filter((p) => p.error);
+        if (!ok.length) throw new Error('No pages could be converted.');
+
+        resultTitle.textContent = `✓ Converted ${ok.length} page${ok.length === 1 ? '' : 's'}`;
+        const parts = [`Original · PDF · ${fmt(files[0].size)} · ${totalPages} page${totalPages === 1 ? '' : 's'}`];
+        if (fail.length) parts.push(`${fail.length} page${fail.length === 1 ? '' : 's'} failed`);
+        resultDetail.textContent = parts.join(' — ');
+
+        /* file info */
+        resultInfo.innerHTML = '';
+        const totalOut = ok.reduce((s, p) => s + p.blob.size, 0);
+        const rows = [['Original', `PDF · ${fmt(files[0].size)} · ${totalPages} page${totalPages === 1 ? '' : 's'}`], ['Output', `JPG · ${fmt(totalOut)} total`]];
+        if (ok.length === 1) rows[1][1] += ` · ${ok[0].width}×${ok[0].height} px`;
+        const tbl = document.createElement('div'); tbl.className = 'grid gap-1 text-xs';
+        rows.forEach(([k, v]) => { const r = document.createElement('div'); r.className = 'flex justify-between gap-4'; r.innerHTML = `<span style="color:var(--nk-text-secondary)">${k}</span><span style="color:var(--nk-text)">${v}</span>`; tbl.append(r); });
+        resultInfo.append(tbl);
+
+        /* thumbnails grid */
+        renderJpgResult(ok);
+        downloadBtn.classList.add('hidden');
+        resultEl.classList.remove('hidden');
+      } catch (e) {
+        hideProgress();
+        err(e.message?.includes('password') ? 'This PDF is password protected.' : `Conversion failed: ${e.message || 'Please try another PDF.'}`);
+      } finally { setBusy(false); }
+    }
+
+    function renderJpgResult(pages) {
+      resultGrid.innerHTML = '';
+      if (pages.length === 1) {
+        const p = pages[0];
+        const img = document.createElement('img');
+        img.src = p.url; img.alt = p.fileName;
+        img.className = 'w-full rounded-md border'; img.style.borderColor = 'var(--nk-border)';
+        img.style.maxHeight = '400px'; img.style.objectFit = 'contain';
+        const w = document.createElement('div'); w.className = 'mt-2 flex justify-center';
+        const dl = document.createElement('button'); dl.type = 'button'; dl.className = 'nk-btn nk-btn-primary'; dl.textContent = 'Download JPG';
+        dl.onclick = () => dlJpg(p); w.append(dl);
+        resultGrid.append(img, w);
+      } else {
+        const g = document.createElement('div'); g.className = 'grid grid-cols-2 gap-3 sm:grid-cols-3';
+        pages.forEach((p) => {
+          const c = document.createElement('div'); c.className = 'rounded-md border p-2'; c.style.borderColor = 'var(--nk-border)'; c.style.background = 'var(--nk-surface)';
+          const img = document.createElement('img'); img.src = p.url; img.alt = p.fileName; img.className = 'mb-2 w-full rounded object-contain'; img.style.height = '120px';
+          const m = document.createElement('p'); m.className = 'truncate text-center text-xs font-medium mb-2'; m.style.color = 'var(--nk-text-secondary)'; m.textContent = `Page ${p.pageNum}`;
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'nk-btn nk-btn-secondary w-full text-xs'; b.textContent = 'Download';
+          b.onclick = () => dlJpg(p);
+          c.append(img, m, b); g.append(c);
+        });
+        const w = document.createElement('div'); w.className = 'mt-3 flex justify-center';
+        const all = document.createElement('button'); all.type = 'button'; all.className = 'nk-btn nk-btn-primary';
+        all.textContent = `Download All (${pages.length} JPGs)`;
+        all.onclick = () => dlAllJpg(pages);
+        w.append(all);
+        resultGrid.append(g, w);
+      }
+    }
+
+    /* ── Save As: File System Access API with anchor fallback ── */
+    async function dlBlob(blob, filename) {
+      await saveFileAs(blob, filename);
+    }
+
+    function dlJpg(p) {
+      dlBlob(p.blob, p.fileName);
+    }
+    async function dlAllJpg(pages) {
+      if (pages.length === 1) return dlJpg(pages[0]);
+      const JSZipCls = await getJSZip();
+        const zip = new JSZipCls();
+      pages.forEach((p) => zip.file(p.fileName, p.blob));
+      const blob = await zip.generateAsync({ type: 'blob' });
+      await dlBlob(blob, `${sanitize(files[0].name.replace(/\.pdf$/i, ''))}-jpgs.zip`);
+    }
+
+    /* ================================================================
+       JPG → PDF
+       ================================================================ */
+    async function runJpgToPdf() {
+       const { PDFDocument, PageSizes } = await getPdfLib();
+      if (busy || !files.length) return;
+      err(); setBusy(true); revokeUrls();
+      showProgress('Creating PDF…');
+      try {
+        const pdf = await PDFDocument.create();
+        const pageSize = root.querySelector('#jpg-page-size')?.value || 'a4';
+        const orient = root.querySelector('#jpg-orientation')?.value || 'auto';
+        const marginName = root.querySelector('#jpg-margin')?.value || 'small';
+        const margin = marginName === 'none' ? 0 : marginName === 'medium' ? 42 : 21;
+
+        for (let i = 0; i < files.length; i++) {
+          setProgress(i, files.length, `Processing image ${i + 1} of ${files.length}…`);
+          const bytes = await files[i].arrayBuffer();
+          const image = files[i].type === 'image/png' ? await pdf.embedPng(bytes) : await pdf.embedJpg(bytes);
+          let [w, h] = pageSize === 'original' ? [image.width + margin * 2, image.height + margin * 2] : PageSizes.A4;
+          const lscape = orient === 'landscape' || (orient === 'auto' && image.width > image.height);
+          if (lscape && pageSize !== 'original') [w, h] = [h, w];
+          const page = pdf.addPage([w, h]);
+          const s = Math.min((w - margin * 2) / image.width, (h - margin * 2) / image.height);
+          page.drawImage(image, { x: (w - image.width * s) / 2, y: (h - image.height * s) / 2, width: image.width * s, height: image.height * s });
+        }
+        progressBar.style.width = '100%'; hideProgress();
+        const blob = new Blob([await pdf.save()], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob); resultUrls.push(url);
+        downloadBtn.href = url; downloadBtn.download = 'solutionsnepal-images.pdf'; downloadBtn.classList.remove('hidden');
+        resultTitle.textContent = `✓ ${copy.success}`;
+        resultDetail.textContent = `${files.length} image${files.length === 1 ? '' : 's'} converted to PDF.`;
+        resultInfo.innerHTML = ''; resultGrid.innerHTML = '';
+        resultEl.classList.remove('hidden');
+      } catch (e) { hideProgress(); err('Failed to create PDF. Please try different images.'); }
+      finally { setBusy(false); }
+    }
+
+    /* ================================================================
+       MERGE PDF
+       ================================================================ */
+    async function runMergePdf() {
+       const { PDFDocument } = await getPdfLib();
+      if (busy || !files.length) return;
+      err(); setBusy(true); revokeUrls();
+      showProgress('Merging PDFs…');
+      try {
+        const out = await PDFDocument.create();
+        for (let i = 0; i < files.length; i++) {
+          setProgress(i, files.length, `Merging file ${i + 1} of ${files.length}…`);
+          const src = await PDFDocument.load(await files[i].arrayBuffer());
+          const pages = await out.copyPages(src, src.getPageIndices());
+          pages.forEach((p) => out.addPage(p));
+        }
+        progressBar.style.width = '100%'; hideProgress();
+        const blob = new Blob([await out.save({ useObjectStreams: true })], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob); resultUrls.push(url);
+        downloadBtn.href = url; downloadBtn.download = 'solutionsnepal-merged.pdf'; downloadBtn.classList.remove('hidden');
+        resultTitle.textContent = `✓ ${copy.success}`;
+        resultDetail.textContent = `${files.length} PDFs merged into one document.`;
+        resultInfo.innerHTML = ''; resultGrid.innerHTML = '';
+        resultEl.classList.remove('hidden');
+      } catch (e) { hideProgress(); err('Failed to merge PDFs. Please check the files are valid.'); }
+      finally { setBusy(false); }
+    }
+
+    /* ================================================================
+       COMPRESS PDF — iterative, never return larger file
+       ================================================================ */
+    async function runCompressPdf() {
+       const { getDocument } = await getPdfJs();
+       const { PDFDocument } = await getPdfLib();
+      if (busy || !files.length) return;
+      err(); setBusy(true); revokeUrls();
+      showProgress('Compressing PDF…');
+      try {
+        const level = root.querySelector('input[name="compression"]:checked')?.value || 'balanced';
+        const originalBytes = await files[0].arrayBuffer();
+        const originalSize = files[0].size;
+
+        /* Strategy: render pages to JPEG at decreasing quality, rebuild PDF.
+           Pick the smallest valid result that's <= original size. */
+        const configs = level === 'maximum'
+          ? [{ scale: 0.7, q: 0.45 }, { scale: 0.8, q: 0.55 }, { scale: 0.9, q: 0.6 }, { scale: 1.0, q: 0.65 }]
+          : level === 'high'
+          ? [{ scale: 1.0, q: 0.75 }, { scale: 1.0, q: 0.82 }, { scale: 1.2, q: 0.85 }]
+          : [{ scale: 0.9, q: 0.6 }, { scale: 1.0, q: 0.7 }, { scale: 1.1, q: 0.75 }, { scale: 1.0, q: 0.8 }];
+
+        let bestBlob = null;
+        let bestSize = Infinity;
+        const srcPdf = await getDocument({ data: originalBytes.slice(0) }).promise;
+        const total = srcPdf.numPages;
+
+        for (const cfg of configs) {
+          try {
+            setProgress(0, total, `Trying compression (quality ${Math.round(cfg.q * 100)}%)…`);
+            const out = await PDFDocument.create();
+            for (let i = 1; i <= total; i++) {
+              setProgress(i, total, `Processing page ${i} of ${total}…`);
+              const page = await srcPdf.getPage(i);
+              const vp = page.getViewport({ scale: cfg.scale });
+              const canvas = document.createElement('canvas');
+              canvas.width = Math.ceil(vp.width);
+              canvas.height = Math.ceil(vp.height);
+              await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+              await yieldToMain();
+              const jpgBlob = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', cfg.q));
+              canvas.width = 0; canvas.height = 0;
+              const img = await out.embedJpg(await jpgBlob.arrayBuffer());
+              const p = out.addPage([vp.width / cfg.scale, vp.height / cfg.scale]);
+              p.drawImage(img, { x: 0, y: 0, width: p.getWidth(), height: p.getHeight() });
+            }
+            const blob = new Blob([await out.save({ useObjectStreams: true })], { type: 'application/pdf' });
+            if (blob.size < bestSize) { bestSize = blob.size; bestBlob = blob; }
+            /* if we're already well under original, stop trying */
+            if (blob.size < originalSize * 0.6) break;
+          } catch { /* skip failed config, try next */ }
+        }
+
+        progressBar.style.width = '100%'; hideProgress();
+
+        if (!bestBlob || bestSize >= originalSize) {
+          /* Could not compress — return original with message */
+          const url = URL.createObjectURL(new Blob([originalBytes], { type: 'application/pdf' }));
+          resultUrls.push(url);
+          downloadBtn.href = url; downloadBtn.download = files[0].name; downloadBtn.classList.remove('hidden');
+          resultTitle.textContent = 'ℹ Could not reduce further';
+          resultDetail.textContent = `Original ${fmt(originalSize)} — this PDF is already optimally compressed or cannot be reduced without significant quality loss.`;
+          resultInfo.innerHTML = ''; resultGrid.innerHTML = '';
+          resultEl.classList.remove('hidden');
+          return;
+        }
+
+        const url = URL.createObjectURL(bestBlob); resultUrls.push(url);
+        downloadBtn.href = url; downloadBtn.download = files[0].name.replace(/\.pdf$/i, '') + '-compressed.pdf'; downloadBtn.classList.remove('hidden');
+        const pct = Math.round((1 - bestSize / originalSize) * 100);
+        resultTitle.textContent = `✓ ${copy.success}`;
+        resultDetail.textContent = `Original ${fmt(originalSize)} → Compressed ${fmt(bestSize)} (${pct}% smaller)`;
+        resultInfo.innerHTML = ''; resultGrid.innerHTML = '';
+        resultEl.classList.remove('hidden');
+      } catch (e) { hideProgress(); err('Compression failed. Please try another PDF.'); }
+      finally { setBusy(false); }
+    }
+
+    /* ================================================================
+       PDF → WORD
+       ================================================================ */
+    async function runPdfToWord() {
+       const { getDocument } = await getPdfJs();
+       const { Document, Packer, Paragraph, TextRun } = await getDocx();
+      if (busy || !files.length) return;
+      err(); setBusy(true); revokeUrls();
+      showProgress('Extracting text…');
+      try {
+        const pdf = await getDocument({ data: await files[0].arrayBuffer() }).promise;
+        const paragraphs = [];
+        for (let i = 1; i <= pdf.numPages; i++) {
+          setProgress(i, pdf.numPages, `Reading page ${i} of ${pdf.numPages}…`);
+          const content = await (await pdf.getPage(i)).getTextContent();
+          const lines = [];
+          for (const item of content.items) {
+            if (!('str' in item) || !item.str.trim()) continue;
+            const y = Math.round(item.transform[5]);
+            let line = lines.find((e) => Math.abs(e.y - y) < 3);
+            if (!line) { line = { y, text: '' }; lines.push(line); }
+            line.text += (line.text ? ' ' : '') + item.str;
+          }
+          lines.sort((a, b) => b.y - a.y);
+          lines.forEach((l) => { if (l.text.trim()) paragraphs.push(new Paragraph({ children: [new TextRun(l.text.trim())] })); });
+          if (i < pdf.numPages) paragraphs.push(new Paragraph({ children: [new TextRun('')] }));
+        }
+        progressBar.style.width = '100%'; hideProgress();
+        if (!paragraphs.length) {
+          err('No selectable text found. This may be a scanned/image PDF — OCR is needed for conversion.');
+          return;
+        }
+        const doc = new Document({ sections: [{ properties: {}, children: paragraphs }] });
+        const blob = await Packer.toBlob(doc);
+        const url = URL.createObjectURL(blob); resultUrls.push(url);
+        downloadBtn.href = url; downloadBtn.download = files[0].name.replace(/\.pdf$/i, '') + '.docx'; downloadBtn.classList.remove('hidden');
+        resultTitle.textContent = `✓ ${copy.success}`;
+        resultDetail.textContent = `Text extracted from ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} into an editable Word document.`;
+        resultInfo.innerHTML = ''; resultGrid.innerHTML = '';
+        resultEl.classList.remove('hidden');
+      } catch (e) { hideProgress(); err('Conversion failed. This PDF may contain only images without selectable text.'); }
+      finally { setBusy(false); }
+    }
+
+    /* ================================================================
+       ACTION DISPATCHER
+       ================================================================ */
+    actionBtn.onclick = () => {
+      if (mode === 'jpg-to-pdf') runJpgToPdf();
+      else if (mode === 'merge-pdf') runMergePdf();
+      else if (mode === 'compress-pdf') runCompressPdf();
+      else if (mode === 'pdf-to-word') runPdfToWord();
+    };
+
+    /* ================================================================
+       RESET
+       ================================================================ */
+    resetBtn.onclick = () => {
+      files = []; revokeUrls(); convertedPages = []; selectedPages.clear(); totalPages = 0;
+      resultEl.classList.add('hidden');
+      renderFiles(); updateVisibility(); err();
+      if (mode === 'pdf-to-jpg') { pagesPanel.innerHTML = ''; pagesPanel.classList.add('hidden'); }
+    };
+  });
+</script>
+
+<style>
+  .pdf-dropzone { color: var(--nk-text-secondary); background: var(--nk-bg); transition: border-color 150ms ease, background-color 150ms ease; }
+  .pdf-dropzone:hover { border-color: var(--nk-accent); background: var(--nk-hover); }
+  .pdf-upload-mark { display: flex; width: 42px; height: 42px; margin: 0 auto 12px; align-items: center; justify-content: center; border-radius: 50%; background: var(--nk-accent-subtle); color: var(--nk-accent); font-size: 24px; }
+</style>

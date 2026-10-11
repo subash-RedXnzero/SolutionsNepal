@@ -1,0 +1,323 @@
+---
+/**
+ * DiscountCalculator — two modes:
+ *   1. Discount Only  (default)
+ *   2. Discount + VAT  (VAT optional, hidden by default)
+ *
+ * Instant calculation, no button needed.
+ */
+const DEFAULT_VAT = 13;
+---
+
+<div id="dc-root" class="nk-card overflow-hidden">
+  <div class="p-5 sm:p-6">
+
+    <!-- Original Price -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1.5" style="color:var(--nk-text-secondary);">Original Price <span class="font-normal">— before discount</span></label>
+      <div class="dc-price-wrap">
+        <span class="dc-price-prefix">Rs.</span>
+        <input
+          id="dc-price"
+          type="number"
+          step="any"
+          min="0"
+          value="5000"
+          placeholder="5000"
+          class="w-full nk-input dc-price-input text-[18px] font-semibold tabular-nums"
+          style="color:var(--nk-text);"
+        />
+      </div>
+    </div>
+
+    <!-- Discount -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1.5" style="color:var(--nk-text-secondary);">Discount <span class="font-normal">— percent off</span></label>
+      <div class="relative">
+        <input
+          id="dc-disc"
+          type="number"
+          step="any"
+          min="0"
+          max="100"
+          value="20"
+          placeholder="20"
+          class="w-full nk-input pr-8 text-[18px] font-semibold tabular-nums"
+          style="color:var(--nk-text);"
+        />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[14px] font-medium pointer-events-none" style="color:var(--nk-text-tertiary);">%</span>
+      </div>
+    </div>
+
+    <!-- Mode toggle -->
+    <div class="mb-4">
+      <p class="text-[13px] font-medium mb-1.5" style="color:var(--nk-text-tertiary);">Calculation</p>
+      <div class="flex rounded-lg overflow-hidden" style="border:1px solid var(--nk-border);">
+        <button id="dc-mode-discount" class="dc-mode flex-1 py-2 text-[13px] font-semibold transition-all" style="background:var(--nk-accent);color:#fff;">Discount Only</button>
+        <button id="dc-mode-vat" class="dc-mode flex-1 py-2 text-[13px] font-medium transition-all" style="background:var(--nk-surface);color:var(--nk-text-secondary);">Discount + VAT</button>
+      </div>
+    </div>
+
+    <!-- Calculate -->
+    <button id="dc-calc" class="w-full py-2.5 rounded-lg text-[14px] font-semibold transition-all hover:opacity-90 active:scale-[0.99] mb-2" style="background-color:var(--nk-accent);color:#fff;">
+      Calculate
+    </button>
+    <p class="text-center text-[13px] mb-4" style="color:var(--nk-text-tertiary);">Result updates automatically as you type</p>
+
+    <!-- VAT (hidden by default) -->
+    <div id="dc-vat-row" class="mb-4 hidden">
+      <label class="block text-sm font-medium mb-1.5" style="color:var(--nk-text-secondary);">VAT Rate <span class="font-normal">— usually 13%</span></label>
+      <div class="flex gap-1.5 mb-2">
+        <button class="dc-vat-chip" data-rate="13">13%</button>
+        <button class="dc-vat-chip" data-rate="0">No VAT</button>
+        <button class="dc-vat-chip" data-rate="custom">Custom</button>
+      </div>
+      <div id="dc-vat-custom" class="hidden relative">
+        <input
+          id="dc-vat"
+          type="number"
+          step="any"
+          min="0"
+          max="100"
+          placeholder="13"
+          class="w-full nk-input pr-8 text-[16px] font-semibold tabular-nums"
+          style="color:var(--nk-text);"
+        />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[14px] font-medium pointer-events-none" style="color:var(--nk-text-tertiary);">%</span>
+      </div>
+    </div>
+
+    <!-- ─── RESULTS ─── -->
+    <div class="rounded-lg p-4 space-y-3" style="background:var(--nk-bg);">
+
+      <!-- You Save -->
+      <div class="flex items-center justify-between">
+        <span class="text-[13px]" style="color:var(--nk-text-secondary);">You Save</span>
+        <span id="dc-save" class="text-[15px] font-bold tabular-nums" style="color:var(--nk-success, #16803C);">Rs. 0</span>
+      </div>
+
+      <!-- Price After Discount (always visible) -->
+      <div class="flex items-center justify-between" style="border-top:1px dashed var(--nk-border);padding-top:10px;">
+        <span class="text-[13px]" style="color:var(--nk-text-secondary);">Price After Discount</span>
+        <span id="dc-after-disc" class="text-[14px] font-semibold tabular-nums" style="color:var(--nk-text);">Rs. 0</span>
+      </div>
+
+      <!-- VAT amount (VAT mode only) -->
+      <div id="dc-vat-amount-row" class="hidden items-center justify-between">
+        <span class="text-[13px]" style="color:var(--nk-text-secondary);">VAT (<span id="dc-vat-label">13</span>%)</span>
+        <span id="dc-vat-amount" class="text-[14px] font-semibold tabular-nums" style="color:var(--nk-text);">Rs. 0</span>
+      </div>
+
+      <!-- Final Price -->
+      <div class="flex items-center justify-between" style="border-top:1px solid var(--nk-border);padding-top:10px;">
+        <span class="text-[14px] font-semibold" style="color:var(--nk-text);">Final Price</span>
+        <span id="dc-final" class="text-[28px] font-bold tracking-[-0.02em] tabular-nums leading-tight" style="color:var(--nk-accent);">Rs. 0</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-4 flex gap-2">
+      <button id="dc-copy" class="nk-btn nk-btn-secondary nk-btn-sm flex-1 text-[13px]">Copy Result</button>
+      <button id="dc-reset" class="nk-btn nk-btn-ghost nk-btn-sm text-[13px]">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = (sel: string) => document.getElementById(sel);
+
+  const fmt = (n: number) => {
+    if (!Number.isFinite(n)) return '0';
+    const rounded = Math.round(n * 100) / 100;
+    if (Number.isInteger(rounded) && Math.abs(rounded) < 1e15) return rounded.toLocaleString('en-US');
+    const s = rounded.toFixed(2).replace(/\.?0+$/, '');
+    const [int, dec] = s.split('.');
+    const formatted = Number(int).toLocaleString('en-US');
+    return dec ? `${formatted}.${dec}` : formatted;
+  };
+
+  const priceEl = $('dc-price') as HTMLInputElement;
+  const discEl = $('dc-disc') as HTMLInputElement;
+  const vatEl = $('dc-vat') as HTMLInputElement;
+  const vatRow = $('dc-vat-row')!;
+  const vatCustom = $('dc-vat-custom')!;
+  const vatLabel = $('dc-vat-label')!;
+  const afterDiscEl = $('dc-after-disc')!;
+  const vatAmountRow = $('dc-vat-amount-row')!;
+  const vatAmountEl = $('dc-vat-amount')!;
+  const saveEl = $('dc-save')!;
+  const finalEl = $('dc-final')!;
+  const modeDiscount = $('dc-mode-discount')!;
+  const modeVat = $('dc-mode-vat')!;
+  let showVat = false;
+  let vatRate = 13;
+  let lastResultText = '';
+
+  function setMode(vat: boolean) {
+    showVat = vat;
+    if (vat) {
+      modeVat.style.background = 'var(--nk-accent)';
+      modeVat.style.color = '#fff';
+      modeVat.style.fontWeight = '600';
+      modeDiscount.style.background = 'var(--nk-surface)';
+      modeDiscount.style.color = 'var(--nk-text-secondary)';
+      modeDiscount.style.fontWeight = '500';
+      vatRow.classList.remove('hidden');
+      vatAmountRow.classList.remove('hidden');
+      vatAmountRow.style.display = 'flex';
+    } else {
+      modeDiscount.style.background = 'var(--nk-accent)';
+      modeDiscount.style.color = '#fff';
+      modeDiscount.style.fontWeight = '600';
+      modeVat.style.background = 'var(--nk-surface)';
+      modeVat.style.color = 'var(--nk-text-secondary)';
+      modeVat.style.fontWeight = '500';
+      vatRow.classList.add('hidden');
+      vatAmountRow.classList.add('hidden');
+    }
+    calculate();
+  }
+
+  function calculate() {
+    const price = parseFloat(priceEl.value);
+    const disc = parseFloat(discEl.value);
+    const vat = showVat ? vatRate : 0;
+
+    if (!Number.isFinite(price) || !Number.isFinite(disc)) {
+      saveEl.textContent = 'Rs. 0';
+      afterDiscEl.textContent = 'Rs. 0';
+      vatAmountEl.textContent = 'Rs. 0';
+      finalEl.textContent = 'Rs. 0';
+      lastResultText = '';
+      return;
+    }
+
+    const safeDisc = Math.min(Math.max(disc, 0), 100);
+    const saveAmount = (safeDisc / 100) * price;
+    const afterDiscount = price - saveAmount;
+    const vatAmount = (vat / 100) * afterDiscount;
+    const final = afterDiscount + vatAmount;
+
+    saveEl.textContent = 'Rs. ' + fmt(saveAmount);
+    afterDiscEl.textContent = 'Rs. ' + fmt(afterDiscount);
+    vatAmountEl.textContent = 'Rs. ' + fmt(vatAmount);
+    vatLabel.textContent = String(vat);
+    finalEl.textContent = 'Rs. ' + fmt(final);
+
+    if (showVat) {
+      lastResultText = `Original: Rs. ${fmt(price)}\nDiscount: ${safeDisc}%\nYou Save: Rs. ${fmt(saveAmount)}\nAfter Discount: Rs. ${fmt(afterDiscount)}\nVAT (${vat}%): Rs. ${fmt(vatAmount)}\nFinal Price: Rs. ${fmt(final)}`;
+    } else {
+      lastResultText = `Original: Rs. ${fmt(price)}\nDiscount: ${safeDisc}%\nYou Save: Rs. ${fmt(saveAmount)}\nFinal Price: Rs. ${fmt(final)}`;
+    }
+  }
+
+  // Mode toggle
+  modeDiscount.addEventListener('click', () => setMode(false));
+  modeVat.addEventListener('click', () => setMode(true));
+
+  // VAT chips
+  document.querySelectorAll('.dc-vat-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.dc-vat-chip').forEach((c) => {
+        (c as HTMLElement).style.borderColor = '';
+        (c as HTMLElement).style.boxShadow = '';
+      });
+      (chip as HTMLElement).style.borderColor = 'var(--nk-accent)';
+      (chip as HTMLElement).style.boxShadow = 'inset 0 0 0 1px var(--nk-accent)';
+
+      const rate = (chip as HTMLElement).dataset.rate;
+      if (rate === 'custom') {
+        vatCustom.classList.remove('hidden');
+        const customVal = parseFloat(vatEl.value);
+        vatRate = Number.isFinite(customVal) && customVal >= 0 ? customVal : 13;
+      } else {
+        vatCustom.classList.add('hidden');
+        vatRate = parseFloat(rate || '13');
+      }
+      calculate();
+    });
+  });
+
+  // Calculate button
+  $('dc-calc')?.addEventListener('click', calculate);
+
+  // Inputs — calculate on input
+  [priceEl, discEl, vatEl].forEach((el) => {
+    el?.addEventListener('input', () => {
+      if (el === vatEl) {
+        const v = parseFloat(vatEl.value);
+        vatRate = Number.isFinite(v) && v >= 0 ? v : 0;
+      }
+      calculate();
+    });
+  });
+
+  // Copy
+  $('dc-copy')?.addEventListener('click', async () => {
+    if (!lastResultText) return;
+    try { await navigator.clipboard.writeText(lastResultText); } catch { /* fallback */ }
+    const btn = $('dc-copy');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Result'; }, 2000); }
+  });
+
+  // Reset — restore the example instead of blanking the tool
+  $('dc-reset')?.addEventListener('click', () => {
+    if (priceEl) priceEl.value = '5000';
+    if (discEl) discEl.value = '20';
+    if (vatEl) vatEl.value = '';
+    setMode(false);
+  });
+
+  // Init — preselect 13% chip
+  document.querySelector('.dc-vat-chip[data-rate="13"]')?.dispatchEvent(new Event('click'));
+  setMode(false);
+</script>
+
+<style>
+  .dc-mode {
+    cursor: pointer;
+    font-family: var(--font-sans);
+    border: none;
+    outline: none;
+  }
+  .dc-vat-chip {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid var(--nk-border);
+    cursor: pointer;
+    color: var(--nk-text-secondary);
+    background: var(--nk-bg);
+    font-family: var(--font-sans);
+    transition: all 0.1s ease;
+  }
+  .dc-vat-chip:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+
+  .dc-price-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .dc-price-prefix {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--nk-text-tertiary);
+    pointer-events: none;
+    z-index: 1;
+    user-select: none;
+  }
+  .dc-price-input {
+    padding-left: 42px !important;
+    text-align: left;
+  }
+  .dc-price-input::-webkit-outer-spin-button,
+  .dc-price-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+</style>

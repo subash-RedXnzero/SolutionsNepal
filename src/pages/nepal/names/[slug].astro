@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { nepaliNames, getNameBySlug } from '../../../data/nepali-names.js';
+
+export async function getStaticPaths() {
+  return nepaliNames.map(name => ({
+    params: { slug: name.slug },
+    props: { name },
+  }));
+}
+
+const { name } = Astro.props;
+
+// Category tags / origin link — only origins & categories with real pages get
+// a dedicated page; the rest filter the explorer via ?category=/?origin=.
+const NAMES_CATEGORY_PAGES = ['sanskrit', 'hindu', 'modern', 'traditional', 'unisex'];
+const categoryTags = name.categories.map(cat => ({
+  label: cat,
+  href: NAMES_CATEGORY_PAGES.includes(cat.toLowerCase())
+    ? `/nepal/names/${cat.toLowerCase()}`
+    : `/nepal/names/all?category=${encodeURIComponent(cat)}`,
+}));
+const originNamesHref = NAMES_CATEGORY_PAGES.includes(name.origin.toLowerCase())
+  ? `/nepal/names/${name.origin.toLowerCase()}`
+  : `/nepal/names/all?origin=${encodeURIComponent(name.origin)}`;
+
+// Safely resolve similar names — skip broken references
+const similarNames = (name.similarNames || [])
+  .map(s => nepaliNames.find(n => n.name === s))
+  .filter(Boolean);
+
+const sameMeaning = nepaliNames
+  .filter(n => n.slug !== name.slug && n.meaningKeywords.some(k => name.meaningKeywords.includes(k)))
+  .slice(0, 6);
+
+const moreByGender = nepaliNames
+  .filter(n => n.slug !== name.slug && n.gender === name.gender)
+  .slice(0, 6);
+
+const moreByOrigin = nepaliNames
+  .filter(n => n.slug !== name.slug && n.origin === name.origin && n.gender === name.gender)
+  .slice(0, 6);
+---
+
+<BaseLayout
+  title={`${name.name} Name Meaning, Origin & Gender | SolutionsNepal`}
+  description={`${name.name} (${name.nepaliName}) means "${name.meaning}". Origin: ${name.origin}. Gender: ${name.gender}.`}
+>
+  <div class="name-page">
+    <!-- Breadcrumb -->
+    <nav class="name-breadcrumb">
+      <a href="/nepal">Nepal</a> → <a href="/nepal/names">Names</a> → <a href={`/nepal/names/letter/${name.name[0].toLowerCase()}`}>{name.name[0].toUpperCase()}</a> → <span>{name.name}</span>
+    </nav>
+
+    <!-- Name Header -->
+    <header class="name-header">
+      <h1 class="name-title">{name.name}</h1>
+      <p class="name-nepali">{name.nepaliName}</p>
+    </header>
+
+    <!-- Quick Info -->
+    <div class="name-info-grid">
+      <div class="name-info-card">
+        <span class="name-info-label">Meaning</span>
+        <span class="name-info-value">{name.meaning}</span>
+      </div>
+      <div class="name-info-card">
+        <span class="name-info-label">Origin</span>
+        <span class="name-info-value">{name.origin}</span>
+      </div>
+      <div class="name-info-card">
+        <span class="name-info-label">Gender</span>
+        <span class="name-info-value">{name.gender}</span>
+      </div>
+      <div class="name-info-card">
+        <span class="name-info-label">Pronunciation</span>
+        <span class="name-info-value">{name.pronunciation || '—'}</span>
+      </div>
+    </div>
+
+    <!-- Name Description -->
+    <section class="name-section">
+      <h2>{name.name} Meaning</h2>
+      <p>The name <strong>{name.name}</strong> ({name.nepaliName}) means <strong>{name.meaning}</strong>. It is of {name.origin} origin and is commonly used as a {name.gender.toLowerCase()} name in Nepal.</p>
+    </section>
+
+    <!-- Categories -->
+    <section class="name-section">
+      <h2>Categories</h2>
+      <div class="name-tags">
+        {categoryTags.map(tag => (
+          <a href={tag.href} class="name-tag">{tag.label}</a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Similar Names -->
+    {similarNames.length > 0 && (
+      <section class="name-section">
+        <h2>Similar Names</h2>
+        <div class="name-grid">
+          {similarNames.map(n => (
+            <a href={`/nepal/names/${n.slug}`} class="name-card">
+              <span class="name-card-name">{n.name}</span>
+              <span class="name-card-nepali">{n.nepaliName}</span>
+              <span class="name-card-meaning">{n.meaning}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Names with Similar Meanings -->
+    {sameMeaning.length > 0 && (
+      <section class="name-section">
+        <h2>Names With Similar Meanings</h2>
+        <div class="name-grid">
+          {sameMeaning.map(n => (
+            <a href={`/nepal/names/${n.slug}`} class="name-card">
+              <span class="name-card-name">{n.name}</span>
+              <span class="name-card-nepali">{n.nepaliName}</span>
+              <span class="name-card-meaning">{n.meaning}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- More by Gender -->
+    {moreByGender.length > 0 && (
+      <section class="name-section">
+        <h2>More {name.gender} Names</h2>
+        <div class="name-grid">
+          {moreByGender.map(n => (
+            <a href={`/nepal/names/${n.slug}`} class="name-card">
+              <span class="name-card-name">{n.name}</span>
+              <span class="name-card-nepali">{n.nepaliName}</span>
+              <span class="name-card-meaning">{n.meaning}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Related Links -->
+    <div class="name-related">
+      <h2>Explore More</h2>
+      <div class="name-related-links">
+        <a href={`/nepal/names/${name.gender.toLowerCase()}`} class="name-related-link">More {name.gender} Names</a>
+        <a href={originNamesHref} class="name-related-link">More {name.origin} Names</a>
+        <a href={`/nepal/names/letter/${name.name[0].toLowerCase()}`} class="name-related-link">Names Starting With {name.name[0]}</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .name-page { max-width: 700px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* Breadcrumb */
+  .name-breadcrumb { font-size: 12px; color: var(--nk-text-tertiary); margin-bottom: 20px; }
+  .name-breadcrumb a { color: var(--nk-accent, #c53030); text-decoration: none; }
+
+  /* Header */
+  .name-header { text-align: center; margin-bottom: 28px; }
+  .name-title { font-size: 32px; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 4px; }
+  .name-nepali { font-size: 22px; color: var(--nk-text-secondary); }
+
+  /* Info Grid */
+  .name-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 28px; }
+  .name-info-card { padding: 14px; background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px; text-align: center; }
+  .name-info-label { display: block; font-size: 11px; font-weight: 500; color: var(--nk-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .name-info-value { display: block; font-size: 14px; font-weight: 600; color: var(--nk-text); }
+
+  /* Sections */
+  .name-section { margin-bottom: 28px; }
+  .name-section h2 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+  .name-section p { font-size: 14px; color: var(--nk-text-secondary); line-height: 1.7; }
+
+  /* Tags */
+  .name-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .name-tag { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--nk-text); background: var(--nk-surface); border: 1px solid var(--nk-border); text-decoration: none; transition: all 0.15s; }
+  .name-tag:hover { border-color: var(--nk-accent, #c53030); color: var(--nk-accent, #c53030); }
+
+  /* Name Grid */
+  .name-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .name-card { display: block; padding: 12px; background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px; text-decoration: none; transition: all 0.15s; }
+  .name-card:hover { border-color: var(--nk-accent, #c53030); transform: translateY(-1px); }
+  .name-card-name { display: block; font-size: 14px; font-weight: 600; color: var(--nk-text); }
+  .name-card-nepali { display: block; font-size: 12px; color: var(--nk-text-secondary); margin-bottom: 2px; }
+  .name-card-meaning { display: block; font-size: 12px; color: var(--nk-text-tertiary); }
+
+  /* Related */
+  .name-related { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--nk-border); }
+  .name-related h2 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+  .name-related-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .name-related-link { padding: 6px 12px; border-radius: 8px; font-size: 12px; color: var(--nk-text); background: var(--nk-surface); border: 1px solid var(--nk-border); text-decoration: none; transition: all 0.15s; }
+  .name-related-link:hover { border-color: var(--nk-accent, #c53030); color: var(--nk-accent, #c53030); }
+
+  @media (max-width: 640px) {
+    .name-page { padding: 20px 16px 60px; }
+    .name-title { font-size: 26px; }
+    .name-info-grid { grid-template-columns: 1fr 1fr; }
+    .name-grid { grid-template-columns: 1fr; }
+  }
+</style>

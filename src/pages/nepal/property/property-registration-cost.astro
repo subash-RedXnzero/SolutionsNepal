@@ -1,0 +1,806 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import { PROVINCES } from '../../../data/nepal/property/locations.js';
+
+const relatedTools = [
+  { title: 'Land Unit Converter', description: 'Convert Ropani, Aana, Bigha', href: '/nepal/land' },
+  { title: 'Vehicle Tax, Fine & Renewal', description: 'Calculate vehicle renewal cost', href: '/nepal/transport/vehicle-tax' },
+  { title: 'Nepal Salary Calculator', description: 'Calculate take-home salary', href: '/nepal/finance/salary-checker' },
+  { title: 'NEA Electricity Bill', description: 'Estimate your electricity bill', href: '/nepal/utilities/electricity-bill' },
+];
+
+const faqItems = [
+  {
+    question: 'What is the property registration fee in Nepal?',
+    answer: 'The property registration fee in Nepal is typically 2% of the property value for land registration, based on the Land Revenue Act 2034. This calculator provides an estimate, but actual rates should be verified with the relevant Land Revenue Office.',
+  },
+  {
+    question: 'How do I calculate land registration costs?',
+    answer: 'To calculate land registration costs: (1) Enter your property value, (2) Select property type and location, (3) Choose transaction type, (4) The calculator estimates registration fee, stamp duty, and other applicable charges. Always verify the final amount with the Land Revenue Office.',
+  },
+  {
+    question: 'Does property registration cost vary by municipality?',
+    answer: 'The national registration fee and stamp duty are standard across Nepal. However, local/municipal fees may vary by location. This calculator shows applicable national fees; local charges should be confirmed with your municipality.',
+  },
+  {
+    question: 'What is the government valuation of land?',
+    answer: 'Government valuation (minimum valuation) is the minimum property value set by the government for tax purposes. If your declared transaction value is lower than the government valuation, the higher amount may be used to calculate registration fees.',
+  },
+  {
+    question: 'What is the difference between land value and registration cost?',
+    answer: 'Land value is the price you pay for the property. Registration cost is the additional government fees you pay to legally register the transfer. For example, if land costs NPR 5,000,000 and registration fees are NPR 300,000, total cost is NPR 5,300,000.',
+  },
+  {
+    question: 'Who pays the registration fee?',
+    answer: 'Typically, the buyer pays the registration and transfer fees. However, this can be negotiated between buyer and seller. The legal responsibility for registration lies with both parties.',
+  },
+  {
+    question: 'Does the property type affect registration charges?',
+    answer: 'Under current rules, the registration fee rate is generally the same for land, house, and apartment. However, specific property types may have different treatments. Always verify with the Land Revenue Office.',
+  },
+  {
+    question: 'Can I calculate the cost before buying property?',
+    answer: 'Yes, this calculator helps you estimate registration and transfer costs before completing a purchase. Enter the proposed property value and location to see estimated fees. This helps with budgeting.',
+  },
+  {
+    question: 'Why is the calculator showing an estimate?',
+    answer: 'This calculator provides estimates based on commonly-cited government fee schedules. Actual fees may vary due to location-specific charges, property classification, or recent policy changes. Always confirm the final amount with the relevant government office.',
+  },
+];
+
+const educationalContent = [
+  {
+    title: 'How is property registration cost calculated in Nepal?',
+    content: 'Property registration cost in Nepal is calculated based on the property value, property type, and transaction type. The main components include: Registration Fee (typically 2% of property value), Stamp Duty (typically 3% for purchase/sale), Transfer Fee (typically 1%), and any applicable local/municipal fees. This calculator estimates these costs based on current rules.',
+  },
+  {
+    title: 'What is a property registration fee?',
+    content: 'The property registration fee is a government charge for legally registering the transfer of property ownership. It is calculated as a percentage of the property value (typically 2% for land) under the Land Revenue Act 2034. This fee must be paid to register the property in the new owner\'s name.',
+  },
+  {
+    title: 'What is land transfer cost?',
+    content: 'Land transfer cost includes all government fees required to transfer land ownership from seller to buyer. This includes registration fee, stamp duty, transfer fee, and any other applicable charges. The total transfer cost is typically 5-7% of the property value.',
+  },
+  {
+    title: 'What factors affect property registration fees?',
+    content: 'Property registration fees are affected by: property value, property type, transaction type (purchase, gift, partition), location, and applicable fiscal year rules. Government minimum valuation may also affect the fee if it\'s higher than the declared value.',
+  },
+  {
+    title: 'Does property registration cost vary by location?',
+    answer: 'National registration fees and stamp duty are standard across Nepal. However, local/municipal fees may vary by municipality. Some locations may have additional charges or different processing requirements.',
+  },
+  {
+    title: 'What is government minimum valuation?',
+    content: 'Government minimum valuation is the minimum property value set by the government for tax purposes. If your declared transaction value is lower than this minimum, the government valuation may be used to calculate registration fees. This ensures fair taxation.',
+  },
+  {
+    title: 'What documents are generally required?',
+    content: 'Generally required documents include: citizenship certificate, land ownership certificate (bluebook), sale deed, tax clearance, witness documents, and passport-size photos. Requirements may vary by location and transaction type.',
+  },
+  {
+    title: 'Who pays registration and transfer charges?',
+    content: 'Typically, the buyer pays registration and transfer fees. However, this can be negotiated between buyer and seller. Both parties have legal responsibility for completing the registration.',
+  },
+  {
+    title: 'Can property registration fees change?',
+    answer: 'Yes, property registration fees can change with new legislation, Finance Acts, or government notifications. Always verify current rates with the Land Revenue Office before completing a transaction.',
+  },
+];
+
+const fiscalYears = [
+  { value: '2083/84', label: '2083/84 (2026/27)' },
+  { value: '2082/83', label: '2082/83 (2025/26)' },
+];
+---
+
+<BaseLayout
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Property', href: '/nepal/property' },
+      { label: 'Registration Cost' },
+    ]} />
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">Nepal Property Registration & Land Transfer Cost Calculator</h1>
+      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Estimate property registration, land transfer, and applicable government fees in Nepal.</p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CALCULATOR                                  -->
+    <!-- ============================================ -->
+    <div class="rounded-xl border overflow-hidden" style="background-color: var(--nk-surface); border-color: var(--nk-border);">
+      <div class="px-5 sm:px-6 pt-6 pb-6 space-y-6">
+
+        <!-- MODE TOGGLE -->
+        <div>
+          <p class="text-xs font-medium mb-2" style="color: var(--nk-text-secondary);">Calculator mode</p>
+          <div class="flex rounded-lg overflow-hidden border" style="border-color: var(--nk-border);">
+            <button
+              id="mode-quick"
+              class="flex-1 py-2.5 text-sm font-medium transition-all duration-200"
+              style="background-color: var(--nk-accent); color: white;"
+              role="tab"
+              aria-selected="true"
+            >
+              Quick Calculator
+            </button>
+            <button
+              id="mode-detailed"
+              class="flex-1 py-2.5 text-sm font-medium transition-all duration-200"
+              style="background-color: var(--nk-surface); color: var(--nk-text-secondary);"
+              role="tab"
+              aria-selected="false"
+            >
+              Detailed Calculator
+            </button>
+          </div>
+        </div>
+
+        <hr style="border-color: var(--nk-border);" />
+
+        <!-- ============================================ -->
+        <!-- QUICK MODE                                   -->
+        <!-- ============================================ -->
+        <div id="quick-mode">
+          <!-- Property Type -->
+          <div class="mb-4">
+            <label for="quick-property-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Type</label>
+            <div class="relative">
+              <select
+                id="quick-property-type"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="land">🏞️ Land</option>
+                <option value="house">🏠 House + Land</option>
+                <option value="apartment">🏢 Apartment</option>
+                <option value="commercial">🏪 Commercial Property</option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <!-- Property Value -->
+          <div class="mb-4">
+            <label for="quick-property-value" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Value</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+              <input inputmode="decimal"
+                id="quick-property-value"
+                type="number"
+                min="0"
+                step="100000"
+                placeholder="5,000,000"
+                class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              />
+            </div>
+            <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">Enter the declared/transaction value of the property.</p>
+          </div>
+
+          <!-- Province -->
+          <div class="mb-4">
+            <label for="quick-province" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Province</label>
+            <div class="relative">
+              <select
+                id="quick-province"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                {PROVINCES.map(p => (
+                  <option value={p.id}>{p.label}</option>
+                ))}
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <!-- District -->
+          <div class="mb-4">
+            <label for="quick-district" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">District</label>
+            <div class="relative">
+              <select
+                id="quick-district"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="">Select District</option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <!-- Transaction Type -->
+          <div class="mb-4">
+            <label for="quick-transaction-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Transaction Type</label>
+            <div class="relative">
+              <select
+                id="quick-transaction-type"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                <option value="purchase">Purchase / Sale</option>
+                <option value="gift">Gift / Transfer</option>
+                <option value="partition">Partition</option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <!-- Fiscal Year -->
+          <div class="mb-4">
+            <label for="quick-fiscal-year" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fiscal Year</label>
+            <div class="relative">
+              <select
+                id="quick-fiscal-year"
+                class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+              >
+                {fiscalYears.map(fy => (
+                  <option value={fy.value}>{fy.label}</option>
+                ))}
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- DETAILED MODE                                -->
+        <!-- ============================================ -->
+        <div id="detailed-mode" class="hidden space-y-4">
+          <!-- Property Details -->
+          <div>
+            <p class="text-sm font-medium mb-3" style="color: var(--nk-text);">Property Details</p>
+
+            <div class="space-y-3">
+              <div>
+                <label for="detail-property-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Type</label>
+                <div class="relative">
+                  <select
+                    id="detail-property-type"
+                    class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  >
+                    <option value="land">🏞️ Land</option>
+                    <option value="house">🏠 House + Land</option>
+                    <option value="apartment">🏢 Apartment</option>
+                    <option value="commercial">🏪 Commercial Property</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+
+              <div>
+                <label for="detail-property-value" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Value</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+                  <input inputmode="decimal"
+                    id="detail-property-value"
+                    type="number"
+                    min="0"
+                    step="100000"
+                    placeholder="5,000,000"
+                    class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="detail-transaction-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Transaction Type</label>
+                <div class="relative">
+                  <select
+                    id="detail-transaction-type"
+                    class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  >
+                    <option value="purchase">Purchase / Sale</option>
+                    <option value="gift">Gift / Transfer</option>
+                    <option value="partition">Partition</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- Location -->
+          <div>
+            <p class="text-sm font-medium mb-3" style="color: var(--nk-text);">Location</p>
+
+            <div class="space-y-3">
+              <div>
+                <label for="detail-province" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Province</label>
+                <div class="relative">
+                  <select
+                    id="detail-province"
+                    class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  >
+                    {PROVINCES.map(p => (
+                      <option value={p.id}>{p.label}</option>
+                    ))}
+                  </select>
+                  <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+
+              <div>
+                <label for="detail-district" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">District</label>
+                <div class="relative">
+                  <select
+                    id="detail-district"
+                    class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  >
+                    <option value="">Select District</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- Advanced Options -->
+          <details class="rounded-lg" style="background-color: var(--nk-muted);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color: var(--nk-text);">
+              Advanced Options
+              <span class="text-xs font-normal" style="color: var(--nk-text-secondary);">(optional)</span>
+            </summary>
+            <div class="px-4 pb-4 space-y-3">
+              <div>
+                <label for="detail-govt-valuation" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Government Valuation (if known)</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+                  <input inputmode="decimal"
+                    id="detail-govt-valuation"
+                    type="number"
+                    min="0"
+                    step="100000"
+                    placeholder="0"
+                    class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  />
+                </div>
+                <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">Enter the applicable government valuation if known. If not sure, leave blank.</p>
+              </div>
+
+              <div>
+                <label for="detail-fiscal-year" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fiscal Year</label>
+                <div class="relative">
+                  <select
+                    id="detail-fiscal-year"
+                    class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  >
+                    {fiscalYears.map(fy => (
+                      <option value={fy.value}>{fy.label}</option>
+                    ))}
+                  </select>
+                  <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- CALCULATE BUTTON -->
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Calculate Registration Cost
+        </button>
+
+        <!-- ============================================ -->
+        <!-- RESULTS                                      -->
+        <!-- ============================================ -->
+        <div id="result" class="hidden">
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- TOTAL COST HERO -->
+          <div class="text-center py-6">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Estimated Registration & Transfer Cost</p>
+            <p id="result-total-fees" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+            <p class="text-sm mt-1" style="color: var(--nk-text-secondary);">in government fees</p>
+          </div>
+
+          <!-- TOTAL AMOUNT -->
+          <div class="p-4 rounded-lg mb-3" style="background-color: var(--nk-muted);">
+            <div class="flex justify-between text-sm mb-1">
+              <span style="color: var(--nk-text-secondary);">Property Value</span>
+              <span id="bd-property-value" class="font-medium" style="color: var(--nk-text);"></span>
+            </div>
+            <div class="flex justify-between text-sm mb-1">
+              <span style="color: var(--nk-text-secondary);">Total Fees</span>
+              <span id="bd-total-fees" class="font-medium" style="color: var(--nk-text);"></span>
+            </div>
+            <hr style="border-color: var(--nk-border); margin: 8px 0;" />
+            <div class="flex justify-between text-base font-bold">
+              <span style="color: var(--nk-text);">Estimated Total Required</span>
+              <span id="bd-total-amount" style="color: var(--nk-accent);"></span>
+            </div>
+          </div>
+
+          <!-- FEE BREAKDOWN -->
+          <div class="p-4 rounded-lg mb-3" style="background-color: var(--nk-muted);">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-secondary);">Fee Breakdown</p>
+            <div class="space-y-2">
+              <div id="bd-registration-row" class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Registration Fee</span>
+                <span id="bd-registration" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-stamp-row" class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Stamp Duty</span>
+                <span id="bd-stamp" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-transfer-row" class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Transfer Fee</span>
+                <span id="bd-transfer" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-local-row" class="flex justify-between text-sm" style="display: none;">
+                <span style="color: var(--nk-text-secondary);">Local / Municipal Fee</span>
+                <span id="bd-local" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-service-row" class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Service Fee</span>
+                <span id="bd-service" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <hr style="border-color: var(--nk-border);" />
+              <div class="flex justify-between text-sm font-semibold">
+                <span style="color: var(--nk-text);">Total Fees</span>
+                <span id="bd-fees-total" style="color: var(--nk-text);"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HOW IS THIS CALCULATED? -->
+          <details class="mb-4 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <summary class="text-xs font-semibold uppercase tracking-wider cursor-pointer" style="color: var(--nk-text-secondary);">How is this calculated?</summary>
+            <div id="calc-details" class="mt-3 space-y-2">
+              <!-- Populated by JS -->
+            </div>
+          </details>
+
+          <!-- ACTIONS -->
+          <div class="flex gap-2">
+            <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copy Result
+            </button>
+            <button id="recalculate-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+              Recalculate
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="mt-6 px-5 py-4 rounded-lg text-xs" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color: var(--nk-text);">Disclaimer</p>
+      <p>This calculator provides an estimate based on the information provided and currently available government fee rules. Actual registration, transfer, valuation, and local charges may differ. Always confirm the final amount with the relevant Land Revenue Office or government authority before completing a transaction.</p>
+      <p class="mt-1.5">Fee rules last verified: <strong>2026-08-19</strong> · Sources: <a href="https://dlma.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Department of Land Management and Archives</a>, Land Revenue Act 2034, Stamp Act 2072</p>
+      <p class="mt-1"><strong>Note:</strong> Rates need verification against current official government sources. Local fees vary by municipality.</p>
+    </div>
+
+    <!-- CALCULATION INFO -->
+    <div class="mt-6 px-5 py-4 rounded-lg text-xs" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color: var(--nk-text);">Calculation Information</p>
+      <p>Fiscal Year: <strong>2083/84</strong></p>
+      <p>Last verified: <strong>2026-08-19</strong></p>
+      <p>Source: Land Revenue Act 2034, Stamp Act 2072, Finance Act 2083</p>
+      <p class="mt-1">Registration fee: 2% of property value · Stamp duty: 3% of property value · Transfer fee: 1% of property value</p>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">How Property Registration Works in Nepal</h2>
+      <div class="space-y-4 text-sm" style="color: var(--nk-text-secondary);">
+        {educationalContent.map(item => (
+          <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <p class="font-semibold mb-1" style="color: var(--nk-text);">{item.title}</p>
+            <p>{item.content}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg overflow-hidden" style="background-color: var(--nk-muted);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color: var(--nk-text);">{item.question}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color: var(--nk-text-secondary);">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <script>
+    import { calculatePropertyRegistrationCost, formatNPR, formatNumber } from '../../../lib/calculators/property-registration.js';
+    import { getDistricts } from '../../../data/nepal/property/locations.js';
+
+    // DOM refs
+    const modeQuick = document.getElementById('mode-quick');
+    const modeDetailed = document.getElementById('mode-detailed');
+    const quickMode = document.getElementById('quick-mode');
+    const detailedMode = document.getElementById('detailed-mode');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const copyBtn = document.getElementById('copy-btn');
+    const recalcBtn = document.getElementById('recalculate-btn');
+
+    let currentMode = 'quick';
+    let lastResult = null;
+
+    // === DISTRICT POPULATION ===
+    function populateDistricts(provinceId, districtSelectId) {
+      const select = document.getElementById(districtSelectId);
+      if (!select) return;
+
+      const districts = getDistricts(provinceId);
+      select.innerHTML = '<option value="">Select District</option>';
+      districts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = d.label;
+        select.appendChild(opt);
+      });
+    }
+
+    // === MODE TOGGLE ===
+    function setMode(mode) {
+      currentMode = mode;
+      const isQuick = mode === 'quick';
+
+      modeQuick.style.backgroundColor = isQuick ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      modeQuick.style.color = isQuick ? 'white' : 'var(--nk-text-secondary)';
+      modeQuick.setAttribute('aria-selected', isQuick ? 'true' : 'false');
+
+      modeDetailed.style.backgroundColor = !isQuick ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      modeDetailed.style.color = !isQuick ? 'white' : 'var(--nk-text-secondary)';
+      modeDetailed.setAttribute('aria-selected', !isQuick ? 'true' : 'false');
+
+      quickMode.classList.toggle('hidden', !isQuick);
+      detailedMode.classList.toggle('hidden', isQuick);
+    }
+
+    modeQuick?.addEventListener('click', () => setMode('quick'));
+    modeDetailed?.addEventListener('click', () => setMode('detailed'));
+
+    // === PROVINCE CHANGE HANDLERS ===
+    document.getElementById('quick-province')?.addEventListener('change', (e) => {
+      populateDistricts(e.target.value, 'quick-district');
+    });
+
+    document.getElementById('detail-province')?.addEventListener('change', (e) => {
+      populateDistricts(e.target.value, 'detail-district');
+    });
+
+    // === CALCULATE ===
+    function calculate() {
+      let propertyValue, propertyType, transactionType, province, district, fiscalYear, govtValuation;
+
+      if (currentMode === 'quick') {
+        propertyValue = parseFloat(document.getElementById('quick-property-value')?.value) || 0;
+        propertyType = document.getElementById('quick-property-type')?.value || 'land';
+        transactionType = document.getElementById('quick-transaction-type')?.value || 'purchase';
+        province = document.getElementById('quick-province')?.value || 'bagmati';
+        district = document.getElementById('quick-district')?.value || 'kathmandu';
+        fiscalYear = document.getElementById('quick-fiscal-year')?.value || '2083/84';
+        govtValuation = 0;
+      } else {
+        propertyValue = parseFloat(document.getElementById('detail-property-value')?.value) || 0;
+        propertyType = document.getElementById('detail-property-type')?.value || 'land';
+        transactionType = document.getElementById('detail-transaction-type')?.value || 'purchase';
+        province = document.getElementById('detail-province')?.value || 'bagmati';
+        district = document.getElementById('detail-district')?.value || 'kathmandu';
+        fiscalYear = document.getElementById('detail-fiscal-year')?.value || '2083/84';
+        govtValuation = parseFloat(document.getElementById('detail-govt-valuation')?.value) || 0;
+      }
+
+      if (propertyValue <= 0) return;
+
+      const r = calculatePropertyRegistrationCost({
+        propertyValue,
+        propertyType,
+        transactionType,
+        province,
+        district,
+        fiscalYear,
+        governmentValuation: govtValuation,
+      });
+
+      lastResult = r;
+
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+      // Hero
+      set('result-total-fees', formatNPR(r.totalFees));
+
+      // Total amount
+      set('bd-property-value', formatNPR(r.input.propertyValue));
+      set('bd-total-fees', formatNPR(r.totalFees));
+      set('bd-total-amount', formatNPR(r.totalAmount));
+
+      // Fee breakdown
+      const regRow = document.getElementById('bd-registration-row');
+      const stampRow = document.getElementById('bd-stamp-row');
+      const transferRow = document.getElementById('bd-transfer-row');
+      const localRow = document.getElementById('bd-local-row');
+      const serviceRow = document.getElementById('bd-service-row');
+
+      if (r.fees.registrationFee) {
+        regRow.style.display = '';
+        set('bd-registration', formatNPR(r.fees.registrationFee.amount));
+      } else {
+        regRow.style.display = 'none';
+      }
+
+      if (r.fees.stampDuty) {
+        stampRow.style.display = '';
+        set('bd-stamp', formatNPR(r.fees.stampDuty.amount));
+      } else {
+        stampRow.style.display = 'none';
+      }
+
+      if (r.fees.transferFee) {
+        transferRow.style.display = '';
+        set('bd-transfer', formatNPR(r.fees.transferFee.amount));
+      } else {
+        transferRow.style.display = 'none';
+      }
+
+      if (r.fees.localFee) {
+        localRow.style.display = '';
+        set('bd-local', formatNPR(r.fees.localFee.amount));
+      } else {
+        localRow.style.display = 'none';
+      }
+
+      if (r.fees.serviceFee) {
+        serviceRow.style.display = '';
+        set('bd-service', formatNPR(r.fees.serviceFee.amount));
+      } else {
+        serviceRow.style.display = 'none';
+      }
+
+      set('bd-fees-total', formatNPR(r.fees.total));
+
+      // Calculation details
+      const calcDetails = document.getElementById('calc-details');
+      if (calcDetails) {
+        let html = '';
+
+        html += `<div class="flex justify-between text-sm">
+          <span style="color: var(--nk-text-secondary);">Property value</span>
+          <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.input.propertyValue)}</span>
+        </div>`;
+
+        if (r.input.governmentValuation > 0) {
+          html += `<div class="flex justify-between text-sm">
+            <span style="color: var(--nk-text-secondary);">Government valuation</span>
+            <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.input.governmentValuation)}</span>
+          </div>`;
+          html += `<div class="flex justify-between text-sm">
+            <span style="color: var(--nk-text-secondary);">Valuation basis (higher of)</span>
+            <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.input.valuationBasis)}</span>
+          </div>`;
+        }
+
+        if (r.fees.registrationFee) {
+          html += `<div class="flex justify-between text-sm">
+            <span style="color: var(--nk-text-secondary);">Registration fee (${(r.fees.registrationFee.rate * 100).toFixed(0)}%)</span>
+            <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.fees.registrationFee.amount)}</span>
+          </div>`;
+        }
+
+        if (r.fees.stampDuty) {
+          html += `<div class="flex justify-between text-sm">
+            <span style="color: var(--nk-text-secondary);">Stamp duty (${(r.fees.stampDuty.rate * 100).toFixed(0)}%)</span>
+            <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.fees.stampDuty.amount)}</span>
+          </div>`;
+        }
+
+        if (r.fees.transferFee) {
+          html += `<div class="flex justify-between text-sm">
+            <span style="color: var(--nk-text-secondary);">Transfer fee (${(r.fees.transferFee.rate * 100).toFixed(0)}%)</span>
+            <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.fees.transferFee.amount)}</span>
+          </div>`;
+        }
+
+        if (r.fees.serviceFee) {
+          html += `<div class="flex justify-between text-sm">
+            <span style="color: var(--nk-text-secondary);">Service fee (fixed)</span>
+            <span class="font-medium" style="color: var(--nk-text);">${formatNPR(r.fees.serviceFee.amount)}</span>
+          </div>`;
+        }
+
+        html += `<div class="flex justify-between text-sm font-semibold pt-2" style="border-top: 1px solid var(--nk-border);">
+          <span style="color: var(--nk-text);">Total fees</span>
+          <span style="color: var(--nk-text);">${formatNPR(r.totalFees)}</span>
+        </div>`;
+
+        html += `<div class="flex justify-between text-sm font-semibold pt-2" style="border-top: 1px solid var(--nk-border);">
+          <span style="color: var(--nk-text);">Total amount required</span>
+          <span style="color: var(--nk-accent);">${formatNPR(r.totalAmount)}</span>
+        </div>`;
+
+        calcDetails.innerHTML = html;
+      }
+
+      resultDiv?.classList.remove('hidden');
+      resultDiv?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+
+    // Enter key support
+    document.getElementById('quick-property-value')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    document.getElementById('detail-property-value')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+
+    // === COPY RESULT ===
+    copyBtn?.addEventListener('click', async () => {
+      if (!lastResult) return;
+      const r = lastResult;
+
+      const lines = [
+        `Nepal Property Registration & Land Transfer Cost Estimate`,
+        `Fiscal Year: ${r.input.fiscalYearLabel}`,
+        ``,
+        `Property Type: ${r.input.propertyLabel}`,
+        `Property Value: ${formatNPR(r.input.propertyValue)}`,
+        `Province: ${r.input.provinceLabel}`,
+        `District: ${r.input.districtLabel}`,
+        `Transaction: ${r.input.transactionLabel}`,
+        ``,
+        `Registration Fee: ${r.fees.registrationFee ? formatNPR(r.fees.registrationFee.amount) : 'N/A'}`,
+        `Stamp Duty: ${r.fees.stampDuty ? formatNPR(r.fees.stampDuty.amount) : 'N/A'}`,
+        `Transfer Fee: ${r.fees.transferFee ? formatNPR(r.fees.transferFee.amount) : 'N/A'}`,
+        `Service Fee: ${r.fees.serviceFee ? formatNPR(r.fees.serviceFee.amount) : 'N/A'}`,
+        `---------------------------------`,
+        `Total Fees: ${formatNPR(r.totalFees)}`,
+        `Total Required: ${formatNPR(r.totalAmount)}`,
+      ].join('\n');
+
+      try {
+        await navigator.clipboard.writeText(lines);
+        if (copyBtn) copyBtn.textContent = 'Copied!';
+        setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy Result'; }, 2000);
+      } catch {}
+    });
+
+    // === RECALCULATE ===
+    recalcBtn?.addEventListener('click', () => {
+      resultDiv?.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // === INIT ===
+    // Populate districts for default province
+    const defaultProvince = document.getElementById('quick-province')?.value || 'bagmati';
+    populateDistricts(defaultProvince, 'quick-district');
+    populateDistricts(defaultProvince, 'detail-district');
+  </script>
+</BaseLayout>

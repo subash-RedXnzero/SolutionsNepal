@@ -1,0 +1,346 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import { DEFAULT_VAT_RATE } from '../../../lib/calculators/vat.js';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'VAT Calculator Nepal – Calculate 13% VAT Online | SolutionsNepal';
+const description = "Calculate VAT in Nepal instantly. Add 13% VAT to any price with SolutionsNepal's free VAT calculator.";
+
+const faqItems = [
+  {
+    q: 'What is the VAT rate in Nepal?',
+    a: `This calculator uses ${DEFAULT_VAT_RATE}% as the standard rate — the long-standing standard rate set by Nepal's Inland Revenue Department (ird.gov.np). The rate is configurable in this tool, so if it changes you can simply type the new percentage. Always confirm the applicable rate for your transaction with the IRD or your tax advisor.`,
+  },
+  {
+    q: 'How do I calculate 13% VAT?',
+    a: 'Multiply the price by 0.13. For example: Rs. 10,000 × 13% = Rs. 1,300 VAT, so the total including VAT is Rs. 10,000 + Rs. 1,300 = Rs. 11,300.',
+  },
+  {
+    q: 'How do I remove VAT from a price?',
+    a: 'Divide the VAT-inclusive price by 1 plus the rate: Rs. 11,300 ÷ 1.13 = Rs. 10,000 before VAT, making the VAT amount Rs. 1,300. Do not subtract 13% directly — that understates the pre-VAT price. For any other rate, divide by 1 + rate ÷ 100.',
+  },
+  {
+    q: 'Is VAT included in the displayed price?',
+    a: 'It depends on the seller and product type. In Nepal, most retail prices are quoted VAT-inclusive, while business invoices often show the pre-VAT amount and add VAT separately. A VAT-inclusive price already contains VAT; a VAT-exclusive price does not. To work backwards from an inclusive price, divide by 1 plus the rate (e.g. ÷ 1.13).',
+  },
+  {
+    q: 'How much VAT is on Rs. 10,000?',
+    a: `At the ${DEFAULT_VAT_RATE}% standard rate: Rs. 10,000 × 13% = Rs. 1,300, giving a total of Rs. 11,300. Enter it above to check with any rate or amount.`,
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'VAT Calculator Nepal',
+      description: 'Add 13% VAT to any price instantly with SolutionsNepal\'s free VAT calculator.',
+      url: 'https://solutionsnepal.com/nepal/finance/vat-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1000px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'VAT Calculator' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">VAT Calculator Nepal</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Calculate VAT instantly using Nepal's standard {DEFAULT_VAT_RATE}% rate — add it to any price.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-5 items-start">
+
+      <!-- ═══ LEFT: INPUTS ═══ -->
+      <div class="nk-card p-5 space-y-4">
+        <!-- Amount -->
+        <div>
+          <label for="vat-amount" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);" id="amount-label">Amount <span class="font-normal">— price before VAT</span></label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[13px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+            <input id="vat-amount" type="number" min="0" step="any" placeholder="e.g. 10,000" class="nk-input text-[15px]" style="padding-left:3rem;" inputmode="decimal" />
+          </div>
+          <p id="amount-error" class="hidden text-xs mt-1" style="color:#dc2626;"></p>
+
+          <!-- Quick amounts -->
+          <div class="flex flex-wrap gap-1.5 mt-2" id="quick-btns"></div>
+        </div>
+
+        <!-- Rate -->
+        <div>
+          <label for="vat-rate" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">VAT rate <span class="font-normal">— standard is {DEFAULT_VAT_RATE}%</span></label>
+          <div class="relative w-36">
+            <input id="vat-rate" type="number" min="0" max="100" step="any" value={String(DEFAULT_VAT_RATE)} placeholder={String(DEFAULT_VAT_RATE)} class="nk-input" style="padding-right:2rem;" inputmode="decimal" />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[13px]" style="color:var(--nk-text-tertiary);">%</span>
+          </div>
+          <p id="rate-error" class="hidden text-xs mt-1" style="color:#dc2626;"></p>
+        </div>
+
+        <button id="calc-btn" class="nk-btn nk-btn-primary w-full">Calculate</button>
+        <p class="text-center text-[13px]" style="color:var(--nk-text-tertiary);">Result updates automatically as you type</p>
+
+        <div class="flex gap-2 pt-1">
+          <button id="reset-btn" class="text-[13px] font-medium px-3 py-2 rounded-lg border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Reset</button>
+        </div>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="md:sticky md:top-4">
+        <div class="nk-card p-5">
+          <p class="text-[13px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">VAT Breakdown</p>
+
+          <!-- Add-VAT layout -->
+          <div id="breakdown-add">
+            <div class="flex items-center justify-between py-1.5 text-[13px]">
+              <span style="color:var(--nk-text-secondary);">Amount</span>
+              <strong class="font-semibold" style="color:var(--nk-text);" id="add-amount">—</strong>
+            </div>
+            <div class="flex items-center justify-between py-1.5 text-[13px]">
+              <span style="color:var(--nk-text-secondary);">VAT (<span id="add-rate">13</span>%)</span>
+              <strong class="font-semibold" style="color:var(--nk-accent);" id="add-vat">+ —</strong>
+            </div>
+            <hr class="my-2" style="border-color:var(--nk-border);" />
+            <div class="rounded-xl px-4 py-3.5 text-center mb-3" style="background-color:var(--nk-accent-subtle);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-0.5" style="color:var(--nk-text-secondary);">Total Including VAT</p>
+              <p class="text-[24px] font-bold tracking-tight leading-none" style="color:var(--nk-accent);" id="add-total">—</p>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="copy-btn" class="flex-1 text-[12px] font-semibold py-2 rounded-lg border transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Copy Breakdown</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO / educational content -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">What is VAT?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">VAT (Value Added Tax) is a consumption tax charged at each stage of producing and selling goods or services — ultimately paid by the final consumer. In Nepal it applies to most products and services, and businesses registered under VAT collect it on behalf of the Inland Revenue Department. When you see a restaurant bill or an invoice with a separate tax line, that line is usually VAT.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Nepal's VAT rate</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">This tool is configured with <strong>{DEFAULT_VAT_RATE}%</strong> as the default standard rate — the long-standing standard rate in Nepal per the Inland Revenue Department (ird.gov.np). Some goods and services carry different rates or exemptions, so treat {DEFAULT_VAT_RATE}% as a starting point rather than a legal certainty for every transaction. The rate field above is editable, so any special rate can be entered directly. If the official standard rate ever changes, updating the tool's single configuration value keeps everything accurate.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">How to calculate VAT (adding VAT)</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Multiply the pre-VAT amount by the rate:<br />
+          <code class="text-[12.5px] px-1.5 py-0.5 rounded" style="background-color:var(--nk-bg);">Rs. 10,000 × 13% = Rs. 1,300 VAT</code><br />
+          Then add it back:
+          <code class="text-[12.5px] px-1.5 py-0.5 rounded" style="background-color:var(--nk-bg);">Rs. 10,000 + Rs. 1,300 = Rs. 11,300 total</code>
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">How to remove VAT (reverse VAT)</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          When a price already includes VAT, divide by (1 + rate ÷ 100):
+          <code class="text-[12.5px] px-1.5 py-0.5 rounded" style="background-color:var(--nk-bg);">Rs. 11,300 ÷ 1.13 = Rs. 10,000 before VAT</code><br />
+          The VAT amount is the difference: Rs. 11,300 − Rs. 10,000 = <strong style="color:var(--nk-text);">Rs. 1,300</strong>.
+          A common mistake is subtracting 13% of Rs. 11,300 (= Rs. 9,831), which gives the wrong pre-VAT price.
+          For any other rate, divide by 1 + rate ÷ 100 — e.g. ÷ 1.05 for 5%, ÷ 1.15 for 15%.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related Nepal calculators</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/salary-checker" style="color:var(--nk-accent);">Salary Calculator</a> — check take-home pay after deductions</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/sip-calculator" style="color:var(--nk-accent);">SIP Calculator</a> — project regular investment growth</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/emi-calculator" style="color:var(--nk-accent);">EMI Calculator</a> — plan loan repayments</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance" style="color:var(--nk-accent);">All finance tools</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <Disclaimer variant="tax" />
+    <RelatedTools tools={[
+      { title: 'SIP Calculator', description: 'Calculate SIP returns & investment growth', href: '/nepal/finance/sip-calculator' },
+      { title: 'EMI Calculator', description: 'Calculate home & car loan EMIs', href: '/nepal/finance/emi-calculator' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style>
+  /* NOTE: quick buttons are created by JS at runtime and never receive
+     Astro's scoped data attribute — keep :global() or they render unstyled. */
+  :global(.quick-btn) {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary);
+    background: transparent;
+    transition: all 150ms;
+  }
+  :global(.quick-btn:hover) { border-color: var(--nk-accent); color: var(--nk-accent); }
+</style>
+
+<script>
+  import { DEFAULT_VAT_RATE, formatNPR, validateAmount, validateRate, addVat } from '../../../lib/calculators/vat.js';
+  import { formatNumberIN } from '../../../lib/calculators/vat.js';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  const amountInput = $<HTMLInputElement>('vat-amount');
+  const rateInput = $<HTMLInputElement>('vat-rate');
+  const amountError = $('amount-error');
+  const rateError = $('rate-error');
+
+  let hasResult = false;
+  let copyTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // ── Quick amount buttons ───────────────────────────────────
+  const QUICK = [1000, 5000, 10000, 50000, 100000];
+  const quickBox = $('quick-btns');
+  for (const q of QUICK) {
+    const b = document.createElement('button');
+    b.className = 'quick-btn';
+    b.textContent = 'Rs. ' + formatNumberIN(q);
+    b.addEventListener('click', () => {
+      amountInput.value = String(q);
+      if (rateInput.value.trim() === '') rateInput.value = String(DEFAULT_VAT_RATE);
+      recalc();
+    });
+    quickBox.appendChild(b);
+  }
+
+  // ── Live calculation ───────────────────────────────────────
+  function setError(el: HTMLElement, msg: string | null) {
+    el.textContent = msg || '';
+    el.classList.toggle('hidden', !msg);
+  }
+
+  function buildCopyText(data: { amount: number; vat: number; total: number }, rate: number): string {
+    return [
+      `Amount: ${formatNPR(data.amount)}`,
+      `VAT: ${rate}%`,
+      `VAT Amount: ${formatNPR(data.vat)}`,
+      `Total: ${formatNPR(data.total)}`,
+    ].join('\n');
+  }
+
+  function recalc() {
+    setError(amountError, null);
+    setError(rateError, null);
+
+    // Empty amount = nothing entered yet: show placeholders, no error.
+    if (amountInput.value.trim() === '') {
+      invalidate();
+      return;
+    }
+
+    const amt = validateAmount(amountInput.value);
+    const rate = validateRate(rateInput.value);
+
+    if (!amt.ok) {
+      setError(amountError, amt.error!);
+      invalidate();
+      return;
+    }
+    if (!rate.ok) {
+      setError(rateError, rate.error!);
+      invalidate();
+      return;
+    }
+
+    const data = addVat(amt.value!, rate.value!);
+
+    $('add-amount').textContent = formatNPR(data.amount);
+    $('add-vat').textContent = '+ ' + formatNPR(data.vat);
+    $('add-total').textContent = formatNPR(data.total);
+    $('add-rate').textContent = String(rate.value);
+
+    copyBtn.dataset.copyText = buildCopyText(data, rate.value);
+    hasResult = true;
+  }
+
+  function invalidate() {
+    hasResult = false;
+    ['add-amount', 'add-vat', 'add-total'].forEach(
+      (id) => ($(id)).textContent = '—',
+    );
+  }
+
+  // ── Copy breakdown ─────────────────────────────────────────
+  const copyBtn = $<HTMLButtonElement>('copy-btn');
+  copyBtn.addEventListener('click', async () => {
+    const text = copyBtn.dataset.copyText || '';
+    if (!text || text.includes('—')) return;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Fallback for older browsers / non-secure contexts
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    copyBtn.textContent = 'Copied ✓';
+    copyBtn.style.color = 'var(--nk-accent)';
+    if (copyTimer) clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => {
+      copyBtn.textContent = 'Copy Breakdown';
+      copyBtn.style.color = '';
+    }, 1600);
+  });
+
+  // ── Reset ──────────────────────────────────────────────────
+  $('reset-btn').addEventListener('click', () => {
+    amountInput.value = '';
+    rateInput.value = String(DEFAULT_VAT_RATE);
+    setError(amountError, null);
+    setError(rateError, null);
+    recalc();
+  });
+
+  // ── Events: live result as you type (button kept for keyboard/mouse users) ──
+  $('calc-btn').addEventListener('click', recalc);
+  amountInput.addEventListener('input', recalc);
+  rateInput.addEventListener('input', recalc);
+  amountInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') recalc(); });
+  rateInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') recalc(); });
+
+  recalc(); // Amount starts empty (placeholder only); breakdown fills in as the user types
+</script>

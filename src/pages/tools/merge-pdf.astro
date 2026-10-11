@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+import PdfTool from '../../components/tools/PdfTool.astro';
+const title = 'Merge PDF — Combine Multiple PDFs Into One | SolutionsNepal';
+const description = 'Combine multiple PDFs into one file in your browser. Reorder, merge and download — free, no uploads, no signup.';
+const faqs = [
+  { q: 'How do I order files when merging?', a: 'After uploading, drag and drop file thumbnails to set the order before merging.' },
+  { q: 'Is there a page limit?', a: 'No hard limit. The tool handles large PDFs, but very large files (100+ pages) may take a few extra seconds to process in-browser.' },
+  { q: 'Will the merged PDF lose quality?', a: 'No. Pages are combined as-is with no re-encoding. Bookmarks and internal links may not transfer.' },
+  { q: 'Can I merge password-protected PDFs?', a: 'Only if you know the password. Encrypted PDFs must be unlocked before merging.' },
+];
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Merge PDF', description: 'Combine multiple PDFs into one file in your browser.', url: 'https://solutionsnepal.com/tools/merge-pdf', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'PDF Tools', href: '/tools/pdf' }, { label: 'Merge PDF' }]} />
+    <div class="mb-5 text-center"><h1 class="text-[28px] font-bold sm:text-[36px] tracking-tight mx-auto" style="color:var(--nk-text);">Merge PDF Files</h1><p class="mt-2 text-[15px] sm:text-[16px] mx-auto text-center leading-relaxed" style="color:var(--nk-text-secondary);">Combine multiple PDF files into one document.</p></div>
+    <PdfTool mode="merge-pdf" />
+    <p class="mt-5 text-xs" style="color:var(--nk-text-secondary);"><strong>Private by design</strong> — your files are processed directly in your browser.</p>
+
+    <section class="mt-10 space-y-4 text-[15px] leading-relaxed" style="color:var(--nk-text);">
+      <h2 class="text-xl font-semibold mt-6">How to Merge PDFs</h2>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Add your PDF files by dragging them in or browsing.</li>
+        <li>Drag to reorder the files in the sequence you need.</li>
+        <li>Click merge and download the combined PDF.</li>
+      </ol>
+      <h2 class="text-xl font-semibold mt-6">Why Merge PDFs?</h2>
+      <p>Job applications, government forms and academic submissions often require a single PDF instead of multiple files. Merging saves time and keeps documents organised — especially when portals have upload limits on the number of files.</p>
+      <h2 class="text-xl font-semibold mt-6">Frequently Asked Questions</h2>
+      {faqs.map(f => (
+        <details class="group border-b py-3" style="border-color:var(--nk-border);">
+          <summary class="cursor-pointer font-medium list-none flex justify-between items-center">{f.q}<span class="ml-2 text-lg transition-transform group-open:rotate-45">+</span></summary>
+          <p class="mt-2 text-sm" style="color:var(--nk-text-secondary);">{f.a}</p>
+        </details>
+      ))}
+    </section>
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[{ title: 'Compress PDF', description: 'Reduce PDF file size', href: '/tools/compress-pdf' }, { title: 'JPG to PDF', description: 'Turn images into a PDF', href: '/tools/jpg-to-pdf' }, { title: 'PDF to Word', description: 'Convert PDF to editable DOCX', href: '/tools/pdf-to-word' }, { title: 'PDF to JPG', description: 'Extract pages as images', href: '/tools/pdf-to-jpg' }]} />
+  </div>
+</BaseLayout>

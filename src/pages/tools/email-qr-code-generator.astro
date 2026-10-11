@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import QrCodeGenerator from '../../components/tools/QrCodeGenerator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Email QR Code Generator – mailto QR with Subject & Body | SolutionsNepal';
+const description: string = 'Create an email QR code that opens a draft to your address with subject and body pre-filled. Perfect for feedback forms, support desks and flyers.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'Email QR Generator' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Email QR Code Generator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">One scan opens a new email — recipient, subject and message already filled in.</p>
+    </div>
+
+    <QrCodeGenerator initialType="email" />
+
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Standard mailto, zero typing</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          The QR encodes a standard <code class="text-[12px] px-1 rounded" style="background-color:var(--nk-bg);">mailto:</code>
+          link with your subject and message URL-encoded into the query string. Scanning opens the phone's
+          mail app with a fully addressed draft — the user just adds their own words and presses send.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Where an email QR shines</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• Feedback & complaint desks — pre-subject like "Feedback about order #1234"</li>
+          <li>• Job postings — applications routed straight to HR</li>
+          <li>• School notices — inquiries to the administration office</li>
+          <li>• Invoice/receipt footers — billing questions to accounts</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Pre-filled subjects keep things organized</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Because every scanned email arrives with the same subject line, you can filter and triage incoming
+          mail automatically. Put a keyword in the subject field above and your inbox does the sorting for you.
+        </p>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        Related: <a class="underline hover:opacity-80" href="/tools/qr-code-generator" style="color:var(--nk-accent);">all QR types</a> ·
+        <a class="underline hover:opacity-80" href="/tools/qr-code-generator" style="color:var(--nk-accent);">SMS QR (in main tool)</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

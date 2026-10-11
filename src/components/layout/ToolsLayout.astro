@@ -1,0 +1,193 @@
+---
+import { categories, getActiveCategories } from '../../data/categories.js';
+import { tools } from '../../data/tools.js';
+
+interface Props {
+  currentPath: string;
+  categoryPage?: boolean;
+  /** false on individual tool / standalone pages: no sidebar, single centered column */
+  showSidebar?: boolean;
+}
+
+const { currentPath, categoryPage = false, showSidebar = true } = Astro.props;
+const sidebarCats = getActiveCategories();
+const activeToolCategory = tools.find(tool => tool.href === currentPath)?.category;
+
+const iconPaths: Record<string, string> = {
+  calendar: '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>',
+  banknote: '<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+  'trending-up': '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  'land-plot': '<rect width="14" height="10" x="5" y="11" rx="1"/><circle cx="12" cy="6" r="2.2"/>',
+  gem: '<path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
+  'graduation-cap': '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 6 3 12 0v-5"/>',
+  languages: '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
+  droplets: '<path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>',
+  truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  camera: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+  image: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+  baby: '<circle cx="12" cy="8" r="4"/><path d="M12 4c.6 1.2.6 2.8 0 4M9 13c-2 1-3 3-3 6h12c0-3-1-5-3-6"/>',
+  car: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/>',
+};
+
+function isActive(href: string) {
+  const category = categories.find(item => item.href === href);
+  return currentPath === href || currentPath.startsWith(href + '/') || category?.id === activeToolCategory;
+}
+---
+
+<div class:list={["tools-layout", { "tools-layout--single": !showSidebar }]}>
+  {showSidebar && (
+  <aside class="tools-layout-sidebar" aria-label="Tool categories">
+    <nav class="tools-layout-sidebar-sticky">
+      <p class="tools-layout-label">Tools</p>
+      <ul class="tools-layout-list">
+        <li>
+          <a href="/nepal" class:list={["tools-layout-item", { active: currentPath === '/nepal' }]} aria-current={currentPath === '/nepal' ? 'page' : undefined}>
+            <span class="tools-layout-dot" aria-hidden="true"></span>
+            <span class="tools-layout-name">All Tools</span>
+            <span class="tools-layout-count">{tools.length}</span>
+          </a>
+        </li>
+        {sidebarCats.map(category => (
+          <li>
+            <a href={category.href!} class:list={["tools-layout-item", { active: isActive(category.href!) }]} aria-current={isActive(category.href!) ? 'page' : undefined}>
+              <span class="tools-layout-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={iconPaths[category.icon || 'wrench'] || iconPaths.wrench} />
+              </span>
+              <span class="tools-layout-name">{category.name!}</span>
+              <span class="tools-layout-count">{category.count}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </aside>
+  )}
+
+  <div class="tools-layout-content">
+    <div class="tools-layout-toprow">
+      <button id="tools-layout-back" class="tools-layout-back" type="button" aria-label={categoryPage ? 'Back to All Tools' : 'Go back to the previous page'}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+        <span>{categoryPage ? 'Back to All Tools' : 'Back'}</span>
+      </button>
+    </div>
+    <slot />
+  </div>
+</div>
+
+<script is:inline>
+  const backButton = document.getElementById('tools-layout-back');
+  backButton?.addEventListener('click', () => {
+    if (!document.referrer) {
+      window.location.assign('/nepal');
+      return;
+    }
+    if (backButton?.getAttribute('aria-label') === 'Back to All Tools') {
+      const previousPath = new URL(document.referrer).pathname.replace(/\/+$/, '') || '/';
+      if (previousPath === '/nepal') history.back();
+      else window.location.assign('/nepal');
+      return;
+    }
+    history.back();
+  });
+</script>
+
+<style>
+  /* Geometry must match .tl-page on /nepal exactly so the sidebar starts at the
+     same top offset and left edge on every page (All Tools is the reference). */
+  .tools-layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 32px;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px 24px 80px;
+    align-items: start;
+  }
+  .tools-layout-sidebar { min-width: 0; }
+  .tools-layout-sidebar-sticky { position: sticky; top: 84px; }
+  /* Single-column mode (individual tools, weather): STRUCTURAL, not an override —
+     display:block removes the grid entirely, so no sidebar track can ever exist.
+     The outer element itself becomes the centered content container, so Back,
+     breadcrumb, tool UI and Related Tools all share one width. */
+  .tools-layout--single {
+    display: block;
+    width: 100%;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 20px 24px 80px;
+  }
+  .tools-layout--single .tools-layout-content { width: 100%; max-width: none; }
+  .tools-layout-label {
+    margin: 0 0 10px; padding: 0 12px;
+    color: var(--nk-text-tertiary); font-size: var(--fs-2xs); font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .tools-layout-list {
+    list-style: none; margin: 0; padding: 0; overflow: hidden;
+    border: 1px solid var(--nk-border); border-radius: var(--radius-lg);
+    background: var(--nk-sidebar-bg);
+  }
+  .tools-layout-item {
+    position: relative; display: flex; align-items: center; gap: 10px;
+    min-height: 40px; padding: 8px 12px 8px 14px;
+    color: var(--nk-text-secondary); font-size: var(--fs-sm);
+    text-decoration: none; border-bottom: 1px solid var(--nk-hairline);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .tools-layout-list li:last-child .tools-layout-item { border-bottom: none; }
+  .tools-layout-item:hover { color: var(--nk-text); background: var(--nk-hover); }
+  .tools-layout-item:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: -2px; }
+  .tools-layout-item.active { color: var(--nk-accent); font-weight: 600; background: var(--nk-sidebar-active); }
+  .tools-layout-item.active::before {
+    content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px;
+    border-radius: 0 2px 2px 0; background: var(--nk-accent);
+  }
+  .tools-layout-dot { width: 7px; height: 7px; margin: 0 4px; border-radius: 50%; background: var(--nk-accent); flex-shrink: 0; }
+  .tools-layout-icon { display: flex; width: 20px; height: 20px; align-items: center; justify-content: center; color: var(--nk-text-tertiary); flex-shrink: 0; }
+  .tools-layout-item.active .tools-layout-icon { color: var(--nk-accent); }
+  .tools-layout-name { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tools-layout-count { flex-shrink: 0; color: var(--nk-text-tertiary); font-size: var(--fs-2xs); font-variant-numeric: tabular-nums; }
+  .tools-layout-content { min-width: 0; }
+  :global(.tools-layout-content .sidebar-container) { display: none; }
+  :global(.tools-layout-content > .page-layout) {
+    display: block;
+    width: 100%; max-width: none; margin: 0; padding: 0 0 80px;
+  }
+  :global(.tools-layout-content > .page-layout > .main-content) { width: 100%; }
+  /* Two-column (category) pages only: neutralize legacy nested rails/wrappers.
+     Single mode has no grid and never renders a sidebar, so these can't apply there. */
+  :global(.tools-layout-content > .mx-auto:has(.sidebar-container)) {
+    width: 100%; max-width: none; margin: 0; padding: 0 0 80px;
+  }
+  :global(.tools-layout-content > .mx-auto:has(.sidebar-container) > .flex) { display: block; }
+  /* Single mode: legacy inner wrappers must not re-narrow the content.
+     Keeps a little vertical rhythm; horizontal control belongs to the outer shell. */
+  :global(.tools-layout--single .tools-layout-content > .mx-auto) {
+    max-width: none; margin: 0; padding: 6px 0 32px;
+  }
+  .tools-layout-toprow {
+    display: flex; align-items: center; gap: 8px;
+    margin: 0 0 16px;
+  }
+  .tools-layout-back {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
+    margin: 0; padding: 10px 14px 10px 10px;
+    color: var(--nk-text-secondary); font: inherit; font-size: 13px; font-weight: 500;
+    background: transparent; border: 1px solid var(--nk-border); border-radius: var(--radius-md); cursor: pointer;
+  }
+  .tools-layout-back:hover { color: var(--nk-text); border-color: var(--nk-border-strong); background: var(--nk-hover); }
+  .tools-layout-back:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  @media (max-width: 1023px) {
+    .tools-layout { display: block; width: 100%; padding: 16px 24px 64px; }
+    .tools-layout-sidebar { display: none; }
+    /* tablet: single mode goes fluid with side padding (max-width stays) */
+    .tools-layout--single { padding: 16px 24px 64px; }
+  }
+  @media (max-width: 479px) {
+    .tools-layout { padding: 16px 16px 56px; }
+    .tools-layout--single { padding-inline: 16px; }
+  }
+</style>

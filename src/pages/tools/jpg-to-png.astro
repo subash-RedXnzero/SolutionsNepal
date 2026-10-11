@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+import ImageConverter from '../../components/tools/ImageConverter.astro';
+
+const faqItems = [
+  {q:'Will my JPG lose quality when converted to PNG?',a:'No. PNG is a lossless format, so every pixel of your JPG is preserved exactly. Note the PNG file will usually be bigger than the original JPG, because JPG uses lossy compression while PNG stores everything.'},
+  {q:'Why is the PNG file bigger than my JPG?',a:'JPG throws away fine detail to stay small; PNG keeps it all. PNG is ideal for screenshots, logos and images with text or sharp edges — for normal photos, JPG or WebP stays smaller.'},
+  {q:'Does converting add transparency?',a:'No. Conversion cannot invent transparency — the background stays exactly as it looks in your JPG. Only images that already have an alpha channel (like PNGs) carry transparency.'},
+  {q:'Is my photo uploaded to a server?',a:'No. Conversion happens entirely in your browser with the canvas API. Your images never leave your device.'},
+];
+---
+
+<BaseLayout
+  title="JPG to PNG Converter — Convert JPG to PNG Online Free | SolutionsNepal"
+  description="Convert JPG images to PNG online for free. Lossless conversion in your browser — no upload, no signup, no watermark."
+  jsonLd={[{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "JPG to PNG Converter",
+    "description": "Convert JPG images to lossless PNG format free in your browser.",
+    "url": "https://solutionsnepal.com/tools/jpg-to-png",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", priceCurrency: "NPR" }
+  }, {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(item => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a }
+    }))
+  }]}
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{label:"Tools",href:"/tools"},{label:"JPG to PNG"}]} />
+
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color:var(--nk-text);">JPG to PNG Converter</h1>
+      <p class="mt-1 text-xs sm:text-sm" style="color:var(--nk-text-secondary);">Convert JPG photos to lossless PNG — free, private, in your browser.</p>
+    </div>
+
+    <ImageConverter
+      fromLabel="JPG"
+      fromMimes={["image/jpeg"]}
+      fromAccept="image/jpeg"
+      toMime="image/png"
+      toLabel="PNG"
+      toExt="png"
+      showQuality={false}
+    />
+
+    <p class="mt-3 text-center text-[10px]" style="color:var(--nk-text-secondary);">🔒 Your image is processed in your browser and is not uploaded to our server.</p>
+
+    <div class="mt-8 space-y-5">
+      <h2 class="text-base font-bold" style="color:var(--nk-text);">When to convert JPG to PNG</h2>
+      <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+        <li>• <strong style="color:var(--nk-text);">Screenshots & text</strong> — PNG keeps edges razor sharp</li>
+        <li>• <strong style="color:var(--nk-text);">Logos & graphics</strong> — flat colours stay clean with no artefacts</li>
+        <li>• <strong style="color:var(--nk-text);">Editing</strong> — PNG is a safe lossless master before further edits</li>
+      </ul>
+      <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">For normal camera photos where file size matters, JPG or WebP is usually the better choice — try our <a href="/tools/png-to-jpg" style="color:var(--nk-accent);">PNG to JPG converter</a> or <a href="/tools/webp-converter" style="color:var(--nk-accent);">WebP converter</a> instead.</p>
+    </div>
+
+    <div class="mt-8 space-y-3">
+      <h2 class="text-base font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'PNG to JPG', description: 'Convert PNG images to smaller JPG files', href: '/tools/png-to-jpg' },
+      { title: 'Image to WebP', description: 'Convert JPG & PNG to modern WebP', href: '/tools/webp-converter' },
+      { title: 'Image Compressor', description: 'Shrink images to an exact KB target', href: '/tools/image-compressor' },
+    ]} />
+  </div>
+</BaseLayout>

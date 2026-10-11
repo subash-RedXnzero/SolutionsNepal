@@ -1,0 +1,462 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Calculator, Flame } from '@lucide/astro';
+import { MEAL_OPTIONS, COOKING_STYLES, SCENARIO_OFFSETS, HOUSEHOLD_ROWS, DEFAULTS } from '../../../../data/lpg-calculator.js';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+
+const title = 'LPG Gas Cost & Duration Calculator Nepal (2026) | SolutionsNepal';
+const description = 'Estimate how long your LPG cylinder will last, your daily gas cost and monthly cooking-gas spend in Nepal.';
+const canonical = 'https://solutionsnepal.com/nepal/utilities/lpg-gas-cost-duration-calculator-nepal';
+
+const faq = [
+  { q:'How long does a 14.2 kg LPG cylinder last?', a:'It depends on household size and cooking habits — roughly 3–5 weeks for a typical family. At 0.45 kg/day, a 14.2 kg cylinder lasts about 32 days. Enter your price and usage above for your own figure.' },
+  { q:'How much LPG does a family use per day?', a:'A common planning figure is around 0.1–0.15 kg per person per day for regular cooking, i.e. roughly 0.4–0.6 kg/day for a family of four cooking three meals. Heavy frying, long simmering and inefficient stoves push it higher.' },
+  { q:'How much does LPG cost per month in Nepal?', a:'Divide your cylinder price by the days it lasts to get daily cost, then multiply by about 30.4 (365 ÷ 12) for the average month. For example Rs 2,060 ÷ 32 days ≈ Rs 64/day, or about Rs 1,960/month.' },
+  { q:'How can I calculate LPG consumption?', a:'Track one cylinder: note fill and finish dates, then daily use = cylinder weight ÷ days. Or estimate from household size × meals × cooking style, which this calculator does for you.' },
+  { q:'How many LPG cylinders do I need per year?', a:'Divide 365 by your cylinder duration in days. A cylinder lasting 32 days means about 11–12 cylinders a year.' },
+  { q:'Does household size affect LPG consumption?', a:'Yes, strongly — more people means more meals and larger quantities. The household comparison table above shows estimated monthly costs for 2–6 people under identical cooking assumptions.' },
+  { q:'How can I make my LPG cylinder last longer?', a:'Match burner size to the pot, keep burners clean, cover pots with lids, avoid unnecessarily high flames, fix leaks promptly, maintain the regulator and hose, and use a pressure cooker where suitable.' },
+  { q:'Does LPG price affect the monthly cost?', a:'Directly and proportionally — monthly cost = (price ÷ duration) × 30.4 (average month). The scenario table shows your cost at several prices; a Rs 200 rise adds roughly (200 ÷ duration) × 30.4 per month.' },
+  { q:'How accurate is this LPG calculator?', a:'It is a budgeting estimate. Real consumption varies with stove efficiency, exact cooking time, cylinder fill weight and habits. Measuring one full cylinder with dates gives the most accurate personal figure.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'LPG Gas Cost & Duration Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Utilities', href:'/nepal/utilities'}, {label:'LPG Gas Calculator'}]} />
+
+    <div class="mb-2.5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">🇳🇵 LPG cooking gas calculator for Nepal</div>
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">LPG Gas Cost &amp; Duration Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[660px]" style="color:var(--nk-text-secondary);">Estimate how long your LPG cylinder will last, your daily gas cost and how much you may spend on cooking gas each month.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.8fr_400px] gap-4 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-2.5 min-w-0">
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◈</span> LPG Cylinder</p>
+          <div class="flex gap-1.5 mb-2.5" role="radiogroup" aria-label="Cylinder size">
+            <button type="button" class="seg-btn seg-active" data-cyl="std" role="radio" aria-checked="true">Standard 14.2 kg</button>
+            <button type="button" class="seg-btn" data-cyl="custom" role="radio" aria-checked="false">Custom</button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field hidden" id="cylw-wrap"><label class="cm-label" for="cyl-weight">Cylinder weight</label><div class="cm-box"><input id="cyl-weight" type="text" inputmode="decimal" placeholder="e.g. 14.2" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">kg</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="lpg-price">LPG cylinder price</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="lpg-price" type="text" inputmode="decimal" placeholder="2,060" class="cm-input" /></div>
+              <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">Enter the current LPG cylinder price in your area.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◫</span> Household Usage</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="hh-people">Number of people</label>
+              <div class="flex items-center gap-1.5">
+                <button type="button" class="step-btn" data-step="hh-people" data-dir="-1" aria-label="Fewer people">−</button>
+                <input id="hh-people" type="text" inputmode="numeric" placeholder="4" class="nk-input text-center tabular-nums" style="height:36px; border-radius:10px;" aria-label="Number of people" />
+                <button type="button" class="step-btn" data-step="hh-people" data-dir="1" aria-label="More people">+</button>
+              </div>
+            </div>
+            <div class="cm-field"><label class="cm-label">Cooking meals per day</label>
+              <div class="flex flex-wrap gap-1.5" id="meal-chips" role="radiogroup" aria-label="Meals per day">
+                {MEAL_OPTIONS.map(m=> <button type="button" class={`chip meal-chip${m===DEFAULTS.meals?' chip-active':''}`} data-meal={String(m)} role="radio" aria-checked={m===DEFAULTS.meals?'true':'false'}>{m===4?'4+':m}</button>)}
+              </div>
+            </div>
+            <div class="cm-field"><label class="cm-label">Cooking style</label>
+              <div class="flex flex-wrap gap-1.5" id="style-chips" role="radiogroup" aria-label="Cooking style">
+                {COOKING_STYLES.map(s=> <button type="button" class={`chip style-chip${s.id===DEFAULTS.style?' chip-active':''}`} data-style={s.id} role="radio" aria-checked={s.id===DEFAULTS.style?'true':'false'}>{s.label}</button>)}
+              </div>
+            </div>
+          </div>
+          <div class="mt-2.5 pt-2.5" style="border-top:1px solid var(--nk-border);">
+            <label class="flex items-center gap-2 cursor-pointer"><input id="adv-toggle" type="checkbox" style="width:15px; height:15px; accent-color:var(--nk-accent);" /> <span class="text-[12.5px] font-semibold" style="color:var(--nk-text);">Use my own consumption</span></label>
+            <div id="adv-row" class="hidden mt-2 cm-field max-w-[240px]"><label class="cm-label" for="adv-use">Estimated LPG used per day</label><div class="cm-box"><input id="adv-use" type="text" inputmode="decimal" placeholder="e.g. 0.45" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">kg/day</span></div></div>
+          </div>
+          <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Gas usage varies depending on cooking habits, stove efficiency, meal type and cooking time.</p>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <button type="button" id="hist-toggle" class="w-full flex items-center justify-between text-left" aria-expanded="false">
+            <span class="sec-head !mb-0"><span class="sec-icon">◔</span> Calculate from your last cylinder <span class="sub">— optional</span></span>
+            <span class="text-[11px] font-semibold px-2.5 py-1 rounded-full" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);" id="hist-caret">Show</span>
+          </button>
+          <div id="hist-panel" class="hidden mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="hist-from">Previous cylinder filled on</label><input id="hist-from" type="date" class="nk-input text-[13px]" style="height:36px; border-radius:10px;" /></div>
+            <div class="cm-field"><label class="cm-label" for="hist-to">Previous cylinder finished on</label><input id="hist-to" type="date" class="nk-input text-[13px]" style="height:36px; border-radius:10px;" /></div>
+            <div class="cm-field"><label class="cm-label" for="refill-start">Current cylinder started on <span class="font-normal" style="color:var(--nk-text-tertiary);">(for refill date)</span></label><input id="refill-start" type="date" class="nk-input text-[13px]" style="height:36px; border-radius:10px;" /></div>
+          </div>
+        </section>
+
+        <div class="flex gap-2.5">
+          <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> Calculate</button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2 text-[13px] font-semibold" style="border-radius:12px;">Reset Calculator</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium" style="color:#DC2626;"></p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Flame size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your LPG Usage Estimate</p>
+            <p class="text-[26px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter price and usage, then click <strong>Calculate</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+          <div class="px-4 pt-4 pb-3 text-center res-hero" style="border-bottom:1px solid var(--nk-border);">
+            <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your LPG Usage Estimate</p>
+            <p class="text-[13px] font-semibold mt-1" style="color:var(--nk-text-secondary);">One Cylinder Lasts</p>
+            <p class="text-[32px] font-extrabold leading-tight tabular-nums nk-gradient-text" id="r-days">—</p>
+            <p class="text-[11.5px] max-w-[300px] mx-auto" style="color:var(--nk-text-secondary);" id="r-use-line">—</p>
+          </div>
+          <div class="p-3.5 space-y-2.5">
+            <div class="rounded-xl text-[12px]" style="border:1px solid var(--nk-border);">
+              <div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Daily gas cost</span><strong style="color:var(--nk-text);" id="r-daily">—</strong></div>
+              <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Monthly LPG cost</span><strong style="color:var(--nk-text);" id="r-monthly">—</strong></div>
+              <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Cylinders / month · year</span><strong style="color:var(--nk-text);"><span id="r-cpm">—</span> · <span id="r-cpy">—</span></strong></div>
+              <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Annual LPG cost</span><strong style="color:var(--nk-text);" id="r-annual">—</strong></div>
+            </div>
+            <p class="text-[10.5px] px-1" style="color:var(--nk-text-tertiary);">Figures are rounded for display; totals are calculated using unrounded values.</p>
+
+            <div id="r-refill" class="rounded-xl p-3 text-[12px]" style="background:var(--nk-hover); border:1px solid var(--nk-border);"></div>
+
+            <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+              <p class="text-[11px] font-bold uppercase tracking-wider mb-1.5" style="color:var(--nk-text-tertiary);">Your LPG consumption</p>
+              <p class="text-[12px] tabular-nums" style="color:var(--nk-text-secondary);" id="r-cons-line">—</p>
+              <div class="mt-2 h-2.5 rounded-full overflow-hidden" style="background:var(--nk-muted);"><div id="r-bar" class="h-full rounded-full" style="width:0%; background:var(--nk-gradient-primary); transition:width 250ms ease;"></div></div>
+              <p class="text-[11px] mt-1.5 tabular-nums" style="color:var(--nk-text-secondary);" id="r-dur-line">—</p>
+            </div>
+
+            <div id="r-actual" class="hidden rounded-xl p-3 text-[12px]" style="border:1px solid var(--nk-border);"></div>
+
+            <details class="rounded-xl" style="border:1px solid var(--nk-border);">
+              <summary class="px-3 py-2 text-[12px] font-semibold cursor-pointer select-none" style="color:var(--nk-text);">What if LPG price changes?</summary>
+              <div class="px-3 pb-2.5"><table class="w-full text-[12px] tabular-nums whitespace-nowrap">
+                <thead><tr class="text-left text-[10.5px]" style="color:var(--nk-text-tertiary);"><th class="py-1 font-semibold">LPG price</th><th class="py-1 font-semibold text-right">Daily</th><th class="py-1 font-semibold text-right">Monthly</th></tr></thead>
+                <tbody id="r-prices"></tbody>
+              </table>
+              <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">Scenario values only — not official future prices.</p></div>
+            </details>
+
+            <details class="rounded-xl" style="border:1px solid var(--nk-border);">
+              <summary class="px-3 py-2 text-[12px] font-semibold cursor-pointer select-none" style="color:var(--nk-text);">Monthly cost by household size</summary>
+              <div class="px-3 pb-2.5"><table class="w-full text-[12px] tabular-nums whitespace-nowrap">
+                <thead><tr class="text-left text-[10.5px]" style="color:var(--nk-text-tertiary);"><th class="py-1 font-semibold">Household</th><th class="py-1 font-semibold text-right">Est. monthly cost</th></tr></thead>
+                <tbody id="r-households"></tbody>
+              </table>
+              <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">Estimates — actual use varies substantially.</p></div>
+            </details>
+
+            <p id="r-insight" class="text-[11.5px] leading-relaxed px-1" style="color:var(--nk-text-secondary);"></p>
+
+            <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+              <strong style="color:var(--nk-text);">🔥 LPG safety reminder:</strong> check regulator, hose and cylinder for leaks · keep upright, away from heat · never test leaks with flame · turn off when not in use · if you smell gas, avoid switches/flames and ventilate.
+            </div>
+
+            <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-surface); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);">
+              <strong style="color:var(--nk-text);">Important:</strong> LPG consumption varies by household, habits, stove efficiency and cylinder size. Enter the latest price you actually pay.
+            </div>
+
+            <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Long Does an LPG Cylinder Last in Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">It depends on household size, number of meals, cooking habits, stove efficiency, cylinder size and cooking time. A 14.2 kg cylinder at 0.45 kg/day lasts about 32 days — measure one full cylinder with dates for your most accurate personal figure.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Does LPG Gas Cost Per Month in Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Divide your cylinder price by the days it lasts for daily cost, then multiply by about 30.4 for the average month. The calculator shows daily, monthly and annual figures plus cylinders per month and year.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Can I Make LPG Gas Last Longer?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Match burner size to the pot, keep burners clean, cover pots with lids, avoid unnecessarily high flames, fix leaks promptly, maintain the regulator and hose, and use a pressure cooker where suitable.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[{title:'NEA Electricity Bill', description:'Estimate your electricity cost', href:'/nepal/utilities/electricity-bill'}, {title:'KUKL Water Bill', description:'Kathmandu water charges', href:'/nepal/utilities/kukl-water-bill'}, {title:'Cost of Living Calculator', description:'Monthly living expenses', href:'/nepal/utilities/cost-of-living-calculator'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .sec-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--nk-text); margin-bottom:5px; letter-spacing:-0.01em; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11px; font-weight:500; cursor:pointer; transition:all 140ms ease; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .seg-btn{ flex:1; display:inline-flex; align-items:center; justify-content:center; height:34px; border-radius:8px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:12px; font-weight:600; cursor:pointer; transition:all 120ms ease; font-family:inherit; }
+  .seg-btn:hover{ border-color:var(--nk-border-strong); color:var(--nk-text); }
+  .seg-btn.seg-active{ background:var(--nk-accent); border-color:var(--nk-accent); color:#fff; font-weight:700; }
+  .seg-btn:focus-visible{ outline:2px solid var(--nk-accent); outline-offset:2px; }
+  .step-btn{ width:36px; height:36px; border-radius:10px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text); font-size:16px; font-weight:700; cursor:pointer; flex-shrink:0; }
+  .step-btn:hover{ border-color:var(--nk-accent); color:var(--nk-accent); }
+  .cm-field{ display:flex; flex-direction:column; gap:4px; }
+  .cm-label{ font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:36px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; outline:none; border-radius:10px; color:var(--nk-text); }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); }
+  .hidden{ display:none !important; }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input, .step-btn{ font-size:16px !important; }
+    .step-btn{ width:44px; height:44px !important; }
+  }
+</style>
+
+<script>
+  import { calcLpg, calcHistory, calcRefill, formatNPR, estimateDailyUse } from '../../../../lib/calculators/lpg-calculator.js';
+  import { STANDARD_CYLINDER_KG, SCENARIO_OFFSETS, HOUSEHOLD_ROWS, DEFAULTS } from '../../../../data/lpg-calculator.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let hasCalculated = false;
+  let cylMode = 'std';
+  let meals = DEFAULTS.meals;
+  let styleId = DEFAULTS.style;
+
+  function cylKg(){
+    if(cylMode==='custom'){
+      const n = Number(String($('cyl-weight').value).replace(/,/g,''));
+      return Number.isFinite(n) && n>0 ? n : 0;
+    }
+    return STANDARD_CYLINDER_KG;
+  }
+  function setChip(selector, attr, val){
+    document.querySelectorAll(selector).forEach(c=>{
+      const on = c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+  document.querySelectorAll('[data-cyl]').forEach(b=> b.addEventListener('click', ()=>{
+    cylMode = b.dataset.cyl;
+    document.querySelectorAll('[data-cyl]').forEach(x=>{
+      const on=x===b;
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    $('cylw-wrap')?.classList.toggle('hidden', cylMode!=='custom');
+    if(cylMode==='custom') $('cyl-weight')?.focus();
+    recalc();
+  }));
+  document.querySelectorAll('.meal-chip').forEach(b=> b.addEventListener('click', ()=>{ meals=Number(b.dataset.meal); setChip('.meal-chip','meal',meals); recalc(); }));
+  document.querySelectorAll('.style-chip').forEach(b=> b.addEventListener('click', ()=>{ styleId=b.dataset.style; setChip('.style-chip','style',styleId); recalc(); }));
+  document.querySelectorAll('.step-btn').forEach(b=> b.addEventListener('click', ()=>{
+    const el=$(b.dataset.step);
+    const cur=Math.round(Number(String(el.value).replace(/,/g,''))||0);
+    el.value = Math.max(1, Math.min(20, cur+Number(b.dataset.dir)));
+    recalc();
+  }));
+
+  $('adv-toggle')?.addEventListener('change', (e)=>{
+    $('adv-row')?.classList.toggle('hidden', !e.target.checked);
+    if(e.target.checked) $('adv-use')?.focus();
+    recalc();
+  });
+  $('hist-toggle')?.addEventListener('click', ()=>{
+    const panel=$('hist-panel');
+    const open=panel.classList.toggle('hidden');
+    $('hist-toggle').setAttribute('aria-expanded', String(!open));
+    $('hist-caret').textContent = open ? 'Show' : 'Hide';
+  });
+
+  ['lpg-price','cyl-weight','hh-people','adv-use'].forEach(id=>{
+    $(id)?.addEventListener('input', ()=>{
+      if($(id).value.includes('-')) $(id).value=$(id).value.replace(/-/g,'');
+      if(id==='hh-people'){
+        const n=Math.round(Number(String($(id).value).replace(/,/g,''))||0);
+        if($(id).value.trim()!=='' && (n<1 || n>20)) $(id).style.borderColor='#FCA5A5';
+        else $(id).style.borderColor='';
+      }
+      recalc();
+    });
+    $(id)?.addEventListener('blur', ()=>{
+      const raw=String($(id).value).replace(/,/g,'').trim();
+      if(raw==='') { recalc(); return; }
+      const n=Number(raw);
+      if(Number.isFinite(n) && n>=0){
+        $(id).value = (id==='adv-use'||id==='cyl-weight') ? (Math.round(n*100)/100).toLocaleString('en-IN',{maximumFractionDigits:2}) : Math.round(n).toLocaleString('en-IN');
+        $(id).style.borderColor='';
+      }
+      recalc();
+    });
+  });
+  ['hist-from','hist-to','refill-start'].forEach(id=> $(id)?.addEventListener('change', recalc));
+
+  function peopleVal(){
+    const n=Math.round(Number(String($('hh-people').value).replace(/,/g,''))||0);
+    return Math.max(1, Math.min(20, n||DEFAULTS.people));
+  }
+
+  function recalc(){
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const r = calcLpg({
+      cylinderKg: cylKg(),
+      price: $('lpg-price').value || DEFAULTS.price, // empty = current default price (placeholder)
+      people: $('hh-people').value.trim()==='' ? DEFAULTS.people : peopleVal(),
+      meals, styleId,
+      useCustom: $('adv-toggle').checked,
+      customKgPerDay: $('adv-use').value,
+    });
+
+    if(!hasCalculated){
+      $('res-empty')?.classList.remove('hidden');
+      $('res-body')?.classList.add('hidden');
+      return;
+    }
+
+    // history (optional, independent)
+    const hist = calcHistory($('hist-from').value, $('hist-to').value, cylKg()||STANDARD_CYLINDER_KG);
+    const actualBox=$('r-actual');
+    if(hist && !hist.error){
+      actualBox.classList.remove('hidden');
+      const cmp = hist.dailyKg > r.estimated
+        ? 'Your actual usage is slightly higher than the typical estimate used by this calculator.'
+        : hist.dailyKg < r.estimated
+          ? 'Your actual usage is slightly lower than the typical estimate used by this calculator.'
+          : 'Your actual usage matches the typical estimate used by this calculator.';
+      actualBox.innerHTML=`<p class="text-[11px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your actual usage</p>
+        <p class="text-[13px] font-bold mt-0.5 tabular-nums" style="color:var(--nk-text);">Previous cylinder lasted ${hist.days} days</p>
+        <p class="text-[12px] tabular-nums" style="color:var(--nk-text-secondary);">Estimated consumption: <strong style="color:var(--nk-text);">${hist.dailyKg.toFixed(3)} kg/day</strong> · ${hist.perMonth.toFixed(2)} cylinders/month</p>
+        <p class="text-[11px] mt-1" style="color:var(--nk-text-tertiary);">${cmp}</p>`;
+    } else {
+      actualBox.classList.add('hidden');
+      if(hist?.error && ($('hist-from').value || $('hist-to').value)){
+        if(hint){ hint.textContent=hist.error; hint.classList.remove('hidden'); }
+      }
+    }
+
+    if(!r.valid){
+      $('res-empty')?.classList.remove('hidden');
+      $('res-body')?.classList.add('hidden');
+      if(r.warnings.length){
+        if(hint && !hist?.error){ hint.textContent=r.warnings[0]; hint.classList.remove('hidden'); }
+      }
+      $('calc-btn')?.animate?.([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],{duration:220});
+      return;
+    }
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+
+    const days = r.valid ? r.duration : 0;
+    const monthlyDisp = r.valid ? Math.round(r.monthlyCost) : 0;
+    const annualDisp = monthlyDisp * 12; // chained so monthly × 12 always matches
+    $('r-days').textContent = r.valid ? `~${Math.round(days)} days` : '—';
+    $('r-use-line').textContent = r.valid ? `${r.daily.toFixed(3)} kg/day · ${r.cyl.toFixed(1)} kg cylinder` : 'Enter price and usage to see your estimate.';
+    $('r-daily').textContent = r.valid ? formatNPR(r.dailyCost,2)+' / day' : '—';
+    $('r-monthly').textContent = r.valid ? formatNPR(monthlyDisp)+' / mo' : '—';
+    $('r-cpm').textContent = r.valid ? r.cylindersPerMonth.toFixed(2) : '—';
+    $('r-cpy').textContent = r.valid ? r.cylindersPerYear.toFixed(1) : '—';
+    $('r-annual').textContent = r.valid ? formatNPR(annualDisp)+' / yr' : '—';
+
+    // refill
+    const rf=$('r-refill');
+    const start=$('refill-start').value;
+    if(start && r.valid){
+      const proj=calcRefill(start, days);
+      rf.innerHTML=`<p class="text-[11px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated next refill</p>
+        <p class="text-[13px] font-bold mt-0.5" style="color:var(--nk-text);">Current cylinder may last until ${proj.label}</p>
+        <p class="text-[11.5px] tabular-nums" style="color:var(--nk-text-secondary);">Approximately ${proj.remaining} days remaining</p>`;
+    } else {
+      rf.innerHTML=`<p class="text-[11.5px]" style="color:var(--nk-text-tertiary);">Enter your cylinder refill date to estimate your next refill.</p>`;
+    }
+
+    // consumption bar
+    $('r-cons-line').textContent = r.valid ? `${r.cyl.toFixed(1)} kg cylinder · ${r.daily.toFixed(3)} kg/day` : '—';
+    $('r-bar').style.width = r.valid ? Math.min(100,(r.daily/1.2)*100)+'%' : '0%';
+    $('r-dur-line').textContent = r.valid ? `Estimated duration: ~${Math.round(days)} days` : '—';
+
+    // price scenarios
+    const seen=new Set();
+    const prices=SCENARIO_OFFSETS.map(o=>Math.max(0, Math.round(r.pr>0?r.pr+o:o+2060))).filter(p=>{ if(seen.has(p)||p<=0) return false; seen.add(p); return true; }).sort((a,b)=>a-b);
+    $('r-prices').innerHTML = r.valid ? prices.map(p=>{
+      const d=p/r.duration, m=d*(365/12);
+      const active=Math.abs(p-r.pr)<1;
+      return `<tr style="border-top:1px solid var(--nk-border);${active?' font-weight:700;':''}"><td class="py-1.5 ${active?'':' '}" style="color:${active?'var(--nk-accent)':'var(--nk-text-secondary);'}">${formatNPR(p)}</td><td class="py-1.5 text-right" style="color:${active?'var(--nk-accent)':'var(--nk-text);'}">${formatNPR(d,2)}</td><td class="py-1.5 text-right" style="color:${active?'var(--nk-accent)':'var(--nk-text);'}">${formatNPR(m)}</td></tr>`;
+    }).join('') : '';
+
+    // household comparison
+    $('r-households').innerHTML = r.valid ? HOUSEHOLD_ROWS.map(p=>{
+      const d=estimateDailyUse(p, meals, styleId);
+      const dur=d>0 ? r.cyl/d : 0;
+      const m=dur>0 ? (r.pr/dur)*(365/12) : 0;
+      const active=p===( $('hh-people').value.trim()==='' ? DEFAULTS.people : peopleVal());
+      return `<tr style="border-top:1px solid var(--nk-border);${active?' font-weight:700;':''}"><td class="py-1.5" style="color:${active?'var(--nk-accent)':'var(--nk-text-secondary);'}">${p} people</td><td class="py-1.5 text-right" style="color:${active?'var(--nk-accent)':'var(--nk-text);'}">${dur>0?formatNPR(m):'—'}</td></tr>`;
+    }).join('') : '';
+
+    // insight
+    const ins=$('r-insight');
+    if(!r.valid){ ins.textContent=''; }
+    else if(days<25) ins.textContent='Your cylinder is being consumed relatively quickly. Tracking daily cooking usage can help identify where most LPG is being used.';
+    else if(days>40) ins.textContent='Your current consumption pattern may allow one cylinder to last longer than a typical monthly refill cycle.';
+    else {
+      const delta=(200/days)*(365/12);
+      ins.textContent=`A Rs 200 increase in cylinder price would increase your estimated monthly LPG cost by approximately ${formatNPR(delta)}.`;
+    }
+
+    window.__lastLpg = r.valid ? r : null;
+  }
+
+  function doCalc(){
+    hasCalculated = true;
+    recalc();
+    if(!$('res-body')?.classList.contains('hidden') && window.innerWidth<1024){
+      setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+    }
+  }
+
+  function doReset(){
+    cylMode='std';
+    document.querySelectorAll('[data-cyl]').forEach(x=>{
+      const on=x.dataset.cyl==='std';
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    $('cylw-wrap')?.classList.add('hidden');
+    $('lpg-price').value=''; $('cyl-weight').value='';
+    $('hh-people').value=''; $('hh-people').style.borderColor='';
+    meals=DEFAULTS.meals; styleId=DEFAULTS.style;
+    const setChip=(sel,attr,val)=>document.querySelectorAll(sel).forEach(c=>{
+      const on=c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on); c.setAttribute('aria-checked', String(on));
+    });
+    setChip('.meal-chip','meal',meals); setChip('.style-chip','style',styleId);
+    $('adv-toggle').checked=false; $('adv-row')?.classList.add('hidden'); $('adv-use').value='';
+    ['hist-from','hist-to','refill-start'].forEach(id=>{ $(id).value=''; });
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    hasCalculated = false;
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+    recalc();
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalc);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && e.target.matches('input, select')) doCalc(); });
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('copy-btn')?.addEventListener('click', async()=>{
+    if($('res-body')?.classList.contains('hidden')){
+      doCalc();
+      if($('res-body')?.classList.contains('hidden')) return;
+    }
+    const r=window.__lastLpg; if(!r) return;
+    const text=`LPG Estimate: 1 cylinder lasts ~${Math.round(r.duration)} days (${r.daily.toFixed(3)} kg/day)\nDaily ${formatNPR(r.dailyCost,2)} · Monthly ${formatNPR(Math.round(r.monthlyCost))} · ${r.cylindersPerMonth.toFixed(2)} cylinders/mo · Annual ${formatNPR(Math.round(r.monthlyCost)*12)}\n— SolutionsNepal LPG calculator`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const t=b.textContent; b.textContent='Copied!'; setTimeout(()=> b.textContent=t,1500);}catch{}
+  });
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+
+  recalc();
+</script>

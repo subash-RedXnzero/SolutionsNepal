@@ -1,0 +1,193 @@
+---
+title: "Tax on Remittance in Nepal (2026): Is Remittance Taxable?"
+description: "A practical guide to remittance tax in Nepal: family support, foreign employment income, freelance payments, bank interest, the commonly misunderstood 1% figure, and records to keep."
+category: Finance
+author: SolutionsNepal Team
+authorCredential: Nepal tax and personal-finance researchers
+date: September 14, 2026
+readTime: 12 min read
+image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop"
+tags: [Remittance Tax Nepal, Foreign Income Nepal, Tax Residency Nepal, Bank Interest Tax, Finance]
+relatedTools: [foreign-exchange, salary-checker]
+headings:
+  - id: short-answer
+    text: "Short Answer: Is Remittance Taxable in Nepal?"
+    level: 2
+  - id: type-of-money
+    text: Tax Treatment by Type of Money Received
+    level: 2
+  - id: remittance-rate
+    text: What Is the Remittance Tax Rate in Nepal?
+    level: 2
+  - id: one-percent
+    text: Where Does the 1% Tax Idea Come From?
+    level: 2
+  - id: foreign-employment
+    text: Tax on Foreign Employment Income
+    level: 2
+  - id: foreign-income
+    text: Foreign Income and Freelance Payments
+    level: 2
+  - id: bank-account
+    text: What Happens When Remittance Reaches a Bank Account?
+    level: 2
+  - id: nrb-rules
+    text: NRB Rules for Remittance and Foreign Currency
+    level: 2
+  - id: principal-interest
+    text: Principal vs Interest on a Remittance Deposit
+    level: 2
+  - id: bank-deductions
+    text: When Do Banks Deduct Tax?
+    level: 2
+  - id: examples
+    text: Simple Examples
+    level: 2
+  - id: records
+    text: Documents to Keep
+    level: 2
+  - id: mistakes
+    text: Common Mistakes About Remittance Tax
+    level: 2
+  - id: takeaway
+    text: Key Takeaway
+    level: 2
+  - id: disclaimer
+    text: Disclaimer
+    level: 2
+faqs:
+  - q: Is receiving a remittance taxable in Nepal?
+    a: "Not automatically. Tax depends on what the money represents and the recipient's tax status. Ordinary family support and personal transfers are generally not taxed as income on receipt, while foreign-source earnings and interest can be taxable."
+  - q: Is there a 1% tax on remittance in Nepal?
+    a: There is no blanket 1% tax on ordinary inward remittances. The 1% figure is associated with the social security tax component of income-tax calculations, not a general tax charged on every remittance transaction.
+  - q: Is foreign employment income taxable in Nepal?
+    a: "Residents are generally taxed on worldwide income, subject to the applicable rules. Non-residents are generally taxed only on Nepal-source income, so foreign employment earnings earned while non-resident are usually outside Nepal's tax net."
+  - q: Is money sent by family from abroad taxable?
+    a: Generally no. Genuine personal gifts and family support are generally exempt under Section 10(f) of the Income Tax Act, 2058, provided the payment is not actually disguised employment, business, or investment income.
+  - q: Is foreign freelance income taxable in Nepal?
+    a: Foreign freelance, remote-work, and business income can be taxable for Nepal tax residents. Qualifying foreign-currency service receipts may be eligible for a 5% final withholding regime when the applicable service, payment-channel, PAN, and annual-limit conditions are satisfied.
+  - q: Is bank interest earned from remittance taxable?
+    a: Yes. The original remittance principal is not taxed merely because it is deposited, but interest earned on a savings or fixed deposit is taxable investment income. Banks generally deduct the applicable final TDS from interest paid to individuals.
+  - q: Do I need tax clearance to receive a remittance?
+    a: Usually not for an ordinary individual receiving family support. Tax clearance may be required for particular transactions, business or investment processes, visas, property matters, or when a government office or bank specifically requests it.
+  - q: What documents should I keep for foreign remittance?
+    a: Keep the remittance receipt, bank statement, sender details, employment records or invoices where relevant, foreign bank statements, exchange records, withholding certificates, and tax returns that support the source and nature of the funds.
+---
+
+<h2 id="short-answer">Short Answer: Is Remittance Taxable in Nepal?</h2>
+
+<strong>No, receiving a remittance in Nepal is not automatically taxable.</strong> Money entering Nepal through a bank or licensed remittance channel does not, by itself, create an income-tax liability for the recipient. The tax question depends on what the money represents: family support, your own foreign earnings, freelance income, a gift, a loan, or interest earned after deposit.
+
+A remittance is a transfer of money, not a separate category of income. Tax liability generally follows the underlying source and nature of the funds, together with your tax residency under the Income Tax Act, 2058.
+
+<h2 id="type-of-money">Tax Treatment by Type of Money Received</h2>
+
+- **Family support or personal remittance** — Generally not taxable to the recipient when it is a genuine personal gift or family transfer.
+- **Your own foreign employment salary** — The transfer is not a new taxable event. Residents may have worldwide-income obligations; non-residents are generally taxed only on Nepal-source income.
+- **Freelance or remote-work income** — Potentially taxable foreign-source service or business income. A qualifying 5% final withholding regime may apply when all conditions are met.
+- **Interest from a bank deposit** — Taxable investment income. The bank deducts applicable TDS from the interest, not from the original remittance principal.
+- **Own money moved from a foreign account** — A transfer of existing funds, not automatically new income. The underlying source and prior tax treatment still matter.
+
+> **Important:** This is a general guide, not personalized tax advice. Residency, source, transaction type, payment channel, and current law can change the result.
+
+<h2 id="remittance-rate">What Is the Remittance Tax Rate in Nepal?</h2>
+
+Nepal does not have a general remittance tax rate applied to every inbound transfer. Ordinary personal remittances used for family support are not subject to a separate remittance levy simply because they crossed the border.
+
+A tax may still apply to the underlying income. For example, foreign freelance income can be taxable for a resident, and interest earned after depositing remittance money is taxable investment income. That is different from taxing the remittance principal itself.
+
+<h2 id="one-percent">Where Does the 1% Tax Idea Come From?</h2>
+
+- <strong>Social security tax:</strong> The 1% figure is commonly discussed as part of the income-tax calculation on the first portion of taxable income under recent tax slabs.
+- <strong>Not a remittance levy:</strong> It does not mean that 1% is withheld from every ordinary inward family remittance.
+- <strong>Check the actual payment type:</strong> Any deduction shown by a bank should identify whether it relates to interest, service income, or another taxable payment.
+
+<h2 id="foreign-employment">Tax on Foreign Employment Income</h2>
+
+There is an important distinction between earning salary abroad and sending previously earned salary to Nepal. Sending money home is generally not a second taxable event. The relevant question is whether the underlying salary was taxable in Nepal for the earner during the relevant tax year.
+
+- <strong>Tax residents:</strong> Residents are generally taxed on worldwide income, including foreign-source income, subject to applicable exclusions, credits, and special regimes.
+- <strong>Non-residents:</strong> Non-residents are generally taxed only on Nepal-source income. Foreign employment income earned while non-resident is generally outside Nepal's tax net.
+- <strong>Residency needs facts:</strong> Physical presence and other statutory tests matter. Do not decide residency from the remittance destination alone.
+
+<h2 id="foreign-income">Foreign Income and Freelance Payments</h2>
+
+Freelancing, remote employment, online business, foreign rental income, dividends, interest, and other actively earned foreign-source income should not be confused with a personal gift. For a Nepal tax resident, these receipts can form part of taxable worldwide income.
+
+Qualifying IT, software, consulting, or similar service receipts paid in foreign currency through a PAN-linked Nepali bank account may be eligible for a 5% final withholding arrangement up to the applicable annual limit (commonly reported under the Finance Act/IRD notices governing foreign-currency service income — confirm the exact provision, service scope, payment-channel, PAN, and annual-limit conditions in the current Finance Act and <a href="https://ird.gov.np">IRD</a> notices before relying on it, as of October 2026). Eligibility depends on the exact service, payment route, documentation, and current law. Not every freelancer automatically qualifies.
+
+<h2 id="bank-account">What Happens When Remittance Reaches a Bank Account?</h2>
+
+- <strong>Records:</strong> The bank or licensed remittance company records sender details, amount, currency, date, and stated purpose.
+- <strong>Statement entry:</strong> Your statement may show an inward-remittance or foreign-currency-conversion reference.
+- <strong>Source-of-funds checks:</strong> For large or unusual transactions, the bank may request an employment letter, invoice, contract, or other evidence for anti-money-laundering compliance.
+- <strong>Possible deductions:</strong> Tax may be deducted from interest or qualifying service income. That does not mean the principal remittance was taxed.
+
+<h2 id="nrb-rules">NRB Rules for Remittance and Foreign Currency</h2>
+
+Nepal Rastra Bank regulates foreign-exchange and remittance flows. Use licensed banks and licensed remittance companies for inward transfers, and confirm current limits and documentation requirements with your provider because directives can change. See <a href="https://www.nrb.org.np">nrb.org.np</a> for current foreign-exchange directives.
+
+- Inward remittances should normally use formal, licensed channels.
+- Foreign-currency account eligibility depends on your status, such as resident, NRN, or entity, and on current NRB directives.
+- Large cash foreign-currency movements may require customs declaration and supporting records.
+- Do not assume that every person can open or freely operate every type of foreign-currency account.
+
+<h2 id="principal-interest">Principal vs Interest on a Remittance Deposit</h2>
+
+Depositing remittance money is not, by itself, a taxable event. There is no general deposit tax on the principal merely because it is placed in a savings account or fixed deposit.
+
+Interest earned after the deposit is different. Interest is investment income, and the bank generally deducts the applicable final TDS from the interest paid to an individual. The deduction is on the interest, not on the original remittance.
+
+<h2 id="bank-deductions">When Do Banks Deduct Tax?</h2>
+
+- <strong>Bank interest:</strong> The bank deducts TDS when it pays interest on a savings account or fixed deposit. The rate should be confirmed against current law and the account holder's status.
+- <strong>Qualifying freelance or IT income:</strong> A 5% final withholding arrangement may apply when the legal conditions are satisfied (see the Finance Act/IRD-notice conditions noted above).
+- <strong>Other payments:</strong> Banks may act as withholding agents for other categories covered by the Income Tax Act.
+
+> **Read the bank entry carefully:** A TDS line identifies tax on a particular payment component. It does not automatically mean that the entire inward transfer was taxed.
+
+<h2 id="examples">Simple Examples</h2>
+
+- **Family support** — A son sends Rs 150,000 from Malaysia to his parents as family support. The genuine personal gift is generally not taxed on receipt.
+- **Own foreign salary** — A worker sends Rs 300,000 from Qatar to a Nepal account. The transfer is not new income; tax depends on the worker's residency and the underlying salary rules.
+- **Freelance payment** — A Kathmandu-based developer receives about Rs 400,000 from a US client. This is service income, not a family remittance, and may be subject to the applicable resident tax or qualifying withholding regime.
+- **Deposit interest** — A Rs 500,000 remittance earns Rs 30,000 interest. The principal is not taxed on deposit; the bank deducts applicable TDS from the Rs 30,000 interest.
+
+<h2 id="records">Documents to Keep</h2>
+
+- Remittance receipt showing amount, date, sender, and channel
+- Bank statements showing the credit and any conversion or deduction
+- Sender name, relationship, country, and contact details for family support
+- Employment contract, payslips, and foreign tax records where the money is salary
+- Invoices and client contracts for freelance or business income
+- Foreign bank statements for transfers between your own accounts
+- Exchange-rate and conversion records
+- TDS certificates, withholding records, and relevant filed tax returns
+
+These records help establish the source and nature of funds if a bank or the Inland Revenue Department asks questions, and they support a tax return or tax-clearance application where one is required.
+
+<h2 id="mistakes">Common Mistakes About Remittance Tax</h2>
+
+- Assuming every remittance is taxed at 1%.
+- Treating a transfer of money as automatically equal to taxable income.
+- Calling freelance or remote-work income a family gift.
+- Assuming a bank deposit makes both the principal and interest tax-free.
+- Failing to keep remittance receipts and source-of-funds records.
+- Using informal channels that make future banking or compliance checks harder.
+- Failing to declare taxable foreign-source income when resident.
+- Confusing withholding tax with the final tax position without checking the payment category.
+
+<h2 id="takeaway">Key Takeaway</h2>
+
+- An inward remittance is not automatically taxable income.
+- The source and nature of the funds determine the tax treatment.
+- Family gifts, foreign salary, freelance income, and bank interest can have different rules.
+- There is no blanket 1% tax on ordinary inward remittances.
+- Use formal channels and keep documents that show where the money came from.
+- Confirm current IRD and NRB rules for your specific facts before filing or making a large transfer.
+
+<strong>Useful SolutionsNepal tools:</strong> Estimate exchange value with the <a href="/nepal/finance/remittance-calculator">Remittance Calculator</a> or check Nepal salary obligations with the <a href="/nepal/finance/salary-checker">Salary Tax Calculator</a>.
+
+<h2 id="disclaimer">Disclaimer</h2>
+
+This article provides general information about Nepal's tax and remittance rules and is not personalized tax or legal advice. Tax treatment can depend on residency, source of income, transaction type, payment channel, and current law. Confirm the applicable rules with Nepal's Inland Revenue Department (<a href="https://ird.gov.np">ird.gov.np</a> — including the current Finance Act and IRD notices on foreign-currency service-income withholding) and Nepal Rastra Bank (<a href="https://www.nrb.org.np">nrb.org.np</a>) or a qualified tax professional. Information is presented for 2026 (as of October 2026) and should be rechecked when the law or NRB directives change.

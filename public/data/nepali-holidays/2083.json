@@ -1,0 +1,115 @@
+{
+  "year": 2083,
+  "syncedAt": "2026-08-31T04:58:37.114Z",
+  "source": "S4NKALP/nepali-calendar-api",
+  "months": [
+    {
+      "month": 1,
+      "nameEn": "Baisakh",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 2,
+      "nameEn": "Jestha",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 3,
+      "nameEn": "Ashadh",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 4,
+      "nameEn": "Shrawan",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 5,
+      "nameEn": "Bhadra",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 6,
+      "nameEn": "Ashwin",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 7,
+      "nameEn": "Kartik",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 8,
+      "nameEn": "Mangsir",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 9,
+      "nameEn": "Poush",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 10,
+      "nameEn": "Magh",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 11,
+      "nameEn": "Falgun",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 12,
+      "nameEn": "Chaitra",
+      "nameNp": "",
+      "days": [],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    }
+  ]
+}

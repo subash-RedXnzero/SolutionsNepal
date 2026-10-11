@@ -1,0 +1,934 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Image from '../../components/ui/Image.astro';
+
+import { tools } from '../../data/tools.js';
+import { isGuideSlug, postUrl } from '../../data/guides.js';
+
+const { post, relatedPosts = [], prevPost = null, nextPost = null } = Astro.props;
+
+const isGuide = isGuideSlug(post.slug);
+const sectionName = isGuide ? 'Guides' : 'Blog';
+const sectionHref = isGuide ? '/guides' : '/blog';
+const currentUrl = `https://solutionsnepal.com${postUrl(post)}`;
+const shareText = encodeURIComponent(post.title);
+
+// Blog→tool bridge: every post gets a tool block without hand-maintaining data.
+// Explicit post.relatedTools (array of tool ids) wins; otherwise fall back to
+// the post's blog category mapped to tool categories.
+const BLOG_TO_TOOL_CATEGORY = {
+  Documents: ['language', 'date'],
+  Vehicles: ['vehicle', 'transport'],
+  Finance: ['finance'],
+  Nepal: ['language', 'date'],
+  Calculators: ['finance', 'education'],
+  Converters: ['image-convert', 'language'],
+  Education: ['education'],
+};
+const wantedCategories = post.relatedTools?.length
+  ? null
+  : (BLOG_TO_TOOL_CATEGORY[post.category] || ['tools']);
+const relatedTools = post.relatedTools?.length
+  ? post.relatedTools.map(id => tools.find(t => t.id === id)).filter(Boolean).map(t => ({
+      title: t.title, description: t.description, href: t.href
+    }))
+  : tools.filter(t => wantedCategories.includes(t.category))
+      .slice(0, 4).map(t => ({
+      title: t.title, description: t.description, href: t.href
+    }));
+
+const faqs = post.faqs || [];
+
+const wordCount = post.sections.reduce((n, s) => {
+  const text = (s.content || '') + (s.text || '') + (s.items || []).join(' ');
+  return n + text.replace(/<[^>]*>/g, ' ').trim().split(/[ \t\r\n]+/).filter(Boolean).length;
+}, 0);
+
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.description,
+  author: { '@type': 'Organization', name: post.author || 'SolutionsNepal Team', url: 'https://solutionsnepal.com' },
+  publisher: { '@type': 'Organization', name: 'SolutionsNepal', url: 'https://solutionsnepal.com', logo: 'https://solutionsnepal.com/favicon.svg' },
+  datePublished: post.date,
+  dateModified: post.date,
+  wordCount,
+  inLanguage: 'en',
+  mainEntityOfPage: { '@type': 'WebPage', '@id': currentUrl },
+  image: post.image || 'https://solutionsnepal.com/og-default.png',
+  keywords: post.tags?.join(', '),
+};
+
+const faqJsonLd = faqs.length > 0 ? [{
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}] : [];
+---
+
+<BaseLayout 
+  title={post.title} 
+  description={post.description}
+  ogImage={post.image || '/og-default.png'}
+  ogType="article"
+  author={post.author || 'SolutionsNepal Team'}
+  publishedTime={post.date}
+  modifiedTime={post.date}
+  jsonLd={[articleJsonLd,
+    ...faqJsonLd]}
+>
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress" class="reading-progress" style="width: 0%;"></div>
+
+  <div class="post-layout">
+    <Breadcrumbs items={[
+      { label: sectionName, href: sectionHref },
+      { label: post.title },
+    ]} />
+
+    <article class="post-article">
+
+      <!-- POST HEADER -->
+      <header class="post-header">
+        <span class="post-category">{post.category}</span>
+        <h1>{post.title}</h1>
+        <p class="post-dek">{post.description}</p>
+
+        <!-- Author + Meta -->
+        <div class="post-author-row">
+          <div class="author-avatar-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="author-info">
+            <span class="author-name">{post.author}</span>
+            <span class="author-cred">{post.authorCredential || 'SolutionsNepal Team'}</span>
+          </div>
+          <div class="post-meta">
+            <span>{post.date}</span>
+            <span class="meta-dot"></span>
+            <span>{post.readTime}</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- FEATURED IMAGE -->
+      {post.image && (
+        <div class="post-featured-image">
+          <Image src={post.image} alt={post.title} width={1200} height={630} loading="eager" fetchpriority="high" wrapper={false} />
+          {post.image.includes('unsplash.com') && (
+            <p class="post-image-credit">Photo via <a href="https://unsplash.com/license" target="_blank" rel="noopener">Unsplash</a> — free to use. All article text is original SolutionsNepal writing; factual rates/fees cite official sources (NRB, IRD, DoTM, OCR).</p>
+          )}
+        </div>
+      )}
+
+      <!-- TWO-COLUMN: Content + Sidebar -->
+      <div class="post-columns">
+
+        <!-- MAIN CONTENT -->
+        <div class="post-content">
+          {post.sections.map(section => {
+            if (section.type === 'heading' && section.level === 2) {
+              return <h2 id={section.id}>{section.text}</h2>;
+            }
+            if (section.type === 'heading' && section.level === 3) {
+              return <h3 id={section.id}>{section.text}</h3>;
+            }
+            if (section.type === 'paragraph') {
+              return <p set:html={section.content} />;
+            }
+            if (section.type === 'list') {
+              const Tag = section.style === 'ol' ? 'ol' : 'ul';
+              return <Tag>{section.items.map(item => <li set:html={item} />)}</Tag>;
+            }
+            if (section.type === 'callout') {
+              return (
+                <div class={`callout ${section.style === 'accent' ? 'callout-accent' : ''}`}>
+                  <div><strong>{section.bold}</strong> <span set:html={section.content} /></div>
+                </div>
+              );
+            }
+            if (section.type === 'formula') {
+              return <div class="formula-box"><code>{section.code}</code></div>;
+            }
+            if (section.type === 'datatable') {
+              return (
+                <div class="data-table">
+                  {section.rows.map(row => (
+                    <div class="data-row">
+                      <span class="data-label">{row.label}</span>
+                      <span class="data-value">{row.value}</span>
+                    </div>
+                  ))}
+                </div>
+              );
+            }
+            if (section.type === 'table') {
+              return (
+                <div class="table-wrap">
+                  <table class="post-table">
+                    {section.headers && (
+                      <thead>
+                        <tr>
+                          {section.headers.map(h => <th>{h}</th>)}
+                        </tr>
+                      </thead>
+                    )}
+                    <tbody>
+                      {section.rows.map(row => (
+                        <tr>
+                          {row.map(cell => <td set:html={cell} />)}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            }
+            if (section.type === 'html') {
+              return <div set:html={section.content} />;
+            }
+            return null;
+          })}
+
+          <!-- FAQ (PAA / featured-snippet target) -->
+          {faqs.length > 0 && (
+            <section class="faq-section">
+              <h2 id="faq">Frequently asked questions</h2>
+              {faqs.map(f => (
+                <details class="faq-item">
+                  <summary>{f.q}</summary>
+                  <div class="faq-a"><p set:html={f.a} /></div>
+                </details>
+              ))}
+            </section>
+          )}
+
+          <!-- TRY THE TOOLS -->
+          {relatedTools.length > 0 && (
+            <section class="post-tools">
+              <h2 id="related-tools">Try the free tools</h2>
+              <p class="post-tools-sub">Put this guide to work — every SolutionsNepal tool is free and needs no signup.</p>
+              <div class="post-tools-grid">
+                {relatedTools.map(t => (
+                  <a href={t.href} class="post-tool-card">
+                    <span class="pt-name">{t.title}</span>
+                    <span class="pt-desc">{t.description}</span>
+                    <span class="pt-cta">Open tool <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- TAGS -->
+          {post.tags && post.tags.length > 0 && (
+            <div class="post-tags">
+              {post.tags.map(tag => (
+                <span class="post-tag">{tag}</span>
+              ))}
+            </div>
+          )}
+
+          <!-- SHARE BUTTONS -->
+          <div class="share-bar">
+            <span class="share-label">Share this article</span>
+            <div class="share-buttons">
+              <a href={`https://x.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(currentUrl)}`} target="_blank" rel="noopener noreferrer" class="share-btn" aria-label="Share on X">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+                X
+              </a>
+              <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`} target="_blank" rel="noopener noreferrer" class="share-btn" aria-label="Share on LinkedIn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                LinkedIn
+              </a>
+              <button id="copy-link-btn" class="share-btn" aria-label="Copy link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                <span id="copy-link-text">Copy Link</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- AUTHOR BIO CARD -->
+          <div class="author-bio-card">
+            <div class="author-bio-avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="author-bio-text">
+              <strong>Written by {post.author}</strong>
+              <p>{post.authorCredential || 'SolutionsNepal provides free calculators, converters, and everyday tools for Nepal.'}</p>
+            </div>
+          </div>
+
+          <!-- PREV / NEXT -->
+          {(prevPost || nextPost) && (
+            <nav class="post-nav">
+              {prevPost ? (
+                <a href={postUrl(prevPost)} class="post-nav-link">
+                  <span class="post-nav-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    Previous
+                  </span>
+                  <span class="post-nav-title">{prevPost.title}</span>
+                </a>
+              ) : <div />}
+              {nextPost ? (
+                <a href={postUrl(nextPost)} class="post-nav-link post-nav-next">
+                  <span class="post-nav-label">
+                    Next
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                  </span>
+                  <span class="post-nav-title">{nextPost.title}</span>
+                </a>
+              ) : <div />}
+            </nav>
+          )}
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <aside class="post-sidebar">
+          <!-- TOC -->
+          <div class="sidebar-card">
+            <h4 class="sidebar-heading">On this page</h4>
+            <nav class="toc-list">
+              {post.headings.map(h => (
+                <a href={`#${h.id}`} class={`toc-link toc-level-${h.level}`}>{h.text}</a>
+              ))}
+            </nav>
+          </div>
+
+          <!-- EXPLORE ALL TOOLS -->
+          <div class="sidebar-card sidebar-newsletter">
+            <div class="newsletter-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
+            </div>
+            <h4 class="sidebar-heading">Put this guide to work</h4>
+            <p class="newsletter-desc">55+ free tools for everyday Nepal — no signup, works offline.</p>
+            <a href="/nepal" class="newsletter-btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none;">Browse all tools</a>
+          </div>
+
+          <!-- RELATED POSTS -->
+          {relatedPosts.length > 0 && (
+            <div class="sidebar-card">
+              <h4 class="sidebar-heading">Related articles</h4>
+              <div class="related-list">
+                {relatedPosts.map(rp => (
+                  <a href={postUrl(rp)} class="related-item">
+                    {rp.image && (
+                      <div class="related-thumb">
+                        <Image src={rp.image} alt={rp.title} width={120} height={68} loading="lazy" wrapper={false} />
+                      </div>
+                    )}
+                    <div class="related-info">
+                      <span class="related-title">{rp.title}</span>
+                      <span class="related-meta">{rp.readTime}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </aside>
+
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<script>
+  // Reading progress bar
+  const progressBar = document.getElementById('reading-progress');
+  const article = document.querySelector('.post-article');
+  function updateProgress() {
+    if (!progressBar || !article) return;
+    const rect = article.getBoundingClientRect();
+    const total = article.offsetHeight - window.innerHeight;
+    const scrolled = -rect.top;
+    const pct = Math.min(Math.max(scrolled / total * 100, 0), 100);
+    progressBar.style.width = `${pct}%`;
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // TOC active state
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = document.querySelectorAll('[id]');
+  function updateToc() {
+    let current = '';
+    sections.forEach(s => {
+      const el = s as HTMLElement;
+      if (el.getBoundingClientRect().top <= 120) current = el.id;
+    });
+    tocLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${current}`));
+  }
+  window.addEventListener('scroll', updateToc, { passive: true });
+  updateToc();
+
+  // Copy link button
+  const copyBtn = document.getElementById('copy-link-btn');
+  const copyText = document.getElementById('copy-link-text');
+  copyBtn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      if (copyText) copyText.textContent = 'Copied!';
+      setTimeout(() => { if (copyText) copyText.textContent = 'Copy Link'; }, 2000);
+    } catch {}
+  });
+</script>
+
+<style>
+  /* ── Reading Progress ── */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--nk-accent);
+    z-index: 100;
+    transition: width 0.1s linear;
+  }
+
+  /* ── Layout ── */
+  .post-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 32px 80px;
+  }
+
+  /* ── Header ── */
+  .post-header { margin-bottom: 28px; }
+  .post-category {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--nk-accent);
+    background: var(--nk-accent-subtle);
+    margin-bottom: 12px;
+  }
+  .post-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .post-dek {
+    font-size: 14px;
+    color: var(--nk-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  /* Author row */
+  .post-author-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .author-avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--nk-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nk-text-tertiary);
+    flex-shrink: 0;
+  }
+  .author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .author-name { font-size: 12px; font-weight: 600; color: var(--nk-text); }
+  .author-cred { font-size: 11px; color: var(--nk-text-tertiary); }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--nk-text-tertiary);
+    margin-left: auto;
+  }
+  .meta-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--nk-border);
+  }
+
+  /* ── Featured Image ── */
+  .post-featured-image {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: var(--nk-muted);
+    margin-bottom: 6px;
+  }
+  .post-featured-image img { width: 100%; height: 100%; object-fit: cover; }
+  .post-image-credit {
+    margin: 8px 0 26px;
+    font-size: 11px;
+    color: var(--nk-text-tertiary);
+    line-height: 1.5;
+  }
+  .post-image-credit a { color: var(--nk-text-secondary); text-decoration: underline; text-underline-offset: 2px; }
+  .post-image-credit a:hover { color: var(--nk-accent); }
+
+  /* ── Two-Column ── */
+  .post-columns {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* ── Content ── */
+  .post-content { max-width: 700px; }
+  .post-content h2 { margin: 32px 0 12px; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+  .post-content h2:first-child { margin-top: 0; }
+  .post-content h3 { margin: 24px 0 10px; font-size: 17px; font-weight: 600; }
+  .post-content p { margin: 0 0 16px; font-size: 14px; line-height: 1.75; color: var(--nk-text); }
+  .post-content a { color: var(--nk-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(13,93,78,0.3); transition: text-decoration-color 0.15s; }
+  .post-content a:hover { text-decoration-color: var(--nk-accent); }
+  .post-content ul, .post-content ol { margin: 0 0 16px; padding-left: 20px; font-size: 14px; line-height: 1.75; }
+  .post-content li { margin-bottom: 6px; }
+  .post-content strong { color: var(--nk-text); font-weight: 600; }
+
+  /* Callout */
+  .callout {
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    background: var(--nk-muted);
+    border-left: 3px solid var(--nk-border);
+    margin: 20px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--nk-text-secondary);
+  }
+  .callout strong { color: var(--nk-text); }
+  .callout a { color: var(--nk-accent); }
+  .callout-accent { background: var(--nk-accent-subtle); border-left-color: var(--nk-accent); }
+
+  /* Formula */
+  .formula-box {
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    background: var(--nk-code-bg);
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  .formula-box code { font: 13px/1.6 var(--font-mono); color: var(--nk-text); white-space: nowrap; }
+
+  /* Data Table */
+  .data-table {
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--nk-hairline);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--nk-text-secondary); }
+  .data-value { font-weight: 600; color: var(--nk-text); }
+
+  /* ── Responsive Post Table ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-md);
+    background: var(--nk-card-bg);
+    -webkit-overflow-scrolling: touch;
+  }
+  .post-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    text-align: left;
+  }
+  .post-table th {
+    padding: 11px 14px;
+    background: var(--nk-muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--nk-text-secondary);
+    border-bottom: 1px solid var(--nk-border);
+    white-space: nowrap;
+  }
+  .post-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--nk-hairline);
+    color: var(--nk-text);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .post-table tr:last-child td {
+    border-bottom: none;
+  }
+  .post-table tr:hover td {
+    background: var(--nk-hover, rgba(0,0,0,0.02));
+  }
+
+  /* ── FAQ (PAA / snippet targets) ── */
+  .faq-section {
+    margin: 36px 0 8px;
+    padding-top: 8px;
+  }
+  .faq-section h2 { margin-bottom: 14px; }
+  .faq-item {
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    background: var(--nk-card-bg);
+    overflow: hidden;
+  }
+  .faq-item summary {
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--nk-text);
+    list-style: none;
+    position: relative;
+    padding-right: 40px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    position: absolute;
+    right: 16px;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    transition: transform 0.15s;
+  }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-a { padding: 0 16px 14px; }
+  .faq-a p { margin: 0; font-size: 14px; line-height: 1.65; color: var(--nk-text-secondary); }
+
+  /* ── Try the tools ── */
+  .post-tools { margin: 32px 0 8px; }
+  .post-tools-sub {
+    font-size: 13.5px;
+    color: var(--nk-text-secondary);
+    margin: -6px 0 14px;
+  }
+  .post-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .post-tool-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-md);
+    background: var(--nk-card-bg);
+    text-decoration: none;
+    transition: border-color 0.15s, transform 0.15s;
+    min-height: 44px;
+  }
+  .post-tool-card:hover { border-color: var(--nk-accent); }
+  .post-tool-card:hover .pt-cta svg { transform: translateX(2px); }
+  .pt-name { font-size: 13.5px; font-weight: 600; color: var(--nk-text); }
+  .pt-desc {
+    font-size: 12px;
+    color: var(--nk-text-secondary);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .pt-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--nk-accent);
+    margin-top: 4px;
+  }
+  .pt-cta svg { transition: transform 0.15s; }
+
+  /* ── Tags ── */
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--nk-border);
+  }
+  .post-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    background: var(--nk-muted);
+    border: 1px solid var(--nk-hairline);
+  }
+
+  /* ── Share Bar ── */
+  .share-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 16px 0;
+    border-top: 1px solid var(--nk-border);
+  }
+  .share-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--nk-text-tertiary);
+    white-space: nowrap;
+  }
+  .share-buttons {
+    display: flex;
+    gap: 6px;
+  }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    cursor: pointer;
+    transition: all 0.1s ease;
+    text-decoration: none;
+    font-family: var(--font-sans);
+  }
+  .share-btn:hover {
+    border-color: var(--nk-accent);
+    color: var(--nk-accent);
+  }
+
+  /* ── Author Bio Card ── */
+  .author-bio-card {
+    display: flex;
+    gap: 14px;
+    padding: 20px;
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-lg);
+    background: var(--nk-card-bg);
+    margin-top: 32px;
+  }
+  .author-bio-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--nk-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nk-text-tertiary);
+    flex-shrink: 0;
+  }
+  .author-bio-text strong { font-size: 13px; display: block; margin-bottom: 4px; color: var(--nk-text); }
+  .author-bio-text p { margin: 0; font-size: 12px; color: var(--nk-text-secondary); line-height: 1.5; }
+
+  /* ── Prev / Next ── */
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--nk-border);
+  }
+  .post-nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 16px;
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s;
+  }
+  .post-nav-link:hover { border-color: var(--nk-border-strong); }
+  .post-nav-next { text-align: right; }
+  .post-nav-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--nk-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .post-nav-next .post-nav-label { justify-content: flex-end; }
+  .post-nav-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--nk-text);
+    line-height: 1.4;
+  }
+  .post-nav-link:hover .post-nav-title { color: var(--nk-accent); }
+
+  /* ── Sidebar ── */
+  .post-sidebar {
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .sidebar-card {
+    padding: 16px;
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-lg);
+    background: var(--nk-card-bg);
+  }
+  .sidebar-heading {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--nk-text-tertiary);
+    margin: 0 0 12px;
+  }
+
+  /* TOC */
+  .toc-list { display: flex; flex-direction: column; }
+  .toc-link {
+    display: block;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--nk-hairline);
+    color: var(--nk-text-secondary);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.15s;
+    line-height: 1.4;
+  }
+  .toc-link:last-child { border-bottom: none; }
+  .toc-link:hover { color: var(--nk-accent); }
+  .toc-link.active { color: var(--nk-accent); font-weight: 500; }
+  .toc-level-3 { padding-left: 12px; font-size: 11px; }
+
+  /* Newsletter */
+  .sidebar-newsletter { text-align: center; }
+  .newsletter-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--nk-accent-subtle);
+    color: var(--nk-accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .newsletter-desc {
+    font-size: 12px;
+    color: var(--nk-text-secondary);
+    line-height: 1.5;
+    margin: 0 0 12px;
+  }
+  .newsletter-btn {
+    padding: 9px 12px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--nk-accent);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.1s;
+    min-height: 36px;
+  }
+  .newsletter-btn:hover { background: var(--nk-accent-hover); }
+
+  /* Related */
+  .related-list { display: flex; flex-direction: column; gap: 10px; }
+  .related-item {
+    display: flex;
+    gap: 10px;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .related-item:hover { opacity: 0.8; }
+  .related-thumb {
+    width: 72px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--nk-muted);
+  }
+  .related-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .related-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .related-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--nk-text);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .related-meta { font-size: 11px; color: var(--nk-text-tertiary); }
+
+  /* ── Responsive ── */
+  @media (max-width: 960px) {
+    .post-columns { grid-template-columns: 1fr; gap: 32px; }
+    .post-sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  }
+  @media (max-width: 560px) {
+    .post-layout { padding: 16px 16px 48px; }
+    .post-header h1 { font-size: 22px; }
+    .post-dek { font-size: 13px; }
+    .post-author-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .post-meta { margin-left: 0; }
+    .post-content h2 { font-size: 18px; }
+    .post-content p, .post-content ul, .post-content ol { font-size: 13px; }
+    .post-sidebar { grid-template-columns: 1fr; }
+    .post-nav { grid-template-columns: 1fr; }
+    .share-bar { flex-direction: column; align-items: flex-start; }
+  }
+</style>

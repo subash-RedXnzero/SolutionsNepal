@@ -1,0 +1,973 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import { FISCAL_YEAR_ORDER, getCurrentFiscalYear } from '../../../data/nepal/tax/index.js';
+import { SSF_CURRENT } from '../../../data/nepal/ssf/current.js';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const fy = getCurrentFiscalYear();
+const canonicalUrl = 'https://solutionsnepal.com/nepal/finance/salary-checker';
+const fiscalYears = FISCAL_YEAR_ORDER.map(id => ({ value: id, label: id }));
+const relatedTools = [
+  { title: 'House Rent Tax Calculator', description: 'Tax on rental income in Nepal', href: '/nepal/finance/house-rent-tax' },
+  { title: 'EMI Calculator', description: 'Calculate monthly loan EMI', href: '/nepal/finance/emi-calculator' },
+  { title: 'NEA Electricity Bill', 'description': 'Estimate your electricity bill', href: '/nepal/utilities/electricity-bill' },
+  { title: 'Fuel Cost Calculator', description: 'Estimate your fuel expenses', href: '/nepal/vehicle/fuel-cost' },
+];
+
+const faqItems = [
+  {
+    question: 'What is take-home salary?',
+    answer: 'Take-home salary is what you actually receive after deductions — your SSF contribution, income tax, and any other deductions — are subtracted from your gross salary.',
+  },
+  {
+    question: 'Is my employer\u2019s SSF contribution deducted from my salary?',
+    answer: 'No. The employer\u2019s SSF contribution is paid by your employer on top of your salary. It is never deducted from your take-home pay. Only your own SSF contribution (11% of basic salary) comes out of your salary.',
+  },
+  {
+    question: 'How is salary tax calculated in Nepal?',
+    answer: 'Nepal uses progressive tax slabs. Your annual taxable income (salary minus allowed deductions) is taxed at rates that rise with income. Monthly TDS is your annual tax divided by 12. The exact slabs depend on the fiscal year.',
+  },
+  {
+    question: 'Are absent days automatically unpaid?',
+    answer: 'No. The calculator never assumes an absence is unpaid on its own. You can choose how unpaid leave is deducted in the advanced options, or leave it to your employer\u2019s rule.',
+  },
+  {
+    question: 'Is this 100% accurate?',
+    answer: 'No calculator can promise that. The tool uses verified SSF and tax rules where possible, and clearly marks anything that still needs verification. Always confirm with your employer or IRD Nepal.',
+  },
+];
+---
+
+<BaseLayout
+  title="Nepal Salary Calculator"
+  description="Calculate your take-home salary in Nepal. Enter your basic salary and allowances, and get your net salary, SSF and tax instantly. Works fully in your browser."
+  canonical={canonicalUrl}
+  jsonLd={[
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Nepal Salary Calculator",
+      "description": "Calculate your take-home salary in Nepal with SSF, income tax, and TDS deductions. Free online calculator.",
+      "url": canonicalUrl,
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "NPR" },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(item => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.answer,
+        },
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Calculate Take-Home Salary in Nepal",
+      "description": "Step-by-step guide to calculating your net salary after SSF and income tax deductions in Nepal.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Enter Basic Salary",
+          "text": "Enter your basic monthly salary. This is typically 50-60% of your gross salary and is used as the base for SSF calculation."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Add Allowances",
+          "text": "Add dearness allowance, other allowances, bonus, and any other income. These are added to your gross salary."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Select SSF Status",
+          "text": "Choose whether you are enrolled in SSF. If enrolled, 11% of basic salary is deducted as your SSF contribution."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Select Fiscal Year",
+          "text": "Choose the applicable fiscal year for income tax calculation. Tax slabs change each year."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "View Results",
+          "text": "See your take-home salary, SSF deduction, income tax, and detailed breakdown instantly."
+        }
+      ]
+    }
+  ]}
+>
+  <div id="salary-root" class="mx-auto max-w-[1200px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'Salary Calculator' },
+    ]} />
+
+    <!-- ================= HEADER ================= -->
+    <div class="mb-6">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">Nepal Salary Calculator</h1>
+      <p class="text-[13px] mt-1 leading-relaxed" style="color: var(--nk-text-secondary);">Enter your salary and see how much you actually receive.</p>
+    </div>
+
+    <!-- ================= 2-COLUMN GRID ================= -->
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 lg:gap-6 items-start">
+
+      <!-- ========== LEFT: INPUT PANEL ========== -->
+      <div class="space-y-5 animate-fade-in">
+
+        <!-- ---- Primary Inputs Card ---- -->
+        <section class="nk-card">
+          <div class="px-4 sm:px-5 py-5 space-y-4">
+
+            <!-- Row 1: Salary fields in grid -->
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.15em] mb-3" style="color: var(--nk-text-secondary);">Salary</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { id: 'inc-basic', label: 'Basic Salary', helper: 'Fixed pay before allowances — check your payslip', placeholder: 'e.g. 25,000' },
+                  { id: 'inc-da', label: 'Dearness Allowance', helper: 'Monthly cost-of-living allowance, if any', placeholder: 'e.g. 7,000' },
+                  { id: 'inc-allow', label: 'Other Allowance', helper: 'Transport, housing or other monthly extras', placeholder: 'e.g. 2,000' },
+                  { id: 'inc-bonus', label: 'Bonus / Incentive', helper: 'Yearly bonus ÷ 12, or average monthly incentive', placeholder: 'e.g. 1,000' },
+                  { id: 'inc-other-income', label: 'Other Income', helper: 'Any other taxable pay this month', placeholder: 'e.g. 500' },
+                ].map(f => (
+                  <div>
+                    <label for={f.id} class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">{f.label}</label>
+                    <p class="text-[11px] mb-1" style="color: var(--nk-text-secondary);">{f.helper}</p>
+                    <div class="relative">
+                      <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                      <input
+                        id={f.id}
+                        type="number"
+                        inputmode="decimal"
+                        min="0"
+                        step="100"
+                        placeholder={f.placeholder}
+                        class="input-field"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <!-- Row 2: Manual SSF -->
+            <div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="ssf-emp" class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">Your SSF (Employee)</label>
+                  <p class="text-[11px] mb-1" style="color: var(--nk-text-secondary);">Leave blank for auto (11% of basic)</p>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                    <input id="ssf-emp" type="number" inputmode="decimal" min="0" step="100" placeholder="Auto: 11%" class="input-field" />
+                  </div>
+                </div>
+                <div>
+                  <label for="ssf-emp-r" class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">Employer SSF</label>
+                  <p class="text-[11px] mb-1" style="color: var(--nk-text-secondary);">Leave blank for auto (20% of basic)</p>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                    <input id="ssf-emp-r" type="number" inputmode="decimal" min="0" step="100" placeholder="Auto: 20%" class="input-field" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 3: Segmented Toggles -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- SSF Toggle -->
+              <div>
+                <p class="text-xs font-semibold mb-2" style="color: var(--nk-text);">SSF Status</p>
+                <div class="segmented-group" role="radiogroup" aria-label="SSF enrollment status">
+                  <button id="ssf-yes" class="seg-btn seg-active" role="radio" aria-checked="true">SSF Enrolled</button>
+                  <button id="ssf-no" class="seg-btn" role="radio" aria-checked="false">Not Enrolled</button>
+                </div>
+              </div>
+              <!-- Filing Status Toggle -->
+              <div>
+                <p class="text-xs font-semibold mb-2" style="color: var(--nk-text);">Taxpayer Category</p>
+                <div class="segmented-group" role="radiogroup" aria-label="Taxpayer category">
+                  <button id="filing-individual" class="seg-btn seg-active" data-value="individual" role="radio" aria-checked="true">Individual</button>
+                  <button id="filing-couple" class="seg-btn" data-value="couple" role="radio" aria-checked="false">Couple</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 4: Female rebate -->
+            <label class="flex items-center gap-2.5 cursor-pointer py-1" style="color: var(--nk-text);">
+              <input type="checkbox" id="female" class="w-4 h-4 rounded accent-[var(--nk-accent)]" />
+              <span class="text-xs font-medium">Apply female tax rebate (10%)</span>
+            </label>
+
+          </div>
+        </section>
+
+        <!-- ---- Additional Deductions (Collapsible) ---- -->
+        <details class="nk-card group">
+          <summary class="px-4 sm:px-5 py-3.5 cursor-pointer select-none flex items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-[0.12em]" style="color: var(--nk-text);">Additional Deductions</span>
+              <span class="block text-[11px] mt-0.5" style="color: var(--nk-text-secondary);">CIT, Insurance, Remote Area, EPF</span>
+            </div>
+            <svg class="w-4 h-4 shrink-0 transition-transform duration-200 group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="px-4 sm:px-5 pb-5 space-y-5 border-t pt-4" style="border-color: var(--nk-border);">
+
+            <!-- Insurance -->
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.15em] mb-3" style="color: var(--nk-text-secondary);">Insurance & Retirement</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="ins-life" class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">Life Insurance (annual)</label>
+                  <p class="text-[11px] mb-1" style="color: var(--nk-text-secondary);">Max deductible: Rs. 40,000/yr</p>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                    <input id="ins-life" type="number" inputmode="decimal" min="0" step="1000" placeholder="0" class="input-field" />
+                  </div>
+                </div>
+                <div>
+                  <label for="ins-health" class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">Health Insurance (annual)</label>
+                  <p class="text-[11px] mb-1" style="color: var(--nk-text-secondary);">Max deductible: Rs. 20,000/yr</p>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                    <input id="ins-health" type="number" inputmode="decimal" min="0" step="1000" placeholder="0" class="input-field" />
+                  </div>
+                </div>
+                <div>
+                  <label for="ret-annual" class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">Other Retirement Fund (annual)</label>
+                  <p class="text-[11px] mb-1" style="color: var(--nk-text-secondary);">CIT, PF, or other approved fund</p>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                    <input id="ret-annual" type="number" inputmode="decimal" min="0" step="1000" placeholder="0" class="input-field" />
+                  </div>
+                </div>
+                <div>
+                  <label for="ded-loan" class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">Loan Deduction</label>
+                  <p class="text-[11px] mb-1" style="color: var(--nk-text-secondary);">Monthly loan deduction</p>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                    <input id="ded-loan" type="number" inputmode="decimal" min="0" step="100" placeholder="0" class="input-field" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- More Income -->
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.15em] mb-3" style="color: var(--nk-text-secondary);">More Income</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { id: 'inc-ot', label: 'Overtime' },
+                  { id: 'inc-commission', label: 'Commission' },
+                ].map(f => (
+                  <div>
+                    <label for={f.id} class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">{f.label}</label>
+                    <div class="relative">
+                      <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                      <input id={f.id} type="number" inputmode="decimal" min="0" step="100" placeholder="0" class="input-field" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <!-- Attendance -->
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.15em] mb-3" style="color: var(--nk-text-secondary);">Attendance</p>
+              <div class="grid grid-cols-4 sm:grid-cols-4 gap-2">
+                {[
+                  { id: 'att-calendar', label: 'Calendar', def: 30 },
+                  { id: 'att-working', label: 'Working', def: 22 },
+                  { id: 'att-present', label: 'Present', def: 22 },
+                  { id: 'att-paid-leave', label: 'Paid leave', def: 0 },
+                  { id: 'att-unpaid-leave', label: 'Unpaid leave', def: 0 },
+                  { id: 'att-absent', label: 'Absent', def: 0 },
+                  { id: 'att-holidays', label: 'Holidays', def: 0 },
+                  { id: 'att-rest', label: 'Rest days', def: 8 },
+                ].map(f => (
+                  <div>
+                    <label for={f.id} class="block text-[10px] font-medium mb-0.5 truncate" style="color: var(--nk-text-secondary);">{f.label}</label>
+                    <input id={f.id} type="number" inputmode="numeric" min="0" step="1" value={f.def}
+                      class="w-full px-1.5 py-1.5 rounded-md border mono text-xs transition-colors duration-150 focus:ring-2 focus:ring-offset-0 text-center"
+                      style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);" />
+                  </div>
+                ))}
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                <div>
+                  <label for="ded-method" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Unpaid-leave method</label>
+                  <div class="relative">
+                    <select id="ded-method" class="w-full px-3 py-2 rounded-lg border text-xs appearance-none transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                      style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                      <option value="not-specified">Not specified (no auto deduction)</option>
+                      <option value="calendar">Calendar-day method</option>
+                      <option value="30-day">30-day method</option>
+                      <option value="working-day">Working-day method</option>
+                      <option value="employer-contract">Employer/contract rule</option>
+                    </select>
+                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <label class="flex items-center gap-2 text-xs pt-4 sm:pt-5 cursor-pointer" style="color: var(--nk-text);">
+                  <input type="checkbox" id="att-include-absent" class="w-3.5 h-3.5 rounded accent-[var(--nk-accent)]" />
+                  Treat absent days as unpaid
+                </label>
+              </div>
+            </div>
+
+            <!-- SSF Advanced -->
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.15em] mb-3" style="color: var(--nk-text-secondary);">SSF Advanced</p>
+              <p class="text-[11px] mb-3 leading-relaxed" style="color: var(--nk-text-secondary);">SSF is 11% of basic salary for you, 20% for your employer. Change only if your employer treats other allowances as basic remuneration.</p>
+
+              <div class="mb-3">
+                <label for="ssf-base-mode" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Salary amount used for SSF</label>
+                <div class="relative">
+                  <select id="ssf-base-mode" class="w-full px-3 py-2 rounded-lg border text-xs appearance-none transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                    style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                    <option value="basic">Basic salary only (official default)</option>
+                    <option value="components">The items ticked as SSF below</option>
+                    <option value="custom">A custom amount</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+              <div id="ssf-custom-wrap" class="hidden mb-3">
+                <label for="ssf-custom-base" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Custom amount used for SSF (Rs)</label>
+                <input id="ssf-custom-base" type="number" inputmode="decimal" min="0" step="1000" placeholder="30,000" class="input-field" />
+              </div>
+
+              <div class="space-y-1.5">
+                {[
+                  { id: 'inc-basic', label: 'Basic Salary', ssf: true, tax: true },
+                  { id: 'inc-da', label: 'Dearness Allowance', ssf: false, tax: true },
+                  { id: 'inc-allow', label: 'Other Allowance', ssf: false, tax: true },
+                  { id: 'inc-ot', label: 'Overtime', ssf: false, tax: true },
+                  { id: 'inc-commission', label: 'Commission', ssf: false, tax: true },
+                  { id: 'inc-bonus', label: 'Bonus', ssf: false, tax: true },
+                  { id: 'inc-other-income', label: 'Other Income', ssf: false, tax: true },
+                ].map(f => (
+                  <label class="flex items-center justify-between gap-2 px-3 py-2 rounded-lg border text-xs" style="border-color: var(--nk-border); background-color: var(--nk-bg);">
+                    <span style="color: var(--nk-text);">{f.label}</span>
+                    <span class="flex items-center gap-2.5">
+                      <span class="text-[10px] font-medium uppercase tracking-wider" style="color: var(--nk-text-secondary);">SSF</span>
+                      <input type="checkbox" class="ssf-cb w-3.5 h-3.5 rounded accent-[var(--nk-accent)]" data-for={f.id} aria-label={`Use ${f.label} for SSF`} />
+                      <span class="text-[10px] font-medium uppercase tracking-wider" style="color: var(--nk-text-secondary);">Tax</span>
+                      <input type="checkbox" class="tax-cb w-3.5 h-3.5 rounded accent-[var(--nk-accent)]" data-for={f.id} aria-label={`${f.label} is taxable`} checked />
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <!-- Other deductions -->
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.15em] mb-3" style="color: var(--nk-text-secondary);">Other Deductions</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="ded-advance" class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">Advance / Negative Adj.</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                    <input id="ded-advance" type="number" inputmode="decimal" min="0" step="100" placeholder="0" class="input-field" />
+                  </div>
+                </div>
+                <div>
+                  <label for="ded-work-hour" class="block text-xs font-semibold mb-1" style="color: var(--nk-text);">Work Hour Deduction</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium" style="color: var(--nk-text-secondary);">Rs</span>
+                    <input id="ded-work-hour" type="number" inputmode="decimal" min="0" step="100" placeholder="0" class="input-field" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tax Options -->
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.15em] mb-3" style="color: var(--nk-text-secondary);">Tax Options</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="fy-select" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Fiscal Year</label>
+                  <div class="relative">
+                    <select id="fy-select" class="w-full px-3 py-2 rounded-lg border text-xs appearance-none transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                      style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                      {fiscalYears.map(fyOpt => (
+                        <option value={fyOpt.value}>{fyOpt.label}</option>
+                      ))}
+                    </select>
+                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <!-- Taxpayer category hidden here, shown as segmented toggle above -->
+              </div>
+            </div>
+
+          </div>
+        </details>
+
+        <!-- ---- Error ---- -->
+        <div id="calc-error" class="hidden rounded-lg border px-4 py-3 text-[13px] font-medium animate-fade-in" role="alert" aria-live="polite" style="border-color: var(--nk-accent); color: var(--nk-accent); background-color: var(--nk-accent-subtle);"></div>
+
+        <!-- ---- Calculate Button ---- -->
+        <button id="calc-btn"
+          class="nk-btn nk-btn-primary w-full py-2.5">
+          Calculate Salary
+        </button>
+        <button id="copy-link-btn" class="nk-btn nk-btn-ghost w-full py-2 mt-2 text-[12.5px]">Copy result link</button>
+        <input type="hidden" id="sal-ssf" value="1" />
+        <input type="hidden" id="sal-filing" value="individual" />
+
+      </div>
+
+      <!-- ========== RIGHT: STICKY SUMMARY CARD ========== -->
+      <div class="hidden md:block" style="position: sticky; top: 88px;">
+        <div class="nk-card overflow-hidden">
+
+          <!-- Net Salary Hero -->
+          <div class="p-5 text-center" style="background: var(--nk-accent-subtle);">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color: var(--nk-text-secondary);">Monthly Take-Home</p>
+            <p id="res-net" class="mt-2 text-4xl font-extrabold tracking-tight mono" style="color: var(--nk-accent);">—</p>
+            <p class="mt-1 text-[11px]" style="color: var(--nk-text-secondary);">Your net salary every month</p>
+            <div id="accuracy-badge" class="mt-3 flex justify-center"></div>
+          </div>
+
+          <!-- Summary Stats -->
+          <div id="calc-result" class="hidden border-t" style="border-color: var(--nk-border);">
+            <div class="grid grid-cols-2 divide-x" style="border-color: var(--nk-border);">
+              <div class="px-4 py-3 text-center">
+                <p class="text-[10px] font-bold uppercase tracking-[0.15em]" style="color: var(--nk-text-secondary);">Gross Salary</p>
+                <p id="res-gross" class="mt-1 text-lg font-bold mono" style="color: var(--nk-text);"></p>
+              </div>
+              <div class="px-4 py-3 text-center">
+                <p class="text-[10px] font-bold uppercase tracking-[0.15em]" style="color: var(--nk-text-secondary);">Monthly Tax</p>
+                <p id="b-tax" class="mt-1 text-lg font-bold mono" style="color: var(--nk-text);"></p>
+              </div>
+            </div>
+
+            <!-- Deductions Breakdown -->
+            <div class="px-4 py-3 space-y-2" style="border-top: 1px solid var(--nk-border);">
+              <div class="flex justify-between items-center text-xs">
+                <span style="color: var(--nk-text-secondary);">Employee SSF</span>
+                <span id="b-ssf" class="mono font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span style="color: var(--nk-text-secondary);">Other Deductions</span>
+                <span id="b-other-ded" class="mono font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between items-center font-bold text-xs pt-2" style="border-top: 1px dashed var(--nk-border);">
+                <span style="color: var(--nk-text);">Net Salary</span>
+                <span id="b-net" class="mono" style="color: var(--nk-accent);"></span>
+              </div>
+            </div>
+
+            <!-- Tax Slab Breakdown (Collapsible) -->
+            <details class="border-t" style="border-color: var(--nk-border);">
+              <summary class="px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] cursor-pointer select-none flex items-center justify-between" style="color: var(--nk-accent);">
+                <span>Tax Slab Breakdown</span>
+                <svg class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 open:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-accent);"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <div class="px-4 pb-3 pt-1 space-y-1.5 text-xs">
+                <div id="tax-slab-list"></div>
+              </div>
+            </details>
+
+            <!-- Warnings -->
+            <div id="warnings-box" class="px-4 pb-3 space-y-2"></div>
+
+            <!-- Employer SSF (compact) -->
+            <div class="px-4 py-3 space-y-1.5" style="border-top: 1px solid var(--nk-border); background-color: var(--nk-bg);">
+              <div class="flex justify-between items-center text-xs">
+                <span style="color: var(--nk-text-secondary);">Employer SSF</span>
+                <span id="b-emp-ssf" class="mono font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between items-center text-xs font-semibold" style="border-top: 1px dashed var(--nk-border); padding-top: 6px;">
+                <span style="color: var(--nk-text);">Total SSF</span>
+                <span id="b-total-ssf" class="mono" style="color: var(--nk-text);"></span>
+              </div>
+              <p class="text-[10px] leading-relaxed pt-1" style="color: var(--nk-text-secondary);">Employer SSF is paid by your employer — <strong>not</strong> deducted from your pay. <span id="ssf-source-note"></span></p>
+            </div>
+
+            <!-- Detailed Calculation (Collapsible) -->
+            <details class="border-t" style="border-color: var(--nk-border);">
+              <summary class="px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] cursor-pointer select-none" style="color: var(--nk-accent);">Detailed Calculation</summary>
+              <div class="px-4 pb-3 pt-1 space-y-3 text-xs">
+
+                <div id="detail-att" style="display:none;">
+                  <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">Salary before deductions</span><span id="d-att" class="mono font-medium" style="color: var(--nk-text);"></span></div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">Income used to calculate tax</span><span id="d-taxable-month" class="mono font-medium" style="color: var(--nk-text);"></span></div>
+                  <p class="text-[11px] mt-0.5" style="color: var(--nk-text-secondary);">Per month · <span id="d-taxable-year" class="mono"></span> per year</p>
+                </div>
+
+                <div>
+                  <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">Monthly TDS</span><span id="d-tds" class="mono font-semibold" style="color: var(--nk-text);"></span></div>
+                  <p class="text-[11px] mt-0.5" style="color: var(--nk-text-secondary);">Annual tax ÷ 12</p>
+                </div>
+
+                <div>
+                  <div class="flex justify-between"><span style="color: var(--nk-text-secondary);">SSF base amount</span><span id="d-ssf-base" class="mono font-medium" style="color: var(--nk-text);"></span></div>
+                </div>
+
+                <!-- Assumptions -->
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-wider mb-1.5" style="color: var(--nk-text-secondary);">Assumptions</p>
+                  <div id="assumptions-box" class="space-y-1 text-[11px]"></div>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- Placeholder when no result -->
+          <div id="summary-placeholder" class="p-6 text-center border-t" style="border-color: var(--nk-border);">
+            <div class="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center" style="background-color: var(--nk-bg);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <p class="text-xs font-semibold" style="color: var(--nk-text-secondary);">Enter your salary and click Calculate</p>
+            <p class="text-[11px] mt-1" style="color: var(--nk-text-secondary);">Results appear here in real-time</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /2-col grid -->
+
+    <!-- ================= MOBILE NET SALARY BADGE (bottom) ================= -->
+    <div id="mobile-net-badge" class="md:hidden mt-5 hidden animate-fade-in">
+      <div class="rounded-xl border p-4 flex items-center justify-between" style="border-color: var(--nk-border); background: linear-gradient(135deg, var(--nk-accent-subtle), var(--nk-surface));">
+        <div>
+          <p class="text-[10px] font-semibold uppercase tracking-[0.15em]" style="color: var(--nk-text-secondary);">Take-home</p>
+          <p id="mob-net" class="text-xl font-extrabold tracking-tight mono mt-0.5" style="color: var(--nk-accent);"></p>
+        </div>
+        <div class="text-right">
+          <p class="text-[10px] font-semibold uppercase tracking-[0.15em]" style="color: var(--nk-text-secondary);">Gross</p>
+          <p id="mob-gross" class="text-sm font-semibold mono mt-0.5" style="color: var(--nk-text);"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ABOUT THESE CALCULATIONS ================= -->
+    <details class="mt-6 nk-card">
+      <summary class="px-4 sm:px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] cursor-pointer select-none" style="color: var(--nk-text);">About These Calculations</summary>
+      <div class="px-4 sm:px-5 pb-4 pt-1 space-y-2 text-[11px]" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);">
+        <div class="flex justify-between gap-3 pt-3"><span>Fiscal Year</span><span id="about-fy" class="font-medium text-right" style="color: var(--nk-text);">{fy.label} · {fy.bs}</span></div>
+        <div class="flex justify-between gap-3"><span>SSF rules</span><span id="about-ssf" class="font-medium text-right" style="color: var(--nk-text);">{SSF_CURRENT.source.name}</span></div>
+        <div class="flex justify-between gap-3"><span>Tax rules</span><span id="about-tax" class="font-medium text-right" style="color: var(--nk-text);">{fy.source.name}</span></div>
+        <div class="flex justify-between gap-3"><span>Last verified</span><span id="about-verified" class="font-medium text-right" style="color: var(--nk-text);">2026-08-19</span></div>
+        <p class="pt-2 leading-relaxed">SSF: your contribution 11% of basic salary (10% pension + 1% social security tax). Employer\u2019s contribution 20% of basic salary, paid on top of your salary. Tax: progressive slabs per the selected fiscal year. TDS is annual tax divided by 12.</p>
+        <p class="pt-1 leading-relaxed">Sources: <a href={SSF_CURRENT.source.url} target="_blank" rel="noopener" style="color: var(--nk-accent);">{SSF_CURRENT.source.name}</a>, <a href={fy.source.url} target="_blank" rel="noopener" style="color: var(--nk-accent);">{fy.source.name}</a>. This is an estimate, not legal, tax or payroll advice — confirm with your employer or IRD Nepal.</p>
+      </div>
+    </details>
+
+    <!-- ================= FAQ ================= -->
+    <div class="mt-8">
+      <h2 class="text-lg font-bold mb-4" style="color: var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-1">
+        {faqItems.map(item => (
+          <details class="nk-card">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color: var(--nk-text);">{item.question}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);">
+              <p class="pt-3">{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <Disclaimer variant="tax" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <style>
+    /* ========== Base Utility Classes ========== */
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .devanagari { font-family: 'Noto Sans Devanagari', sans-serif; }
+
+    /* ========== Input Field Style ========== */
+    .input-field {
+      width: 100%;
+      padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--nk-border);
+      background-color: var(--nk-bg);
+      color: var(--nk-text);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input-field::placeholder { color: var(--nk-text-secondary); opacity: 0.6; }
+    .input-field:focus {
+      outline: none;
+      border-color: var(--nk-accent);
+      box-shadow: 0 0 0 2px var(--nk-accent-subtle);
+    }
+
+    /* ========== Segmented Toggle ========== */
+    .segmented-group {
+      display: flex;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      border: 1px solid var(--nk-border);
+      background-color: var(--nk-bg);
+    }
+    .seg-btn {
+      flex: 1;
+      padding: 0.4rem 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      background-color: transparent;
+      color: var(--nk-text-secondary);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .seg-btn + .seg-btn {
+      border-left: 1px solid var(--nk-border);
+    }
+    .seg-btn.seg-active {
+      background-color: var(--nk-accent);
+      color: white;
+    }
+    .seg-btn:not(.seg-active):hover {
+      background-color: var(--nk-muted);
+    }
+
+    /* ========== Section divider inside cards ========== */
+    #calc-result .divide-x > div:not(:last-child) {
+      border-right-color: var(--nk-border);
+    }
+
+    /* ========== Mobile compact pass (desktop untouched) ========== */
+    @media (max-width: 767px) {
+      #salary-root .py-6 { padding-block: 1rem; }
+      #salary-root .mb-6 { margin-bottom: 1rem; }
+      #salary-root .mt-6 { margin-top: 1rem; }
+      #salary-root .mt-5 { margin-top: 1rem; }
+      #salary-root .gap-5 { gap: 1rem; }
+      #salary-root .gap-3 { gap: 0.625rem; }
+      #salary-root .mb-3 { margin-bottom: 0.5rem; }
+      #salary-root .space-y-5 > :not(:last-child) { margin-block-start: 1rem; margin-block-end: 1rem; }
+      #salary-root .space-y-4 > :not(:last-child) { margin-block-start: 0.75rem; margin-block-end: 0.75rem; }
+      #salary-root .nk-card .py-5 { padding-block: 1rem; }
+      #salary-root .py-3\.5 { padding-block: 0.625rem; }
+      #salary-root .input-field { padding-top: 0.45rem; padding-bottom: 0.45rem; }
+      #salary-root .seg-btn { padding-top: 0.35rem; padding-bottom: 0.35rem; }
+      #salary-root #mobile-net-badge .p-4 { padding: 0.75rem; }
+    }
+  </style>
+
+  <script>
+    import { calculateNepalSalary } from '../../../lib/calculators/nepal-salary.js';
+    import { formatNumber } from '../../../lib/utils/npr.js';
+    import { readSharedParams, syncUrl, copyLink } from '../../../lib/share-params.js';
+
+    // Shareable result links: short param → input id. Toggles ride along
+    // via hidden fields (attendance details intentionally excluded).
+    const SAL_PARAMS = {
+      b: 'inc-basic', da: 'inc-da', al: 'inc-allow', ot: 'inc-ot',
+      com: 'inc-commission', bon: 'inc-bonus', oi: 'inc-other-income',
+      se: 'ssf-emp', ser: 'ssf-emp-r',
+      loan: 'ded-loan', adv: 'ded-advance', wh: 'ded-work-hour',
+      li: 'ins-life', hi: 'ins-health', ra: 'ret-annual',
+      scb: 'ssf-custom-base',
+      f: 'female',
+      fy: 'fy-select', sbm: 'ssf-base-mode', dm: 'ded-method',
+      ssf: 'sal-ssf', fs: 'sal-filing',
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const num = (id) => { const v = parseFloat($(id)?.value); return Number.isFinite(v) && v >= 0 ? v : 0; };
+    const money = (v) => (v == null ? '—' : 'NPR ' + formatNumber(v));
+    const minus = (v) => (v == null ? '—' : '− ' + money(v));
+
+    // ---------- Component toggles ----------
+    const FIELD_TO_KEY = {
+      'inc-basic': 'basicSalary',
+      'inc-da': 'dearnessAllowance',
+      'inc-allow': 'otherAllowances',
+      'inc-ot': 'overtimeAmount',
+      'inc-commission': 'commission',
+      'inc-bonus': 'bonus',
+      'inc-other-income': 'otherIncome',
+    };
+    document.querySelectorAll('.ssf-cb').forEach(cb => {
+      cb.checked = cb.dataset.for === 'inc-basic';
+      cb.addEventListener('change', () => {
+        if (cb.checked) $('ssf-base-mode').value = 'components';
+      });
+    });
+
+    // ---------- SSF enrolled toggle ----------
+    let ssfEnabled = true;
+    $('ssf-yes').addEventListener('click', () => setSSF(true));
+    $('ssf-no').addEventListener('click', () => setSSF(false));
+    function setSSF(on) {
+      ssfEnabled = on;
+      const hidden = $('sal-ssf');
+      if (hidden) hidden.value = on ? '1' : '0';
+      $('ssf-yes').classList.toggle('seg-active', on);
+      $('ssf-yes').setAttribute('aria-checked', on);
+      $('ssf-no').classList.toggle('seg-active', !on);
+      $('ssf-no').setAttribute('aria-checked', !on);
+    }
+    $('ssf-base-mode').addEventListener('change', () => {
+      $('ssf-custom-wrap').classList.toggle('hidden', $('ssf-base-mode').value !== 'custom');
+    });
+
+    // ---------- Filing status toggle ----------
+    let filingStatus = 'individual';
+    $('filing-individual').addEventListener('click', () => setFiling('individual'));
+    $('filing-couple').addEventListener('click', () => setFiling('couple'));
+    function setFiling(val) {
+      filingStatus = val;
+      const hidden = $('sal-filing');
+      if (hidden) hidden.value = val;
+      $('filing-individual').classList.toggle('seg-active', val === 'individual');
+      $('filing-individual').setAttribute('aria-checked', val === 'individual');
+      $('filing-couple').classList.toggle('seg-active', val === 'couple');
+      $('filing-couple').setAttribute('aria-checked', val === 'couple');
+    }
+
+    // ---------- Friendly validation ----------
+    const INCOME_FIELDS = ['inc-basic', 'inc-da', 'inc-allow', 'inc-ot', 'inc-commission', 'inc-bonus', 'inc-other-income'];
+    const MONEY_FIELDS = INCOME_FIELDS.concat(['ssf-emp', 'ssf-emp-r', 'ded-work-hour', 'ded-advance', 'ded-loan', 'ins-life', 'ins-health', 'ret-annual', 'ssf-custom-base']);
+    function showError(msg) {
+      const el = $('calc-error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+    function clearError() { $('calc-error').classList.add('hidden'); }
+    function validateInputs() {
+      const negatives = [];
+      for (const id of MONEY_FIELDS) {
+        const raw = $(id)?.value;
+        if (raw && Number(raw) < 0) negatives.push(id);
+      }
+      if (negatives.length) { showError('Amounts can\u2019t be negative. Please fix the highlighted fields.'); return false; }
+      const gross = INCOME_FIELDS.reduce((sum, id) => sum + num(id), 0);
+      if (gross <= 0) { showError('Please enter your salary amount first.'); return false; }
+      return true;
+    }
+
+    // ---------- Shared input collection ----------
+    function collectInput() {
+      const ssfApplicable = [];
+      const taxable = [];
+      document.querySelectorAll('.ssf-cb').forEach(cb => { if (cb.checked) ssfApplicable.push(FIELD_TO_KEY[cb.dataset.for]); });
+      document.querySelectorAll('.tax-cb').forEach(cb => { if (cb.checked) taxable.push(FIELD_TO_KEY[cb.dataset.for]); });
+
+      const ssfEmpRaw = $('ssf-emp')?.value;
+      const ssfEmprRaw = $('ssf-emp-r')?.value;
+      const ssfManual = {};
+      if (ssfEmpRaw !== undefined && ssfEmpRaw.trim() !== '') ssfManual.employee = num('ssf-emp');
+      if (ssfEmprRaw !== undefined && ssfEmprRaw.trim() !== '') ssfManual.employer = num('ssf-emp-r');
+
+      return {
+        fiscalYear: $('fy-select').value,
+        income: {
+          basicSalary: num('inc-basic'),
+          dearnessAllowance: num('inc-da'),
+          otherAllowances: num('inc-allow'),
+          overtimeAmount: num('inc-ot'),
+          bonus: num('inc-bonus'),
+          commission: num('inc-commission'),
+          otherIncome: num('inc-other-income'),
+          ssfApplicable,
+          taxable,
+        },
+        ssfEnabled,
+        ssfBaseMode: $('ssf-base-mode').value,
+        ssfCustomBase: num('ssf-custom-base'),
+        ssfCeiling: { enabled: false, amount: 50000 },
+        ssfManual: Object.keys(ssfManual).length ? ssfManual : null,
+        filingStatus,
+        female: $('female').checked,
+        insurance: { life: num('ins-life'), health: num('ins-health') },
+        otherRetirementAnnual: num('ret-annual'),
+        deductions: { loan: num('ded-loan'), advance: num('ded-advance'), otherEmployee: num('ded-work-hour') },
+        attendance: {
+          calendarDays: num('att-calendar') || 30,
+          workingDays: num('att-working') || 22,
+          presentDays: num('att-present') || 22,
+          paidLeave: num('att-paid-leave'),
+          unpaidLeave: num('att-unpaid-leave'),
+          absentDays: num('att-absent'),
+          publicHolidays: num('att-holidays'),
+          restDays: num('att-rest') || 8,
+        },
+        attendanceOptions: {
+          deductionMethod: $('ded-method').value,
+          includeAbsentAsUnpaid: $('att-include-absent').checked,
+        },
+      };
+    }
+
+    // ---------- Calculator ----------
+    let lastExpected = null;
+    function runCalculator() {
+      clearError();
+      if (!validateInputs()) return;
+      syncUrl(SAL_PARAMS);
+
+      const r = calculateNepalSalary(collectInput());
+      lastExpected = r;
+
+      const set = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+
+      // Mobile net badge
+      $('mob-net').textContent = r.net != null ? 'NPR ' + formatNumber(r.net) : '—';
+      $('mob-gross').textContent = 'NPR ' + formatNumber(r.income.contractualGross);
+      $('mobile-net-badge').classList.remove('hidden');
+
+      // NET SALARY hero + breakdown
+      set('res-net', r.net != null ? 'NPR ' + formatNumber(r.net) : '—');
+      set('res-gross', money(r.income.contractualGross));
+      set('b-ssf', minus(r.ssf.employee.total));
+      set('b-tax', minus(r.tds.monthly));
+      const otherDed = r.employeeDeductions.advance + r.employeeDeductions.otherEmployee;
+      set('b-other-ded', minus(otherDed));
+      set('b-net', r.net != null ? 'NPR ' + formatNumber(r.net) : '—');
+
+      // Employer SSF
+      set('b-emp-ssf', '+' + money(r.ssf.employer.total));
+      set('b-total-ssf', money(r.ssf.combined));
+      set('ssf-source-note', r.ssf.manual ? 'You entered these SSF amounts manually.' : 'SSF calculated automatically (11% of basic for you, 20% for your employer).');
+
+      // Accuracy badge
+      const fyOk = !r.fiscalYear.needsVerification;
+      $('accuracy-badge').innerHTML = fyOk
+        ? `<span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold" style="background:#1F7A4D; color:#fff;">✓ Verified rules</span>`
+        : `<span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold" title="FY ${r.fiscalYear.id} — confirm on ird.gov.np" style="background:#D97706; color:#fff;">⚠ Rates need verification</span>`;
+
+      // Warnings
+      const wb = $('warnings-box');
+      const warns = [...r.warnings];
+      if (r.attendance.deduction.needsVerification && !warns.some(w => /salary deduction method/i.test(w.message))) {
+        warns.push({ level: 'info', message: r.attendance.deduction.assumption });
+      }
+      wb.innerHTML = warns.map(w => `
+        <div class="rounded-lg px-3 py-2 text-[11px] border-l-[3px]" style="background-color: var(--nk-bg); border-color: ${w.level === 'warning' ? '#D97706' : 'var(--nk-border)'}; border-left-color: ${w.level === 'warning' ? '#D97706' : 'var(--nk-accent)'};">
+          <p class="font-semibold" style="color: var(--nk-text);">${w.level === 'warning' ? '⚠️' : 'ℹ️'} ${w.message}</p>
+          ${w.detail ? `<p class="mt-0.5" style="color: var(--nk-text-secondary);">${w.detail}</p>` : ''}
+        </div>`).join('');
+
+      // Detailed calculation
+      const att = r.attendance.deduction.amount || 0;
+      if (att > 0) { $('detail-att').style.display = ''; set('d-att', money(r.adjustedGross)); } else $('detail-att').style.display = 'none';
+      set('d-taxable-month', money(r.tax.assessableAnnual / 12));
+      set('d-taxable-year', money(r.tax.assessableAnnual));
+      set('d-tds', money(r.tds.monthly));
+      set('d-ssf-base', money(r.ssf.base));
+
+      // Tax slab math
+      const slabHtml = (r.tax.slabs || []).map(s => {
+        const band = s.taxableAmount != null ? `Rs. ${new Intl.NumberFormat('en-IN').format(Math.round(s.taxableAmount))}` : '';
+        const rate = s.ratePercent != null ? `${s.ratePercent}%` : '';
+        return `<div class="flex justify-between text-[11px] py-0.5">
+          <span style="color: var(--nk-text-secondary);">${band} ${rate}${s.label ? ' (' + s.label + ')' : ''}</span>
+          <span class="mono font-medium" style="color: var(--nk-text);">${money(s.tax)}</span>
+        </div>`;
+      }).join('');
+      const rebateHtml = r.tax.rebate > 0 ? `<div class="flex justify-between text-[11px] py-0.5" style="color:#1F7A4D;"><span>Female rebate (−10%)</span><span class="mono font-medium">${money(r.tax.rebate)}</span></div>` : '';
+      const waiverHtml = r.tax.sstWaiver > 0 ? `<div class="flex justify-between text-[11px] py-0.5" style="color:#1F7A4D;"><span>SST waived (SSF)</span><span class="mono font-medium">${money(r.tax.sstWaiver)}</span></div>` : '';
+      $('tax-slab-list').innerHTML = (slabHtml ? `<p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color: var(--nk-text);">Income Tax by Slab</p>` + slabHtml : '') + rebateHtml + waiverHtml;
+      if (!slabHtml && !rebateHtml && !waiverHtml) $('tax-slab-list').innerHTML = '<p class="text-[11px]" style="color: var(--nk-text-secondary);">No income tax applies.</p>';
+
+      // Assumptions
+      $('assumptions-box').innerHTML = r.assumptions.map(a => `
+        <div class="flex justify-between gap-2 py-0.5">
+          <span class="shrink-0" style="color: var(--nk-text-secondary);">${a.label}</span>
+          <span class="text-right font-medium" style="color: var(--nk-text);">${a.value}</span>
+        </div>`).join('');
+
+      // About section (per selected FY)
+      set('about-fy', `${r.fiscalYear.label} · ${r.fiscalYear.bs}`);
+      set('about-ssf', r.ssf.source.name);
+      set('about-tax', r.fiscalYear.source.name);
+      set('about-verified', `${r.fiscalYear.lastVerified}${r.fiscalYear.needsVerification ? ' (tax rules need confirmation)' : ''}`);
+
+      // Show result, hide placeholder
+      $('calc-result').classList.remove('hidden');
+      $('summary-placeholder').classList.add('hidden');
+    }
+    $('calc-btn').addEventListener('click', runCalculator);
+
+    // Live update once a result is showing (and inputs are valid)
+    const liveFields = MONEY_FIELDS.concat(['fy-select', 'ssf-base-mode', 'ded-method', 'att-calendar', 'att-working', 'att-present', 'att-paid-leave', 'att-unpaid-leave', 'att-absent', 'att-holidays', 'att-rest', 'att-include-absent']);
+    liveFields.forEach(id => {
+      const el = $(id);
+      if (!el) return;
+      const evt = el.tagName === 'SELECT' || el.type === 'checkbox' ? 'change' : 'input';
+      el.addEventListener(evt, () => {
+        if (!lastExpected) return;
+        if (!validateInputs()) return;
+        clearError();
+        runCalculator();
+      });
+    });
+
+    // Also live-update on segmented toggle changes
+    ['ssf-yes', 'ssf-no', 'filing-individual', 'filing-couple', 'female'].forEach(id => {
+      const el = $(id);
+      if (!el) return;
+      el.addEventListener('click', () => {
+        if (!lastExpected) return;
+        if (!validateInputs()) return;
+        clearError();
+        runCalculator();
+      });
+    });
+    $('female').addEventListener('change', () => {
+      if (!lastExpected) return;
+      if (!validateInputs()) return;
+      clearError();
+      runCalculator();
+    });
+
+    $('copy-link-btn').addEventListener('click', async () => {
+      const btn = $('copy-link-btn');
+      const original = btn.textContent;
+      syncUrl(SAL_PARAMS);
+      const ok = await copyLink();
+      btn.textContent = ok ? 'Link copied ✓' : 'Copy failed — copy the address bar URL';
+      setTimeout(() => { btn.textContent = original; }, 2200);
+    });
+
+    // Shareable result links (?b=&da=&…&ssf=&fs=), plus legacy ?basic=
+    // deep-link support (e.g. from smart search "मेरो salary 80 हजार छ").
+    (function () {
+      const applied = readSharedParams(SAL_PARAMS, window.location.search);
+      // Guarded selects: fall back when the shared value is unknown.
+      ['fy-select', 'ssf-base-mode', 'ded-method'].forEach(id => {
+        const el = $(id);
+        if (el && !el.querySelector(`option[value="${el.value}"]`)) el.selectedIndex = 0;
+      });
+      setSSF($('sal-ssf')?.value !== '0');
+      const fs = $('sal-filing')?.value;
+      setFiling(fs === 'couple' ? 'couple' : 'individual');
+      const sbm = $('ssf-base-mode');
+      if (sbm && $('ssf-custom-wrap')) $('ssf-custom-wrap').classList.toggle('hidden', sbm.value !== 'custom');
+      if (!applied.b) {
+        const basic = Number(new URLSearchParams(window.location.search).get('basic'));
+        if (basic > 0) {
+          const input = document.getElementById('inc-basic');
+          if (input) {
+            input.value = String(basic);
+            runCalculator();
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return;
+        }
+      }
+      if (Object.keys(applied).length) runCalculator();
+    })();
+  </script>
+</BaseLayout>

@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import NepaliNumberConverter from '../../../components/tools/NepaliNumberConverter.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'Nepali Number Converter – Digits, Words & Grouping | SolutionsNepal';
+const description = 'Convert between Nepali digits, English numbers, grouping styles and words. १२५०००० ↔ 12,50,000 ↔ बाह्र लाख पचास हजार — instant and offline.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-[1000px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Tools', href: '/nepal' },
+      { label: 'Nepali Number Converter' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Nepali Number Converter</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">One tool for everything numeric-Nepali: Devanagari digits, Indian-style grouping, and words — both directions.</p>
+    </div>
+
+    <NepaliNumberConverter initialInput="123456789" />
+
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">What can it convert?</h2>
+        <ul class="text-sm leading-relaxed space-y-1.5" style="color:var(--nk-text-secondary);">
+          <li>• <strong>Digits:</strong> 1250000 → १२,५०,००० (and back — paste Devanagari digits directly)</li>
+          <li>• <strong>Grouping:</strong> Western 1,250,000 → Nepal system 12,50,000</li>
+          <li>• <strong>Nepali words:</strong> बाह्र लाख पचास हजार with correct grammar at every scale</li>
+          <li>• <strong>English words (Lakh/Crore):</strong> Twelve Lakh Fifty Thousand — never "million"</li>
+          <li>• <strong>Reverse:</strong> paste words like बाह्र लाख पचास हजार under "Words → Number"</li>
+          <li>• <strong>Currency & cheque text:</strong> रुपैयाँ … मात्र / Rupees … Only</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Digit reference: Devanagari ↔ ASCII</h3>
+        <div class="rounded-lg border p-4 text-center text-[18px] tracking-widest" style="border-color:var(--nk-border);background-color:var(--nk-bg);" lang="ne">
+          ० १ २ ३ ४ ५ ६ ७ ८ ९
+        </div>
+        <p class="text-sm leading-relaxed mt-2" style="color:var(--nk-text-secondary);">
+          These ten Devanagari digits map one-to-one onto 0–9. Numbers written with them are fully
+          interchangeable with ASCII digits everywhere in this tool.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Works completely offline</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Every conversion is computed by a deterministic engine inside your browser — no server round-trips,
+          no translation APIs, nothing leaves your device.
+        </p>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        Also useful: <a class="underline hover:opacity-80" href="/nepal/tools/nepali-number-to-words" style="color:var(--nk-accent);">number to words main page</a> ·
+        <a class="underline hover:opacity-80" href="/nepal/finance/vat-calculator" style="color:var(--nk-accent);">VAT calculator</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import { nepaliNames, ALL_ALPHABET, getNamesPaginated, getLetterCounts, getGenderCounts } from '../../../../data/nepali-names.js';
+
+export async function getStaticPaths() {
+  return ALL_ALPHABET.map(letter => ({
+    params: { letter: letter.toLowerCase() },
+    props: { letter },
+  }));
+}
+
+const { letter } = Astro.props;
+const page = Number(Astro.url.searchParams.get('page') || 1);
+const gender = Astro.url.searchParams.get('gender') || 'All';
+const search = Astro.url.searchParams.get('q') || '';
+
+let filtered = nepaliNames.filter(n => n.name[0].toUpperCase() === letter.toUpperCase());
+if (gender && gender !== 'All') {
+  filtered = filtered.filter(n => n.gender === gender);
+}
+if (search) {
+  const q = search.toLowerCase();
+  filtered = filtered.filter(n =>
+    n.name.toLowerCase().includes(q) ||
+    n.meaning.toLowerCase().includes(q) ||
+    n.nepaliName.includes(q) ||
+    n.meaningKeywords.some(k => k.includes(q))
+  );
+}
+
+const { names, total, totalPages } = getNamesPaginated(filtered, page, 30);
+
+// Dynamic counts
+const genderCounts = getGenderCounts(nepaliNames);
+const allLetterCounts = getLetterCounts(nepaliNames, 'All');
+const genderLetterCounts = gender && gender !== 'All' ? getLetterCounts(nepaliNames, gender) : allLetterCounts;
+
+function buildUrl(params) {
+  const u = new URL(`/nepal/names/letter/${letter.toLowerCase()}`, Astro.url.origin);
+  if (params.gender && params.gender !== 'All') u.searchParams.set('gender', params.gender);
+  if (params.q) u.searchParams.set('q', params.q);
+  if (params.page && params.page > 1) u.searchParams.set('page', params.page);
+  return u.pathname + u.search;
+}
+---
+
+<BaseLayout
+  title={`Nepali Names Starting With ${letter} – Meanings | SolutionsNepal`}
+  description={`Discover Nepali baby names starting with ${letter}. Browse ${total} names with their meanings and origins.`}
+>
+  <div class="names-page">
+    <nav class="name-breadcrumb">
+      <a href="/nepal">Nepal</a> → <a href="/nepal/names">Names</a> → <span>Starting With {letter}</span>
+    </nav>
+
+    <header class="names-header">
+      <h1>Nepali Names Starting With {letter}</h1>
+      <p class="names-subtitle">{total} name{total !== 1 ? 's' : ''} starting with {letter}. {genderCounts.Boy} boy names, {genderCounts.Girl} girl names, {genderCounts.Unisex} unisex names.</p>
+    </header>
+
+    <!-- Gender Filter -->
+    <div class="names-gender-filter">
+      <a href={buildUrl({ gender: 'All' })} class:list={['nk-pill', { active: gender === 'All' || !gender }]}>All</a>
+      <a href={buildUrl({ gender: 'Boy' })} class:list={['nk-pill', { active: gender === 'Boy' }]}>Boys</a>
+      <a href={buildUrl({ gender: 'Girl' })} class:list={['nk-pill', { active: gender === 'Girl' }]}>Girls</a>
+      <a href={buildUrl({ gender: 'Unisex' })} class:list={['nk-pill', { active: gender === 'Unisex' }]}>Unisex</a>
+    </div>
+
+    <!-- Full A-Z Navigation -->
+    <div class="names-letter-section">
+      <div class="names-letter-grid">
+        {ALL_ALPHABET.map(l => {
+          const count = genderLetterCounts[l] || 0;
+          const isActive = l === letter.toUpperCase();
+          const isDisabled = count === 0;
+          return (
+            <a
+              href={isDisabled ? undefined : `/nepal/names/letter/${l.toLowerCase()}${gender && gender !== 'All' ? `?gender=${gender}` : ''}`}
+              class:list={['names-letter-btn', { active: isActive, disabled: isDisabled }]}
+              aria-label={`${l} — ${count} name${count !== 1 ? 's' : ''}`}
+              aria-disabled={isDisabled}
+              aria-pressed={isActive}
+              tabindex={isDisabled ? -1 : 0}
+            >
+              <span class="names-letter-char">{l}</span>
+              <span class="names-letter-count">{count}</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Search on letter page -->
+    <div class="names-search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <form method="get" style="display:flex;flex:1">
+        {gender && gender !== 'All' && <input type="hidden" name="gender" value={gender} />}
+        <input type="text" name="q" placeholder={`Search ${letter} names...`} value={search} class="names-search-input" />
+        <button type="submit" class="names-search-btn">Search</button>
+      </form>
+    </div>
+
+    <div class="names-listing">
+      <h2 class="names-section-title">
+        {search ? `Results for "${search}" in ${letter}` : gender && gender !== 'All' ? `${gender} Names Starting With ${letter}` : `Names Starting With ${letter}`}
+        <span class="names-result-count">{total} name{total !== 1 ? 's' : ''}</span>
+      </h2>
+
+      {names.length === 0 ? (
+        <div class="names-empty">
+          <p>No names found.</p>
+          <a href={`/nepal/names/letter/${letter.toLowerCase()}`} class="names-clear-link">View all {letter} names</a>
+        </div>
+      ) : (
+        <div class="names-grid">
+          {names.map(name => (
+            <a href={`/nepal/names/${name.slug}`} class="names-card">
+              <div class="names-card-header">
+                <span class="names-card-name">{name.name}</span>
+                <span class="names-card-nepali">{name.nepaliName}</span>
+              </div>
+              <div class="names-card-meaning">{name.meaning}</div>
+              <div class="names-card-meta">
+                <span class="names-card-origin">{name.origin}</span>
+                <span class="names-card-gender">{name.gender}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div class="names-pagination">
+          {page > 1 && (
+            <a href={buildUrl({ gender, q: search, page: page - 1 })} class="names-page-btn">← Previous</a>
+          )}
+          <span class="names-page-info">Page {page} of {totalPages}</span>
+          {page < totalPages && (
+            <a href={buildUrl({ gender, q: search, page: page + 1 })} class="names-page-btn">Next →</a>
+          )}
+        </div>
+      )}
+    </div>
+
+    <div class="name-related">
+      <h3>Browse More</h3>
+      <div class="name-related-links">
+        <a href="/nepal/names/boy" class="name-related-link">Boy Names</a>
+        <a href="/nepal/names/girl" class="name-related-link">Girl Names</a>
+        <a href="/nepal/names/sanskrit" class="name-related-link">Sanskrit Names</a>
+        <a href="/nepal/names/modern" class="name-related-link">Modern Names</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .names-page { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+  .name-breadcrumb { font-size: 12px; color: var(--nk-text-tertiary); margin-bottom: 20px; }
+  .name-breadcrumb a { color: var(--nk-accent, #c53030); text-decoration: none; }
+  .names-header { text-align: center; margin-bottom: 24px; }
+  .names-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 4px; }
+  .names-subtitle { font-size: 14px; color: var(--nk-text-secondary); }
+  .names-gender-filter { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  :global(.nk-pill) { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid var(--nk-border); background: var(--nk-surface); color: var(--nk-text-secondary); text-decoration: none; transition: all 0.15s; }
+  :global(.nk-pill:hover) { border-color: var(--nk-accent, #c53030); color: var(--nk-text); }
+  :global(.nk-pill.active) { background: var(--nk-accent, #c53030); color: #fff; border-color: var(--nk-accent, #c53030); }
+  .names-letter-section { margin-bottom: 20px; }
+  .names-letter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; }
+  .names-letter-btn { width: 100%; aspect-ratio: 1; min-height: 36px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--nk-text); background: var(--nk-surface); border: 1px solid var(--nk-border); text-decoration: none; transition: all 0.15s; }
+  .names-letter-btn:hover:not(.disabled) { border-color: var(--nk-accent, #c53030); }
+  .names-letter-btn.active { background: var(--nk-accent, #c53030); color: #fff; border-color: var(--nk-accent, #c53030); }
+  .names-letter-btn.disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+  .names-letter-char { font-size: 14px; font-weight: 600; line-height: 1; }
+  .names-letter-count { font-size: 8px; font-weight: 400; opacity: 0.7; }
+  .names-letter-btn.active .names-letter-count { opacity: 1; }
+  .names-search-box { display: flex; align-items: center; gap: 10px; background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; color: var(--nk-text-secondary); }
+  .names-search-input { flex: 1; border: none; background: transparent; font-size: 14px; color: var(--nk-text); outline: none; font-family: inherit; }
+  .names-search-input::placeholder { color: var(--nk-text-tertiary); }
+  .names-search-btn { background: var(--nk-accent, #c53030); color: #fff; border: none; border-radius: 8px; padding: 6px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; }
+  .names-section-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .names-result-count { font-size: 12px; font-weight: 400; color: var(--nk-text-tertiary); }
+  .names-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .names-card { display: flex; min-height: 92px; flex-direction: column; padding: 12px; background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 6px; text-decoration: none; transition: border-color 0.15s, transform 0.15s; }
+  .names-card:hover { border-color: var(--nk-accent, #c53030); transform: translateY(-1px); }
+  .names-card-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+  .names-card-name { font-size: 15px; font-weight: 600; color: var(--nk-text); }
+  .names-card-nepali { font-size: 13px; color: var(--nk-text-secondary); }
+  .names-card-meaning { font-size: 13px; color: var(--nk-text-secondary); margin-bottom: 6px; }
+  .names-card-meta { display: flex; gap: 8px; font-size: 11px; color: var(--nk-text-tertiary); }
+  .names-card-origin, .names-card-gender { padding: 2px 6px; background: var(--nk-bg, #f7f7f7); border-radius: 4px; }
+  .names-empty { text-align: center; padding: 40px 20px; color: var(--nk-text-secondary); font-size: 14px; }
+  .names-clear-link { display: inline-block; margin-top: 8px; color: var(--nk-accent, #c53030); text-decoration: none; font-size: 13px; }
+  .names-pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--nk-border); }
+  .names-page-btn { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--nk-text); background: var(--nk-surface); border: 1px solid var(--nk-border); text-decoration: none; }
+  .names-page-btn:hover { border-color: var(--nk-accent, #c53030); color: var(--nk-accent, #c53030); }
+  .names-page-info { font-size: 13px; color: var(--nk-text-secondary); }
+  .name-related { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--nk-border); }
+  .name-related h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+  .name-related-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .name-related-link { padding: 6px 12px; border-radius: 8px; font-size: 12px; color: var(--nk-text); background: var(--nk-surface); border: 1px solid var(--nk-border); text-decoration: none; transition: all 0.15s; }
+  .name-related-link:hover { border-color: var(--nk-accent, #c53030); color: var(--nk-accent, #c53030); }
+  @media (max-width: 640px) {
+    .names-page { padding: 20px 16px 60px; }
+    .names-header h1 { font-size: 22px; }
+    .names-grid { grid-template-columns: 1fr; }
+    .names-letter-grid { grid-template-columns: repeat(6, 1fr); gap: 3px; }
+    .names-letter-btn { min-height: 32px; font-size: 12px; }
+  }
+  @media (min-width: 641px) and (max-width: 900px) {
+    .names-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  }
+</style>

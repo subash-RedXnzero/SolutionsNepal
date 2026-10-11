@@ -1,0 +1,329 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Briefcase, UserCheck, Store, Shapes, Calculator } from '@lucide/astro';
+import { EMPLOYMENT_TYPES, LOAN_TYPES, TENURE_YEARS, DEFAULTS } from '../../../../data/loan-eligibility.js';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+
+const title = 'Loan Eligibility Calculator Nepal (2026) | SolutionsNepal';
+const description = 'Estimate how much you may be able to borrow and comfortably repay in Nepal — check affordable loan amount, EMI, DTI and tenure based on income and existing EMIs.';
+const canonical = 'https://solutionsnepal.com/nepal/finance/loan-eligibility-calculator-nepal';
+
+const empIcons = { 'salaried': Briefcase, 'self-employed': UserCheck, 'business': Store, 'other': Shapes };
+
+const faq = [
+  { q:'How much loan can I get in Nepal based on my salary?', a:'As a rough guide, lenders often allow total monthly EMIs up to about 40–50% of your verified monthly income, minus existing EMIs and debts. A longer tenure or lower interest rate increases the loan amount the same EMI can support. Enter your salary above for a personalised planning estimate.' },
+  { q:'How is loan eligibility calculated?', a:'Eligibility = (Total monthly income × repayment-capacity ratio − existing EMI − other debt) converted into a loan principal using the amortisation formula for your rate and tenure. This calculator uses 50% for salaried and 45% for self-employed/business applicants as planning assumptions.' },
+  { q:'How much EMI can I afford with my salary?', a:'A common comfort rule is keeping total EMIs within about half your monthly income, after living expenses. The affordability breakdown above shows your income minus living costs and current debt to reveal what is left for a new EMI.' },
+  { q:'Does an existing EMI reduce my loan eligibility?', a:'Yes, directly. Every rupee of existing EMI or debt payment reduces the new EMI you can afford by the same amount, which lowers the supported loan principal. Clearing or reducing current debt is the fastest way to raise eligibility.' },
+  { q:'Does loan tenure affect eligibility?', a:'Yes. A longer tenure spreads repayment over more months, so the same EMI supports a larger loan. Try 10 vs 20 years above to see the difference. Longer tenures also mean much more total interest paid.' },
+  { q:'Does a higher down payment improve loan affordability?', a:'Yes. A down payment reduces the amount you need to finance, which lowers the required EMI for your desired purchase — making approval easier and cutting total interest, even though it does not change your maximum eligible principal.' },
+  { q:'Is this calculator an official bank loan eligibility calculator?', a:'No. It is a planning estimate only — not a loan approval. Actual eligibility depends on the lender\u2019s policies, income verification, employment, credit history, collateral, age, existing obligations and other factors.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'Loan Eligibility Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Finance', href:'/nepal/finance'}, {label:'Loan Eligibility Calculator'}]} />
+
+    <div class="mb-2.5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">🇳🇵 For borrowers in Nepal</div>
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">Loan Eligibility Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[660px]" style="color:var(--nk-text-secondary);">Estimate how much you may be able to borrow and comfortably repay based on your income, expenses, existing EMIs and loan terms.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.8fr_400px] gap-4 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-2.5 min-w-0">
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◈</span> Income &amp; Employment</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="in-monthly">Monthly income</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="in-monthly" type="text" inputmode="decimal" placeholder="e.g. 80,000" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="in-other">Other monthly income <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="in-other" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+          <div class="flex flex-wrap gap-1.5 mt-2.5" id="emp-chips" role="radiogroup" aria-label="Employment type">
+            {EMPLOYMENT_TYPES.map(e=>{
+              const Icon=empIcons[e.id] || Briefcase;
+              const active = e.id===DEFAULTS.employmentId;
+              return <button type="button" class={`chip emp-chip${active?' chip-active':''}`} data-emp={e.id} role="radio" aria-checked={active?'true':'false'}><Icon size={13}/> {e.label}</button>
+            })}
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2.5">
+            <div class="cm-field"><label class="cm-label" for="in-co">Co-borrower / spouse income <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="in-co" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+          <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Use your average monthly income after regular deductions where possible. <span id="foir-note" class="font-semibold" style="color:var(--nk-text-secondary);"></span></p>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">⌂</span> Existing Obligations</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="ob-emi">Existing monthly EMI</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="ob-emi" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="ob-debt">Other monthly debt payments</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="ob-debt" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="ob-living">Monthly living expenses</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="ob-living" type="text" inputmode="decimal" placeholder="e.g. 25,000" class="cm-input" /></div></div>
+          </div>
+          <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Existing debt directly reduces the new EMI you can comfortably handle.</p>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">₨</span> Loan Details</p>
+          <div class="flex flex-wrap gap-1.5 mb-2.5" id="loan-chips" role="radiogroup" aria-label="Loan type">
+            {LOAN_TYPES.map(t=>{
+              const active = t.id===DEFAULTS.loanTypeId;
+              return <button type="button" class={`chip loan-chip${active?' chip-active':''}`} data-loan={t.id} role="radio" aria-checked={active?'true':'false'}>{t.label}</button>
+            })}
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="ln-desired">Desired loan amount <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="ln-desired" type="text" inputmode="decimal" placeholder="e.g. 5,000,000" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="ln-down">Down payment</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="ln-down" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="ln-rate">Interest rate</label><div class="cm-box"><input id="ln-rate" type="text" inputmode="decimal" placeholder="9.5" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">% p.a.</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="ln-tenure">Loan tenure</label>
+              <select id="ln-tenure" class="nk-input text-[13px]" style="height:36px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                {TENURE_YEARS.map(y=> <option value={String(y)} selected={y===DEFAULTS.tenureYears}>{y} year{y===1?'':'s'}</option>)}
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <div class="flex gap-2.5">
+          <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> Calculate Eligibility →</button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2 text-[13px] font-semibold" style="border-radius:12px;">Reset Calculator</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium" style="color:#DC2626;"></p>
+      </div>
+
+      <!-- RIGHT: sticky results -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your Estimated Eligibility</p>
+            <p class="text-[26px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter your income and loan details, then click <strong>Calculate Eligibility</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+            <div class="px-4 pt-4 pb-3 text-center res-hero" style="border-bottom:1px solid var(--nk-border);">
+              <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your Estimated Eligibility</p>
+              <p class="text-[13px] font-semibold mt-1" style="color:var(--nk-text-secondary);">Estimated Affordable Loan</p>
+              <p class="text-[30px] font-extrabold leading-tight tabular-nums nk-gradient-text" id="res-principal">—</p>
+              <p class="text-[11.5px] mt-1 max-w-[300px] mx-auto leading-relaxed" style="color:var(--nk-text-secondary);" id="res-plain">—</p>
+              <p class="text-[12px] tabular-nums mt-1" style="color:var(--nk-text-secondary);">Comfortable: <strong style="color:var(--nk-text);" id="res-comfort">—</strong></p>
+            </div>
+            <div class="p-3.5 space-y-2.5">
+              <div class="rounded-xl text-[12px]" style="border:1px solid var(--nk-border);">
+                <div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Estimated EMI</span><strong style="color:var(--nk-text);" id="res-emi">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Total EMI after loan</span><strong style="color:var(--nk-text);" id="res-total-emi">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Debt-to-income ratio</span><strong style="color:var(--nk-text);"><span id="res-dti">—</span> <span class="text-[10.5px] font-semibold px-1.5 py-0.5 rounded-full" id="res-dti-tag" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);">—</span></strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Loan terms</span><strong style="color:var(--nk-text);" id="res-terms">—</strong></div>
+              </div>
+
+              <div id="res-compare" class="hidden rounded-xl p-3 text-[12px]" style="border:1px solid var(--nk-border);"></div>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">Monthly Affordability Breakdown</p>
+                <div id="res-breakdown" class="space-y-1 text-[12px] tabular-nums"></div>
+                <div class="mt-2 h-2 rounded-full overflow-hidden" style="background:var(--nk-muted);"><div id="res-bar" class="h-full rounded-full" style="width:0%; background:var(--nk-gradient-primary); transition:width 250ms ease;"></div></div>
+                <p id="res-cap-note" class="hidden text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);"></p>
+              </div>
+
+              <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+                <strong style="color:var(--nk-text);">Important:</strong> This calculator provides an estimate, not a loan approval. Actual eligibility depends on the lender's policies, income verification, employment, credit history, collateral, age, existing obligations and other factors.
+              </div>
+
+              <div id="res-warn" class="space-y-1.5"></div>
+              <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Loan Eligibility Is Calculated</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Start with total monthly income, then set aside a repayment-capacity share (around half for salaried borrowers). Subtract existing EMIs and debt payments to get your affordable new EMI. That EMI is converted into a loan principal with the standard amortisation formula for your interest rate and tenure — longer tenures and lower rates support larger loans from the same EMI.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Loan Eligibility in Nepal</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Banks and financial institutions in Nepal typically weigh your income and employment stability, existing loans and repayment history, credit record, collateral value, loan purpose, age and overall repayment capacity — each institution applies its own policies, so two lenders may offer different amounts for the same profile.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+    </div>
+
+    <Disclaimer variant="finance" />
+    <RelatedTools tools={[{title:'EMI Calculator', description:'Monthly EMI for any loan', href:'/nepal/finance/emi-calculator'}, {title:'Salary Checker', description:'Take-home salary in Nepal', href:'/nepal/finance/salary-checker'}, {title:'SIP Calculator', description:'Plan investments in Nepal', href:'/nepal/finance/sip-calculator'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .sec-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--nk-text); margin-bottom:5px; letter-spacing:-0.01em; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11px; font-weight:500; cursor:pointer; transition:all 140ms ease; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .cm-field{ display:flex; flex-direction:column; gap:4px; }
+  .cm-label{ font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:36px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; outline:none; border-radius:10px; color:var(--nk-text); }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); }
+  .hidden{ display:none !important; }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input{ font-size:16px !important; }
+  }
+</style>
+
+<script>
+  import { calcEligibility, formatNPR } from '../../../../lib/calculators/loan-eligibility.js';
+  import { getEmployment, COMFORT_FACTOR } from '../../../../data/loan-eligibility.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let employmentId = 'salaried';
+  let loanTypeId = 'home';
+
+  function setEmployment(id){
+    employmentId = id;
+    document.querySelectorAll('.emp-chip').forEach(c=>{
+      const on = c.dataset.emp===id;
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+    const pct = Math.round(getEmployment(id).foir*100);
+    $('foir-note').textContent = `Planning assumption: up to ${pct}% of income for total EMIs.`;
+  }
+  document.querySelectorAll('.emp-chip').forEach(b=> b.addEventListener('click', ()=> setEmployment(b.dataset.emp)));
+  document.querySelectorAll('.loan-chip').forEach(b=> b.addEventListener('click', ()=>{
+    loanTypeId = b.dataset.loan;
+    document.querySelectorAll('.loan-chip').forEach(c=>{
+      const on = c.dataset.loan===loanTypeId;
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }));
+
+  // keep inputs clean: no negatives, commas on blur
+  document.querySelectorAll('.cm-input').forEach(el=>{
+    el.addEventListener('input', ()=>{ if(el.value.includes('-')) el.value = el.value.replace(/-/g,''); });
+    el.addEventListener('blur', ()=>{
+      const raw = String(el.value).trim().replace(/,/g,'');
+      if(raw==='' || el.id==='ln-rate') return;
+      const n = Number(raw);
+      if(Number.isFinite(n) && n>=0) el.value = Math.round(n).toLocaleString('en-IN');
+    });
+    el.addEventListener('focus', ()=>{
+      const raw = String(el.value).replace(/,/g,'');
+      if(raw!=='' && !Number.isNaN(Number(raw))) el.value = raw;
+    });
+    el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  });
+
+  function val(id){ const el=$(id); return el ? el.value : ''; }
+
+  function doCalc(){
+    const hint=$('calc-hint');
+    if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const r = calcEligibility({
+      monthlyIncome: val('in-monthly'),
+      otherIncome: val('in-other'),
+      coborrowerIncome: val('in-co'),
+      existingEmi: val('ob-emi'),
+      otherDebt: val('ob-debt'),
+      livingExpenses: val('ob-living'),
+      foir: getEmployment(employmentId).foir,
+      annualRatePct: val('ln-rate') || '9.5', // empty = default 9.5% (placeholder value)
+      tenureYears: val('ln-tenure'),
+      desiredAmount: val('ln-desired'),
+      downPayment: val('ln-down'),
+    });
+
+    if(r.totalIncome<=0){
+      if(hint){ hint.textContent='Enter your monthly income to estimate eligibility.'; hint.classList.remove('hidden'); }
+      $('calculate-btn')?.animate?.([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],{duration:220});
+      return;
+    }
+
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+
+    $('res-principal').textContent = formatNPR(r.affordablePrincipal);
+    $('res-plain').textContent = `With ${formatNPR(r.totalIncome)}/mo income, you could borrow about ${formatNPR(r.affordablePrincipal)} — that's ${formatNPR(r.affordableNewEmi)}/mo for ${r.inputs.years} ${r.inputs.years===1?'year':'years'}.`;
+    $('res-comfort').textContent = formatNPR(r.comfortablePrincipal);
+    $('res-emi').textContent = formatNPR(r.affordableNewEmi)+' / mo';
+    $('res-total-emi').textContent = formatNPR(r.totalEmiAfter)+' / mo';
+    $('res-dti').textContent = r.dti.toFixed(1)+'%';
+    const dtiTag=$('res-dti-tag');
+    const verdict = r.dti<=40 ? 'Comfortable' : r.dti<=50 ? 'At your limit' : 'Over limit';
+    dtiTag.textContent = verdict;
+    dtiTag.style.color = r.dti<=40 ? '#16A34A' : r.dti<=50 ? '#D97706' : '#DC2626';
+    dtiTag.style.borderColor = r.dti<=40 ? '#86EFAC' : r.dti<=50 ? '#FCD34D' : '#FECACA';
+    dtiTag.style.background = r.dti<=40 ? '#F0FDF4' : r.dti<=50 ? '#FFFBEB' : '#FEF2F2';
+    $('res-terms').textContent = `${r.inputs.years} yr · ${r.inputs.rate}%`;
+
+    // comparison
+    const cmp=$('res-compare');
+    if(r.desiredStatus){
+      cmp.classList.remove('hidden');
+      const ok = r.desiredStatus==='within';
+      cmp.style.background = ok ? 'var(--nk-accent-subtle)' : '#FEF2F2';
+      cmp.style.borderColor = ok ? 'var(--nk-accent-muted)' : '#FECACA';
+      cmp.innerHTML = `
+        <div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">Your desired loan${r.inputs.down>0?' (after down payment)':''}</span><strong style="color:var(--nk-text);">${formatNPR(r.inputs.financed)}</strong></div>
+        <div class="flex justify-between tabular-nums mt-1"><span style="color:var(--nk-text-secondary);">Estimated affordable loan</span><strong style="color:var(--nk-text);">${formatNPR(r.affordablePrincipal)}</strong></div>
+        <p class="mt-2 font-semibold" style="color:${ok?'var(--nk-accent)':'#DC2626'};">${ok?'✓ Your desired loan is within your estimated affordability range.':'⚠ Your desired loan is above the estimated affordable amount.'}</p>
+        ${!ok && r.desiredEmi>0 ? `<p class="mt-1" style="color:var(--nk-text-secondary);">It would need about ${formatNPR(r.desiredEmi)} / mo.</p>` : ''}
+        <p class="mt-1 text-[10.5px]" style="color:var(--nk-text-tertiary);">Estimate only — not a guarantee of approval.</p>`;
+    } else cmp.classList.add('hidden');
+
+    // breakdown
+    const pct = r.totalIncome>0 ? Math.min(100,(r.totalEmiAfter/r.totalIncome)*100) : 0;
+    $('res-breakdown').innerHTML = `
+      <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Your income</span><span style="color:var(--nk-text); font-weight:600;">${formatNPR(r.totalIncome)} / mo</span></div>
+      <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Safe to use for EMIs (${Math.round(r.inputs.ratio*100)}%)</span><span style="color:var(--nk-text);">${formatNPR(r.maxTotalEmi)} / mo</span></div>
+      <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Minus existing EMI</span><span style="color:var(--nk-text);">− ${formatNPR(r.inputs.existEmi)}</span></div>
+      <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Minus other debt</span><span style="color:var(--nk-text);">− ${formatNPR(r.inputs.otherD)}</span></div>
+      <div class="flex justify-between pt-1.5 mt-1" style="border-top:1px solid var(--nk-border); font-weight:700;"><span style="color:var(--nk-text);">Left for your new EMI</span><span style="color:var(--nk-accent);">${formatNPR(r.affordableNewEmi)} / mo</span></div>`;
+    $('res-bar').style.width = pct+'%';
+    const cap=$('res-cap-note');
+    if(r.inputs.living>0){
+      cap.classList.remove('hidden');
+      const left = r.cashSurplus;
+      cap.textContent = left>=0
+        ? `Living expenses ${formatNPR(r.inputs.living)} leave about ${formatNPR(left)}/mo cash after all payments.`
+        : `Living expenses ${formatNPR(r.inputs.living)} exceed your income — review your budget.`;
+    } else cap.classList.add('hidden');
+
+    // warnings
+    $('res-warn').innerHTML = r.warnings.length
+      ? r.warnings.map(w=>`<div class="text-[11px] p-2.5 rounded-lg" style="background:#FEF2F2; border:1px solid #FECACA; color:#991B1B;">${w}</div>`).join('')
+      : `<div class="text-[11px] p-2.5 rounded-lg" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);">Within a healthy range — adjust tenure or rate to model scenarios.</div>`;
+
+    if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+  }
+
+  function doReset(){
+    ['in-monthly','in-other','in-co','ob-emi','ob-debt','ob-living','ln-desired','ln-down'].forEach(id=>{ $(id).value=''; });
+    $('ln-rate').value='';
+    $('ln-tenure').value='20';
+    setEmployment('salaried');
+    loanTypeId='home';
+    document.querySelectorAll('.loan-chip').forEach(c=>{
+      const on=c.dataset.loan==='home';
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalc);
+  $('reset-btn')?.addEventListener('click', doReset);
+  setEmployment('salaried');
+</script>

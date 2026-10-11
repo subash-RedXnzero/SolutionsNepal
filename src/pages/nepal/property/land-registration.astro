@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import { PROVINCES, getDistricts, getMunicipalities, hasBagmatiSurcharge } from '../../../data/nepal/property/land-reg-locations.js';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [{title:'GPA Calculator',description:'Calculate GPA',href:'/nepal/education/gpa-percentage'},{title:'House Rent Tax',description:'Calculate house rent tax',href:'/nepal/finance/house-rent-tax'}];
+const faqItems = [{q:'How is registration fee calculated?',a:'The fee is a percentage of the higher of declared value or govt minimum valuation. Metro 5%, Sub-Metro 4.5%, Municipality 4%, Rural 2%. Apartments 1%, high-rise 0.5%, group housing 2%.'},{q:'What is Bagmati Savyata Kosh?',a:'A 5% surcharge on registration fee for Kathmandu, Lalitpur, Bhaktapur.'},{q:'Is there a discount for women?',a:'Yes. 25% concession urban, 30% rural.'},{q:'Family transfer rate?',a:'Flat 1.5% regardless of local body type.'},{q:'What is the service charge?',a:'Flat NPR 500 processing charge.'}];
+---
+<BaseLayout
+>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-10">
+    <Breadcrumbs items={[{label:"Nepal",href:"/nepal"},{label:"Property",href:"/nepal/property"},{label:"Land Registration"}]} />
+    <div class="mb-6">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">Land & Property Registration Calculator</h1>
+      <p class="mt-1.5 text-sm" style="color:var(--nk-text-secondary);">Estimate registration fees, surcharges, and transfer costs.</p>
+    </div>
+    <div class="rounded-xl px-4 py-3 mb-5 text-[11px] leading-relaxed" style="background-color:var(--nk-surface);border:1px solid var(--nk-border);color:var(--nk-text-secondary);">
+      <span style="color:var(--nk-text);">&#x2139;</span> Fees vary by local body type, property classification, and buyer concessions. Estimates based on Land Revenue (Malpot) guidelines for FY 2083/84.
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 lg:gap-6 items-start">
+      <div class="space-y-4 animate-fade-in">        <div class="rounded-xl border p-4 space-y-3" style="background-color:var(--nk-surface);border-color:var(--nk-border);">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.15em]" style="color:var(--nk-text-secondary);">Location</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--nk-text);">Province</label>
+              <select id="province" class="w-full px-2.5 py-2 rounded-lg border text-xs" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);">
+                {PROVINCES.map(p => (<option value={p.id}>{p.name}</option>))}
+              </select></div>
+            <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--nk-text);">District</label>
+              <select id="district" class="w-full px-2.5 py-2 rounded-lg border text-xs" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);"><option value="">Select</option></select></div>
+            <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--nk-text);">Municipality</label>
+              <select id="municipality" class="w-full px-2.5 py-2 rounded-lg border text-xs" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);"><option value="">Select</option></select></div>
+          </div>
+          <p id="surcharge-note" class="text-[10px] hidden" style="color:var(--nk-accent);">&#x26a0; Bagmati Savyata Kosh applies here (5% surcharge).</p>
+        </div>
+        <div class="rounded-xl border p-4 space-y-3" style="background-color:var(--nk-surface);border-color:var(--nk-border);">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.15em]" style="color:var(--nk-text-secondary);">Property & Transaction</p>
+          <div><label class="block text-[10px] font-semibold mb-1.5" style="color:var(--nk-text);">Property Type</label>
+            <div class="segmented-group" role="radiogroup"><button id="pt-land" class="seg-btn seg-active" role="tab">Land / House</button><button id="pt-apartment" class="seg-btn" role="tab">Apartment</button><button id="pt-highrise" class="seg-btn" role="tab">High-Rise</button><button id="pt-ghousing" class="seg-btn" role="tab">Group Housing</button></div></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--nk-text);">Transaction</label>
+              <select id="txn-type" class="w-full px-2.5 py-2 rounded-lg border text-xs" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);"><option value="purchase">Sale / Purchase</option><option value="family">Family Transfer (1.5%)</option><option value="gift">Gift</option><option value="partition">Partition</option></select></div>
+            <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--nk-text);">Buyer Category</label>
+              <select id="buyer-category" class="w-full px-2.5 py-2 rounded-lg border text-xs" style="background-color:var(--nk-bg);border-color:var(--nk-border);color:var(--nk-text);"><option value="general">Male / General</option><option value="female">Female Owner (25% off)</option><option value="joint">Joint (Spouses)</option></select></div>
+          </div>
+          <p id="buyer-hint" class="text-[10px] hidden" style="color:var(--nk-accent);">&#x2713; Female concession: 25% urban, 30% rural.</p>
+        </div>
+        <div class="rounded-xl border p-4 space-y-3" style="background-color:var(--nk-surface);border-color:var(--nk-border);">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.15em]" style="color:var(--nk-text-secondary);">Valuation</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--nk-text);">Declared Transaction Value</label>
+              <div class="relative"><span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold" style="color:var(--nk-text-secondary);">Rs.</span><input inputmode="decimal" id="declared-value" type="number" min="0" step="10000" placeholder="1000000" class="input-field" style="padding-left:2.75rem;" /></div></div>
+            <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--nk-text);">Govt. Minimum Valuation</label>
+              <div class="relative"><span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold" style="color:var(--nk-text-secondary);">Rs.</span><input inputmode="decimal" id="govt-value" type="number" min="0" step="10000" placeholder="Optional" class="input-field" style="padding-left:2.75rem;" /></div>
+              <p class="text-[10px] mt-1" style="color:var(--nk-text-secondary);">Leave blank if unknown. Uses higher of both.</p></div>
+          </div>
+        </div>
+
+        <button id="calculate-btn" class="w-full py-3 px-4 text-sm font-bold rounded-xl" style="background-color:var(--nk-accent);color:white;">Calculate Registration Cost</button>
+
+      </div>
+      <div class="md:sticky md:top-20">
+        <div class="rounded-xl border overflow-hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+          <div class="p-5 text-center" style="background:linear-gradient(160deg,var(--nk-accent-subtle) 0%,var(--nk-surface) 100%);">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color:var(--nk-text-secondary);">Estimated Total Closing Cost</p>
+            <p id="total-cost" class="mt-2 text-4xl font-extrabold tracking-tight mono" style="color:var(--nk-accent);">&#x2014;</p>
+          </div>
+          <div id="calc-result" class="hidden" style="border-top:1px solid var(--nk-border);">
+            <div class="grid grid-cols-2 gap-px" style="background-color:var(--nk-border);">
+              <div class="p-3 text-center" style="background-color:var(--nk-surface);"><p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Registration Fee</p><p id="bd-reg-fee" class="mt-0.5 text-sm font-bold mono" style="color:var(--nk-text);"></p></div>
+              <div class="p-3 text-center" style="background-color:var(--nk-surface);"><p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Savyata Kosh</p><p id="bd-surcharge" class="mt-0.5 text-sm font-bold mono" style="color:var(--nk-text);"></p></div>
+              <div class="p-3 text-center" style="background-color:var(--nk-surface);"><p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Concession</p><p id="bd-concession" class="mt-0.5 text-sm font-bold mono" style="color:var(--nk-text);"></p></div>
+              <div class="p-3 text-center" style="background-color:var(--nk-surface);"><p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Service Charge</p><p id="bd-service" class="mt-0.5 text-sm font-bold mono" style="color:var(--nk-text);"></p></div>
+            </div>
+            <div class="px-4 py-2.5 flex justify-between items-center font-bold text-xs" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text);">Total</span><span id="bd-total" class="mono" style="color:var(--nk-accent);"></span></div>
+            <div class="px-4 py-2.5 text-[11px]" style="background-color:var(--nk-bg);border-top:1px solid var(--nk-border);color:var(--nk-text-secondary);">
+              <div class="flex justify-between mb-0.5"><span>Valuation Basis</span><span id="bd-valuation" class="font-medium mono" style="color:var(--nk-text);"></span></div>
+              <div class="flex justify-between"><span>Province</span><span id="bd-province" class="font-medium" style="color:var(--nk-text);"></span></div>
+              <div id="bd-surcharge-note" class="mt-1 hidden"><span class="font-semibold" style="color:var(--nk-accent);">&#x26a0; Bagmati Savyata Kosh applied</span></div>
+            </div>
+            <details class="border-t" style="border-color:var(--nk-border);"><summary class="px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] cursor-pointer select-none" style="color:var(--nk-accent);">How This Was Calculated</summary><div id="calc-explanation" class="px-4 pb-3 pt-1 space-y-1.5 text-[11px]" style="color:var(--nk-text-secondary);"></div></details>
+            <div class="flex gap-2 px-4 py-3 border-t" style="border-color:var(--nk-border);"><button id="copy-btn" class="flex-1 px-3 py-2 text-xs font-medium rounded-lg border" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Copy</button><button id="reset-btn" class="px-3 py-2 text-xs font-medium rounded-lg border" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Reset</button></div>
+          </div>
+          <div id="summary-placeholder" class="p-6 text-center border-t" style="border-color:var(--nk-border);"><p class="text-xs font-semibold" style="color:var(--nk-text-secondary);">Fill the form &amp; click Calculate</p><p class="text-[11px] mt-1" style="color:var(--nk-text-secondary);">Breakdown appears here</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 rounded-xl px-4 py-3 text-[11px] leading-relaxed" style="background-color:var(--nk-surface);border:1px solid var(--nk-border);color:var(--nk-text-secondary);">
+      <p>&#x26a0;&#xfe0f; Actual charges may differ based on local ward recommendations. Verify with your local Land Revenue Office.</p>
+      <p class="mt-1">Fiscal Year: <strong>2083/84</strong> &middot; Sources: DOLMA, Provincial Finance Acts 2083/84. Last verified: <strong>August 2026</strong>.</p>
+    </div>
+    <div class="mt-8"><h2 class="text-lg font-bold mb-4" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">{faqItems.map(item => (<details class="rounded-xl border" style="border-color:var(--nk-border);background-color:var(--nk-surface);"><summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary><div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div></details>))}</div></div>
+    <Disclaimer variant="property" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+  <style>
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .input-field { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.75rem; border-radius: 0.5rem; border: 1px solid var(--nk-border); background-color: var(--nk-bg); color: var(--nk-text); font-size: 0.8125rem; line-height: 1.5; transition: border-color 0.15s; }
+    .input-field::placeholder { color: var(--nk-text-secondary); opacity: 0.6; }
+    .input-field:focus { outline: none; border-color: var(--nk-accent); box-shadow: 0 0 0 2px var(--nk-accent-subtle); }
+    .segmented-group { display: flex; border-radius: 0.5rem; overflow: hidden; border: 1px solid var(--nk-border); background-color: var(--nk-bg); }
+    .seg-btn { flex: 1; padding: 0.4rem 0; font-size: 0.75rem; font-weight: 600; background-color: transparent; color: var(--nk-text-secondary); border: none; cursor: pointer; transition: all 0.15s; text-align: center; line-height: 1.4; white-space: nowrap; }
+    .seg-btn + .seg-btn { border-left: 1px solid var(--nk-border); }
+    .seg-btn.seg-active { background-color: var(--nk-accent); color: white; }
+    .seg-btn:not(.seg-active):hover { background-color: var(--nk-muted); }
+  </style>
+  <script>
+    import { calculateLandRegistration, formatNPR } from "../../../lib/calculators/land-registration.js";
+    import { PROVINCES, getDistricts, getMunicipalities, hasBagmatiSurcharge } from "../../../data/nepal/property/land-reg-locations.js";
+
+    const provinceSelect = document.getElementById("province");
+    const districtSelect = document.getElementById("district");
+    const municipalitySelect = document.getElementById("municipality");
+    const surchargeNote = document.getElementById("surcharge-note");
+    const declaredValue = document.getElementById("declared-value");
+    const govtValue = document.getElementById("govt-value");
+    const txnType = document.getElementById("txn-type");
+    const buyerCategory = document.getElementById("buyer-category");
+    const buyerHint = document.getElementById("buyer-hint");
+    const calcBtn = document.getElementById("calculate-btn");
+    const resultDiv = document.getElementById("calc-result");
+    const summaryPlaceholder = document.getElementById("summary-placeholder");
+    const copyBtn = document.getElementById("copy-btn");
+    const resetBtn = document.getElementById("reset-btn");
+    const ptButtons = {land:document.getElementById("pt-land"),apartment:document.getElementById("pt-apartment"),highrise:document.getElementById("pt-highrise"),"group-housing":document.getElementById("pt-ghousing")}
+    let selectedPropertyType="land";let lastResult=null;
+
+    function updateDistricts(){const pid=provinceSelect.value;const d=getDistricts(pid);
+      districtSelect.innerHTML='<option value="">Select</option>';
+      d.forEach(x=>{const o=document.createElement("option");o.value=x.id;o.textContent=x.name;districtSelect.appendChild(o);});updateMunicipalities();updateSurcharge();}
+    function updateMunicipalities(){const pid=provinceSelect.value;const did=districtSelect.value;
+      const m=getMunicipalities(pid,did);
+      municipalitySelect.innerHTML='<option value="">Select</option>';
+      m.forEach(x=>{const o=document.createElement("option");o.value=x.type;o.textContent=x.name+" ("+x.type+")";municipalitySelect.appendChild(o);});}
+    function updateSurcharge(){surchargeNote.classList.toggle("hidden",!hasBagmatiSurcharge(provinceSelect.value,districtSelect.value));}
+    provinceSelect.addEventListener("change",updateDistricts);
+    districtSelect.addEventListener("change",()=>{updateMunicipalities();updateSurcharge();});updateDistricts();
+
+    function setPropertyType(pt){selectedPropertyType=pt;Object.entries(ptButtons).forEach(([k,b])=>{if(!b)return;b.classList.toggle("seg-active",k===pt);b.setAttribute("aria-selected",k===pt?"true":"false");});}
+    Object.entries(ptButtons).forEach(([k,b])=>{if(b)b.addEventListener("click",()=>setPropertyType(k));});
+    buyerCategory.addEventListener("change",()=>{buyerHint.classList.toggle("hidden",buyerCategory.value!=="female");});
+
+    function calculate(){const dv=parseFloat(declaredValue.value)||0;const gv=parseFloat(govtValue.value)||0;
+      if(dv<=0&&gv<=0)return;const mt=municipalitySelect.value||"Municipality";
+      try{const r=calculateLandRegistration({declaredValue:dv,governmentValue:gv,propertyType:selectedPropertyType,transactionType:txnType.value,provinceId:provinceSelect.value,districtId:districtSelect.value,municipalityType:mt,buyerCategory:buyerCategory.value});
+        if(!r)return;lastResult=r;const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+        set("total-cost",formatNPR(r.total));set("bd-reg-fee",formatNPR(r.registrationFee));
+        set("bd-surcharge",r.surcharge>0?formatNPR(r.surcharge):"—");
+        set("bd-concession",r.concessionAmount>0?"-"+formatNPR(r.concessionAmount):"—");
+        set("bd-service",formatNPR(r.serviceCharge));set("bd-total",formatNPR(r.total));
+        set("bd-valuation",formatNPR(r.input.valuation));
+        set("bd-province",r.input.provinceLabel+" · "+r.input.districtLabel);
+        const sn=document.getElementById("bd-surcharge-note");if(sn)sn.classList.toggle("hidden",!r.hasSurcharge);
+        const expl=document.getElementById("calc-explanation");
+        if(expl){let h="<p><strong>Valuation Used:</strong> "+formatNPR(r.input.valuation)+" (Higher of declared vs. govt)</p>";
+          h+="<p><strong>Base Rate:</strong> "+r.rateSource+" × "+formatNPR(r.input.valuation)+" = "+formatNPR(r.regFeeBeforeConcession)+"</p>";
+          if(r.concessionAmount>0)h+="<p><strong>Female Concession:</strong> -"+formatNPR(r.concessionAmount)+"</p>";
+          if(r.hasSurcharge)h+="<p><strong>Bagmati Savyata Kosh (5%):</strong> "+formatNPR(r.surcharge)+"</p>";
+          h+="<p><strong>Service Charge:</strong> "+formatNPR(r.serviceCharge)+"</p>";
+          h+="<p><strong>Total:</strong> "+formatNPR(r.total)+"</p>";
+          expl.innerHTML=h;}
+        resultDiv.classList.remove("hidden");summaryPlaceholder.classList.add("hidden");
+      }catch(err){console.error("Calc error:",err);}}
+    calcBtn.addEventListener("click",calculate);
+    [declaredValue,govtValue].forEach(el=>{el.addEventListener("keydown",e=>{if(e.key==="Enter")calculate();});});
+    copyBtn.addEventListener("click",async()=>{if(!lastResult)return;const r=lastResult;
+      const ln=["Nepal Land Registration Cost Estimate","",
+        "Province: "+r.input.provinceLabel+" / "+r.input.districtLabel,
+        "Property: "+r.input.propertyLabel+" / "+r.input.transactionLabel,
+        "Buyer: "+r.input.buyerLabel,", ",
+        "Valuation: "+formatNPR(r.input.valuation),"Reg Fee: "+formatNPR(r.registrationFee),
+        r.concessionAmount>0?"Concession: -"+formatNPR(r.concessionAmount):null,
+        r.surcharge>0?"Savyata Kosh: "+formatNPR(r.surcharge):null,
+        "Service: "+formatNPR(r.serviceCharge),"------------------",
+        "TOTAL: "+formatNPR(r.total)].filter(Boolean).join("\n");
+      try{await navigator.clipboard.writeText(ln);}catch{}});
+    resetBtn.addEventListener("click",()=>{resultDiv.classList.add("hidden");summaryPlaceholder.classList.remove("hidden");lastResult=null;window.scrollTo({top:0,behavior:"smooth"});});
+  </script>
+</BaseLayout>

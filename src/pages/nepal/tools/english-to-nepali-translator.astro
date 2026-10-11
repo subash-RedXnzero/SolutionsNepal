@@ -1,0 +1,589 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'English to Nepali Translator – Translate English to Nepali | SolutionsNepal';
+const description = 'Translate English to Nepali online with SolutionsNepal. Translate English words, sentences, and paragraphs into natural Nepali quickly and easily.';
+
+const relatedTools = [
+  {title:'Nepali Unicode Converter',description:'Convert Romanized Nepali to Unicode',href:'/nepal/tools/nepali-unicode'},
+  {title:'Nepali Number to Words',description:'Convert numbers to Nepali words',href:'/nepal/tools/nepali-number-to-words'},
+  {title:'Nepali Names & Meanings',description:'Explore Nepali baby names',href:'/nepal/names'},
+];
+
+const faqItems = [
+  {q:'Is this a translation tool or a typing tool?',a:'This is a translation tool. You type English text (e.g., "How are you?") and it translates it into Nepali (e.g., "तपाईंलाई कस्तो छ?"). If you want to type Nepali using English letters phonetically, use the English to Nepali Typing tool instead.'},
+  {q:'How accurate is the translation?',a:'The translation uses a machine translation service that produces natural Nepali output for most common sentences and paragraphs. Very technical, poetic, or culturally specific text may not translate perfectly.'},
+  {q:'Is my text sent to a server?',a:'Yes. Your English text is sent to third-party translation services to generate the Nepali translation. The text is not stored or used for any other purpose.'},
+  {q:'Can I translate long paragraphs?',a:'Yes, but very long text may need to be split into smaller chunks. The service works best with paragraphs of a few hundred words at a time.'},
+  {q:'Does this support Nepali to English translation?',a:'This tool currently translates from English to Nepali. For reverse translation, you can paste Nepali text into a search engine or use Google Translate.'},
+];
+---
+
+<BaseLayout title={title} description={description}
+  jsonLd={[{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "English to Nepali Translator",
+    "description": "Free online English to Nepali translator. Translate English text into natural Nepali.",
+    "url": "https://solutionsnepal.com/nepal/tools/english-to-nepali-translator",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "NPR" }
+  }, {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }]}
+>
+  <div class="mx-auto max-w-[1160px] px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[{label:"Nepal",href:"/nepal"},{label:"Tools",href:"/nepal/tools"},{label:"English to Nepali Translator"}]} />
+
+    <!-- Header -->
+    <header class="tr-hero">
+      <span class="tr-eyebrow">English → नेपाली</span>
+      <h1 class="tr-title">English to Nepali Translator</h1>
+      <p class="tr-sub">Translate English words, sentences, and paragraphs into Nepali.</p>
+    </header>
+
+    <!-- Translator -->
+    <div class="tr-grid">
+      <!-- English Input -->
+      <section class="tr-card" aria-labelledby="tr-input-label">
+        <div class="tr-cardhead">
+          <label id="tr-input-label" for="en-input" class="tr-label">English</label>
+          <span class="tr-count"><span id="en-chars">0</span> characters</span>
+        </div>
+        <textarea id="en-input" rows="10" placeholder="Type or paste English text here..." spellcheck="true" autocomplete="off" autocapitalize="off" aria-label="English text" class="tr-area"></textarea>
+      </section>
+
+      <!-- Nepali Output -->
+      <section class="tr-card" aria-labelledby="tr-output-label">
+        <div class="tr-cardhead">
+          <span id="tr-output-label" class="tr-label">Nepali</span>
+          <span class="tr-count"><span id="np-chars">0</span> characters</span>
+        </div>
+        <div id="np-output" class="tr-area tr-area--out" role="region" aria-label="Nepali translation output" tabindex="0">
+          <span id="np-placeholder" class="tr-placeholder">Translation will appear here...</span>
+          <span id="np-text" class="hidden"></span>
+        </div>
+        <div class="tr-cardfoot tr-cardfoot--end">
+          <button id="reset-btn" type="button" class="tr-btn-subtle">Reset</button>
+          <button id="copy-btn" type="button" class="tr-btn-subtle" aria-label="Copy Nepali translation">Copy</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Error -->
+    <div id="error-banner" role="alert" class="tr-error hidden">
+      <span id="error-text"></span>
+    </div>
+
+    <!-- Examples -->
+    <div class="tr-examples">
+      <p class="tr-examples-label" id="tr-examples-label">Try an example:</p>
+      <div class="tr-chips" role="group" aria-labelledby="tr-examples-label">
+        <button type="button" class="tr-chip example-btn" data-text="Hello">Hello</button>
+        <button type="button" class="tr-chip example-btn" data-text="How are you?">How are you?</button>
+        <button type="button" class="tr-chip example-btn" data-text="My name is Subash.">My name is Subash.</button>
+        <button type="button" class="tr-chip example-btn" data-text="Nepal is a beautiful country.">Nepal is a beautiful country.</button>
+        <button type="button" class="tr-chip example-btn" data-text="I want to learn Nepali.">I want to learn Nepali.</button>
+        <button type="button" class="tr-chip example-btn" data-text="Please submit the document tomorrow.">Please submit the document tomorrow.</button>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="tr-status">
+      <p class="tr-live" role="status">
+        <span class="tr-dot" aria-hidden="true"></span>
+        <span id="tr-status-text">Live translation<span class="tr-vh"> is active</span></span>
+      </p>
+    </div>
+
+    <p class="tr-privacy">Text is sent to a translation service. Not stored.</p>
+
+    <!-- SEO Content -->
+    <div class="tr-prose">
+    <section class="mt-10">
+      <h2 class="text-[17px] font-bold mb-3" style="color:var(--nk-text);">How to Translate English to Nepali</h2>
+      <ol class="text-[13px] space-y-1.5" style="color:var(--nk-text-secondary);">
+        <li><strong style="color:var(--nk-text);">1. Type</strong> — Enter English text in the left panel.</li>
+        <li><strong style="color:var(--nk-text);">2. Translate</strong> — Translation appears automatically as you type.</li>
+        <li><strong style="color:var(--nk-text);">3. Copy</strong> — Click "Copy" to copy the Nepali text to your clipboard.</li>
+      </ol>
+    </section>
+
+    <section class="mt-6">
+      <h2 class="text-[17px] font-bold mb-3" style="color:var(--nk-text);">Translation vs Typing</h2>
+      <div class="text-[13px] leading-relaxed space-y-2.5" style="color:var(--nk-text-secondary);">
+        <p><strong style="color:var(--nk-text);">Translation</strong> — Type English text and get a Nepali translation. The tool understands sentence meaning and produces natural Nepali.</p>
+        <p><strong style="color:var(--nk-text);">Typing</strong> — Type Nepali sounds using English letters (e.g., "namaste" → नमस्ते). Use the <a href="/nepal/tools/nepali-unicode" style="color:var(--nk-accent);">Nepali Unicode Converter</a> for phonetic input.</p>
+      </div>
+    </section>
+
+    <section class="mt-6">
+      <h2 class="text-[17px] font-bold mb-3" style="color:var(--nk-text);">FAQs</h2>
+      <div class="rounded-xl border overflow-hidden" style="border-color:var(--nk-border);background:var(--nk-surface);">
+        {faqItems.map(item => (
+          <details class="group" style="border-bottom:1px solid var(--nk-border);">
+            <summary class="flex items-center justify-between px-4 py-3 cursor-pointer text-[13px] font-semibold select-none" style="color:var(--nk-text);">
+              {item.q}
+              <svg class="w-4 h-4 shrink-0 transition-transform group-open:rotate-45" style="color:var(--nk-text-tertiary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </summary>
+            <div class="px-4 pb-3 text-[12px] leading-relaxed" style="color:var(--nk-text-secondary);">{item.a}</div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={relatedTools} />
+    </div>
+  </div>
+
+  <script>
+    // ── Instant dictionary for common phrases ──
+    const DICT: Record<string, string> = {
+      'hello': 'नमस्ते', 'hi': 'नमस्ते', 'namaste': 'नमस्ते',
+      'thank you': 'धन्यवाद', 'thanks': 'धन्यवाद', 'dhanyabad': 'धन्यवाद',
+      'good morning': 'शुभ प्रभात', 'good night': 'शुभ रात्रि', 'good evening': 'शुभ सन्ध्या',
+      'good afternoon': 'शुभ दिउँसो',
+      'please': 'कृपया', 'sorry': 'माफ गर्नुहोस्', 'excuse me': 'माफ गर्नुहोस्',
+      'yes': 'हो', 'no': 'होइन',
+      'how are you?': 'तपाईंलाई कस्तो छ?', 'how are you': 'तपाईंलाई कस्तो छ',
+      'hello how are you': 'नमस्ते, तपाईंलाई कस्तो छ?',
+      'i am fine': 'म ठीक छु', "i'm fine": 'म ठीक छु', 'i am good': 'म राम्रो छु',
+      'what is your name?': 'तपाईंको नाम के हो?', 'what is your name': 'तपाईंको नाम के हो',
+      'my name is': 'मेरो नाम हो',
+      'i love you': 'म तिमीलाई माया गर्छु',
+      'welcome': 'स्वागत छ', 'welcome to nepal': 'नेपालमा स्वागत छ',
+      'nepal': 'नेपाल', 'nepali': 'नेपाली',
+      'india': 'भारत', 'kathmandu': 'काठमाडौं', 'pokhara': 'पोखरा',
+      'how old are you?': 'तपाईं कति वर्षका हुनुहुन्छ?', 'how old are you': 'तपाईं कति वर्षका हुनुहुन्छ',
+      'where are you from?': 'तपाईं कहाँबाट हुनुहुन्छ?', 'where are you from': 'तपाईं कहाँबाट हुनुहुन्छ',
+      'i am from nepal': 'म नेपालबाट हुँ', "i'm from nepal": 'म नेपालबाट हुँ',
+      'nice to meet you': 'तपाईंसँग भेटेर खुसी लाग्यो',
+      'see you later': 'पछि भेटौँ', 'see you': 'पछि भेटौँ',
+      'bye': 'बिदाई', 'goodbye': 'बिदाई',
+      'i understand': 'म बुझ्छु', 'i don\'t understand': 'म बुझ्दिन',
+      'do you speak english?': 'के तपाईं अंग्रेजी बोल्नुहुन्छ?',
+      'do you speak nepali?': 'के तपाईं नेपाली बोल्नुहुन्छ?',
+      'i want water': 'मलाई पानी चाहिन्छ', 'i am hungry': 'म भोको छु',
+      'help': 'सहायता', 'help me': 'मलाई सहयोग गर्नुहोस्',
+      'beautiful': 'सुन्दर', 'nepal is beautiful': 'नेपाल सुन्दर छ',
+      'nepal is a beautiful country': 'नेपाल एक सुन्दर देश हो',
+    };
+
+    const API = 'https://api.mymemory.translated.net/get';
+    const cache = new Map<string, string>();
+    let abortCtrl: AbortController | null = null;
+    let autoTimer: ReturnType<typeof setTimeout>;
+    let lastInput = '';
+
+    const enInput = document.getElementById('en-input') as HTMLTextAreaElement;
+    const npPlaceholder = document.getElementById('np-placeholder')!;
+    const npText = document.getElementById('np-text')!;
+    const enChars = document.getElementById('en-chars')!;
+    const npChars = document.getElementById('np-chars')!;
+    const copyBtn = document.getElementById('copy-btn')!;
+    const resetBtn = document.getElementById('reset-btn')!;
+    const errorBanner = document.getElementById('error-banner')!;
+    const errorText = document.getElementById('error-text')!;
+    const statusText = document.getElementById('tr-status-text')!;
+    const STATUS_IDLE = 'Live translation<span class="tr-vh"> is active</span>';
+    const STATUS_BUSY = 'Translating…';
+
+    function setBusy(busy: boolean) {
+      statusText.innerHTML = busy ? STATUS_BUSY : STATUS_IDLE;
+    }
+
+    let currentTranslation = '';
+
+    function updateCounts() {
+      enChars.textContent = String(enInput.value.length);
+      npChars.textContent = String(currentTranslation.length);
+    }
+
+    function showResult(text: string) {
+      currentTranslation = text;
+      npPlaceholder.classList.add('hidden');
+      npText.classList.remove('hidden');
+      npText.textContent = text;
+      updateCounts();
+    }
+
+    function showError(msg: string) {
+      errorText.textContent = msg;
+      errorBanner.classList.remove('hidden');
+      setTimeout(() => errorBanner.classList.add('hidden'), 5000);
+    }
+
+    // Try dictionary first for instant result
+    function tryDictionary(text: string): string | null {
+      const lower = text.toLowerCase().trim();
+      // Exact match
+      if (DICT[lower]) return DICT[lower];
+      // Try without punctuation
+      const clean = lower.replace(/[?!.,;:]+$/g, '').trim();
+      if (DICT[clean]) return DICT[clean];
+      return null;
+    }
+
+    // Split into sentences for faster parallel translation
+    function splitSentences(text: string): string[] {
+      const parts = text.split(/(?<=[.!?])\s+/);
+      return parts.filter(s => s.trim().length > 0);
+    }
+
+    // A genuine English → Nepali translation must contain Devanagari script.
+    // Anything else (romanized text, echoes of the input) is rejected.
+    const HAS_DEVANAGARI = /\p{Script=Devanagari}/u;
+
+    function pickDevanagari(candidates: unknown[]): string | null {
+      for (const c of candidates) {
+        if (typeof c === 'string' && c.trim() && HAS_DEVANAGARI.test(c)) return c;
+      }
+      return null;
+    }
+
+    // Backup translation service (free, no key required)
+    async function translateViaGoogle(text: string): Promise<string | null> {
+      try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ne&dt=t&q=${encodeURIComponent(text)}`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+          const t = data[0].map((seg: any) => (Array.isArray(seg) ? seg[0] : '')).join('');
+          if (t && HAS_DEVANAGARI.test(t)) return t;
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    async function translateChunk(text: string): Promise<string | null> {
+      if (cache.has(text)) return cache.get(text)!;
+      // Primary: MyMemory. Its translation memory occasionally serves a wrong,
+      // non-Nepali match (e.g. romanized text), so only accept output that
+      // actually contains Devanagari script.
+      try {
+        const url = `${API}?q=${encodeURIComponent(text)}&langpair=en|ne`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          const candidates: unknown[] = [];
+          if (data.responseStatus === 200 && data.responseData?.translatedText) {
+            candidates.push(data.responseData.translatedText);
+          }
+          if (Array.isArray(data.matches)) {
+            for (const m of data.matches) candidates.push((m as any)?.translation);
+          }
+          const good = pickDevanagari(candidates);
+          if (good) {
+            cache.set(text, good);
+            return good;
+          }
+        }
+      } catch {
+        // fall through to the backup service
+      }
+      // Backup: Google Translate (no key required)
+      const fallback = await translateViaGoogle(text);
+      if (fallback) {
+        cache.set(text, fallback);
+        return fallback;
+      }
+      return null;
+    }
+
+    async function translate() {
+      const text = enInput.value.trim();
+      if (!text) {
+        currentTranslation = '';
+        npPlaceholder.classList.remove('hidden');
+        npText.classList.add('hidden');
+        npText.textContent = '';
+        updateCounts();
+        return;
+      }
+
+      // Check dictionary first for instant result
+      const dictResult = tryDictionary(text);
+      if (dictResult) {
+        showResult(dictResult);
+        return;
+      }
+
+      setBusy(true);
+      errorBanner.classList.add('hidden');
+
+      // Cancel previous request
+      if (abortCtrl) abortCtrl.abort();
+      abortCtrl = new AbortController();
+
+      try {
+        const sentences = splitSentences(text);
+        if (sentences.length <= 1) {
+          // Single chunk
+          const result = await translateChunk(text);
+          if (result) showResult(result);
+          else showError('Unable to translate. Please try again.');
+        } else {
+          // Translate sentences in parallel for speed
+          const results = await Promise.all(sentences.map(s => translateChunk(s)));
+          const translated = results.map((r, i) => r || sentences[i]).join(' ');
+          if (results.some(r => r !== null)) {
+            showResult(translated);
+          } else {
+            showError('Unable to translate. Please try again.');
+          }
+        }
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          showError('Unable to translate right now. Please try again.');
+        }
+      }
+
+      setBusy(false);
+    }
+
+    // Auto-translate with debounce (800ms after typing stops)
+    function scheduleAuto() {
+      clearTimeout(autoTimer);
+      const text = enInput.value.trim();
+      if (!text || text === lastInput) return;
+      autoTimer = setTimeout(() => {
+        lastInput = text;
+        translate();
+      }, 800);
+    }
+
+    // Events (translation itself runs automatically as you type)
+    enInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        lastInput = '';
+        translate();
+      }
+    });
+
+    enInput.addEventListener('input', () => {
+      updateCounts();
+      scheduleAuto();
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      if (!currentTranslation) return;
+      try {
+        await navigator.clipboard.writeText(currentTranslation);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = currentTranslation;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      copyBtn.textContent = 'Copied ✓';
+      copyBtn.classList.add('is-copied');
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy';
+        copyBtn.classList.remove('is-copied');
+      }, 1600);
+    });
+
+    resetBtn.addEventListener('click', () => {
+      if (enInput.value.length > 100 && !confirm('Reset all text?')) return;
+      enInput.value = '';
+      lastInput = '';
+      currentTranslation = '';
+      npPlaceholder.classList.remove('hidden');
+      npText.classList.add('hidden');
+      npText.textContent = '';
+      errorBanner.classList.add('hidden');
+      updateCounts();
+      enInput.focus();
+    });
+
+    // Examples
+    document.querySelectorAll('.example-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        enInput.value = (btn as HTMLElement).dataset.text!;
+        lastInput = '';
+        updateCounts();
+        translate();
+      });
+    });
+
+    updateCounts();
+  </script>
+</BaseLayout>
+
+<style>
+  /* ── English to Nepali Translator · premium minimal writing tool ── */
+  .tr-hero { text-align: center; margin: 10px 0 30px; }
+  .tr-eyebrow {
+    display: inline-block; margin: 0 0 14px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+    color: #B91C1C; background: rgba(185, 28, 28, 0.07);
+    border: 1px solid rgba(185, 28, 28, 0.2);
+    padding: 5px 14px; border-radius: 999px;
+  }
+  .tr-title {
+    margin: 0; color: #0F172A;
+    font-size: clamp(26px, 3.6vw, 36px); font-weight: 800; letter-spacing: -0.02em;
+  }
+  .tr-sub { margin: 10px 0 0; font-size: 16px; color: #64748B; }
+
+  .tr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: stretch; }
+  .tr-card {
+    display: flex; flex-direction: column;
+    background: #FFFFFF; border: 1px solid #E7E3DC; border-radius: 16px;
+    padding: 18px 18px 12px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .tr-card:focus-within {
+    border-color: #B91C1C;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1), 0 1px 2px rgba(15, 23, 42, 0.05);
+  }
+  .tr-cardhead {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .tr-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #64748B;
+  }
+  .tr-count { font-size: 12px; color: #64748B; font-variant-numeric: tabular-nums; }
+  .tr-area {
+    width: 100%; min-height: 270px; flex: 1;
+    border: none; outline: none; resize: vertical;
+    background: transparent; color: #0F172A;
+    font: inherit; font-size: 16px; line-height: 1.7;
+    padding: 2px; caret-color: #B91C1C;
+  }
+  .tr-area::placeholder { color: #94A3B8; }
+  div.tr-area { overflow-y: auto; overflow-wrap: anywhere; cursor: text; }
+  div.tr-area:focus-visible { outline: none; }
+  .tr-area--out {
+    font-size: 19px; font-weight: 500;
+    font-family: 'Noto Sans Devanagari', 'Mangal', 'Lohit Devanagari', sans-serif;
+  }
+  .tr-placeholder { color: #94A3B8; }
+  .tr-cardfoot {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 46px; margin-top: 8px; padding-top: 10px; gap: 8px;
+    border-top: 1px solid #F1EEE8;
+  }
+  .tr-cardfoot--end { justify-content: flex-end; }
+
+  .tr-btn-subtle {
+    font: inherit; font-size: 13px; font-weight: 600;
+    color: #64748B; background: transparent; border: 1px solid #E7E3DC;
+    border-radius: 10px; padding: 8px 20px; cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .tr-btn-subtle:hover { color: #0F172A; border-color: #0F172A; }
+  .tr-btn-subtle.is-copied { color: #16A34A; border-color: #16A34A; }
+
+  .tr-error {
+    margin-top: 14px; padding: 10px 16px;
+    font-size: 13px; color: #B91C1C;
+    background: #FEF2F2; border: 1px solid #FECACA; border-radius: 12px;
+  }
+
+  .tr-examples { margin-top: 24px; }
+  .tr-examples-label { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: #64748B; }
+  .tr-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tr-chip {
+    font: inherit; font-size: 13px; font-weight: 500; white-space: nowrap;
+    color: #0F172A; background: #FFFFFF; border: 1px solid #E7E3DC;
+    border-radius: 999px; padding: 9px 18px; cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .tr-chip:hover {
+    border-color: #B91C1C;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+  }
+  .tr-chip:active { transform: translateY(0) scale(0.98); }
+
+  .tr-status {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 20px; padding-top: 14px;
+    border-top: 1px solid #E7E3DC;
+  }
+  .tr-live { display: flex; align-items: center; gap: 9px; margin: 0; font-size: 13px; font-weight: 500; color: #64748B; }
+  .tr-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #16A34A; flex-shrink: 0; }
+  .tr-dot::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid rgba(22, 163, 74, 0.45);
+    animation: tr-ping 2s ease-out infinite;
+  }
+  @keyframes tr-ping {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(1.15); opacity: 0; }
+  }
+  .tr-privacy { margin: 14px 0 0; text-align: center; font-size: 11px; color: #64748B; }
+
+  .tr-vh {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .tr-prose { max-width: 760px; margin-left: auto; margin-right: auto; }
+
+  .tr-chip:focus-visible,
+  .tr-btn-subtle:focus-visible {
+    outline: 2px solid #B91C1C; outline-offset: 2px;
+  }
+
+  @media (max-width: 860px) {
+    .tr-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .tr-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; }
+    .tr-chip { flex-shrink: 0; min-height: 44px; }
+    .tr-btn-subtle { min-height: 44px; }
+    .tr-area { min-height: 220px; font-size: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-dot::after { animation: none; }
+    .tr-card, .tr-chip, .tr-btn-subtle { transition: none; }
+    .tr-chip:hover { transform: none; }
+  }
+
+  /* Dark theme: same minimal aesthetic, harmonized surfaces */
+  [data-theme="dark"] .tr-title { color: #F1EFE9; }
+  [data-theme="dark"] .tr-sub,
+  [data-theme="dark"] .tr-label,
+  [data-theme="dark"] .tr-count,
+  [data-theme="dark"] .tr-live,
+  [data-theme="dark"] .tr-examples-label,
+  [data-theme="dark"] .tr-privacy { color: #A8A29E; }
+  [data-theme="dark"] .tr-card { background: #1E1B17; border-color: #35302A; box-shadow: none; }
+  [data-theme="dark"] .tr-card:focus-within { border-color: #B91C1C; box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.25); }
+  [data-theme="dark"] .tr-area { color: #F1EFE9; caret-color: #F87171; }
+  [data-theme="dark"] .tr-area::placeholder,
+  [data-theme="dark"] .tr-placeholder { color: #78716C; }
+  [data-theme="dark"] .tr-cardfoot { border-top-color: #2A2723; }
+  [data-theme="dark"] .tr-chip { color: #F1EFE9; background: #1E1B17; border-color: #35302A; }
+  [data-theme="dark"] .tr-chip:hover { border-color: #B91C1C; box-shadow: none; }
+  [data-theme="dark"] .tr-btn-subtle { color: #A8A29E; border-color: #35302A; }
+  [data-theme="dark"] .tr-btn-subtle:hover { color: #F1EFE9; border-color: #F1EFE9; }
+  [data-theme="dark"] .tr-btn-subtle.is-copied { color: #4ADE80; border-color: #4ADE80; }
+  [data-theme="dark"] .tr-status { border-top-color: #35302A; }
+  [data-theme="dark"] .tr-error { color: #FCA5A5; background: rgba(185, 28, 28, 0.12); border-color: rgba(185, 28, 28, 0.4); }
+  [data-theme="dark"] .tr-eyebrow { color: #F87171; background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.3); }
+  [data-theme="dark"] .tr-chip:focus-visible,
+  [data-theme="dark"] .tr-btn-subtle:focus-visible { outline-color: #F87171; }
+</style>

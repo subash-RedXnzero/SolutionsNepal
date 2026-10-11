@@ -1,0 +1,553 @@
+---
+/**
+ * BusinessDaysCalculator — working days between two dates.
+ *
+ * Excludes: Saturdays (optional), Nepal public holidays (optional), custom holidays.
+ * Supports: BS and AD calendar systems.
+ */
+---
+
+<div id="bd-root" class="nk-card overflow-hidden">
+  <div class="p-5 sm:p-6">
+
+    <!-- Calendar toggle -->
+    <div class="mb-5 text-center">
+      <p class="text-[11px] font-medium mb-1.5" style="color:var(--nk-text-tertiary);">Calendar System</p>
+      <div class="inline-flex rounded-lg overflow-hidden" style="border:1px solid var(--nk-border);">
+        <button id="bd-sys-bs" class="bd-sys px-5 py-1.5 text-[13px] font-semibold transition-all" style="background:var(--nk-accent);color:#fff;">BS</button>
+        <button id="bd-sys-ad" class="bd-sys px-5 py-1.5 text-[13px] font-medium transition-all" style="background:var(--nk-surface);color:var(--nk-text-secondary);">AD</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+      <!-- Left: Dates -->
+      <div class="space-y-3">
+        <!-- Start Date BS -->
+        <div id="bd-start-bs">
+          <label class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Start Date</label>
+          <div class="grid grid-cols-3 gap-1.5">
+            <input id="bd-sy" type="number" min="2000" max="2090" placeholder="2082" class="nk-input text-center text-[15px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+            <input id="bd-sm" type="number" min="1" max="12" placeholder="01" class="nk-input text-center text-[15px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+            <input id="bd-sd" type="number" min="1" max="32" placeholder="01" class="nk-input text-center text-[15px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+          </div>
+          <p id="bd-start-label" class="text-[10px] mt-1" style="color:var(--nk-text-tertiary);">2082-01-01 BS ≈ Apr 14, 2025 AD</p>
+        </div>
+
+        <!-- Start Date AD -->
+        <div id="bd-start-ad" class="hidden">
+          <label class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Start Date</label>
+          <input id="bd-ad-start" type="date" class="w-full nk-input text-[14px]" style="color:var(--nk-text);" />
+          <p id="bd-start-ad-label" class="text-[10px] mt-1" style="color:var(--nk-text-tertiary);">—</p>
+        </div>
+
+        <!-- End Date BS -->
+        <div id="bd-end-bs">
+          <label class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">End Date</label>
+          <div class="grid grid-cols-3 gap-1.5">
+            <input id="bd-ey" type="number" min="2000" max="2090" placeholder="2082" class="nk-input text-center text-[15px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+            <input id="bd-em" type="number" min="1" max="12" placeholder="01" class="nk-input text-center text-[15px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+            <input id="bd-ed" type="number" min="1" max="32" placeholder="15" class="nk-input text-center text-[15px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+          </div>
+          <p id="bd-end-label" class="text-[10px] mt-1" style="color:var(--nk-text-tertiary);">2082-01-15 BS ≈ Apr 28, 2025 AD</p>
+        </div>
+
+        <!-- End Date AD -->
+        <div id="bd-end-ad" class="hidden">
+          <label class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">End Date</label>
+          <input id="bd-ad-end" type="date" class="w-full nk-input text-[14px]" style="color:var(--nk-text);" />
+          <p id="bd-end-ad-label" class="text-[10px] mt-1" style="color:var(--nk-text-tertiary);">—</p>
+        </div>
+      </div>
+
+      <!-- Right: Options -->
+      <div class="space-y-3">
+        <p class="text-[12px] font-medium" style="color:var(--nk-text-secondary);">Exclude</p>
+
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input id="bd-excl-sat" type="checkbox" checked class="accent-current w-4 h-4" />
+          <span class="text-[13px]" style="color:var(--nk-text);">Saturday</span>
+        </label>
+
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input id="bd-excl-hol" type="checkbox" checked class="accent-current w-4 h-4" />
+          <span class="text-[13px]" style="color:var(--nk-text);">Nepal Public Holidays</span>
+        </label>
+
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input id="bd-inclusive" type="checkbox" checked class="accent-current w-4 h-4" />
+          <span class="text-[13px]" style="color:var(--nk-text);">Include start & end dates</span>
+        </label>
+
+        <!-- Custom holidays -->
+        <div class="mt-2 pt-3" style="border-top:1px dashed var(--nk-border);">
+          <p class="text-[11px] font-medium mb-2" style="color:var(--nk-text-tertiary);">Custom Holidays</p>
+          <div class="flex gap-1.5 items-end">
+            <div class="flex-shrink-0">
+              <input id="bd-custom-date" type="text" placeholder="YYYY/MM/DD" class="bd-date-input nk-input text-[13px] py-1.5 tabular-nums" style="color:var(--nk-text);width:130px;" maxlength="10" inputmode="numeric" />
+            </div>
+            <div class="min-w-0 flex-1">
+              <input id="bd-custom-name" type="text" placeholder="Holiday name" class="w-full nk-input text-[13px] py-1.5" style="color:var(--nk-text);" />
+            </div>
+            <button id="bd-add-custom" class="flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center text-[16px] font-bold transition-all" style="background:var(--nk-accent);color:#fff;">+</button>
+          </div>
+          <p class="text-[10px] mt-1" style="color:var(--nk-text-tertiary);">Format: 2082/01/15 = Jan 15, 2082 BS</p>
+          <div id="bd-custom-list" class="flex flex-wrap gap-1.5 mt-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculate -->
+    <button id="bd-calc" class="w-full py-2.5 rounded-lg text-[14px] font-semibold transition-all hover:opacity-90 active:scale-[0.99]" style="background-color:var(--nk-accent);color:#fff;">
+      Calculate Working Days
+    </button>
+
+    <!-- Error -->
+    <p id="bd-error" class="hidden mt-3 text-[12px] text-center" style="color:var(--nk-danger, #dc2626);"></p>
+
+    <!-- Result -->
+    <div id="bd-result" class="hidden mt-5 rounded-lg p-5" style="background:var(--nk-bg);">
+      <div class="text-center mb-4">
+        <p class="text-[11px] font-medium mb-1" style="color:var(--nk-text-tertiary);">Working Days</p>
+        <p id="bd-working" class="text-[48px] font-bold tracking-[-0.02em] leading-tight" style="color:var(--nk-accent);">—</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-center mb-4">
+        <div class="rounded-lg p-3" style="background:var(--nk-surface);">
+          <p class="text-[10px] font-medium" style="color:var(--nk-text-tertiary);">Holidays</p>
+          <p id="bd-hol-count" class="text-[20px] font-bold tabular-nums mt-0.5" style="color:var(--nk-text);">—</p>
+        </div>
+        <div class="rounded-lg p-3" style="background:var(--nk-surface);">
+          <p class="text-[10px] font-medium" style="color:var(--nk-text-tertiary);">Total Days</p>
+          <p id="bd-total" class="text-[20px] font-bold tabular-nums mt-0.5" style="color:var(--nk-text);">—</p>
+        </div>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="space-y-1.5 text-[12px]" style="border-top:1px dashed var(--nk-border);padding-top:10px;">
+        <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Start</span><span id="bd-res-start" class="font-medium" style="color:var(--nk-text);">—</span></div>
+        <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">End</span><span id="bd-res-end" class="font-medium" style="color:var(--nk-text);">—</span></div>
+        <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Saturdays excluded</span><span id="bd-res-sat" class="font-medium" style="color:var(--nk-text);">—</span></div>
+        <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Public holidays excluded</span><span id="bd-res-hol" class="font-medium" style="color:var(--nk-text);">—</span></div>
+        <div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Custom holidays excluded</span><span id="bd-res-custom" class="font-medium" style="color:var(--nk-text);">0</span></div>
+      </div>
+
+      <!-- Holiday list -->
+      <details id="bd-hol-list-wrap" class="hidden mt-3">
+        <summary class="text-[11px] font-medium cursor-pointer" style="color:var(--nk-text-secondary);">Holidays in this period</summary>
+        <div id="bd-hol-list" class="mt-2 space-y-1 text-[11px]" style="color:var(--nk-text-secondary);"></div>
+      </details>
+    </div>
+
+    <!-- Reverse warning -->
+    <div id="bd-reverse" class="hidden mt-3 text-center">
+      <p class="text-[12px] mb-2" style="color:var(--nk-text-secondary);">End date must be on or after the start date.</p>
+      <button id="bd-swap" class="text-[12px] font-medium px-3 py-1.5 rounded-md border transition-colors" style="border-color:var(--nk-border);color:var(--nk-accent);">Swap Dates</button>
+    </div>
+
+    <!-- Quick examples -->
+    <div class="mt-4">
+      <p class="text-[11px] font-medium mb-1.5" style="color:var(--nk-text-tertiary);">Examples</p>
+      <div class="flex flex-wrap gap-1.5">
+        <button class="bd-preset" data-sy="2082" data-sm="1" data-sd="6" data-ey="2082" data-em="1" data-ed="10">Mon → Fri</button>
+        <button class="bd-preset" data-sy="2082" data-sm="1" data-sd="1" data-ey="2082" data-em="1" data-ed="15">2 weeks</button>
+        <button class="bd-preset" data-sy="2082" data-sm="1" data-sd="1" data-ey="2082" data-em="12" data-ed="30">1 BS year</button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-4 flex gap-2">
+      <button id="bd-copy" class="nk-btn nk-btn-secondary nk-btn-sm flex-1 text-[12px]">Copy Summary</button>
+      <button id="bd-reset" class="nk-btn nk-btn-ghost nk-btn-sm text-[12px]">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { bsToAd, adToBs, getDaysInBsMonth, todayInNepal, formatBsDate, formatAdDate } from '../../lib/nepal/calendar.js';
+  import { NEPAL_HOLIDAYS, getHolidayAdDatesSet } from '../../data/nepal-holidays.js';
+
+  function isValidBsDate(year: number, month: number, day: number): boolean {
+    const days = getDaysInBsMonth(year, month);
+    return days !== null && day >= 1 && day <= days;
+  }
+
+  const $ = (sel: string) => document.getElementById(sel);
+
+  // Elements
+  const sysBsBtn = $('bd-sys-bs')!;
+  const sysAdBtn = $('bd-sys-ad')!;
+  const startBsWrap = $('bd-start-bs')!;
+  const startAdWrap = $('bd-start-ad')!;
+  const endBsWrap = $('bd-end-bs')!;
+  const endAdWrap = $('bd-end-ad')!;
+  const syEl = $('bd-sy') as HTMLInputElement;
+  const smEl = $('bd-sm') as HTMLInputElement;
+  const sdEl = $('bd-sd') as HTMLInputElement;
+  const eyEl = $('bd-ey') as HTMLInputElement;
+  const emEl = $('bd-em') as HTMLInputElement;
+  const edEl = $('bd-ed') as HTMLInputElement;
+  const adStartEl = $('bd-ad-start') as HTMLInputElement;
+  const adEndEl = $('bd-ad-end') as HTMLInputElement;
+  const startLabel = $('bd-start-label')!;
+  const endLabel = $('bd-end-label')!;
+  const startAdLabel = $('bd-start-ad-label')!;
+  const endAdLabel = $('bd-end-ad-label')!;
+  const exclSatEl = $('bd-excl-sat') as HTMLInputElement;
+  const exclHolEl = $('bd-excl-hol') as HTMLInputElement;
+  const inclusiveEl = $('bd-inclusive') as HTMLInputElement;
+  const customDateEl = $('bd-custom-date') as HTMLInputElement;
+  const customNameEl = $('bd-custom-name') as HTMLInputElement;
+  const customListEl = $('bd-custom-list')!;
+
+  // Input mask: auto-insert / after YYYY and MM
+  customDateEl.addEventListener('input', () => {
+    let v = customDateEl.value.replace(/[^0-9]/g, '');
+    if (v.length > 8) v = v.substring(0, 8);
+    if (v.length > 4) v = v.substring(0, 4) + '/' + v.substring(4);
+    if (v.length > 7) v = v.substring(0, 7) + '/' + v.substring(7);
+    customDateEl.value = v;
+  });
+  customDateEl.addEventListener('keydown', (e) => {
+    // Allow backspace to remove slash cleanly
+    if (e.key === 'Backspace') {
+      const v = customDateEl.value;
+      if ((v.length === 5 || v.length === 8) && v.endsWith('/')) {
+        customDateEl.value = v.slice(0, -1);
+      }
+    }
+  });
+  const resultBox = $('bd-result')!;
+  const workingEl = $('bd-working')!;
+  const holCountEl = $('bd-hol-count')!;
+  const totalEl = $('bd-total')!;
+  const resStart = $('bd-res-start')!;
+  const resEnd = $('bd-res-end')!;
+  const resSat = $('bd-res-sat')!;
+  const resHol = $('bd-res-hol')!;
+  const resCustom = $('bd-res-custom')!;
+  const holListWrap = $('bd-hol-list-wrap')!;
+  const holListEl = $('bd-hol-list')!;
+  const errorEl = $('bd-error')!;
+  const reverseBox = $('bd-reverse')!;
+
+  let calendarSystem = 'bs';
+  let customHolidays: { date: string; name: string }[] = [];
+  let lastResultText = '';
+  const holidayDates = getHolidayAdDatesSet();
+
+  const AD_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function formatAdShort(ad: {year:number;month:number;day:number}) {
+    return `${AD_MONTHS[ad.month - 1]} ${ad.day}, ${ad.year}`;
+  }
+
+  // ── Labels ──────────────────────────────────────────────
+  function updateBsLabels() {
+    const sy = parseInt(syEl.value), sm = parseInt(smEl.value), sd = parseInt(sdEl.value);
+    const ey = parseInt(eyEl.value), em = parseInt(emEl.value), ed = parseInt(edEl.value);
+    if (isValidBsDate(sy, sm, sd)) {
+      const ad = bsToAd(sy, sm, sd);
+      startLabel.textContent = `${sy}-${String(sm).padStart(2,'0')}-${String(sd).padStart(2,'0')} BS${ad ? ' ≈ ' + formatAdShort(ad) + ' AD' : ''}`;
+    } else { startLabel.textContent = '—'; }
+    if (isValidBsDate(ey, em, ed)) {
+      const ad = bsToAd(ey, em, ed);
+      endLabel.textContent = `${ey}-${String(em).padStart(2,'0')}-${String(ed).padStart(2,'0')} BS${ad ? ' ≈ ' + formatAdShort(ad) + ' AD' : ''}`;
+    } else { endLabel.textContent = '—'; }
+  }
+
+  function updateAdLabels() {
+    if (adStartEl.value) {
+      const [y, m, d] = adStartEl.value.split('-').map(Number);
+      const bs = adToBs(y, m, d);
+      startAdLabel.textContent = bs ? `${bs.year}-${String(bs.month).padStart(2,'0')}-${String(bs.day).padStart(2,'0')} BS` : '—';
+    } else { startAdLabel.textContent = '—'; }
+    if (adEndEl.value) {
+      const [y, m, d] = adEndEl.value.split('-').map(Number);
+      const bs = adToBs(y, m, d);
+      endAdLabel.textContent = bs ? `${bs.year}-${String(bs.month).padStart(2,'0')}-${String(bs.day).padStart(2,'0')} BS` : '—';
+    } else { endAdLabel.textContent = '—'; }
+  }
+
+  // ── System toggle ────────────────────────────────────────
+  function setSystem(sys: string) {
+    calendarSystem = sys;
+    if (sys === 'bs') {
+      sysBsBtn.style.background = 'var(--nk-accent)'; sysBsBtn.style.color = '#fff'; sysBsBtn.style.fontWeight = '600';
+      sysAdBtn.style.background = 'var(--nk-surface)'; sysAdBtn.style.color = 'var(--nk-text-secondary)'; sysAdBtn.style.fontWeight = '500';
+      startBsWrap.classList.remove('hidden'); startAdWrap.classList.add('hidden');
+      endBsWrap.classList.remove('hidden'); endAdWrap.classList.add('hidden');
+      updateBsLabels();
+    } else {
+      sysAdBtn.style.background = 'var(--nk-accent)'; sysAdBtn.style.color = '#fff'; sysAdBtn.style.fontWeight = '600';
+      sysBsBtn.style.background = 'var(--nk-surface)'; sysBsBtn.style.color = 'var(--nk-text-secondary)'; sysBsBtn.style.fontWeight = '500';
+      startBsWrap.classList.add('hidden'); startAdWrap.classList.remove('hidden');
+      endBsWrap.classList.add('hidden'); endAdWrap.classList.remove('hidden');
+      updateAdLabels();
+    }
+    resultBox.classList.add('hidden');
+    errorEl.classList.add('hidden');
+    reverseBox.classList.add('hidden');
+  }
+
+  // ── Get AD date pair ─────────────────────────────────────
+  function getAdDates(): { startAd: {year:number;month:number;day:number}; endAd: {year:number;month:number;day:number} } | null {
+    if (calendarSystem === 'bs') {
+      const sy = parseInt(syEl.value), sm = parseInt(smEl.value), sd = parseInt(sdEl.value);
+      const ey = parseInt(eyEl.value), em = parseInt(emEl.value), ed = parseInt(edEl.value);
+      if (!sy || !sm || !sd || !ey || !em || !ed) return null;
+      if (!isValidBsDate(sy, sm, sd) || !isValidBsDate(ey, em, ed)) return null;
+      const startAd = bsToAd(sy, sm, sd);
+      const endAd = bsToAd(ey, em, ed);
+      if (!startAd || !endAd) return null;
+      return { startAd, endAd };
+    } else {
+      if (!adStartEl.value || !adEndEl.value) return null;
+      const [sy, sm, sd] = adStartEl.value.split('-').map(Number);
+      const [ey, em, ed] = adEndEl.value.split('-').map(Number);
+      return { startAd: { year: sy, month: sm, day: sd }, endAd: { year: ey, month: em, day: ed } };
+    }
+  }
+
+  // ── Calculate ────────────────────────────────────────────
+  function calculate() {
+    errorEl.classList.add('hidden');
+    resultBox.classList.add('hidden');
+    reverseBox.classList.add('hidden');
+
+    const dates = getAdDates();
+    if (!dates) {
+      errorEl.textContent = 'Please enter valid start and end dates.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    const { startAd, endAd } = dates;
+
+    // Total calendar days (inclusive by default)
+    const msPerDay = 86400000;
+    const startUtc = Date.UTC(startAd.year, startAd.month - 1, startAd.day);
+    const endUtc = Date.UTC(endAd.year, endAd.month - 1, endAd.day);
+    let totalDays = Math.round((endUtc - startUtc) / msPerDay);
+    if (totalDays < 0) {
+      reverseBox.classList.remove('hidden');
+      return;
+    }
+    if (inclusiveEl.checked) totalDays += 1;
+
+    // Count excluded days using a Set to avoid double-counting
+    const excludedDates = new Set<string>();
+    const saturdays: string[] = [];
+    const publicHolidays: string[] = [];
+    const customExcluded: string[] = [];
+
+    // Iterate each day in range
+    const startMs = Date.UTC(startAd.year, startAd.month - 1, startAd.day);
+    for (let i = 0; i <= Math.round((endUtc - startMs) / msPerDay); i++) {
+      const d = new Date(startMs + i * msPerDay);
+      const dateStr = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+      const weekday = d.getUTCDay(); // 6 = Saturday
+
+      let excluded = false;
+
+      // Saturday
+      if (exclSatEl.checked && weekday === 6 && !excludedDates.has(dateStr)) {
+        saturdays.push(dateStr);
+        excluded = true;
+      }
+
+      // Public holidays
+      if (exclHolEl.checked && holidayDates.has(dateStr) && !excludedDates.has(dateStr)) {
+        publicHolidays.push(dateStr);
+        excluded = true;
+      }
+
+      // Custom holidays
+      if (customHolidays.some(ch => ch.date === dateStr) && !excludedDates.has(dateStr)) {
+        customExcluded.push(dateStr);
+        excluded = true;
+      }
+
+      if (excluded) excludedDates.add(dateStr);
+    }
+
+    const excludedCount = excludedDates.size;
+    const workingDays = totalDays - excludedCount;
+
+    // Display
+    workingEl.textContent = String(workingDays);
+    holCountEl.textContent = String(excludedCount);
+    totalEl.textContent = String(totalDays);
+    resSat.textContent = String(saturdays.length);
+    resHol.textContent = String(publicHolidays.length);
+    resCustom.textContent = String(customExcluded.length);
+
+    // Date labels
+    if (calendarSystem === 'bs') {
+      const sy = parseInt(syEl.value), sm = parseInt(smEl.value), sd = parseInt(sdEl.value);
+      const ey = parseInt(eyEl.value), em = parseInt(emEl.value), ed = parseInt(edEl.value);
+      const sAd = bsToAd(sy, sm, sd);
+      const eAd = bsToAd(ey, em, ed);
+      resStart.textContent = `${sy}-${String(sm).padStart(2,'0')}-${String(sd).padStart(2,'0')} BS${sAd ? ' ≈ ' + formatAdShort(sAd) : ''}`;
+      resEnd.textContent = `${ey}-${String(em).padStart(2,'0')}-${String(ed).padStart(2,'0')} BS${eAd ? ' ≈ ' + formatAdShort(eAd) : ''}`;
+    } else {
+      resStart.textContent = formatAdShort(startAd);
+      resEnd.textContent = formatAdShort(endAd);
+    }
+
+    // Holiday list
+    holListEl.innerHTML = '';
+    if (saturdays.length > 0) {
+      const div = document.createElement('div');
+      div.innerHTML = `<span class="font-medium" style="color:var(--nk-text);">Saturday</span> — ${saturdays.length} day${saturdays.length > 1 ? 's' : ''}`;
+      holListEl.appendChild(div);
+    }
+    if (publicHolidays.length > 0) {
+      // Find holiday names
+      const holNames: string[] = [];
+      for (const h of NEPAL_HOLIDAYS) {
+        const hDateStr = `${h.ad.year}-${String(h.ad.month).padStart(2,'0')}-${String(h.ad.day).padStart(2,'0')}`;
+        if (publicHolidays.includes(hDateStr)) {
+          holNames.push(`${h.name} (${hDateStr})`);
+        }
+      }
+      const div = document.createElement('div');
+      div.innerHTML = `<span class="font-medium" style="color:var(--nk-text);">Public Holidays</span> — ${publicHolidays.length} day${publicHolidays.length > 1 ? 's' : ''}`;
+      holListEl.appendChild(div);
+      for (const name of holNames) {
+        const p = document.createElement('p');
+        p.textContent = '• ' + name;
+        p.className = 'pl-3';
+        holListEl.appendChild(p);
+      }
+    }
+    if (customExcluded.length > 0) {
+      const div = document.createElement('div');
+      div.innerHTML = `<span class="font-medium" style="color:var(--nk-text);">Custom Holidays</span> — ${customExcluded.length} day${customExcluded.length > 1 ? 's' : ''}`;
+      holListEl.appendChild(div);
+    }
+    holListWrap.classList.toggle('hidden', holListEl.children.length === 0);
+
+    resultBox.classList.remove('hidden');
+
+    lastResultText = `Business Days Calculation\n\nStart: ${resStart.textContent}\nEnd: ${resEnd.textContent}\n\nTotal Days: ${totalDays}\nSaturdays Excluded: ${saturdays.length}\nPublic Holidays Excluded: ${publicHolidays.length}\nCustom Holidays Excluded: ${customExcluded.length}\nWorking Days: ${workingDays}`;
+  }
+
+  // ── Custom holidays ──────────────────────────────────────
+  function renderCustomHolidays() {
+    customListEl.innerHTML = '';
+    customHolidays.forEach((ch, i) => {
+      const chip = document.createElement('span');
+      chip.className = 'inline-flex items-center gap-1 text-[11px] font-medium px-2 py-1 rounded-full';
+      chip.style.background = 'var(--nk-surface)';
+      chip.style.color = 'var(--nk-text)';
+      chip.style.border = '1px solid var(--nk-border)';
+      chip.innerHTML = `${ch.name} <button class="ml-0.5 text-[13px] leading-none font-bold transition-opacity hover:opacity-60" style="color:var(--nk-text-tertiary);">×</button>`;
+      chip.querySelector('button')!.addEventListener('click', () => { customHolidays.splice(i, 1); renderCustomHolidays(); });
+      customListEl.appendChild(chip);
+    });
+  }
+
+  $('bd-add-custom')?.addEventListener('click', () => {
+    const raw = customDateEl.value.trim();
+    const name = customNameEl.value.trim();
+    if (!raw || !name) return;
+    // Parse YYYY/MM/DD (masked input)
+    const parts = raw.split('/');
+    let dateStr = '';
+    if (parts.length === 3 && parts[0].length === 4 && parts[1].length === 2 && parts[2].length === 2) {
+      const y = parseInt(parts[0]), m = parseInt(parts[1]), d = parseInt(parts[2]);
+      if (y && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+        dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      }
+    }
+    if (!dateStr) {
+      errorEl.textContent = 'Enter date as YYYY/MM/DD (e.g. 2082/01/15)';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+    errorEl.classList.add('hidden');
+    customHolidays.push({ date: dateStr, name });
+    customDateEl.value = '';
+    customNameEl.value = '';
+    renderCustomHolidays();
+  });
+
+  // ── Events ───────────────────────────────────────────────
+  sysBsBtn.addEventListener('click', () => setSystem('bs'));
+  sysAdBtn.addEventListener('click', () => setSystem('ad'));
+  $('bd-calc')?.addEventListener('click', calculate);
+  $('bd-swap')?.addEventListener('click', () => {
+    if (calendarSystem === 'bs') {
+      const tmpY = syEl.value, tmpM = smEl.value, tmpD = sdEl.value;
+      syEl.value = eyEl.value; smEl.value = emEl.value; sdEl.value = edEl.value;
+      eyEl.value = tmpY; emEl.value = tmpM; edEl.value = tmpD;
+    } else {
+      const tmp = adStartEl.value; adStartEl.value = adEndEl.value; adEndEl.value = tmp;
+    }
+    reverseBox.classList.add('hidden');
+    resultBox.classList.add('hidden');
+    updateBsLabels(); updateAdLabels();
+  });
+
+  [syEl, smEl, sdEl, eyEl, emEl, edEl].forEach(el => el?.addEventListener('input', () => {
+    updateBsLabels(); resultBox.classList.add('hidden'); errorEl.classList.add('hidden');
+  }));
+  [adStartEl, adEndEl].forEach(el => el?.addEventListener('input', () => {
+    updateAdLabels(); resultBox.classList.add('hidden'); errorEl.classList.add('hidden');
+  }));
+
+  // Presets
+  document.querySelectorAll('.bd-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const b = btn as HTMLElement;
+      setSystem('bs');
+      syEl.value = b.dataset.sy || ''; smEl.value = b.dataset.sm || ''; sdEl.value = b.dataset.sd || '';
+      eyEl.value = b.dataset.ey || ''; emEl.value = b.dataset.em || ''; edEl.value = b.dataset.ed || '';
+      updateBsLabels(); calculate();
+    });
+  });
+
+  // Copy
+  $('bd-copy')?.addEventListener('click', async () => {
+    if (!lastResultText) return;
+    try { await navigator.clipboard.writeText(lastResultText); } catch {}
+    const btn = $('bd-copy');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Summary'; }, 2000); }
+  });
+
+  // Reset
+  $('bd-reset')?.addEventListener('click', () => {
+    syEl.value = '2082'; smEl.value = '1'; sdEl.value = '1';
+    eyEl.value = '2082'; emEl.value = '1'; edEl.value = '15';
+    adStartEl.value = ''; adEndEl.value = '';
+    customHolidays = []; renderCustomHolidays();
+    setSystem('bs');
+    resultBox.classList.add('hidden'); errorEl.classList.add('hidden'); reverseBox.classList.add('hidden');
+    lastResultText = '';
+  });
+
+  // Init
+  syEl.value = '2082'; smEl.value = '1'; sdEl.value = '1';
+  eyEl.value = '2082'; emEl.value = '1'; edEl.value = '15';
+  updateBsLabels();
+</script>
+
+<style>
+  .bd-sys { cursor: pointer; font-family: var(--font-sans); border: none; outline: none; }
+  .bd-date-input {
+    text-align: center;
+  }
+  .bd-date-input::placeholder {
+    color: var(--nk-text);
+    opacity: 0.5;
+    font-weight: 700;
+    letter-spacing: 0;
+    font-size: 13px;
+    text-align: center;
+  }
+  .bd-preset {
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 500;
+    border: 1px solid var(--nk-border); cursor: pointer; color: var(--nk-text-secondary);
+    background: var(--nk-bg); font-family: var(--font-sans); transition: all 0.1s ease;
+  }
+  .bd-preset:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+</style>

@@ -1,0 +1,705 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+
+const title = 'SIP Calculator Nepal – Calculate SIP Returns & Investment Growth | SolutionsNepal';
+const description = 'Calculate SIP returns in Nepal. Estimate total investment, expected returns and final value with monthly SIP, annual SIP, step-up SIP and SIP vs FD comparisons.';
+
+const faqItems = [
+  {
+    q: 'What is SIP?',
+    a: 'A Systematic Investment Plan (SIP) means investing a fixed amount at regular intervals — usually every month — into a mutual fund or similar investment, instead of investing a large sum at once. It builds discipline and averages out your purchase cost over time.',
+  },
+  {
+    q: 'How much should I invest in SIP every month?',
+    a: 'A common guideline is to invest 10–20% of your monthly income after essential expenses and emergency savings. Even Rs. 1,000–2,000 per month can grow significantly over 10–15 years thanks to compounding. Use the calculator above to see what fits your goals.',
+  },
+  {
+    q: 'Is SIP better than FD?',
+    a: 'They serve different purposes. FDs offer fixed, predictable interest with low risk; SIPs are market-linked, so returns fluctuate and are not guaranteed. Historically equity investments have outperformed FDs over long periods, but past performance never guarantees future results. Compare both using the SIP vs FD tab.',
+  },
+  {
+    q: 'Are SIP returns guaranteed?',
+    a: 'No. This calculator provides an estimate based on the return rate you enter. Actual investment returns are not guaranteed and may be higher or lower. SIP investments are market-linked and returns can fluctuate.',
+  },
+  {
+    q: 'How is SIP return calculated?',
+    a: 'This calculator uses the standard future-value-of-annuity formula: FV = P × [((1 + r)ⁿ − 1) ÷ r], where P is your monthly installment, r is the monthly rate (annual return ÷ 12) and n is the number of months. Contributions are assumed to be made at the end of each month.',
+  },
+  {
+    q: 'What is a step-up SIP?',
+    a: 'A step-up SIP increases your installment by a fixed percentage every year — for example starting at Rs. 5,000/month and stepping up 10% annually means Rs. 5,500 in year two, Rs. 6,050 in year three, and so on. Because your contributions grow with your income, the final corpus grows substantially faster.',
+  },
+  {
+    q: 'Can I calculate SIP returns for 10 years?',
+    a: 'Yes — enter any period from 1 to 60 years. The default example (Rs. 5,000/month for 10 years at 12%) grows to about Rs. 11.5 lakh, of which Rs. 5.5 lakh is estimated growth.',
+  },
+  {
+    q: 'What happens if I increase my SIP every year?',
+    a: 'Each increase adds more money earlier in the timeline where compounding works longest. Try the Step-up SIP tab: a Rs. 5,000 SIP stepped up 10% yearly for 15 years invests about Rs. 19 lakh instead of Rs. 9 lakh — and the final value grows far more than proportionally.',
+  },
+  {
+    q: 'Can I share my SIP projection with someone?',
+    a: 'Yes — every input, including the active tab, is mirrored in the page address. Use the "Copy result link" button and send it on Viber, Messenger or Facebook; whoever opens it sees the same tab, inputs and projection. Nothing is uploaded or stored anywhere.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'SIP Calculator Nepal',
+      description: 'Calculate SIP returns in Nepal with monthly SIP, annual SIP, step-up SIP and SIP vs FD comparisons.',
+      url: 'https://solutionsnepal.com/nepal/finance/sip-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1200px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'SIP Calculator' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">SIP Calculator Nepal</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Estimate how your regular monthly investment could grow — monthly SIP, annual SIP, step-up SIP, and SIP vs fixed deposit.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-1 mb-4 p-1 rounded-lg w-fit" style="background-color:var(--nk-surface);border:1px solid var(--nk-border);">
+      <button class="sip-tab" data-tab="monthly" data-active>Monthly SIP</button>
+      <button class="sip-tab" data-tab="annual">Annual SIP</button>
+      <button class="sip-tab" data-tab="stepup">Step-up SIP</button>
+      <button class="sip-tab" data-tab="vsfd">SIP vs FD</button>
+      <input type="hidden" id="sip-tab" value="monthly" />
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 items-start">
+
+      <!-- ═══ LEFT: INPUTS ═══ -->
+      <div class="nk-card p-5 space-y-4">
+
+        <!-- Monthly -->
+        <div id="tab-monthly" class="tab-panel space-y-3">
+          <div>
+            <label for="m-amount" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Monthly investment <span class="font-normal">— same amount every month</span></label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input inputmode="decimal" id="m-amount" type="number" min="0" step="500" placeholder="5,000" class="nk-input" style="padding-left:3rem;" />
+            </div>
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="m-years" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Investment period</label>
+            <div class="flex gap-2">
+              <input inputmode="decimal" id="m-years" type="number" min="0" max="60" step="1" placeholder="10" class="nk-input" />
+              <select id="m-unit" class="nk-input !w-32">
+                <option value="years" selected>Years</option>
+                <option value="months">Months</option>
+              </select>
+            </div>
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="m-rate" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Expected annual return</label>
+            <div class="relative">
+              <input inputmode="decimal" id="m-rate" type="number" min="0" max="100" step="0.5" placeholder="12" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="text-xs mt-1" style="color:var(--nk-text-tertiary);">Market-linked estimates commonly range 8–15%. Not guaranteed.</p>
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+        </div>
+
+        <!-- Annual -->
+        <div id="tab-annual" class="tab-panel hidden space-y-3">
+          <div>
+            <label for="a-amount" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Annual investment <span class="font-normal">— once a year</span></label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input inputmode="decimal" id="a-amount" type="number" min="0" step="1000" placeholder="60,000" class="nk-input" style="padding-left:3rem;" />
+            </div>
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="a-years" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Investment period (years)</label>
+            <input inputmode="decimal" id="a-years" type="number" min="0" max="60" step="1" placeholder="10" class="nk-input" />
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="a-rate" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Expected annual return</label>
+            <div class="relative">
+              <input inputmode="decimal" id="a-rate" type="number" min="0" max="100" step="0.5" placeholder="12" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+          <p class="text-xs" style="color:var(--nk-text-tertiary);">Annual installments are compounded yearly — this is calculated independently from the monthly SIP.</p>
+        </div>
+
+        <!-- Step-up -->
+        <div id="tab-stepup" class="tab-panel hidden space-y-3">
+          <div>
+            <label for="s-start" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Starting monthly investment <span class="font-normal">— year one</span></label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input inputmode="decimal" id="s-start" type="number" min="0" step="500" placeholder="5,000" class="nk-input" style="padding-left:3rem;" />
+            </div>
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="s-step" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Annual step-up <span class="font-normal">— raise every year</span></label>
+            <div class="relative">
+              <input inputmode="decimal" id="s-step" type="number" min="0" max="100" step="1" placeholder="10" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="text-xs mt-1" style="color:var(--nk-text-tertiary);">Your installment increases by this % each year: 5,000 → 5,500 → 6,050…</p>
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="s-years" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Period (years)</label>
+              <input inputmode="decimal" id="s-years" type="number" min="0" max="60" step="1" placeholder="15" class="nk-input" />
+              <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+            </div>
+            <div>
+              <label for="s-rate" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Expected return</label>
+              <div class="relative">
+                <input inputmode="decimal" id="s-rate" type="number" min="0" max="100" step="0.5" placeholder="12" class="nk-input" style="padding-right:2.2rem;" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+              </div>
+              <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIP vs FD -->
+        <div id="tab-vsfd" class="tab-panel hidden space-y-3">
+          <div>
+            <label for="v-total" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Total investment amount</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input inputmode="decimal" id="v-total" type="number" min="0" step="10000" placeholder="6,00,000" class="nk-input" style="padding-left:3rem;" />
+            </div>
+            <p class="text-xs mt-1" style="color:var(--nk-text-tertiary);">SIP spreads this as monthly installments; FD deposits it upfront.</p>
+            <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="v-years" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Period (years)</label>
+              <input inputmode="decimal" id="v-years" type="number" min="0" max="60" step="1" placeholder="10" class="nk-input" />
+              <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+            </div>
+            <div>
+              <label for="v-fdfreq" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">FD compounding</label>
+              <select id="v-fdfreq" class="nk-input">
+                <option value="quarterly" selected>Quarterly</option>
+                <option value="annually">Annually</option>
+                <option value="half-yearly">Half-yearly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="v-siprate" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">Expected SIP return</label>
+              <div class="relative">
+                <input inputmode="decimal" id="v-siprate" type="number" min="0" max="100" step="0.5" placeholder="12" class="nk-input" style="padding-right:2.2rem;" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+              </div>
+              <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+            </div>
+            <div>
+              <label for="v-fdrate" class="block text-sm font-medium mb-1" style="color:var(--nk-text-secondary);">FD interest rate</label>
+              <div class="relative">
+                <input inputmode="decimal" id="v-fdrate" type="number" min="0" max="100" step="0.1" placeholder="9" class="nk-input" style="padding-right:2.2rem;" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+              </div>
+              <p class="text-xs mt-1" style="color:var(--nk-text-tertiary);">Enter your bank's actual rate — rates vary by bank and tenor.</p>
+              <p class="field-error hidden text-xs mt-1" style="color:#dc2626;"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2.5">Calculate</button>
+          <button id="copy-link-btn" class="nk-btn nk-btn-secondary flex-1 py-2.5">Copy result link</button>
+        </div>
+        <p class="text-center text-[13px]" style="color:var(--nk-text-tertiary);">Result updates automatically as you type</p>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="md:sticky md:top-4 space-y-4">
+
+        <!-- Projection card -->
+        <div class="nk-card p-5" id="result-card">
+          <p class="text-[13px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-tertiary);" id="result-title">Your SIP projection</p>
+          <div id="result-summary" class="flex flex-wrap gap-x-4 gap-y-1 text-[13px] mb-3" style="color:var(--nk-text-secondary);"></div>
+
+          <div class="rounded-xl py-5 px-4 text-center mb-4" style="background-color:var(--nk-accent-subtle);">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-secondary);" id="fv-label">Estimated Final Value</p>
+            <p class="text-[26px] sm:text-[30px] font-bold tracking-tight leading-none" style="color:var(--nk-accent);" id="out-final">—</p>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-[13px]">
+              <span class="inline-flex items-center gap-2" style="color:var(--nk-text-secondary);"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background-color:var(--nk-border);"></span>Total Investment</span>
+              <strong class="font-semibold" style="color:var(--nk-text);" id="out-invested">—</strong>
+            </div>
+            <div class="flex items-center justify-between text-[13px]">
+              <span class="inline-flex items-center gap-2" style="color:var(--nk-text-secondary);"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background-color:var(--nk-accent);opacity:.55;"></span>Estimated Returns</span>
+              <strong class="font-semibold" style="color:var(--nk-accent);" id="out-returns">—</strong>
+            </div>
+          </div>
+
+          <!-- Breakdown bar -->
+          <div class="mt-4">
+            <div id="breakdown-bar" class="h-3 w-full rounded-full overflow-hidden flex" style="background-color:var(--nk-border);">
+              <div id="bar-invested" class="h-full transition-all duration-300" style="width:50%;background-color:var(--nk-border);"></div>
+              <div id="bar-returns" class="h-full transition-all duration-300" style="width:50%;background-color:var(--nk-accent);opacity:.55;"></div>
+            </div>
+            <div class="flex justify-between mt-1.5 text-xs" style="color:var(--nk-text-tertiary);">
+              <span>Your money · <span id="bd-invested-pct"></span></span>
+              <span>Growth · <span id="bd-returns-pct"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIP vs FD table (only in that tab) -->
+        <div id="fd-table-wrap" class="hidden nk-card p-5">
+          <p class="text-[13px] font-semibold mb-3" style="color:var(--nk-text);">SIP vs Fixed Deposit</p>
+          <table class="w-full text-[12.5px]" id="fd-table">
+            <thead>
+              <tr class="text-left" style="color:var(--nk-text-tertiary);">
+                <th class="py-1.5 font-medium"></th>
+                <th class="py-1.5 font-semibold text-right" style="color:var(--nk-text);">SIP</th>
+                <th class="py-1.5 font-semibold text-right" style="color:var(--nk-text);">FD</th>
+              </tr>
+            </thead>
+            <tbody id="fd-tbody"></tbody>
+          </table>
+          <p id="fd-winner" class="mt-3 text-[12px] font-medium" style="color:var(--nk-text);"></p>
+          <p class="mt-2 text-xs leading-relaxed" style="color:var(--nk-text-tertiary);">SIP returns shown are market-linked estimates — they are not guaranteed and can be higher or lower. FD returns depend on your bank's applicable interest rate, tenor and terms.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Growth chart -->
+    <div id="chart-section" class="nk-card p-5 mt-5">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-[13px] font-semibold" style="color:var(--nk-text);">Investment vs Estimated Growth</p>
+        <div class="flex items-center gap-3 text-xs" style="color:var(--nk-text-secondary);">
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background-color:var(--nk-border);"></span>Amount invested</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color:var(--nk-accent);"></span>Estimated total value</span>
+        </div>
+      </div>
+      <svg id="growth-chart" viewBox="0 0 640 240" class="w-full" role="img" aria-label="Growth chart of invested amount versus estimated total value"></svg>
+    </div>
+
+    <!-- Year-by-year -->
+    <details class="nk-card mt-5 overflow-hidden">
+      <summary class="px-5 py-4 text-[13px] font-semibold cursor-pointer select-none" style="color:var(--nk-text);">Year-by-Year Growth <span class="font-normal text-xs" style="color:var(--nk-text-tertiary);">— view yearly breakdown</span></summary>
+      <div class="px-5 pb-5" style="border-top:1px solid var(--nk-border);">
+        <div class="overflow-x-auto mt-4">
+          <table class="w-full text-[12px] whitespace-nowrap">
+            <thead>
+              <tr class="text-left" style="color:var(--nk-text-tertiary);">
+                <th class="py-2 pr-4 font-medium">Year</th>
+                <th class="py-2 pr-4 font-medium text-right">Annual Investment</th>
+                <th class="py-2 pr-4 font-medium text-right">Total Invested</th>
+                <th class="py-2 pr-4 font-medium text-right">Estimated Value</th>
+                <th class="py-2 font-medium text-right">Estimated Returns</th>
+              </tr>
+            </thead>
+            <tbody id="yearly-body"></tbody>
+          </table>
+        </div>
+        <p id="stepup-note" class="hidden mt-2 text-xs" style="color:var(--nk-text-tertiary);"></p>
+      </div>
+    </details>
+
+    <!-- Disclaimer -->
+    <div class="mt-5 rounded-lg border px-4 py-3 text-[13px] leading-relaxed" style="border-color:var(--nk-border);background-color:var(--nk-bg);color:var(--nk-text-secondary);">
+      ⚠️ <strong style="color:var(--nk-text);">Disclaimer:</strong> This calculator provides an estimate based on the return rate you enter. Actual investment returns are not guaranteed and may be higher or lower. SIP investments are market-linked and returns can fluctuate.
+    </div>
+
+    <!-- SEO content -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">What is SIP?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">SIP stands for Systematic Investment Plan — a way of investing a fixed amount at regular intervals (typically monthly) into mutual funds or similar market-linked instruments, rather than depositing a lump sum once. For many Nepalese investors, it's the most practical entry point into investing: you commit only what you can spare each month, and the habit matters more than the amount.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">How does a SIP work?</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Say you start a SIP of Rs. 5,000 per month. Every month, that amount automatically buys units of your chosen fund — more units when prices are low, fewer when prices are high. Over time this "rupee-cost averaging" smooths out market ups and downs. After 10 years at an assumed 12% average annual return, your Rs. 6 lakh of contributions could grow to roughly Rs. 11.5 lakh — nearly half of that being growth, not your own money.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">How are SIP returns calculated?</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Calculators use the future value of an annuity formula: <code class="text-[12px] px-1 rounded" style="background-color:var(--nk-bg);">FV = P × [((1 + r)ⁿ − 1) ÷ r]</code>, where P is your monthly installment, r is the monthly return (annual rate ÷ 12), and n is the number of months. This tool assumes contributions happen at the end of each month and applies the formula consistently across all modes — no approximations.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">SIP vs Fixed Deposit</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">A fixed deposit gives you a contract: the bank pays a stated interest rate for a fixed term, so your outcome is known in advance — but capped. A SIP's outcome depends on markets: potentially higher over long horizons, but uncertain year to year. They aren't really competitors — many investors use FDs for short-term goals and emergency savings, and SIPs for long-term wealth building. The SIP vs FD tab above compares both using the same total money so you can see the trade-off yourself.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">What is a Step-up SIP?</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">A step-up (or top-up) SIP increases your contribution by a set percentage every year — matching salary growth. Starting at Rs. 5,000/month with a 10% annual step-up means Rs. 5,500/month in year 2, Rs. 6,050 in year 3, and about Rs. 18,500 by year 15. Because larger contributions get more years to compound, the effect on the final corpus is dramatic — try it in the Step-up SIP tab.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related finance tools</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/emi-calculator" style="color:var(--nk-accent);">EMI Calculator</a> — plan loan repayments before committing to monthly investments</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/salary-checker" style="color:var(--nk-accent);">Salary Calculator</a> — find out how much of your take-home pay you can invest</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/remittance-calculator" style="color:var(--nk-accent);">Remittance Calculator</a> — check what your foreign income is worth in NPR</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance" style="color:var(--nk-accent);">All finance tools</a> — tax, rent, overtime and more</li>
+        </ul>
+      </section>
+    </div>
+
+    <RelatedTools tools={[
+      { title: 'EMI Calculator', description: 'Calculate home & car loan EMIs', href: '/nepal/finance/emi-calculator' },
+      { title: 'Salary Calculator', description: 'Calculate take-home salary in Nepal', href: '/nepal/finance/salary-checker' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style define:vars={{}}>
+  .sip-tab {
+    padding: 0.45rem 0.85rem;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: calc(var(--radius-lg, 10px) - 3px);
+    color: var(--nk-text-secondary);
+    transition: all 150ms;
+  }
+  .sip-tab:hover { color: var(--nk-text); }
+  .sip-tab[data-active] {
+    background-color: var(--nk-accent);
+    color: #fff;
+  }
+</style>
+
+<script>
+  import {
+    formatNPR,
+    validateField,
+    calcMonthlySip,
+    calcAnnualSip,
+    calcStepUpSip,
+    monthlySipSeries,
+    compareSipVsFd,
+  } from '../../../lib/calculators/sip.js';
+  import {
+    readSharedParams,
+    syncUrl,
+    copyLink,
+  } from '../../../lib/share-params.js';
+
+  // Shareable result links: param → input id (active tab via hidden field).
+  const SIP_PARAMS = {
+    mAmt: 'm-amount', mYrs: 'm-years', mUnit: 'm-unit', mRate: 'm-rate',
+    aAmt: 'a-amount', aYrs: 'a-years', aRate: 'a-rate',
+    sStart: 's-start', sStep: 's-step', sYrs: 's-years', sRate: 's-rate',
+    vTot: 'v-total', vYrs: 'v-years', vFreq: 'v-fdfreq', vSip: 'v-siprate', vFd: 'v-fdrate',
+    tab: 'sip-tab',
+  };
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.sip-tab')];
+  const panels = ['monthly', 'annual', 'stepup', 'vsfd'].map(t => $('tab-' + t));
+  let activeTab: string = 'monthly';
+
+  // ── Tab switching ──────────────────────────────────────────
+  tabs.forEach(btn => btn.addEventListener('click', () => {
+    tabs.forEach(b => b.removeAttribute('data-active'));
+    btn.setAttribute('data-active', '');
+    activeTab = btn.dataset.tab!;
+    $('sip-tab').value = activeTab;
+    panels.forEach(p => p.classList.add('hidden'));
+    $('tab-' + activeTab).classList.remove('hidden');
+    $('fd-table-wrap').classList.toggle('hidden', activeTab !== 'vsfd');
+    $('result-title').textContent =
+      activeTab === 'annual' ? 'Your Annual SIP projection'
+      : activeTab === 'stepup' ? 'Your Step-up SIP projection'
+      : activeTab === 'vsfd' ? 'Comparison' : 'Your SIP projection';
+    recalc();
+  }));
+
+  // ── Helpers ────────────────────────────────────────────────
+  function showError(input: HTMLInputElement, msg: string | null) {
+    const err = input.closest('div')?.parentElement?.querySelector<HTMLElement>('.field-error')
+      ?? input.parentElement?.parentElement?.querySelector<HTMLElement>('.field-error');
+    if (err) {
+      err.textContent = msg || '';
+      err.classList.toggle('hidden', !msg);
+    }
+    input.style.borderColor = msg ? '#dc2626' : '';
+  }
+
+  function readField(id: string, label: string, opts: { min?: number; max?: number; isPercent?: boolean } = {}) {
+    const input = $(id);
+    // Empty = nothing entered yet: no error, result just waits for input.
+    if (input.value.trim() === '') return { ok: false as const, empty: true };
+    const res = validateField(input.value, { label, ...opts });
+    showError(input, res.ok ? null : res.error!);
+    return res;
+  }
+
+  function clearErrors() {
+    document.querySelectorAll<HTMLElement>('.field-error').forEach(e => e.classList.add('hidden'));
+  }
+
+  function setResults(invested: number, returns: number, finalValue: number, summaryBits: [string, string][], series: { year: number; totalInvested: number; value: number }[] | null, extraNote: string | null) {
+    $('out-final').textContent = formatNPR(finalValue);
+    $('out-invested').textContent = formatNPR(invested);
+    $('out-returns').textContent = formatNPR(returns);
+    $('result-summary').innerHTML = summaryBits
+      .map(([k, v]) => `<span>${k}: <strong style="color:var(--nk-text)">${v}</strong></span>`).join('');
+    const invPct = finalValue > 0 ? (invested / finalValue * 100) : 100;
+    $('bar-invested').style.width = Math.min(100, Math.max(2, invPct)) + '%';
+    $('bar-returns').style.width = Math.min(98, Math.max(0, 100 - invPct)) + '%';
+    $('bd-invested-pct').textContent = invPct.toFixed(0) + '%';
+    $('bd-returns-pct').textContent = (100 - invPct).toFixed(0) + '%';
+    renderChart(series);
+    renderTable(series, extraNote);
+  }
+
+  // ── Recalculate ────────────────────────────────────────────
+  function recalc() {
+    clearErrors();
+    syncUrl(SIP_PARAMS);
+    const amountV = { min: 0, max: 1e10 };
+    const yearsV = { min: 0, max: 60 };
+
+    if (activeTab === 'monthly') {
+      const amt = readField('m-amount', 'a monthly investment greater than Rs. 0', amountV);
+      const yrsInput = $('m-years');
+      const yrs = readField('m-years', 'an investment period', yearsV);
+      const rate = readField('m-rate', 'an expected return between 0–100%', { min: -1, max: 100, isPercent: true });
+      if (!amt.ok || !yrs.ok || !rate.ok) return invalidate();
+
+      const years = $('m-unit').value === 'months' ? yrs.value! / 12 : yrs.value!;
+      if (!(years > 0)) { showError(yrsInput, 'Enter an investment period greater than 0.'); return invalidate(); }
+
+      const r = calcMonthlySip(amt.value!, rate.value!, years);
+      setResults(r.invested, r.returns, r.finalValue,
+        [['Monthly SIP', formatNPR(amt.value!)],
+         ['Period', yrsLabel(yrs.value!, $('m-unit').value)],
+         ['Expected Return', rate.value! + '%']],
+        monthlySipSeries(amt.value!, rate.value!, years), null);
+    }
+    else if (activeTab === 'annual') {
+      const amt = readField('a-amount', 'an annual investment greater than Rs. 0', amountV);
+      const yrs = readField('a-years', 'an investment period', yearsV);
+      const rate = readField('a-rate', 'an expected return between 0–100%', { min: -1, max: 100, isPercent: true });
+      if (!amt.ok || !yrs.ok || !rate.ok) return invalidate();
+
+      const r = calcAnnualSip(amt.value!, rate.value!, Math.round(yrs.value!));
+      // series from annual contributions
+      const series = [];
+      let bal = 0, ti = 0;
+      for (let y = 1; y <= Math.round(yrs.value!); y++) {
+        bal = bal * (1 + rate.value! / 100) + amt.value!;
+        ti += amt.value!;
+        series.push({ year: y, totalInvested: ti, value: bal });
+      }
+      setResults(r.invested, r.returns, r.finalValue,
+        [['Annual SIP', formatNPR(amt.value!)],
+         ['Period', yrs.value! + (yrs.value! === 1 ? ' year' : ' years')],
+         ['Expected Return', rate.value! + '%']],
+        series, null);
+    }
+    else if (activeTab === 'stepup') {
+      const amt = readField('s-start', 'a starting monthly investment greater than Rs. 0', amountV);
+      const step = readField('s-step', 'an annual step-up of 0% or more', { min: -1, max: 100, isPercent: true });
+      const yrs = readField('s-years', 'an investment period', yearsV);
+      const rate = readField('s-rate', 'an expected return between 0–100%', { min: -1, max: 100, isPercent: true });
+      if (!amt.ok || !step.ok || !yrs.ok || !rate.ok) return invalidate();
+
+      const r = calcStepUpSip(amt.value!, step.value!, rate.value!, Math.round(yrs.value!));
+      setResults(r.invested, r.returns, r.finalValue,
+        [['Starting SIP', formatNPR(amt.value!) + '/mo'],
+         ['Step-up', step.value! + '%/yr'],
+         ['Period', yrs.value! + (yrs.value! === 1 ? ' year' : ' years')],
+         ['Expected Return', rate.value! + '%']],
+        r.series.map(s => ({ year: s.year, totalInvested: s.totalInvested, value: s.value })),
+        'Installments grow ' + step.value! + '% every year — amounts shown per year reflect that schedule.');
+    }
+    else if (activeTab === 'vsfd') {
+      const total = readField('v-total', 'a total investment amount greater than Rs. 0', amountV);
+      const yrs = readField('v-years', 'an investment period', yearsV);
+      const sipRate = readField('v-siprate', 'an expected SIP return between 0–100%', { min: -1, max: 100, isPercent: true });
+      const fdRate = readField('v-fdrate', 'an FD interest rate between 0–100%', { min: -1, max: 100, isPercent: true });
+      if (!total.ok || !yrs.ok || !sipRate.ok || !fdRate.ok) return invalidate();
+
+      const c = compareSipVsFd(total.value!, Math.round(yrs.value!), sipRate.value!, fdRate.value!, $('v-fdfreq').value);
+
+      $('out-final').textContent = formatNPR(Math.max(c.sip.finalValue, c.fd.finalValue));
+      $('fv-label').textContent = 'Higher Final Value (' + (c.winner === 'tie' ? 'tie' : c.winner.toUpperCase()) + ')';
+      $('out-invested').textContent = formatNPR(total.value!);
+      $('out-returns').textContent = formatNPR(c.sip.returns) + ' (SIP)';
+      $('bar-invested').style.width = '50%';
+      $('bar-returns').style.width = '50%';
+      $('result-summary').innerHTML =
+        `<span>Total investment: <strong style="color:var(--nk-text)">${formatNPR(total.value!)}</strong></span>` +
+        `<span>SIP as: <strong style="color:var(--nk-text)">${formatNPR(c.sip.monthlyInstallment)}/mo × ${Math.round(yrs.value!) * 12}</strong></span>` +
+        `<span>FD @ <strong style="color:var(--nk-text)">${fdRate.value!}% ${$('v-fdfreq').value}</strong></span>`;
+      $('result-title').textContent = 'SIP vs FD comparison';
+
+      const row = (label: string, sip: string, fd: string, hlSip: boolean, hlFd: boolean) =>
+        `<tr><td class="py-2" style="color:var(--nk-text-secondary)">${label}</td>` +
+        `<td class="py-2 text-right font-semibold ${hlSip ? '' : ''}" style="color:${hlSip ? 'var(--nk-accent)' : 'var(--nk-text)'}">${sip}${hlSip ? ' ◂' : ''}</td>` +
+        `<td class="py-2 text-right font-semibold" style="color:${hlFd ? 'var(--nk-accent)' : 'var(--nk-text)'}">${fd}${hlFd ? ' ◂' : ''}</td></tr>`;
+      const rows =
+        row('Total Investment', formatNPR(c.sip.invested), formatNPR(c.fd.invested), false, false) +
+        row('Estimated Returns', formatNPR(c.sip.returns), formatNPR(c.fd.returns), false, false) +
+        row('Final Value', formatNPR(c.sip.finalValue), formatNPR(c.fd.finalValue), c.winner === 'sip', c.winner === 'fd');
+      $('fd-tbody').innerHTML = rows;
+      $('fd-winner').innerHTML = c.winner === 'tie'
+        ? 'Both produce the same estimated value at these inputs.'
+        : `At these inputs, <strong>${c.winner === 'sip' ? 'SIP' : 'FD'} shows the higher estimated final value (${formatNPR(c.winner === 'sip' ? c.sip.finalValue : c.fd.finalValue)}).</strong> This is an estimate — SIP returns are market-linked and not guaranteed.`;
+      $('chart-section').style.display = 'none';
+      renderTable(null, null);
+      return;
+    }
+
+    $('chart-section').style.display = '';
+    $('fv-label').textContent = 'Estimated Final Value';
+  }
+
+  function invalidate() {
+    ['out-final', 'out-invested', 'out-returns'].forEach(id => ($(id)).textContent = '—');
+    $('result-summary').innerHTML = '';
+    renderChart(null);
+    renderTable(null, null);
+  }
+
+  function yrsLabel(v: number, unit: string) {
+    if (unit === 'months') return v + ' mo';
+    return v + (v === 1 ? ' year' : ' years');
+  }
+
+  // ── Chart ──────────────────────────────────────────────────
+  function renderChart(series: { totalInvested: number; value: number }[] | null) {
+    const svg = $('growth-chart');
+    if (!series || series.length === 0) { svg.innerHTML = ''; return; }
+    const W = 640, H = 240, padL = 70, padR = 16, padT = 14, padB = 30;
+    const maxY = Math.max(...series.map(s => s.value), ...series.map(s => s.totalInvested)) * 1.05 || 1;
+    const n = series.length;
+    const x = (i: number) => padL + (i / Math.max(1, n - 1)) * (W - padL - padR);
+    const y = (v: number) => padT + (1 - v / maxY) * (H - padT - padB);
+    const path = (key: 'value' | 'totalInvested') =>
+      series.map((s, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(s[key]).toFixed(1)}`).join(' ');
+    const fmtShort = (v: number) => {
+      if (v >= 1e7) return (v / 1e7).toFixed(1).replace(/\.0$/, '') + ' Cr';
+      if (v >= 1e5) return (v / 1e5).toFixed(1).replace(/\.0$/, '') + ' L';
+      if (v >= 1e3) return Math.round(v / 1e3) + 'K';
+      return String(Math.round(v));
+    };
+    let g = '';
+    for (let k = 0; k <= 4; k++) {
+      const vy = padT + (k / 4) * (H - padT - padB);
+      const val = maxY * (1 - k / 4);
+      g += `<line x1="${padL}" y1="${vy}" x2="${W - padR}" y2="${vy}" stroke="var(--nk-border)" stroke-width="1"/>` +
+           `<text x="${padL - 8}" y="${vy + 3}" text-anchor="end" font-size="9" fill="var(--nk-text-tertiary)">${fmtShort(val)}</text>`;
+    }
+    let xt = '';
+    const step = n <= 12 ? 1 : Math.ceil(n / 12);
+    for (let i = 0; i < n; i += step) {
+      xt += `<text x="${x(i)}" y="${H - 10}" text-anchor="middle" font-size="9" fill="var(--nk-text-tertiary)">Y${series[i].year}</text>`;
+    }
+    svg.innerHTML = `
+      ${g}${xt}
+      <path d="${path('totalInvested')} L${x(n - 1)},${y(0)} L${padL},${y(0)} Z" fill="var(--nk-border)" opacity="0.35"/>
+      <path d="${path('totalInvested')}" fill="none" stroke="var(--nk-text-tertiary)" stroke-width="2"/>
+      <path d="${path('value')}" fill="none" stroke="var(--nk-accent)" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  }
+
+  // ── Yearly table ───────────────────────────────────────────
+  function renderTable(series: { year: number; investedThisYear?: number; totalInvested: number; value: number; returns?: number }[] | null, note: string | null) {
+    const body = $('yearly-body');
+    $('stepup-note').classList.toggle('hidden', !note);
+    if (note) $('stepup-note').textContent = note;
+    if (!series || series.length === 0) { body.innerHTML = ''; return; }
+    body.innerHTML = series.map(s => {
+      const iy = s.investedThisYear ?? (s.totalInvested - (series[s.year - 2]?.totalInvested ?? 0));
+      const ret = s.returns ?? (s.value - s.totalInvested);
+      return `<tr style="border-top:1px solid var(--nk-border)">
+        <td class="py-2 pr-4 font-semibold" style="color:var(--nk-text)">${s.year}</td>
+        <td class="py-2 pr-4 text-right" style="color:var(--nk-text-secondary)">${formatNPR(iy)}</td>
+        <td class="py-2 pr-4 text-right" style="color:var(--nk-text-secondary)">${formatNPR(s.totalInvested)}</td>
+        <td class="py-2 pr-4 text-right font-medium" style="color:var(--nk-text)">${formatNPR(s.value)}</td>
+        <td class="py-2 text-right" style="color:var(--nk-accent)">${formatNPR(ret)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── Events ─────────────────────────────────────────────────
+  ['tab-monthly', 'tab-annual', 'tab-stepup', 'tab-vsfd'].forEach(pid => {
+    $(pid).querySelectorAll('input, select').forEach(inp =>
+      inp.addEventListener('input', () => recalc()));
+  });
+  $('calc-btn').addEventListener('click', () => {
+    recalc();
+    $('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  $('copy-link-btn').addEventListener('click', async () => {
+    const btn = $('copy-link-btn');
+    const original = btn.textContent;
+    syncUrl(SIP_PARAMS);
+    const ok = await copyLink();
+    btn.textContent = ok ? 'Link copied ✓' : 'Copy failed — copy the address bar URL';
+    setTimeout(() => { btn.textContent = original; }, 2200);
+  });
+
+  // Shareable result links (?mAmt=&…&tab=): restore inputs, then open the
+  // saved tab (its click handler recalculates) or recalculate directly.
+  (function restoreSip() {
+    readSharedParams(SIP_PARAMS, location.search);
+    const tab = $('sip-tab').value;
+    if (['annual', 'stepup', 'vsfd'].includes(tab)) {
+      document.querySelector(`.sip-tab[data-tab="${tab}"]`)?.click();
+    } else {
+      if (!['monthly', 'annual', 'stepup', 'vsfd'].includes(tab)) $('sip-tab').value = 'monthly';
+      recalc();
+    }
+  })();
+</script>

@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import NepaliNumberConverter from '../../../components/tools/NepaliNumberConverter.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'Rupees to Words Converter – रुपैयाँ in Words for Cheques | SolutionsNepal';
+const description = 'Convert any rupee amount into Nepali and English words instantly. Rs. 12,50,000 → रुपैयाँ बाह्र लाख पचास हजार मात्र. Ideal for cheques, bills and agreements.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-[1000px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Tools', href: '/nepal' },
+      { label: 'Rupees to Words' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Rupees to Words Converter</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Write any amount in words — रुपैयाँ … मात्र or Rupees … Only — ready for cheques, bills and payment documents.</p>
+    </div>
+
+    <NepaliNumberConverter initialInput="1250000" />
+
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Why cheque amounts must end with "मात्र"</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          When you write a cheque in Nepal, the amount-in-words line should end with मात्र (or "Only").
+          It closes the sentence so no additional word can be inserted after it — a basic anti-fraud
+          convention every bank expects. This tool's Cheque mode adds it automatically:
+          Rs. 12,50,000 becomes <strong lang="ne">रुपैयाँ बाह्र लाख पचास हजार मात्र</strong> /
+          Rupees Twelve Lakh Fifty Thousand Only.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Common rupee amounts in words</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-[13px] whitespace-nowrap rounded-lg overflow-hidden" style="border:1px solid var(--nk-border);">
+            <thead>
+              <tr style="background-color:var(--nk-bg);" >
+                <th class="text-left px-3 py-2 font-semibold" style="color:var(--nk-text);">Amount</th>
+                <th class="text-left px-3 py-2 font-semibold" style="color:var(--nk-text);" lang="ne">In Nepali words</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['Rs. 5,000', 'रुपैयाँ पाँच हजार मात्र'],
+                ['Rs. 10,000', 'रुपैयाँ दस हजार मात्र'],
+                ['Rs. 50,000', 'रुपैयाँ पचास हजार मात्र'],
+                ['Rs. 1,00,000', 'रुपैयाँ एक लाख मात्र'],
+                ['Rs. 5,00,000', 'रुपैयाँ पाँच लाख मात्र'],
+                ['Rs. 10,00,000', 'रुपैयाँ दस लाख मात्र'],
+                ['Rs. 1,00,00,000', 'रुपैयाँ एक करोड मात्र'],
+              ].map(([amt, np]) => (
+                <tr style="border-top:1px solid var(--nk-border);">
+                  <td class="px-3 py-2 font-medium" style="color:var(--nk-text);">{amt}</td>
+                  <td class="px-3 py-2" lang="ne" style="color:var(--nk-text-secondary);">{np}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Paisa on documents</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          If an amount has paisa, write it after the rupees: Rs. 2,500.75 →
+          <span lang="ne">रुपैयाँ दुई हजार पाँच सय पचहत्तर र पचहत्तर पैसा मात्र</span>.
+          Enter decimals above — they are handled automatically as paisa.
+        </p>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        Also see: <a class="underline hover:opacity-80" href="/nepal/tools/nepali-number-to-words" style="color:var(--nk-accent);">full number-to-words converter</a> ·
+        <a class="underline hover:opacity-80" href="/nepal/tools/cheque-amount-in-words" style="color:var(--nk-accent);">cheque amount in words</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

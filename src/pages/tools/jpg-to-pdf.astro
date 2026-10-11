@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+import PdfTool from '../../components/tools/PdfTool.astro';
+const title = 'JPG to PDF Converter — Images to One PDF | SolutionsNepal';
+const description = 'Combine JPG/PNG images into a single PDF in your browser. Reorder pages, set size and download — free and private.';
+const faqs = [
+  { q: 'How do I order images in the PDF?', a: 'After uploading, drag and drop thumbnails to reorder them before downloading.' },
+  { q: 'What page size is used?', a: 'By default, each image becomes a full page. You can choose A4 or fit-to-image sizing.' },
+  { q: 'Does conversion lose image quality?', a: 'Images are embedded at their original resolution. No re-compression is applied unless you choose it.' },
+  { q: 'Can I add both JPG and PNG files?', a: 'Yes. Both JPG/JPEG and PNG images are supported and can be mixed in one PDF.' },
+];
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'JPG to PDF Converter', description: 'Combine JPG/PNG images into a single PDF in your browser.', url: 'https://solutionsnepal.com/tools/jpg-to-pdf', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'PDF Tools', href: '/tools/pdf' }, { label: 'JPG to PDF' }]} />
+    <div class="mb-5 text-center"><h1 class="text-[28px] font-bold sm:text-[36px] tracking-tight mx-auto" style="color:var(--nk-text);">JPG to PDF Converter</h1><p class="mt-2 text-[15px] sm:text-[16px] mx-auto text-center leading-relaxed" style="color:var(--nk-text-secondary);">Convert JPG images into a single PDF quickly and easily.</p></div>
+    <PdfTool mode="jpg-to-pdf" />
+    <p class="mt-5 text-xs" style="color:var(--nk-text-secondary);"><strong>Private by design</strong> — your files are processed directly in your browser.</p>
+
+    <section class="mt-10 space-y-4 text-[15px] leading-relaxed" style="color:var(--nk-text);">
+      <h2 class="text-xl font-semibold mt-6">How to Convert JPG to PDF</h2>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Drop your JPG or PNG images into the tool.</li>
+        <li>Drag to reorder pages if needed.</li>
+        <li>Choose page size (A4 or fit-to-image) and download the PDF.</li>
+      </ol>
+      <h2 class="text-xl font-semibold mt-6">Common Uses</h2>
+      <p>Combine scanned documents, receipts, photos or multiple images into a single PDF for job applications, government forms, academic submissions or sharing with clients. Particularly useful when portals only accept PDF uploads.</p>
+      <h2 class="text-xl font-semibold mt-6">Frequently Asked Questions</h2>
+      {faqs.map(f => (
+        <details class="group border-b py-3" style="border-color:var(--nk-border);">
+          <summary class="cursor-pointer font-medium list-none flex justify-between items-center">{f.q}<span class="ml-2 text-lg transition-transform group-open:rotate-45">+</span></summary>
+          <p class="mt-2 text-sm" style="color:var(--nk-text-secondary);">{f.a}</p>
+        </details>
+      ))}
+    </section>
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[{ title: 'Merge PDF', description: 'Combine multiple PDFs', href: '/tools/merge-pdf' }, { title: 'PDF to JPG', description: 'Extract pages as images', href: '/tools/pdf-to-jpg' }, { title: 'Compress PDF', description: 'Reduce PDF file size', href: '/tools/compress-pdf' }, { title: 'Image Compressor', description: 'Shrink images to a target size', href: '/tools/image-compressor' }]} />
+  </div>
+</BaseLayout>

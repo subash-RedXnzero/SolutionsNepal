@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page Not Found | SolutionsNepal"
+  description="The page you are looking for does not exist. Browse SolutionsNepal tools, calculators and guides for Nepal."
+  noindex={true}
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-16 sm:py-24 text-center">
+    <p class="text-6xl font-bold mb-4" style="color: var(--nk-accent);">404</p>
+    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3" style="color: var(--nk-text);">
+      Page Not Found
+    </h1>
+    <p class="text-base mb-8" style="color: var(--nk-text-secondary);">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-lg transition-all duration-200 no-underline"
+      style="background-color: var(--nk-accent); color: white;"
+    >
+      Go Home
+    </a>
+    <div class="mt-10 text-left">
+      <h2 class="text-sm font-semibold mb-3" style="color: var(--nk-text);">Popular tools</h2>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+        <li><a href="/nepal/finance/salary-checker">Nepal Salary Calculator</a></li>
+        <li><a href="/nepal/date/bs-to-ad">BS to AD Converter</a></li>
+        <li><a href="/nepal/finance/emi-calculator">EMI Calculator Nepal</a></li>
+        <li><a href="/nepal/gold-price-nepal">Gold Price Nepal Today</a></li>
+        <li><a href="/nepal">All Nepal tools</a></li>
+        <li><a href="/guides">Guides</a></li>
+      </ul>
+    </div>
+  </div>
+</BaseLayout>

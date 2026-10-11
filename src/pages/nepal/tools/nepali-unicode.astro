@@ -1,0 +1,440 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  {title:'SEE GPA Calculator',description:'Calculate SEE GPA from grades',href:'/nepal/education/see-gpa'},
+  {title:'NEB Class 11/12 GPA',description:'Calculate NEB GPA with Directive 2078',href:'/nepal/education/neb-gpa-calculator'},
+  {title:'Remittance Calculator',description:'Convert foreign currency to NPR',href:'/nepal/finance/remittance-calculator'},
+];
+
+const faqItems = [
+  {q:'What is Nepali Unicode?',a:'Nepali Unicode is the international standard encoding for Devanagari script used to write Nepali. It allows Nepali text to be displayed consistently across devices, websites, and applications.'},
+  {q:'How do I type Nepali using this tool?',a:'Type Nepali sounds using English letters. For example, type "namaste" and it will be converted to नमस्ते automatically. You can type entire sentences and the tool will convert them in real-time.'},
+  {q:'Is this a translation tool?',a:'No. This tool converts Romanized Nepali typing into Unicode Devanagari text. It does not translate English into Nepali. You need to type the Nepali sounds using English letters.'},
+  {q:'How do I type long vowels?',a:'Use double vowels for long sounds. For example: "aa" for ा (e.g., nepaal → नेपाल), "ii" or "ee" for ी, "uu" or "oo" for ू. Without double vowels, you get the short vowel.'},
+  {q:'How do I type retroflex vs dental letters?',a:'Use uppercase for retroflex inside words: T = ट, D = ड, N = ण (for example, "kaTa" gives कट, but "kata" gives कत). Lowercase for dental: t = त, d = द, n = न. A capital at the very start of a word is read as lowercase, so sentence case just works: "Namaste" gives नमस्ते.'},
+  {q:'How do I type conjunct consonants?',a:'Simply type consonants together and the tool adds a halant automatically. For example, "sta" → स्त, "kta" → क्त. Common conjunct shortcuts: "ksh" → क्ष, "gya" → ज्ञ, "tra" → त्र, "shri" → श्रि.'},
+  {q:'Can I type Devanagari directly?',a:'Yes. If you paste or type Devanagari Unicode characters directly, they are preserved as-is. The tool only converts Romanized input.'},
+  {q:'What is anusvara (ं)?',a:'The anusvara is the nasal sound represented by ं. Type "m" before a consonant or at word end. For example, "ram" → राम, "sankalp" → संकल्प. Also, "x" works for छ (chha).'},
+  {q:'What is chandrabindu (ँ)?',a:'The chandrabindu (nasalized vowel) is represented by ँ. Type capital "M" after a consonant to add it. For example, "hM" → हँ.'},
+  {q:'What is visarga (ः)?',a:'The visarga is represented by ः. Type capital "H" to add it. For example, "namahH" → नमः.'},
+  {q:'Is my text sent to a server?',a:'No. All conversion happens locally in your browser. Your text never leaves your device.'},
+];
+
+const examples = [
+  { label: 'namaste', text: 'namaste' },
+  { label: 'mero naam', text: 'mero naam' },
+  { label: 'tapai lai kasto xa?', text: 'tapai lai kasto xa?' },
+];
+---
+
+<BaseLayout>
+  <div class="mx-auto max-w-[1160px] px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[{label:"Nepal",href:"/nepal"},{label:"Tools",href:"/nepal/tools"},{label:"Nepali Unicode Converter"}]} />
+
+    <!-- Header -->
+    <header class="uc-hero">
+      <span class="uc-eyebrow">रोमन → युनिकोड</span>
+      <h1 class="uc-title">नेपाली Unicode Converter</h1>
+      <p class="uc-sub">Romanized Nepali → नेपाली Unicode</p>
+    </header>
+
+    <!-- Converter -->
+    <div class="uc-grid">
+      <!-- Input -->
+      <section class="uc-card" aria-labelledby="uc-input-label">
+        <div class="uc-cardhead">
+          <label id="uc-input-label" for="roman-input" class="uc-label">Romanized Nepali</label>
+          <span class="uc-count"><span id="char-count">0</span> characters</span>
+        </div>
+        <textarea
+          id="roman-input"
+          rows="10"
+          placeholder="namaste tapailai&#10;swagat xa"
+          class="uc-area"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          aria-describedby="uc-input-count"
+        >namaste tapailai&#10;swagat xa</textarea>
+      </section>
+
+      <!-- Output -->
+      <section class="uc-card uc-card--out" aria-labelledby="uc-output-label">
+        <div class="uc-cardhead">
+          <label id="uc-output-label" for="nepali-output" class="uc-label">Nepali Unicode</label>
+          <span class="uc-count"><span id="out-count">0</span> characters</span>
+        </div>
+        <textarea
+          id="nepali-output"
+          rows="10"
+          readonly
+          placeholder="…"
+          aria-label="Nepali Unicode output"
+          class="uc-area uc-area--out"
+        ></textarea>
+        <div class="uc-cardfoot uc-cardfoot--end">
+          <button id="copy-btn" type="button" class="uc-copy" aria-label="Copy Nepali text">Copy</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Examples -->
+    <div class="uc-examples">
+      <p class="uc-examples-label" id="uc-examples-label">Try an example:</p>
+      <div class="uc-chips" role="group" aria-labelledby="uc-examples-label">
+        {examples.map(ex => (
+          <button type="button" class="uc-chip example-btn" data-text={ex.text}>{ex.label}</button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="uc-status">
+      <p class="uc-live">
+        <span class="uc-dot" aria-hidden="true"></span>
+        <span>Live conversion<span class="uc-vh"> is active</span></span>
+      </p>
+      <button id="clear-btn" type="button" class="uc-clear">Clear</button>
+    </div>
+
+    <!-- Nepali digits -->
+    <div class="uc-digits">
+      <span class="uc-digits-sample" aria-hidden="true">नेपाली अंक: ०१२३४५६७८९</span>
+      <span class="uc-digits-name" id="uc-digits-name">Nepali digits</span>
+      <button
+        id="nepali-digits-btn"
+        type="button"
+        class="uc-switch"
+        aria-pressed="false"
+        aria-labelledby="uc-digits-name uc-digits-state"
+      >
+        <span class="uc-knob" aria-hidden="true"></span>
+        <span id="uc-digits-state" class="uc-state">OFF</span>
+      </button>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="uc-prose">
+    <div class="mt-10 space-y-6">
+      <h2 class="text-lg font-bold" style="color:var(--nk-text);">What is Nepali Unicode?</h2>
+      <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Nepali Unicode is the international standard encoding for Devanagari script used to write Nepali. It allows Nepali text to be displayed consistently across modern devices, websites, and applications. This converter helps you type Nepali using your English keyboard and converts it into proper Unicode Devanagari text.</p>
+
+      <h3 class="text-sm font-semibold" style="color:var(--nk-text);">How to type Nepali Unicode?</h3>
+      <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Simply type Nepali sounds using English letters. The converter will automatically transliterate your text into Devanagari Unicode. For example:</p>
+      <div class="rounded-lg border px-4 py-3 text-sm" style="border-color:var(--nk-border);background-color:var(--nk-bg);color:var(--nk-text);">
+        <p class="font-mono text-xs mb-1" style="color:var(--nk-text-secondary);">namaste</p>
+        <p style="font-family:'Noto Sans Devanagari','Mangal',sans-serif;">→ नमस्ते</p>
+      </div>
+
+      <h3 class="text-sm font-semibold" style="color:var(--nk-text);">Is this a translation tool?</h3>
+      <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);"><strong style="color:var(--nk-text);">No.</strong> This tool converts Romanized Nepali typing into Unicode Devanagari text. It does not translate English sentences into Nepali. You need to type the Nepali sounds using English letters — for example, "namaste" becomes नमस्ते, not "hello".</p>
+
+      <h3 class="text-sm font-semibold" style="color:var(--nk-text);">Typing tips</h3>
+      <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+        <li>• Use <strong style="color:var(--nk-text);">double vowels</strong> for long sounds: "aa" → ा, "ii" or "ee" → ी, "uu" or "oo" → ू</li>
+        <li>• <strong style="color:var(--nk-text);">"x"</strong> = छ (chha): "xaina" → छैन, "chha" → छ</li>
+        <li>• <strong style="color:var(--nk-text);">Uppercase</strong> for retroflex inside words: T = ट, D = ड, N = ण — a capital at a word start reads as lowercase (Namaste gives नमस्ते)</li>
+        <li>• Conjunct shortcuts: "ksh" → क्ष, "gya" → ज्ञ, "tra" → त्र, "shri" → श्रि</li>
+        <li>• Type consonants together for halant: "sta" → स्त, "kta" → क्त</li>
+        <li>• <strong style="color:var(--nk-text);">"m"</strong> before consonant or at word end → anusvara: "ram" → राम</li>
+        <li>• <strong style="color:var(--nk-text);">"M"</strong> → chandrabindu (ँ), <strong style="color:var(--nk-text);">"H"</strong> → visarga (ः)</li>
+        <li>• Punctuation and numbers are preserved: "namaste!" → नमस्ते!</li>
+      </ul>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-10 space-y-3">
+      <h2 class="text-lg font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-xl border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <!-- Privacy note -->
+    <div class="mt-6 text-center">
+      <p class="text-[10px]" style="color:var(--nk-text-secondary);">🔒 Your text is converted in your browser and is not sent to our server.</p>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={relatedTools} />
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { romanToNepali } from '../../../lib/calculators/nepali-unicode.js';
+
+  const inputEl = document.getElementById('roman-input');
+  const outputEl = document.getElementById('nepali-output');
+  const charCountEl = document.getElementById('char-count');
+  const outCountEl = document.getElementById('out-count');
+  const copyBtn = document.getElementById('copy-btn');
+  const clearBtn = document.getElementById('clear-btn');
+  const nepaliDigitsBtn = document.getElementById('nepali-digits-btn');
+  const digitsState = document.getElementById('uc-digits-state');
+
+  let useNepaliDigits = false;
+  let copyTimer = null;
+
+  function doConvert() {
+    const text = inputEl.value;
+    outputEl.value = romanToNepali(text, { nepaliDigits: useNepaliDigits });
+    const n = text.length;
+    charCountEl.textContent = n + (n === 1 ? ' character' : ' characters');
+    const m = nepali.length;
+    outCountEl.textContent = m + (m === 1 ? ' character' : ' characters');
+  }
+
+  // Live conversion on every keystroke
+  inputEl.addEventListener('input', doConvert);
+
+  // Example chips
+  document.querySelectorAll('.example-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      inputEl.value = btn.dataset.text;
+      doConvert();
+      inputEl.focus();
+    });
+  });
+
+  // Copy
+  copyBtn.addEventListener('click', async function () {
+    const text = outputEl.value;
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      outputEl.select();
+      document.execCommand('copy');
+    }
+    copyBtn.textContent = 'Copied ✓';
+    copyBtn.classList.add('is-copied');
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () {
+      copyBtn.textContent = 'Copy';
+      copyBtn.classList.remove('is-copied');
+    }, 1600);
+  });
+
+  // Clear
+  clearBtn.addEventListener('click', function () {
+    if (inputEl.value.length > 100) {
+      if (!confirm('Clear all text?')) return;
+    }
+    inputEl.value = '';
+    doConvert();
+    inputEl.focus();
+  });
+
+  // Nepali digits toggle
+  nepaliDigitsBtn.addEventListener('click', function () {
+    useNepaliDigits = !useNepaliDigits;
+    nepaliDigitsBtn.setAttribute('aria-pressed', String(useNepaliDigits));
+    nepaliDigitsBtn.classList.toggle('is-on', useNepaliDigits);
+    digitsState.textContent = useNepaliDigits ? 'ON' : 'OFF';
+    doConvert();
+  });
+
+  // Initial state (input ships with a demo line so conversion is visible instantly)
+  doConvert();
+</script>
+
+<style>
+  /* ── Nepali Unicode Converter · premium minimal writing tool ── */
+  .uc-hero { text-align: center; margin: 10px 0 30px; }
+  .uc-eyebrow {
+    display: inline-block; margin: 0 0 14px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+    color: #B91C1C; background: rgba(185, 28, 28, 0.07);
+    border: 1px solid rgba(185, 28, 28, 0.2);
+    padding: 5px 14px; border-radius: 999px;
+  }
+  .uc-title {
+    margin: 0; color: #0F172A;
+    font-size: clamp(26px, 3.6vw, 36px); font-weight: 800; letter-spacing: -0.02em;
+  }
+  .uc-sub { margin: 10px 0 0; font-size: 16px; color: #64748B; }
+
+  .uc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: stretch; }
+  .uc-card {
+    display: flex; flex-direction: column;
+    background: #FFFFFF; border: 1px solid #E7E3DC; border-radius: 16px;
+    padding: 18px 18px 12px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .uc-card:focus-within {
+    border-color: #B91C1C;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1), 0 1px 2px rgba(15, 23, 42, 0.05);
+  }
+  .uc-cardhead {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .uc-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #64748B;
+  }
+  .uc-area {
+    width: 100%; min-height: 270px; flex: 1;
+    border: none; outline: none; resize: vertical;
+    background: transparent; color: #0F172A;
+    font: inherit; font-size: 16px; line-height: 1.7;
+    padding: 2px; caret-color: #B91C1C;
+  }
+  .uc-area::placeholder { color: #94A3B8; }
+  .uc-area--out {
+    font-size: 19px; font-weight: 500;
+    font-family: 'Noto Sans Devanagari', 'Mangal', 'Lohit Devanagari', sans-serif;
+  }
+  .uc-cardfoot {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 46px; margin-top: 8px; padding-top: 10px;
+    border-top: 1px solid #F1EEE8;
+  }
+  .uc-cardfoot--end { justify-content: flex-end; }
+  .uc-count { font-size: 12px; color: #64748B; font-variant-numeric: tabular-nums; }
+  .uc-copy {
+    font: inherit; font-size: 13px; font-weight: 600;
+    color: #FFFFFF; background: #B91C1C; border: 1px solid #B91C1C;
+    border-radius: 10px; padding: 8px 20px; cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+  }
+  .uc-copy:hover { background: #991B1B; border-color: #991B1B; }
+  .uc-copy:active { transform: scale(0.97); }
+  .uc-copy.is-copied { background: #16A34A; border-color: #16A34A; }
+
+  .uc-examples { margin-top: 24px; }
+  .uc-examples-label { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: #64748B; }
+  .uc-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .uc-chip {
+    font: inherit; font-size: 13px; font-weight: 500; white-space: nowrap;
+    color: #0F172A; background: #FFFFFF; border: 1px solid #E7E3DC;
+    border-radius: 999px; padding: 9px 18px; cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .uc-chip:hover {
+    border-color: #B91C1C;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+  }
+  .uc-chip:active { transform: translateY(0) scale(0.98); }
+
+  .uc-status {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 20px; padding-top: 14px;
+    border-top: 1px solid #E7E3DC;
+  }
+  .uc-live { display: flex; align-items: center; gap: 9px; margin: 0; font-size: 13px; font-weight: 500; color: #64748B; }
+  .uc-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #16A34A; flex-shrink: 0; }
+  .uc-dot::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid rgba(22, 163, 74, 0.45);
+    animation: uc-ping 2s ease-out infinite;
+  }
+  @keyframes uc-ping {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(1.15); opacity: 0; }
+  }
+  .uc-clear {
+    font: inherit; font-size: 13px; font-weight: 600;
+    color: #64748B; background: transparent; border: 1px solid #E7E3DC;
+    border-radius: 10px; padding: 8px 22px; cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .uc-clear:hover { color: #0F172A; border-color: #0F172A; }
+
+  .uc-digits {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: 10px; margin-top: 16px;
+    font-size: 13px; color: #64748B;
+  }
+  .uc-digits-sample { font-family: 'Noto Sans Devanagari', 'Mangal', sans-serif; }
+  .uc-digits-name { font-weight: 600; }
+  .uc-switch {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: inherit; font-size: 12px; font-weight: 700;
+    color: #64748B; background: #FFFFFF; border: 1px solid #E7E3DC;
+    border-radius: 999px; padding: 4px 12px 4px 5px; cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .uc-knob {
+    position: relative; width: 30px; height: 18px; border-radius: 999px;
+    background: #E7E3DC; transition: background-color 0.18s ease; flex-shrink: 0;
+  }
+  .uc-knob::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #FFFFFF; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: transform 0.18s ease;
+  }
+  .uc-switch.is-on { color: #B91C1C; border-color: #B91C1C; }
+  .uc-switch.is-on .uc-knob { background: #B91C1C; }
+  .uc-switch.is-on .uc-knob::after { transform: translateX(12px); }
+
+  .uc-vh {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .uc-prose { max-width: 760px; margin-left: auto; margin-right: auto; }
+
+  .uc-chip:focus-visible,
+  .uc-copy:focus-visible,
+  .uc-clear:focus-visible,
+  .uc-switch:focus-visible {
+    outline: 2px solid #B91C1C; outline-offset: 2px;
+  }
+
+  @media (max-width: 860px) {
+    .uc-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .uc-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; }
+    .uc-chip { flex-shrink: 0; min-height: 44px; }
+    .uc-copy, .uc-clear { min-height: 44px; }
+    .uc-area { min-height: 220px; font-size: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .uc-dot::after { animation: none; }
+    .uc-card, .uc-chip, .uc-copy, .uc-clear, .uc-switch, .uc-knob, .uc-knob::after { transition: none; }
+    .uc-chip:hover { transform: none; }
+  }
+
+  /* Dark theme: same minimal aesthetic, harmonized surfaces */
+  [data-theme="dark"] .uc-title { color: #F1EFE9; }
+  [data-theme="dark"] .uc-sub,
+  [data-theme="dark"] .uc-label,
+  [data-theme="dark"] .uc-count,
+  [data-theme="dark"] .uc-live,
+  [data-theme="dark"] .uc-examples-label,
+  [data-theme="dark"] .uc-digits { color: #A8A29E; }
+  [data-theme="dark"] .uc-card { background: #1E1B17; border-color: #35302A; box-shadow: none; }
+  [data-theme="dark"] .uc-card:focus-within { border-color: #B91C1C; box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.25); }
+  [data-theme="dark"] .uc-area { color: #F1EFE9; caret-color: #F87171; }
+  [data-theme="dark"] .uc-area::placeholder { color: #78716C; }
+  [data-theme="dark"] .uc-cardfoot { border-top-color: #2A2723; }
+  [data-theme="dark"] .uc-chip { color: #F1EFE9; background: #1E1B17; border-color: #35302A; }
+  [data-theme="dark"] .uc-chip:hover { border-color: #B91C1C; box-shadow: none; }
+  [data-theme="dark"] .uc-clear { color: #A8A29E; border-color: #35302A; }
+  [data-theme="dark"] .uc-clear:hover { color: #F1EFE9; border-color: #F1EFE9; }
+  [data-theme="dark"] .uc-status { border-top-color: #35302A; }
+  [data-theme="dark"] .uc-switch { color: #A8A29E; background: #1E1B17; border-color: #35302A; }
+  [data-theme="dark"] .uc-knob { background: #35302A; }
+  [data-theme="dark"] .uc-copy { background: #B91C1C; border-color: #B91C1C; color: #FFFFFF; }
+  [data-theme="dark"] .uc-copy:hover { background: #991B1B; border-color: #991B1B; }
+  [data-theme="dark"] .uc-eyebrow { color: #F87171; background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.3); }
+  [data-theme="dark"] .uc-chip:focus-visible,
+  [data-theme="dark"] .uc-copy:focus-visible,
+  [data-theme="dark"] .uc-clear:focus-visible,
+  [data-theme="dark"] .uc-switch:focus-visible { outline-color: #F87171; }
+</style>

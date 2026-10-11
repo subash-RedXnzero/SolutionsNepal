@@ -1,0 +1,1082 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+import {
+  MapPin, Users, Utensils, Building2, Gem, Camera, Music, Mail, Car,
+  BedDouble, Wallet, Calculator, Printer, Copy, RotateCcw, Save,
+  PiggyBank, ShieldCheck, Heart, Hand, Sparkles, PartyPopper, Plus,
+  Shirt, User, Star,
+} from '@lucide/astro';
+import {
+  PROVINCES,
+  CITIES,
+  WEDDING_EVENTS,
+  WEDDING_EXPENSE_GROUPS,
+  MEAL_STYLES,
+  GUEST_PRESETS,
+  BUFFER_PRESETS,
+  BUDGET_ALLOCATION,
+  WEDDING_DEFAULTS,
+} from '../../data/wedding-budget.js';
+
+const title = 'Wedding Budget Calculator Nepal | SolutionsNepal';
+const description = 'Plan your wedding budget in Nepal. Estimate food, venue, jewellery, decoration, photography, clothing and other wedding expenses.';
+
+const faqItems = [
+  {
+    q: 'How much does a wedding cost in Nepal?',
+    a: 'There is no single fixed cost for a wedding in Nepal (नेपालमा विवाह खर्च / बिहे खर्च). Guest count, venue, food menu, jewellery, decoration and the number of events can significantly affect the total. Enter your own guest count and quoted prices above to build a realistic budget for your situation.',
+  },
+  {
+    q: 'What is the biggest wedding expense?',
+    a: 'It varies from wedding to wedding, but food and catering, the venue, jewellery and decoration can each account for a large portion of the total depending on guest count and personal choices. After calculating, check the “Biggest expenses” section to see your own top three.',
+  },
+  {
+    q: 'How much does food cost per person?',
+    a: 'Per-plate catering prices vary widely by menu, venue package and city, so enter the actual quoted price from your caterer or venue in the “Cost per guest” field. The calculator multiplies it by your guest count — nothing is assumed.',
+  },
+  {
+    q: 'Does this include jewellery?',
+    a: 'Only if you enter a jewellery budget. Jewellery is kept separate because it can dominate the total. Enter your expected jewellery budget rather than trying to estimate it automatically.',
+  },
+  {
+    q: 'Can I calculate a wedding under Rs. 10 lakh?',
+    a: 'Yes. Choose “Plan within my budget”, enter Rs. 10,00,000 (or any amount), and SolutionsNepal will create a suggested allocation across food, venue, decoration, clothing and other expenses. Every amount can then be edited.',
+  },
+  {
+    q: 'Can I plan a wedding for Rs. 20 lakh?',
+    a: 'Yes. Enter Rs. 20,00,000 as your total budget and let SolutionsNepal create a suggested allocation that you can adjust. Compare it against your own quoted costs to see whether the plan fits.',
+  },
+];
+
+const EVENT_ICONS = { Heart, Hand, Music, Sparkles, PartyPopper, Plus };
+const GROUP_ICONS = {
+  Bride: Shirt, Groom: User, Ceremony: Sparkles, Photography: Camera,
+  Entertainment: Music, Invitations: Mail, Transportation: Car,
+  Accommodation: BedDouble, Other: Wallet,
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Wedding Budget Calculator Nepal',
+      description: 'Plan your wedding budget in Nepal. Estimate food, venue, jewellery, decoration, photography, clothing and other wedding expenses.',
+      url: 'https://solutionsnepal.com/nepal/wedding-budget-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-4 sm:py-5 wb-wrap">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Wedding Budget Calculator' },
+    ]} />
+
+    <div class="mb-4">
+      <span class="wb-kicker"><Heart size={12} /> Wedding planner · Nepal</span>
+      <h1 class="text-[22px] sm:text-[26px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Wedding Budget Calculator Nepal</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Plan and estimate your wedding expenses in Nepal.</p>
+      <p class="text-[12px] leading-relaxed mt-0.5" style="color:var(--nk-text-tertiary);">Enter your guest count, events, and expected expenses to build a realistic wedding budget.</p>
+    </div>
+
+    <!-- ═══ MODE SELECT ═══ -->
+    <div class="seg-wrap mb-3" role="radiogroup" aria-label="Calculator mode">
+      <button type="button" class="seg-btn seg-active" data-mode="estimate" role="radio" aria-checked="true">
+        <Calculator size={15} /><span><strong>Estimate cost</strong><small>From guests &amp; expenses</small></span>
+      </button>
+      <button type="button" class="seg-btn" data-mode="budget" role="radio" aria-checked="false">
+        <PiggyBank size={15} /><span><strong>Plan in budget</strong><small>Split a fixed budget</small></span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-5 items-start">
+
+      <!-- ═══ LEFT: INPUTS ═══ -->
+      <div class="nk-card p-4 space-y-4" id="input-card">
+
+        <!-- Budget-first panel -->
+        <div id="budget-panel" class="hidden rounded-lg border p-3" style="border-color:var(--nk-border);background-color:var(--nk-hover);">
+          <p class="text-[13px] font-semibold mb-1" style="color:var(--nk-text);">What&rsquo;s your total wedding budget?</p>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <div class="relative flex-1">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="alloc-budget" type="text" inputmode="numeric" autocomplete="off" placeholder={`Example: ${WEDDING_DEFAULTS.totalBudget.toLocaleString('en-IN')}`} class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+            </div>
+            <button type="button" id="alloc-generate" class="nk-btn nk-btn-primary nk-btn-sm whitespace-nowrap">Generate suggested allocation</button>
+          </div>
+          <p class="text-[11px] mt-1.5 leading-relaxed" style="color:var(--nk-text-tertiary);">Suggested budget allocation — not an official price recommendation. Every amount below can be edited.</p>
+          <div id="alloc-table" class="hidden mt-2 text-[12px] tabular-nums"></div>
+          <p id="err-alloc" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+        </div>
+
+        <!-- Basics · Location + Guests -->
+        <section class="duo">
+          <div>
+            <p class="sec-head"><span class="sec-icon"><MapPin size={14} /></span> Location</p>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label for="province" class="sr-only">Province</label>
+                <select id="province" class="nk-input text-[13px]">
+                  <option value="">Province</option>
+                  {PROVINCES.map((p) => (<option value={p.id}>{p.name}</option>))}
+                </select>
+              </div>
+              <div>
+                <label for="city" class="sr-only">City / district</label>
+                <select id="city" class="nk-input text-[13px]">
+                  <option value="">City</option>
+                  {CITIES.map((c) => (<option value={c}>{c}</option>))}
+                </select>
+              </div>
+            </div>
+            <p class="text-[10.5px] mt-1 leading-relaxed" style="color:var(--nk-text-tertiary);">Reference only — enter your own quoted prices.</p>
+          </div>
+          <div>
+            <p class="sec-head"><span class="sec-icon"><Users size={14} /></span> Guests</p>
+            <input id="guests" type="text" inputmode="numeric" autocomplete="off" value={String(WEDDING_DEFAULTS.guests)} class="nk-input guest-big text-[17px] font-semibold tabular-nums" aria-label="Number of guests" />
+            <div class="flex flex-wrap gap-1.5 mt-1.5">
+              {GUEST_PRESETS.map((g) => (
+                <button type="button" class="quick-btn" data-guests={g}>{g.toLocaleString('en-IN')}</button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <!-- Events -->
+        <section>
+          <p class="sec-head"><span class="sec-icon"><PartyPopper size={14} /></span> Events <span class="sub">— catering &amp; venue scale with guest count</span></p>
+          <div class="flex flex-wrap gap-1.5" id="event-chips">
+            {WEDDING_EVENTS.map((e) => {
+              const Icon = EVENT_ICONS[e.icon] || Plus;
+              const selected = e.id === 'wedding';
+              return (
+                <button type="button" class={`event-chip${selected ? ' chip-active' : ''}`} data-event={e.id} role="checkbox" aria-checked={selected ? 'true' : 'false'}>
+                  <Icon size={13} /> {e.label}
+                </button>
+              );
+            })}
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2" id="event-g-list">
+            {WEDDING_EVENTS.map((e) => (
+              <div class={e.id === 'wedding' ? 'event-g-row' : 'event-g-row hidden'} data-erow={e.id}>
+                <label class="text-[10.5px]" style="color:var(--nk-text-tertiary);" for={`event-g-${e.id}`}>{e.label} guests</label>
+                <input id={`event-g-${e.id}`} type="text" inputmode="numeric" autocomplete="off" placeholder="Same as main" class="nk-input text-[13px] tabular-nums event-g-input" data-event-g={e.id} />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Food + Venue -->
+        <section class="duo">
+          <div>
+            <p class="sec-head"><span class="sec-icon"><Utensils size={14} /></span> Food <span class="sub">per guest</span></p>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="per-guest" type="text" inputmode="decimal" autocomplete="off" value={String(WEDDING_DEFAULTS.cateringPerGuest)} class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+            </div>
+            <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);"><span class="example-badge">Example</span> overwrite with your caterer&rsquo;s quote.</p>
+            <div class="flex flex-wrap gap-1.5 mt-1.5" id="meal-row">
+              {MEAL_STYLES.map((m, i) => (
+                <button type="button" class={`quick-btn${i === 1 ? ' quick-active' : ''}`} data-meal={m.id} data-example={m.examplePerGuest ?? ''}>{m.label}</button>
+              ))}
+            </div>
+            <p class="text-[12px] tabular-nums mt-1.5" style="color:var(--nk-text-secondary);">Catering: <strong id="catering-preview" style="color:var(--nk-text);">—</strong></p>
+          </div>
+          <div>
+            <p class="sec-head"><span class="sec-icon"><Building2 size={14} /></span> Venue</p>
+            <div class="flex gap-1.5 mb-2">
+              <button type="button" class="unit-btn unit-active" data-vmode="total">Total</button>
+              <button type="button" class="unit-btn" data-vmode="per-event">Per event</button>
+            </div>
+            <div id="venue-total-wrap" class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="venue-total" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter your expected cost" class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+            </div>
+            <div id="venue-perevent-wrap" class="hidden relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="venue-perevent" type="text" inputmode="numeric" autocomplete="off" placeholder="Cost per event" class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Major expenses -->
+        <section>
+          <p class="sec-head"><span class="sec-icon"><Wallet size={14} /></span> Expenses <span class="sub">— leave blank what doesn&rsquo;t apply</span></p>
+          <div class="exp-grid" id="expense-groups">
+            {WEDDING_EXPENSE_GROUPS.map((g) => {
+              const GIcon = GROUP_ICONS[g.name] || Wallet;
+              return (
+                <details class="exp-group">
+                  <summary class="exp-summary"><GIcon size={14} /><span>{g.name}</span></summary>
+                  <div class="exp-body">
+                    {g.fields.map((f) => (
+                      <div class="exp-row" data-exp={f.key}>
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                          <label for={`exp-${f.key}`} class="text-[12px] font-medium" style="color:var(--nk-text);">{f.label}</label>
+                          <label class="inc-check"><input type="checkbox" class="inc-box" id={`inc-${f.key}`} data-key={f.key} checked /> Include</label>
+                        </div>
+                        <div class="relative">
+                          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+                          <input id={`exp-${f.key}`} type="text" inputmode="decimal" autocomplete="off" placeholder="Enter your expected cost" class="nk-input text-[14px] tabular-nums exp-input" style="padding-left:3rem;" data-key={f.key} />
+                        </div>
+                        <p class="hidden text-[11px] mt-1" style="color:var(--nk-text-tertiary);" data-excluded-note={f.key}>Not included in total</p>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              );
+            })}
+          </div>
+        </section>
+
+        <!-- Jewellery + Buffer + Target -->
+        <section class="trio">
+          <div>
+            <p class="sec-head"><span class="sec-icon"><Gem size={14} /></span> Jewellery <span class="opt-badge">Optional</span></p>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="exp-jewellery" type="text" inputmode="decimal" autocomplete="off" placeholder="Expected budget" class="nk-input text-[14px] tabular-nums exp-input" style="padding-left:3rem;" data-key="jewellery" />
+            </div>
+            <label class="inc-check mt-1"><input type="checkbox" class="inc-box" id="inc-jewellery" data-key="jewellery" checked /> Include</label>
+            <p class="hidden text-[11px] mt-1" style="color:var(--nk-text-tertiary);" data-excluded-note="jewellery">Not included in total</p>
+          </div>
+          <div>
+            <p class="sec-head"><span class="sec-icon"><ShieldCheck size={14} /></span> Buffer</p>
+            <div id="buffer-controls" class="flex flex-wrap items-center gap-1.5">
+              {BUFFER_PRESETS.map((b) => (
+                <button type="button" class={`quick-btn${b === WEDDING_DEFAULTS.bufferPercent ? ' quick-active' : ''}`} data-buffer={b}>{b}%</button>
+              ))}
+              <button type="button" class="quick-btn" data-buffer="custom">Custom</button>
+              <span id="buffer-custom-wrap" class="hidden items-center gap-1">
+                <input id="buffer-percent" type="text" inputmode="decimal" autocomplete="off" value={String(WEDDING_DEFAULTS.bufferPercent)} aria-label="Custom buffer percent" class="nk-input text-[13px] tabular-nums" style="width:64px;padding:6px 10px;" />
+                <span class="text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+              </span>
+            </div>
+            <label class="flex items-center gap-2 cursor-pointer mt-1.5">
+              <input id="buffer-toggle" type="checkbox" checked style="width:14px;height:14px;accent-color:var(--nk-accent);" />
+              <span class="text-[11px]" style="color:var(--nk-text-secondary);">Add on top of subtotal</span>
+            </label>
+          </div>
+          <div>
+            <label for="target-budget" class="sec-head"><span class="sec-icon"><PiggyBank size={14} /></span> Target <span class="sub">optional</span></label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="target-budget" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 20,00,000" class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+            </div>
+            <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">Shows over / under after calculating.</p>
+          </div>
+        </section>
+
+        <button type="button" id="calc-btn" class="nk-btn nk-btn-primary w-full">
+          <Calculator size={15} /> Calculate wedding budget
+        </button>
+        <div class="flex gap-2">
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1"><RotateCcw size={13} /> Reset</button>
+          <button type="button" id="save-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1"><Save size={13} /> Save this budget</button>
+        </div>
+        <p class="text-[11px] leading-relaxed" style="color:var(--nk-text-tertiary);">Your budget is stored only in your browser.</p>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="md:sticky md:top-4">
+        <div class="nk-card p-4" aria-live="polite" id="result-card">
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">Your estimate</p>
+
+          <div id="res-empty">
+            <div class="rounded-xl px-4 py-6 text-center" style="background-color:var(--nk-accent-subtle);">
+              <span class="res-empty-icon"><Calculator size={20} /></span>
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-secondary);">Estimated wedding cost</p>
+              <p class="text-[24px] font-bold tracking-tight" style="color:var(--nk-text-tertiary);">—</p>
+              <p class="text-[11.5px] mt-1.5" style="color:var(--nk-text-secondary);">Enter your details and click <strong>Calculate wedding budget</strong>.</p>
+            </div>
+          </div>
+
+          <div id="res-body" class="hidden">
+            <div class="res-hero">
+              <p class="res-hero-label">Estimated wedding cost</p>
+              <p class="tabular-nums" id="res-total">—</p>
+              <p class="res-hero-sub" id="res-subline"></p>
+            </div>
+
+            <div class="stat-duo">
+              <div class="stat-tile"><span>Cost per guest</span><strong class="tabular-nums" id="res-perguest">—</strong></div>
+              <div class="stat-tile"><span>Categories</span><strong class="tabular-nums" id="res-count">—</strong></div>
+            </div>
+
+            <p class="text-[11px] font-semibold uppercase tracking-wider mt-4 mb-1.5" style="color:var(--nk-text-tertiary);">Breakdown</p>
+            <div id="res-rows"></div>
+            <div id="res-buffer-row" class="hidden result-row"><span>Emergency buffer</span><span class="rv" id="res-buffer">—</span></div>
+            <div class="flex items-center justify-between py-1.5 mt-1">
+              <span class="text-[13px] font-semibold" style="color:var(--nk-text);">Estimated total</span>
+              <strong class="text-[15px] font-bold tabular-nums" style="color:var(--nk-accent);" id="res-total-2">—</strong>
+            </div>
+
+            <div id="res-budget-box" class="hidden rounded-lg px-3 py-2.5 mt-2 text-[12.5px]" style="background-color:var(--nk-hover);border:1px solid var(--nk-border);">
+              <p class="font-semibold mb-1" style="color:var(--nk-text);">Budget status</p>
+              <div id="budget-rows" class="space-y-1 tabular-nums"></div>
+            </div>
+
+            <div id="res-top-wrap" class="mt-3">
+              <p class="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style="color:var(--nk-text-tertiary);">Biggest expenses</p>
+              <div id="res-top" class="space-y-1.5"></div>
+            </div>
+
+            <div id="res-tips-wrap" class="hidden mt-3">
+              <p class="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style="color:var(--nk-text-tertiary);">Ways to reduce the budget</p>
+              <div id="res-tips" class="space-y-1.5"></div>
+              <p class="text-[10.5px] mt-1.5 leading-relaxed" style="color:var(--nk-text-tertiary);">Mathematical observations based on your inputs — not financial advice.</p>
+            </div>
+
+            <div id="res-warnings" class="hidden mt-3 space-y-1.5"></div>
+
+            <div class="px-0 py-3 flex gap-2 mt-1">
+              <button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1"><Printer size={13} /> Print budget</button>
+              <button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1"><Copy size={13} /> Copy summary</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ EDUCATIONAL CONTENT ═══ -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">How much does a wedding cost in Nepal?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">There is no single fixed wedding cost in Nepal. A small family ceremony and a large multi-event celebration can differ enormously, because guest count, venue, food menu, jewellery, decoration and the number of events all move the total. The practical approach is to collect your own quotes — catering per plate, venue, photographer, decorator — and add them up with a small emergency buffer, which is exactly what this calculator does.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related Nepal calculators</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/tools/nepali-number-to-words" style="color:var(--nk-accent);">Number to Nepali Words</a> — write your wedding budget or cheque amounts in words</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/vat-calculator" style="color:var(--nk-accent);">VAT Calculator</a> — check whether vendor quotes include 13% VAT</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance" style="color:var(--nk-accent);">All finance tools</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'Number to Nepali Words', description: 'Write amounts in words for cheques & bills', href: '/nepal/tools/nepali-number-to-words' },
+      { title: 'VAT Calculator Nepal', description: 'Add or remove 13% VAT from vendor quotes', href: '/nepal/finance/vat-calculator' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .seg-wrap {
+    display: flex; gap: 3px; padding: 3px;
+    border: 1px solid var(--nk-border); border-radius: var(--radius-lg);
+    background-color: var(--nk-hover);
+  }
+  .seg-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 7px 10px; border-radius: 9px; border: 1px solid transparent;
+    background: transparent; color: var(--nk-text-secondary);
+    cursor: pointer; font: inherit; text-align: left;
+    transition: all 150ms ease;
+  }
+  .seg-btn span { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+  .seg-btn strong { font-size: 12.5px; font-weight: 600; line-height: 1.3; }
+  .seg-btn small { font-size: 10.5px; line-height: 1.3; color: var(--nk-text-tertiary); }
+  .seg-btn:hover { color: var(--nk-text); }
+  .seg-btn.seg-active {
+    background-color: var(--nk-surface); color: var(--nk-text);
+    border-color: var(--nk-border); box-shadow: var(--shadow-sm);
+  }
+  .duo { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 560px) { .duo { grid-template-columns: 1fr 1fr; } }
+  .trio { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 640px) { .trio { grid-template-columns: 1fr 1fr 1fr; } }
+  .exp-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  @media (min-width: 560px) { .exp-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1280px) { .exp-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  /* Guard: unlayered component display rules must never override Tailwind's `hidden`. */
+  .hidden { display: none !important; }
+  .wb-wrap { background-image: linear-gradient(180deg, var(--nk-accent-subtle), transparent 340px); }
+  .wb-kicker {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 9999px;
+    background-color: var(--nk-accent-subtle); color: var(--nk-accent); margin-bottom: 8px;
+  }
+  .sec-head {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--nk-text);
+  }
+  .sec-head .sub { font-size: 11px; font-weight: 400; color: var(--nk-text-tertiary); }
+  .sec-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0;
+    background-color: var(--nk-accent-subtle); color: var(--nk-accent);
+  }
+  #input-card { position: relative; overflow: hidden; box-shadow: var(--shadow-md); }
+  #input-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--nk-gradient-primary);
+  }
+  #calc-btn {
+    box-shadow: 0 10px 22px -10px rgba(230,43,30,.55);
+    padding-top: 12px; padding-bottom: 12px; font-weight: 600;
+  }
+  [data-theme="dark"] #calc-btn { box-shadow: 0 10px 22px -10px rgba(0,0,0,.7); }
+  #result-card { box-shadow: var(--shadow-md); }
+  .res-hero {
+    border-radius: var(--radius-lg); padding: 16px 14px; text-align: center;
+    background: var(--nk-gradient-primary); color: #fff;
+  }
+  .res-hero-label { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; opacity: .85; margin-bottom: 2px; }
+  #res-total { font-size: 30px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+  .res-hero-sub { font-size: 11px; margin-top: 2px; opacity: .85; }
+  .stat-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .stat-tile {
+    border: 1px solid var(--nk-border); border-radius: var(--radius-lg);
+    padding: 8px 12px; background-color: var(--nk-hover);
+  }
+  .stat-tile span { display: block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--nk-text-tertiary); }
+  .stat-tile strong { font-size: 16px; font-weight: 700; color: var(--nk-text); }
+  .res-empty-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 12px; margin-bottom: 8px;
+    background-color: var(--nk-surface); color: var(--nk-accent); box-shadow: var(--shadow-sm);
+  }
+  .exp-summary::after {
+    content: '+'; margin-left: auto; font-size: 14px; font-weight: 600;
+    color: var(--nk-text-tertiary); line-height: 1;
+  }
+  .exp-group[open] .exp-summary::after { content: '−'; color: var(--nk-accent); }
+  .exp-group { transition: border-color 150ms ease, box-shadow 150ms ease; }
+  .exp-group:hover { border-color: var(--nk-border-strong); }
+  .exp-group[open] { border-color: var(--nk-border-strong); box-shadow: var(--shadow-sm); }
+  .event-chip.chip-active { box-shadow: 0 2px 10px -3px rgba(230,43,30,.45); }
+  .quick-btn {
+    font-size: 11px; font-weight: 600;
+    padding: 0.3rem 0.7rem; border-radius: 9999px;
+    border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary); background: transparent;
+    cursor: pointer; transition: all 150ms; font-family: var(--font-sans);
+  }
+  .quick-btn:hover, .quick-btn.quick-active { border-color: var(--nk-accent); color: var(--nk-accent); }
+  .quick-btn.quick-active { background-color: var(--nk-accent-subtle); }
+  .unit-btn {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center;
+    height: 28px; border-radius: var(--radius-md); font-size: 11.5px; font-weight: 500;
+    border: 1px solid var(--nk-border); cursor: pointer; transition: all 0.1s ease;
+    color: var(--nk-text-secondary); background: var(--nk-surface); font-family: var(--font-sans);
+  }
+  .unit-btn:hover { border-color: var(--nk-border-strong); color: var(--nk-text); }
+  .unit-btn.unit-active { background: var(--nk-accent); border-color: var(--nk-accent); color: white; font-weight: 600; }
+  .guest-big { min-height: 44px; }
+  .event-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500; padding: 7px 12px; border-radius: 9999px;
+    border: 1px solid var(--nk-border); background: transparent;
+    color: var(--nk-text-secondary); cursor: pointer;
+    transition: all 150ms ease; font-family: var(--font-sans);
+  }
+  .event-chip:hover { border-color: var(--nk-border-strong); color: var(--nk-text); }
+  .event-chip.chip-active { border-color: var(--nk-accent); background-color: var(--nk-accent-subtle); color: var(--nk-accent); font-weight: 600; }
+  .event-g-row { display: flex; flex-direction: column; gap: 2px; }
+  .event-g-row .nk-input { padding: 6px 10px; font-size: 12.5px; }
+  .exp-group { border: 1px solid var(--nk-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .exp-summary {
+    display: flex; align-items: center; gap: 8px; padding: 8px 11px;
+    font-size: 12.5px; font-weight: 600; cursor: pointer; list-style: none;
+    color: var(--nk-text);
+  }
+  .exp-summary::-webkit-details-marker { display: none; }
+  .exp-summary:hover { background-color: var(--nk-hover); }
+  .exp-body { padding: 10px 11px 11px; display: grid; grid-template-columns: 1fr; gap: 10px; border-top: 1px solid var(--nk-border); }
+  .exp-row .nk-input { padding-top: 7px; padding-bottom: 7px; }
+  .inc-check {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 500; white-space: nowrap;
+    color: var(--nk-text-secondary); cursor: pointer;
+  }
+  .inc-check input { width: 14px; height: 14px; accent-color: var(--nk-accent); cursor: pointer; }
+  .example-badge {
+    display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; padding: 1px 6px; border-radius: 9999px;
+    background-color: var(--nk-hover); border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary);
+  }
+  .opt-badge {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 1px 7px; border-radius: 9999px; color: var(--nk-text-secondary);
+    border: 1px solid var(--nk-border);
+  }
+  .result-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; padding: 5px 0; font-size: 12.5px; color: var(--nk-text-secondary);
+  }
+  .result-row .rv { font-weight: 600; color: var(--nk-text); white-space: nowrap; }
+  .kv-row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+    padding: 3px 0; font-size: 12.5px; color: var(--nk-text-secondary);
+  }
+  .kv-row strong { color: var(--nk-text); font-weight: 600; white-space: nowrap; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .top-bar { height: 6px; border-radius: 9999px; background-color: var(--nk-hover); overflow: hidden; margin-top: 3px; }
+  .top-fill { height: 100%; border-radius: 9999px; background: var(--nk-gradient-primary); }
+  .tip-line {
+    border-radius: 8px; padding: 8px 12px; font-size: 11.5px; line-height: 1.6;
+    background-color: var(--nk-hover); border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary);
+  }
+  .tip-line strong { color: var(--nk-text); }
+  /* NOTE: warning lines are created by JS at runtime — keep :global(). */
+  :global(.warn-line) {
+    border-radius: 8px; padding: 8px 12px; font-size: 11px; line-height: 1.55;
+    background-color: #fef3cd; border: 1px solid #ffc107; color: #856404;
+  }
+  :global([data-theme="dark"] .warn-line) { background-color: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); color: #fbbf24; }
+  .alloc-row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+    padding: 3px 0; border-bottom: 1px dashed var(--nk-border);
+  }
+  .alloc-row:last-child { border-bottom: none; }
+  @media print {
+    #input-card, .nk-btn, .seg-wrap { display: none !important; }
+    #result-card { border: 1px solid #999; }
+  }
+</style>
+
+<script>
+  import {
+    calculateWeddingBudget, suggestBudgetAllocation,
+    formatNPR, formatNumberIN, parseAmount, sanitizeGuests,
+  } from '../../lib/calculators/wedding-budget.js';
+  import {
+    BUDGET_ALLOCATION, STORAGE_KEY, WEDDING_EXPENSE_KEYS, WEDDING_LABELS,
+  } from '../../data/wedding-budget.js';
+
+  const $ = (id) => document.getElementById(id);
+  const EXP_KEYS = WEDDING_EXPENSE_KEYS;
+
+  let mode = 'estimate';
+  let venueMode = 'total';
+  let bufferChoice = 5; // number or 'custom'
+
+  // ── Mode ──
+  const modeCards = [...document.querySelectorAll('.seg-btn[data-mode]')];
+  function setMode(m) {
+    mode = m;
+    modeCards.forEach((c) => {
+      const on = c.dataset.mode === m;
+      c.classList.toggle('seg-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+    $('budget-panel').classList.toggle('hidden', m !== 'budget');
+  }
+  modeCards.forEach((c) => c.addEventListener('click', () => setMode(c.dataset.mode)));
+
+  // ── Guests ──
+  document.querySelectorAll('[data-guests]').forEach((b) => b.addEventListener('click', () => {
+    $('guests').value = b.dataset.guests;
+    document.querySelectorAll('[data-guests]').forEach((x) => x.classList.toggle('quick-active', x === b));
+    updateCateringPreview();
+  }));
+  $('guests').addEventListener('input', updateCateringPreview);
+
+  // ── Events ──
+  function selectedEvents() {
+    return [...document.querySelectorAll('.event-chip.chip-active')].map((c) => c.dataset.event);
+  }
+  function toggleEvent(chip, force) {
+    const on = force !== undefined ? force : !chip.classList.contains('chip-active');
+    chip.classList.toggle('chip-active', on);
+    chip.setAttribute('aria-checked', String(on));
+    const row = document.querySelector(`[data-erow="${chip.dataset.event}"]`);
+    if (row) row.classList.toggle('hidden', !on);
+    updateCateringPreview();
+  }
+  document.querySelectorAll('.event-chip').forEach((chip) => {
+    chip.addEventListener('click', () => toggleEvent(chip));
+  });
+  document.querySelectorAll('.event-g-input').forEach((el) => {
+    el.addEventListener('input', updateCateringPreview);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') doCalc(); });
+  });
+
+  // ── Meal styles ──
+  document.querySelectorAll('[data-meal]').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-meal]').forEach((x) => x.classList.toggle('quick-active', x === b));
+    if (b.dataset.example !== '') $('per-guest').value = Number(b.dataset.example).toLocaleString('en-IN');
+    else $('per-guest').focus();
+    updateCateringPreview();
+  }));
+  $('per-guest').addEventListener('input', updateCateringPreview);
+
+  function cateringNumbers() {
+    const main = sanitizeGuests($('guests').value);
+    const sel = selectedEvents();
+    let guestNights = 0;
+    if (sel.length === 0) {
+      guestNights = main;
+    } else {
+      guestNights = sel.reduce((s, id) => {
+        const raw = document.querySelector(`[data-event-g="${id}"]`);
+        const g = raw && String(raw.value).trim() !== '' ? sanitizeGuests(raw.value) : main;
+        return s + g;
+      }, 0);
+    }
+    const per = parseAmount($('per-guest').value);
+    const perGuest = per.value == null ? 0 : per.value;
+    return { guestNights, perGuest };
+  }
+
+  function updateCateringPreview() {
+    const { guestNights, perGuest } = cateringNumbers();
+    const el = $('catering-preview');
+    if (!el) return;
+    if (guestNights > 0 && perGuest > 0) {
+      el.textContent = `${formatNumberIN(guestNights)} guests × ${formatNPR(perGuest)} = ${formatNPR(guestNights * perGuest)}`;
+    } else {
+      el.textContent = 'Enter guests and cost per guest to preview';
+    }
+  }
+
+  // ── Venue mode ──
+  document.querySelectorAll('[data-vmode]').forEach((b) => b.addEventListener('click', () => {
+    venueMode = b.dataset.vmode;
+    document.querySelectorAll('[data-vmode]').forEach((x) => x.classList.toggle('unit-active', x === b));
+    $('venue-total-wrap').classList.toggle('hidden', venueMode !== 'total');
+    $('venue-perevent-wrap').classList.toggle('hidden', venueMode !== 'per-event');
+  }));
+
+  // ── Buffer ──
+  document.querySelectorAll('[data-buffer]').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-buffer]').forEach((x) => x.classList.toggle('quick-active', x === b));
+    const v = b.dataset.buffer;
+    bufferChoice = v === 'custom' ? 'custom' : Number(v);
+    const custom = bufferChoice === 'custom';
+    $('buffer-custom-wrap').classList.toggle('hidden', !custom);
+    $('buffer-custom-wrap').classList.toggle('items-center', custom);
+    if (!custom) $('buffer-percent').value = String(bufferChoice);
+  }));
+  $('buffer-toggle').addEventListener('change', () => {
+    $('buffer-controls').style.opacity = $('buffer-toggle').checked ? '1' : '0.45';
+  });
+
+  // ── Include / exclude ──
+  document.querySelectorAll('.inc-box').forEach((cb) => cb.addEventListener('change', () => {
+    const note = document.querySelector(`[data-excluded-note="${cb.dataset.key}"]`);
+    if (note) note.classList.toggle('hidden', cb.checked);
+  }));
+
+  // ── Budget-first allocation ──
+  function setExpense(key, amount) {
+    const input = $(`exp-${key}`);
+    if (input) input.value = Math.round(amount).toLocaleString('en-IN');
+    const inc = $(`inc-${key}`);
+    if (inc && !inc.checked) {
+      inc.checked = true;
+      const note = document.querySelector(`[data-excluded-note="${key}"]`);
+      if (note) note.classList.add('hidden');
+    }
+  }
+
+  $('alloc-generate').addEventListener('click', () => {
+    const err = $('err-alloc');
+    err.classList.add('hidden');
+    const { value, error } = parseAmount($('alloc-budget').value);
+    if (error || value == null || value <= 0) {
+      err.textContent = error || 'Enter your total budget — a number above zero.';
+      err.classList.remove('hidden');
+      return;
+    }
+    let rows;
+    try {
+      rows = suggestBudgetAllocation(value);
+    } catch (e) {
+      err.textContent = e.message;
+      err.classList.remove('hidden');
+      return;
+    }
+    const guests = sanitizeGuests($('guests').value) || 0;
+    const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
+    // Map allocation rows onto real inputs (all editable afterwards).
+    if (guests > 0) $('per-guest').value = Math.round(byId.catering.amount / guests).toLocaleString('en-IN');
+    document.querySelectorAll('[data-meal]').forEach((x) => x.classList.toggle('quick-active', x.dataset.meal === 'custom'));
+    if (venueMode === 'total') $('venue-total').value = Math.round(byId.venue.amount).toLocaleString('en-IN');
+    else $('venue-perevent').value = Math.round(byId.venue.amount).toLocaleString('en-IN');
+    setExpense('decoration', byId.decoration.amount);
+    setExpense('jewellery', byId.jewellery.amount);
+    setExpense('bridalClothing', byId.clothing.amount * 0.7);
+    setExpense('groomClothing', byId.clothing.amount * 0.3);
+    setExpense('photography', byId.photography.amount);
+    setExpense('makeup', byId.makeup.amount);
+    setExpense('coupleTransport', byId.transport.amount);
+    setExpense('miscellaneous', byId.other.amount);
+    $('target-budget').value = Math.round(value).toLocaleString('en-IN');
+    $('alloc-table').innerHTML = rows.map((r) =>
+      `<div class="alloc-row"><span style="color:var(--nk-text-secondary);">${r.label} (${r.percent}%)</span><strong style="color:var(--nk-text);">${formatNPR(r.amount)}</strong></div>`
+    ).join('');
+    $('alloc-table').classList.remove('hidden');
+    updateCateringPreview();
+    doCalc();
+  });
+
+  // ── Collect + calculate ──
+  let lastResult = null;
+  let lastSummary = '';
+
+  function collectInput() {
+    const main = $('guests').value;
+    const mainGuests = sanitizeGuests(main);
+    const events = selectedEvents().map((id) => {
+      const raw = document.querySelector(`[data-event-g="${id}"]`);
+      const g = raw && String(raw.value).trim() !== '' ? raw.value : main;
+      return { id, guests: g };
+    });
+    const expenses = {};
+    for (const key of EXP_KEYS) {
+      const input = $(`exp-${key}`);
+      expenses[key] = input ? input.value : '';
+    }
+    const excluded = [...document.querySelectorAll('.inc-box')]
+      .filter((cb) => !cb.checked)
+      .map((cb) => cb.dataset.key);
+    const bufferPct = bufferChoice === 'custom'
+      ? parseFloat(String($('buffer-percent').value).replace(/,/g, '')) || 0
+      : Number(bufferChoice);
+    return {
+      guests: main,
+      events,
+      cateringPerGuest: $('per-guest').value,
+      venue: {
+        mode: venueMode,
+        total: $('venue-total').value,
+        perEvent: $('venue-perevent').value,
+      },
+      expenses,
+      excluded,
+      emergencyBuffer: { enabled: $('buffer-toggle').checked, percent: bufferPct },
+      targetBudget: $('target-budget').value,
+      meta: { mainGuests, province: $('province').value, city: $('city').value },
+    };
+  }
+
+  function rowHTML(label, value, muted) {
+    return `<div class="result-row"><span>${label}</span><span class="${muted ? 'rv-muted' : 'rv'}">${value}</span></div>`;
+  }
+
+  function doCalc() {
+    const input = collectInput();
+    const r = calculateWeddingBudget(input);
+    lastResult = { input, r };
+    render(input, r);
+  }
+
+  function render(input, r) {
+    $('res-empty').classList.add('hidden');
+    $('res-body').classList.remove('hidden');
+
+    $('res-total').textContent = formatNPR(r.total);
+    $('res-total-2').textContent = formatNPR(r.total);
+    const parts = [];
+    if (input.meta.city) parts.push(input.meta.city);
+    if (r.guestDivisor > 0) parts.push(`${formatNumberIN(r.guestDivisor)} guests`);
+    $('res-subline').textContent = parts.join(' · ') || 'Your wedding estimate';
+
+    $('res-perguest').textContent = r.guestDivisor > 0 ? formatNPR(r.costPerGuest) : '—';
+    $('res-count').textContent = r.categoryBreakdown.length > 0 ? String(r.categoryBreakdown.length) : '—';
+
+    $('res-rows').innerHTML = r.categoryBreakdown.length > 0
+      ? r.categoryBreakdown.map((b) => rowHTML(b.name, formatNPR(b.amount), false)).join('')
+      : rowHTML('No expenses entered yet', 'Enter amounts on the left', true);
+
+    const bufRow = $('res-buffer-row');
+    if (r.emergencyBuffer > 0) {
+      bufRow.classList.remove('hidden');
+      $('res-buffer').textContent = `${formatNPR(r.emergencyBuffer)} (${r.bufferPercent}%)`;
+    } else {
+      bufRow.classList.add('hidden');
+    }
+
+    // Budget status — clear text, not only color.
+    const box = $('res-budget-box');
+    if (r.budgetDifference) {
+      box.classList.remove('hidden');
+      const d = r.budgetDifference;
+      const status = d.status === 'over'
+        ? `<div class="kv-row"><span>Over budget</span><strong style="color:#DC2626;">${formatNPR(d.difference)}</strong></div>`
+        : d.status === 'under'
+          ? `<div class="kv-row"><span>Under budget</span><strong style="color:#059669;">${formatNPR(Math.abs(d.difference))}</strong></div>`
+          : `<div class="kv-row"><span>On budget</span><strong>Exactly on target</strong></div>`;
+      $('budget-rows').innerHTML =
+        `<div class="kv-row"><span>Your budget</span><strong>${formatNPR(d.budget)}</strong></div>` +
+        `<div class="kv-row"><span>Estimated cost</span><strong>${formatNPR(d.estimated)}</strong></div>` +
+        status;
+    } else {
+      box.classList.add('hidden');
+    }
+
+    // Biggest expenses — simple horizontal breakdown.
+    const max = r.topExpenses.length > 0 ? r.topExpenses[0].amount : 0;
+    $('res-top').innerHTML = r.topExpenses.length > 0
+      ? r.topExpenses.map((b, i) => {
+          const pct = max > 0 ? Math.max(4, Math.round((b.amount / max) * 100)) : 0;
+          return `<div><div class="result-row" style="padding-bottom:0;"><span>${i + 1}. ${b.name}</span><span class="rv">${formatNPR(b.amount)}</span></div><div class="top-bar"><div class="top-fill" style="width:${pct}%;"></div></div></div>`;
+        }).join('')
+      : rowHTML('Nothing to rank yet', 'Enter amounts on the left', true);
+
+    // Savings suggestions — mathematical observations only.
+    const tips = [];
+    if (r.cateringGuests > 50 && r.cateringCost > 0) {
+      const per = r.cateringGuests > 0 ? r.cateringCost / r.cateringGuests : 0;
+      if (per > 0) {
+        tips.push(`You have ${formatNumberIN(r.cateringGuests)} guest-meals planned. Reducing the guest count by 50 could reduce catering costs by approximately <strong>${formatNPR(50 * per)}</strong>.`);
+      }
+    }
+    const jew = r.categoryBreakdown.find((b) => b.id === 'jewellery');
+    if (jew && jew.amount > 0) {
+      const lead = r.topExpenses[0] && r.topExpenses[0].id === 'jewellery'
+        ? 'Your jewellery budget is one of your largest expenses. '
+        : 'Your jewellery budget is a large part of this plan. ';
+      tips.push(`${lead}Reducing this category by 10% would save approximately <strong>${formatNPR(jew.amount * 0.1)}</strong>.`);
+    }
+    const big = r.topExpenses[0];
+    if (big && big.id !== 'jewellery' && big.amount > 0) {
+      tips.push(`Your largest expense is <strong>${big.name} (${formatNPR(big.amount)})</strong>. Reducing it by 10% would save approximately <strong>${formatNPR(big.amount * 0.1)}</strong>.`);
+    }
+    const tipsWrap = $('res-tips-wrap');
+    if (tips.length > 0) {
+      tipsWrap.classList.remove('hidden');
+      $('res-tips').innerHTML = tips.slice(0, 3).map((t) => `<div class="tip-line">${t}</div>`).join('');
+    } else {
+      tipsWrap.classList.add('hidden');
+    }
+
+    const warnBox = $('res-warnings');
+    warnBox.innerHTML = '';
+    warnBox.classList.toggle('hidden', r.warnings.length === 0);
+    r.warnings.forEach((w) => {
+      const d = document.createElement('div');
+      d.className = 'warn-line';
+      d.textContent = w;
+      warnBox.appendChild(d);
+    });
+
+    buildSummary(input, r);
+    document.querySelector('#result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function eventLabel(id) {
+    const map = { engagement: 'Engagement', mehendi: 'Mehendi', sangeet: 'Sangeet', wedding: 'Wedding ceremony', reception: 'Reception', other: 'Other' };
+    return map[id] || id;
+  }
+
+  function buildSummary(input, r) {
+    const lines = ['SolutionsNepal — Wedding Budget'];
+    lines.push(`Guests: ${input.meta.mainGuests > 0 ? formatNumberIN(input.meta.mainGuests) : '—'}`);
+    if (input.meta.city || input.meta.province) lines.push(`Location: ${[input.meta.city, input.meta.province].filter(Boolean).join(', ')}`);
+    if (input.events.length > 0) {
+      lines.push(`Events: ${input.events.map((e) => `${eventLabel(e.id)} (${formatNumberIN(sanitizeGuests(e.guests))})`).join(' + ')}`);
+    }
+    lines.push(`Estimated total: ${formatNPR(r.total)}`);
+    if (r.guestDivisor > 0) lines.push(`Cost per guest: ${formatNPR(r.costPerGuest)}`);
+    lines.push('Category breakdown:');
+    r.categoryBreakdown.forEach((b) => lines.push(`- ${b.name}: ${formatNPR(b.amount)}`));
+    if (r.emergencyBuffer > 0) lines.push(`Emergency buffer (${r.bufferPercent}%): ${formatNPR(r.emergencyBuffer)}`);
+    if (r.budgetDifference) {
+      const d = r.budgetDifference;
+      lines.push(`Budget: ${formatNPR(d.budget)} — ${d.status === 'over' ? `Over budget by ${formatNPR(d.difference)}` : d.status === 'under' ? `Under budget by ${formatNPR(Math.abs(d.difference))}` : 'Exactly on budget'}`);
+    }
+    lastSummary = lines.join('\n');
+  }
+
+  $('calc-btn').addEventListener('click', doCalc);
+  ['guests', 'per-guest', 'venue-total', 'venue-perevent', 'target-budget', 'alloc-budget'].forEach((id) => {
+    const el = $(id);
+    if (el) el.addEventListener('keydown', (e) => { if (e.key === 'Enter') doCalc(); });
+  });
+  document.querySelectorAll('.exp-input').forEach((el) => {
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') doCalc(); });
+  });
+
+  // ── Print / copy ──
+  $('print-btn').addEventListener('click', () => window.print());
+  $('copy-btn').addEventListener('click', async () => {
+    const btn = $('copy-btn');
+    try {
+      await navigator.clipboard.writeText(lastSummary || 'SolutionsNepal — Wedding Budget');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.innerHTML = 'Copy summary'; }, 2000);
+    } catch { /* clipboard unavailable */ }
+  });
+
+  // ── Reset / save (localStorage only — never sent to a server) ──
+  function snapshot() {
+    const snap = { mode, venueMode, bufferChoice };
+    ['province', 'city', 'guests', 'per-guest', 'venue-total', 'venue-perevent', 'buffer-percent', 'target-budget', 'alloc-budget'].forEach((id) => {
+      const el = $(id);
+      snap[id] = el ? el.value : '';
+    });
+    snap.bufferOn = $('buffer-toggle').checked;
+    snap.events = [...document.querySelectorAll('.event-chip')].map((c) => ({
+      id: c.dataset.event,
+      on: c.classList.contains('chip-active'),
+      guests: (document.querySelector(`[data-event-g="${c.dataset.event}"]`) || {}).value || '',
+    }));
+    snap.meal = (document.querySelector('[data-meal].quick-active') || {}).dataset?.meal || 'custom';
+    snap.expenses = {};
+    snap.included = {};
+    for (const key of EXP_KEYS) {
+      const input = $(`exp-${key}`);
+      const inc = $(`inc-${key}`);
+      snap.expenses[key] = input ? input.value : '';
+      snap.included[key] = inc ? inc.checked : true;
+    }
+    return snap;
+  }
+
+  function restore(snap) {
+    if (!snap || typeof snap !== 'object') return false;
+    setMode(snap.mode === 'budget' ? 'budget' : 'estimate');
+    const setVal = (id, v) => { const el = $(id); if (el && v !== undefined) el.value = v; };
+    ['province', 'city', 'guests', 'per-guest', 'venue-total', 'venue-perevent', 'buffer-percent', 'target-budget', 'alloc-budget'].forEach((id) => setVal(id, snap[id]));
+    if (snap.venueMode) {
+      venueMode = snap.venueMode;
+      document.querySelectorAll('[data-vmode]').forEach((x) => x.classList.toggle('unit-active', x.dataset.vmode === venueMode));
+      $('venue-total-wrap').classList.toggle('hidden', venueMode !== 'total');
+      $('venue-perevent-wrap').classList.toggle('hidden', venueMode !== 'per-event');
+    }
+    if (snap.bufferChoice !== undefined) {
+      bufferChoice = snap.bufferChoice;
+      document.querySelectorAll('[data-buffer]').forEach((x) => x.classList.toggle('quick-active', String(x.dataset.buffer) === String(bufferChoice)));
+      const custom = bufferChoice === 'custom';
+      $('buffer-custom-wrap').classList.toggle('hidden', !custom);
+    }
+    if (snap.bufferOn !== undefined) {
+      $('buffer-toggle').checked = !!snap.bufferOn;
+      $('buffer-controls').style.opacity = snap.bufferOn ? '1' : '0.45';
+    }
+    if (Array.isArray(snap.events)) {
+      snap.events.forEach((e) => {
+        const chip = document.querySelector(`.event-chip[data-event="${e.id}"]`);
+        if (chip) {
+          chip.classList.toggle('chip-active', !!e.on);
+          chip.setAttribute('aria-checked', String(!!e.on));
+        }
+        const row = document.querySelector(`[data-erow="${e.id}"]`);
+        if (row) row.classList.toggle('hidden', !e.on);
+        const g = document.querySelector(`[data-event-g="${e.id}"]`);
+        if (g && e.guests !== undefined) g.value = e.guests;
+      });
+    }
+    if (snap.meal) {
+      document.querySelectorAll('[data-meal]').forEach((x) => x.classList.toggle('quick-active', x.dataset.meal === snap.meal));
+    }
+    for (const key of EXP_KEYS) {
+      if (snap.expenses && snap.expenses[key] !== undefined) {
+        const input = $(`exp-${key}`);
+        if (input) input.value = snap.expenses[key];
+      }
+      if (snap.included && snap.included[key] !== undefined) {
+        const inc = $(`inc-${key}`);
+        if (inc) inc.checked = !!snap.included[key];
+        const note = document.querySelector(`[data-excluded-note="${key}"]`);
+        if (note) note.classList.toggle('hidden', !!snap.included[key]);
+      }
+    }
+    return true;
+  }
+
+  $('reset-btn').addEventListener('click', () => {
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* private mode */ }
+    setMode('estimate');
+    $('province').value = '';
+    $('city').value = '';
+    $('guests').value = '300';
+    $('per-guest').value = '2,000';
+    $('venue-total').value = '';
+    $('venue-perevent').value = '';
+    $('target-budget').value = '';
+    $('alloc-budget').value = '';
+    $('alloc-table').classList.add('hidden');
+    $('alloc-table').innerHTML = '';
+    $('buffer-toggle').checked = true;
+    $('buffer-controls').style.opacity = '1';
+    bufferChoice = 5;
+    $('buffer-percent').value = '5';
+    document.querySelectorAll('[data-buffer]').forEach((x) => x.classList.toggle('quick-active', x.dataset.buffer === '5'));
+    $('buffer-custom-wrap').classList.add('hidden');
+    venueMode = 'total';
+    document.querySelectorAll('[data-vmode]').forEach((x) => x.classList.toggle('unit-active', x.dataset.vmode === 'total'));
+    $('venue-total-wrap').classList.remove('hidden');
+    $('venue-perevent-wrap').classList.add('hidden');
+    document.querySelectorAll('.event-chip').forEach((chip) => {
+      const on = chip.dataset.event === 'wedding';
+      chip.classList.toggle('chip-active', on);
+      chip.setAttribute('aria-checked', String(on));
+      const row = document.querySelector(`[data-erow="${chip.dataset.event}"]`);
+      if (row) row.classList.toggle('hidden', !on);
+    });
+    document.querySelectorAll('.event-g-input').forEach((el) => { el.value = ''; });
+    document.querySelectorAll('[data-meal]').forEach((x) => x.classList.toggle('quick-active', x.dataset.meal === 'standard'));
+    document.querySelectorAll('[data-guests]').forEach((x) => x.classList.toggle('quick-active', x.dataset.guests === '300'));
+    for (const key of EXP_KEYS) {
+      const input = $(`exp-${key}`);
+      if (input) input.value = '';
+      const inc = $(`inc-${key}`);
+      if (inc) inc.checked = true;
+      const note = document.querySelector(`[data-excluded-note="${key}"]`);
+      if (note) note.classList.add('hidden');
+    }
+    $('res-body').classList.add('hidden');
+    $('res-empty').classList.remove('hidden');
+    lastResult = null;
+    updateCateringPreview();
+  });
+
+  $('save-btn').addEventListener('click', () => {
+    const btn = $('save-btn');
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot()));
+      btn.textContent = 'Saved!';
+      setTimeout(() => { btn.innerHTML = 'Save this budget'; }, 2000);
+    } catch {
+      btn.textContent = 'Could not save';
+      setTimeout(() => { btn.innerHTML = 'Save this budget'; }, 2000);
+    }
+  });
+
+  // ── Init: restore saved budget, then preview ──
+  (function init() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) restore(JSON.parse(raw));
+    } catch { /* corrupted or unavailable storage — start fresh */ }
+    updateCateringPreview();
+  })();
+</script>

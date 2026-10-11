@@ -1,0 +1,405 @@
+---
+/**
+ * NepaliNumberConverter — reusable number ⇄ Nepali words tool.
+ * Props: initialInput (string) — prefill the amount field.
+ */
+interface Props {
+  initialInput?: string;
+}
+const { initialInput = '' } = Astro.props;
+---
+
+<div id="nnw-root" data-initial={initialInput}>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+
+    <!-- ═══ LEFT: INPUT ═══ -->
+    <div class="nk-card p-5">
+      <!-- Direction tabs -->
+      <div class="flex gap-1 mb-4 p-1 rounded-lg w-fit" style="background-color:var(--nk-bg);border:1px solid var(--nk-border);">
+        <button id="dir-n2w" class="dir-btn" data-dir="n2w" aria-pressed="true">Number → Words</button>
+        <button id="dir-w2n" class="dir-btn" data-dir="w2n" aria-pressed="false">Words → Number</button>
+      </div>
+
+      <!-- Number → Words panel -->
+      <div id="panel-n2w">
+        <label for="nnw-input" class="block text-[13px] font-semibold mb-2" style="color:var(--nk-text);">Enter a number</label>
+        <input id="nnw-input" type="text" inputmode="decimal" placeholder="e.g. 1250000 or १२,५०,०००"
+          class="nk-input !text-[20px] !py-3 font-semibold tracking-wide" autocomplete="off" spellcheck="false" />
+        <p id="nnw-error" class="hidden text-[11.5px] mt-2" style="color:#dc2626;"></p>
+        <button id="nnw-convert" class="nk-btn nk-btn-primary w-full py-2.5 mt-3">Convert</button>
+
+        <div class="flex flex-wrap gap-1.5 mt-2.5" id="nnw-quick"></div>
+
+        <!-- Options -->
+        <div class="mt-4 space-y-2.5 pt-4" style="border-top:1px solid var(--nk-border);">
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <div class="inline-flex rounded-lg overflow-hidden text-[11.5px] font-semibold" style="border:1px solid var(--nk-border);">
+              <button class="fmt-toggle" data-fmt="currency" aria-pressed="true">Currency</button>
+              <button class="fmt-toggle" data-fmt="number" aria-pressed="false">Number</button>
+            </div>
+            <label class="inline-flex items-center gap-1.5 text-[11.5px] font-medium cursor-pointer" style="color:var(--nk-text-secondary);">
+              <input type="checkbox" id="nnw-cheque" checked class="accent-current" />
+              Cheque mode (<span style="font-size:12px;">मात्र / Only</span>)
+            </label>
+          </div>
+          <div id="nnw-decimal-row" class="hidden items-center gap-2 text-[11.5px]" style="color:var(--nk-text-secondary);">
+            <span>Decimals are:</span>
+            <select id="nnw-decimals" class="nk-input !py-1 !text-[11.5px] !w-auto">
+              <option value="paisa" selected>Paisa (0.50 = ५० पैसा)</option>
+              <option value="decimal">Decimal digits (0.50 = point five zero)</option>
+            </select>
+          </div>
+          <p class="text-[10.5px] leading-relaxed" style="color:var(--nk-text-tertiary);">
+            Accepts commas, Devanagari digits (१२३) and prefixes like Rs., रु., NPR — everything is normalized automatically.
+          </p>
+        </div>
+      </div>
+
+      <!-- Words → Number panel -->
+      <div id="panel-w2n" class="hidden">
+        <label for="nnw-words-input" class="block text-[13px] font-semibold mb-2" style="color:var(--nk-text);">Enter number words</label>
+        <textarea id="nnw-words-input" rows="2" placeholder="e.g. बाह्र लाख पचास हजार  ·  Twelve Lakh Fifty Thousand"
+          class="nk-input !py-2.5 resize-none" spellcheck="false"></textarea>
+        <p id="nnw-w2n-error" class="hidden text-[11.5px] mt-2" style="color:#dc2626;"></p>
+        <button id="nnw-convert-rev" class="nk-btn nk-btn-primary w-full py-2.5 mt-1">Convert</button>
+        <p class="text-[10.5px] mt-2" style="color:var(--nk-text-tertiary);">Works with Nepali or English words using the Lakh/Crore system.</p>
+      </div>
+    </div>
+
+    <!-- ═══ RIGHT: RESULT ═══ -->
+    <div class="lg:sticky lg:top-4">
+
+      <!-- N → W result -->
+      <div id="result-card" class="nk-card p-5 hidden">
+        <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">Converted result</p>
+
+        <!-- Output tabs -->
+        <div class="flex gap-1 mb-3 p-1 rounded-lg w-fit text-[11px] font-semibold" style="background-color:var(--nk-bg);">
+          <button class="out-tab" data-out="np" data-active>Nepali</button>
+          <button class="out-tab" data-out="en">English</button>
+          <button class="out-tab" data-out="digits">Digits</button>
+          <button class="out-tab" data-out="cheque">Cheque</button>
+        </div>
+
+        <p id="out-rs-label" class="hidden text-[11px] font-bold tracking-wider mb-1" style="color:var(--nk-text-secondary);">Rs.</p>
+        <div class="rounded-xl px-4 py-4 mb-3 min-h-[86px] flex flex-col justify-center" style="background-color:var(--nk-accent-subtle);">
+          <!-- Nepali -->
+          <div data-pane="np">
+            <p id="out-np" class="text-[17px] sm:text-[19px] font-bold leading-snug break-words" lang="ne" style="color:var(--nk-accent);"></p>
+          </div>
+          <!-- English -->
+          <div data-pane="en" class="hidden">
+            <p id="out-en" class="text-[16px] sm:text-[18px] font-bold leading-snug break-words" style="color:var(--nk-accent);"></p>
+          </div>
+          <!-- Digits -->
+          <div data-pane="digits" class="hidden space-y-1">
+            <p id="out-digits-en" class="text-[19px] font-bold tracking-wide" style="color:var(--nk-accent);"></p>
+            <p id="out-digits-np" class="text-[19px] font-bold tracking-wide" lang="ne" style="color:var(--nk-text-secondary);"></p>
+          </div>
+          <!-- Cheque -->
+          <div data-pane="cheque" class="hidden space-y-2">
+            <div>
+              <p class="text-[9.5px] uppercase tracking-wider mb-0.5" style="color:var(--nk-text-secondary);">नेपाली</p>
+              <p id="out-cheque-np" class="text-[15px] font-bold leading-snug break-words" lang="ne" style="color:var(--nk-accent);"></p>
+            </div>
+            <div>
+              <p class="text-[9.5px] uppercase tracking-wider mb-0.5" style="color:var(--nk-text-secondary);">English</p>
+              <p id="out-cheque-en" class="text-[14px] font-bold leading-snug break-words" style="color:var(--nk-accent);"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <button id="copy-main" class="nk-btn nk-btn-primary flex-1 py-2 text-[12px]">Copy</button>
+          <button id="copy-cheque" class="hidden text-[12px] font-semibold py-2 px-3.5 rounded-lg border transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Copy Cheque Text</button>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="result-empty" class="nk-card p-8 text-center">
+        <p class="text-[13px] font-medium mb-1" style="color:var(--nk-text);">Your result appears here</p>
+        <p class="text-[11px]" style="color:var(--nk-text-secondary);">Try typing <strong style="color:var(--nk-text);">1250000</strong> or <strong style="color:var(--nk-text);" lang="ne">रु. १२,५०,०००</strong></p>
+      </div>
+
+      <!-- W → N result -->
+      <div id="w2n-card" class="nk-card p-5 hidden">
+        <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">Number</p>
+        <div class="rounded-xl px-4 py-4 mb-3" style="background-color:var(--nk-accent-subtle);">
+          <p id="w2n-formatted" class="text-[22px] font-bold tracking-wide" style="color:var(--nk-accent);"></p>
+          <p id="w2n-nepali-digits" class="text-[15px] font-semibold mt-1" lang="ne" style="color:var(--nk-text-secondary);"></p>
+        </div>
+        <button id="copy-w2n" class="nk-btn nk-btn-primary w-full py-2 text-[12px]">Copy Number</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .dir-btn, .out-tab {
+    padding: 0.35rem 0.75rem;
+    font-weight: 600;
+    border-radius: calc(var(--radius-lg, 10px) - 3px);
+    color: var(--nk-text-secondary);
+    transition: all 150ms;
+  }
+  .dir-btn { font-size: 11.5px; }
+  .out-tab { font-size: 10.5px; padding: 0.3rem 0.65rem; }
+  .dir-btn:hover, .out-tab:hover { color: var(--nk-text); }
+  .dir-btn[aria-pressed="true"], .out-tab[data-active] {
+    background-color: var(--nk-surface);
+    box-shadow: inset 0 0 0 1px var(--nk-border);
+    color: var(--nk-text);
+  }
+  .dir-btn[aria-pressed="true"] {
+    background-color: var(--nk-accent);
+    color: #fff;
+    box-shadow: none;
+  }
+  .fmt-toggle {
+    padding: 0.3rem 0.7rem;
+    font-weight: 600;
+    color: var(--nk-text-secondary);
+    transition: all 150ms;
+  }
+  .fmt-toggle[aria-pressed="true"] {
+    background-color: var(--nk-accent);
+    color: #fff;
+  }
+  .quick-amt {
+    font-size: 10.5px; font-weight: 600;
+    padding: 0.25rem 0.6rem; border-radius: 9999px;
+    border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary);
+    transition: all 150ms;
+  }
+  .quick-amt:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+</style>
+
+<script>
+  import {
+    convertAll,
+    parseInput,
+    formatNumber,
+    toNepaliDigits,
+    wordsToNumber,
+  } from '../../lib/calculators/nepali-numbers.js';
+  import { formatNumberIN } from '../../lib/calculators/vat.js';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  const root = $('nnw-root');
+  const input = $<HTMLInputElement>('nnw-input');
+  const errorEl = $('nnw-error');
+
+  let dir: 'n2w' | 'w2n' = 'n2w';
+  let outTab: string = 'np';
+  let fmt: 'currency' | 'number' = 'currency';
+  let copyTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // ── Quick amounts ──────────────────────────────────────────
+  const QUICK = [1000, 10000, 100000, 1000000, 10000000];
+  const quickBox = $('nnw-quick');
+  for (const q of QUICK) {
+    const b = document.createElement('button');
+    b.className = 'quick-amt';
+    b.textContent = 'Rs. ' + formatNumberIN(q);
+    b.addEventListener('click', () => { input.value = String(q); recalc(); });
+    quickBox.appendChild(b);
+  }
+
+  // ── Direction switching ────────────────────────────────────
+  function setDir(d: 'n2w' | 'w2n') {
+    dir = d;
+    document.querySelectorAll<HTMLButtonElement>('.dir-btn').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.dir === d)));
+    $('panel-n2w').classList.toggle('hidden', d !== 'n2w');
+    $('panel-w2n').classList.toggle('hidden', d !== 'w2n');
+    $('result-card').classList.toggle('hidden', d !== 'n2w');
+    $('result-empty').classList.toggle('hidden', d !== 'n2w' || !!input.value);
+    $('w2n-card').classList.toggle('hidden', true);
+    if (d === 'w2n') ($('nnw-words-input') as HTMLTextAreaElement).focus();
+    else recalc();
+  }
+  $('dir-n2w').addEventListener('click', () => setDir('n2w'));
+  $('dir-w2n').addEventListener('click', () => setDir('w2n'));
+
+  // ── Format toggles & output tabs ───────────────────────────
+  document.querySelectorAll<HTMLButtonElement>('.fmt-toggle').forEach((b) =>
+    b.addEventListener('click', () => {
+      fmt = b.dataset.fmt as 'currency' | 'number';
+      document.querySelectorAll<HTMLButtonElement>('.fmt-toggle').forEach((x) =>
+        x.setAttribute('aria-pressed', String(x === b)));
+      $('nnw-decimal-row').classList.toggle('hidden', false);
+      recalc();
+    }));
+
+  document.querySelectorAll<HTMLButtonElement>('.out-tab').forEach((b) =>
+    b.addEventListener('click', () => {
+      outTab = b.dataset.out!;
+      document.querySelectorAll<HTMLButtonElement>('.out-tab').forEach((x) => {
+        const active = x === b;
+        if (active) x.setAttribute('data-active', ''); else x.removeAttribute('data-active');
+      });
+      showOutPanes();
+    }));
+
+  function showOutPanes() {
+    root.querySelectorAll<HTMLElement>('[data-pane]').forEach((p) =>
+      p.classList.toggle('hidden', p.dataset.pane !== outTab));
+    $('copy-cheque').classList.toggle('hidden', outTab !== 'cheque');
+  }
+
+  // ── Live conversion (Number → Words) ──────────────────────
+  let lastResults: ReturnType<typeof convertAll> | null = null;
+
+  function recalc() {
+    setError(errorEl, null);
+    const raw = input.value.trim();
+
+    // Currency label lives OUTSIDE the output box — never inside the words.
+    $('out-rs-label').classList.toggle('hidden', fmt !== 'currency');
+
+    if (!raw) {
+      // No input: show the empty-state hint, hide results.
+      lastResults = null;
+      invalidate();
+      $('result-card').classList.add('hidden');
+      $('result-empty').classList.remove('hidden');
+      return;
+    }
+
+    const r = convertAll(raw, {
+      mode: fmt,
+      cheque: ($('nnw-cheque') as HTMLInputElement).checked,
+      decimalsAs: ($('nnw-decimals') as HTMLSelectElement).value as 'paisa' | 'decimal',
+    });
+
+    if (!r.ok) {
+      lastResults = null;
+      setError(errorEl, r.error!);
+      invalidate();
+      // Invalid input: keep both cards hidden; the inline error explains why.
+      $('result-card').classList.add('hidden');
+      $('result-empty').classList.add('hidden');
+      return;
+    }
+
+    // Valid conversion: make sure the result card is actually visible.
+    $('result-card').classList.remove('hidden');
+    $('result-empty').classList.add('hidden');
+
+    lastResults = r;
+    $('out-np').textContent = r.nepaliWords;
+    $('out-en').textContent = r.englishWords;
+    $('out-digits-en').textContent = r.currencyAscii.replace(/^Rs\. /, '') ;
+    $('out-digits-np').textContent = r.currencyNepali.replace(/^रु\. /, '');
+    $('out-cheque-np').textContent = r.chequeNepali;
+    $('out-cheque-en').textContent = r.chequeEnglish;
+    showOutPanes();
+  }
+
+  function invalidate() {
+    ['out-np', 'out-en', 'out-digits-en', 'out-digits-np', 'out-cheque-np', 'out-cheque-en']
+      .forEach((id) => ($(id)).textContent = '');
+  }
+
+  function setError(el: HTMLElement, msg: string | null) {
+    el.textContent = msg || '';
+    el.classList.toggle('hidden', !msg);
+  }
+
+  // Results appear ONLY when Convert is clicked (no live recalculation).
+
+  // ── Convert buttons (explicit action + scroll to result) ──
+  $('nnw-convert').addEventListener('click', () => {
+    recalc();
+    if (!input.value.trim()) { input.focus(); return; }
+    if (lastResults) {
+      $('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+      errorEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  });
+  $('nnw-convert-rev').addEventListener('click', () => {
+    recalcW2n();
+    $('w2n-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  // ── Reverse conversion (Words → Number) ────────────────────
+  const wordsInput = $<HTMLTextAreaElement>('nnw-words-input');
+
+  wordsInput.addEventListener('input', () => {
+    // clear stale result while typing; recompute happens on Convert click
+    $('w2n-card').classList.add('hidden');
+    setError($('nnw-w2n-error'), null);
+  });
+
+  function recalcW2n() {
+    const errEl = $('nnw-w2n-error');
+    const raw = wordsInput.value.trim();
+    $('w2n-card').classList.add('hidden');
+    setError(errEl, null);
+    if (!raw) return;
+
+    const r = wordsToNumber(raw);
+    if (!r.ok) {
+      setError(errEl, r.error!);
+      return;
+    }
+    $('w2n-formatted').textContent = formatNumber(r.value);
+    $('w2n-nepali-digits').textContent = toNepaliDigits(formatNumber(r.value));
+    $('copy-w2n').dataset.num = r.value;
+    $('w2n-card').classList.remove('hidden');
+  }
+
+
+  // ── Copy helpers ───────────────────────────────────────────
+  async function copyText(text: string, btn: HTMLButtonElement, label: string) {
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    btn.textContent = 'Copied ✓';
+    if (copyTimer) clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => { btn.textContent = label; }, 1600);
+  }
+
+  $('copy-main').addEventListener('click', function (this: HTMLButtonElement) {
+    if (!lastResults) return;
+    const map: Record<string, string> = {
+      np: lastResults.nepaliWords!,
+      en: lastResults.englishWords!,
+      digits: lastResults.formattedAscii!,
+      cheque: lastResults.chequeNepali! + '\n' + lastResults.chequeEnglish!,
+    };
+    const labels: Record<string, string> = { np: 'Copy', en: 'Copy', digits: 'Copy', cheque: 'Copy' };
+    copyText(map[outTab], this, labels[outTab]);
+  });
+
+  $('copy-cheque').addEventListener('click', function (this: HTMLButtonElement) {
+    if (!lastResults) return;
+    copyText(lastResults.chequeNepali! + '\n' + lastResults.chequeEnglish!, this, 'Copy Cheque Text');
+  });
+
+  $('copy-w2n').addEventListener('click', function (this: HTMLButtonElement) {
+    copyText(this.dataset.num || '', this, 'Copy Number');
+  });
+
+  // ── Init ───────────────────────────────────────────────────
+  const init = root.dataset.initial || '';
+  if (init) {
+    input.value = init;
+    recalc();
+  } else {
+    input.value = '';
+    recalc();
+  }
+</script>

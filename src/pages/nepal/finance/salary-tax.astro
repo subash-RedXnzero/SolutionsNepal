@@ -1,0 +1,28 @@
+---
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+const target = '/nepal/finance/salary-checker';
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nepal Salary Calculator | SolutionsNepal</title>
+    <meta name="description" content="This page has moved. Use the Nepal Salary Calculator." />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={`https://solutionsnepal.com${target}`} />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <Disclaimer variant="tax" />
+
+  <script is:inline>
+      window.location.replace("/nepal/finance/salary-checker");
+    </script>
+  </head>
+  <body>
+    <main style="padding: 48px 20px; text-align: center;">
+      <h1 style="font-size: 20px; font-weight: 700;">This tool has moved</h1>
+      <p style="margin: 12px 0 20px;">The Nepal Salary &amp; Tax Calculator is now the <strong>Nepal Salary Calculator</strong>.</p>
+      <a href={target} style="font-weight: 600; color: #DC143C;">Go to the new tool →</a>
+    </main>
+  </body>
+</html>

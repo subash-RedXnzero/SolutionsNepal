@@ -1,0 +1,452 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import { Calculator } from '@lucide/astro';
+import { PURITIES, TENURE_QUICK, DEFAULTS } from '../../../data/gold-loan.js';
+import { getGoldPriceAsync } from '../../../lib/nepal/gold-price.js';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'Gold Loan Calculator Nepal – Calculate Gold Loan & EMI | SolutionsNepal';
+const description = 'Calculate your estimated gold loan amount, EMI, interest and repayment using gold weight, purity, Nepal gold price and loan-to-value.';
+const canonical = 'https://solutionsnepal.com/nepal/finance/gold-loan-calculator';
+
+let livePrice = 0;
+let priceLive = false;
+let priceDate = '';
+try {
+  const gd = await getGoldPriceAsync();
+  livePrice = gd?.fineGold?.pricePerTola || 0;
+  priceLive = !!gd?.isLive;
+  priceDate = gd?.lastUpdated || '';
+} catch { livePrice = 0; }
+
+const faq = [
+  { q:'How much loan can I get against gold in Nepal?', a:'It depends on weight, purity, the current gold price and the lender\u2019s LTV limit. This calculator multiplies those to estimate your maximum eligible loan — enter your gold details above.' },
+  { q:'How is gold loan EMI calculated?', a:'With the standard amortisation formula: EMI = P × r × (1+r)^n ÷ ((1+r)^n − 1), where r is the monthly interest rate and n is the number of months. Longer tenures lower the EMI but raise total interest.' },
+  { q:'Does gold purity affect the loan amount?', a:'Yes. Lenders value 24K at full price, 22K at roughly 22/24 and 18K at 18/24 of the per-tola rate — so the same weight in 18K borrows noticeably less than in 24K.' },
+  { q:'What LTV do Nepali banks offer on gold loans?', a:'LTV limits differ by lender and can change with policy — there is no single universal figure. This calculator defaults to an editable 75% planning assumption; always confirm the current limit with your bank.' },
+  { q:'What happens if I cannot repay a gold loan?', a:'The lender can auction the pledged gold to recover dues, as per the loan agreement. Borrow only what your monthly budget can service and read the terms carefully.' },
+  { q:'Is the calculator price the actual market price?', a:'The prefilled rate comes from the published Nepal gold price feed when available (otherwise enter it manually) — but lenders apply their own valuation on the pledge day, so confirm before borrowing.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'Gold Loan Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Finance', href:'/nepal/finance'}, {label:'Gold Loan Calculator'}]} />
+
+    <div class="mb-2.5">
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">Gold Loan Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[660px]" style="color:var(--nk-text-secondary);">Estimate how much you could borrow against your gold and calculate your monthly EMI, total interest and repayment amount.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.8fr_400px] gap-4 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-2.5 min-w-0" id="input-col">
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◈</span> Your Gold</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="gl-weight">Gold weight</label>
+              <div class="flex gap-1.5 mb-2" role="radiogroup" aria-label="Weight unit">
+                <button type="button" id="unit-tola" class="seg-btn seg-lg seg-active" data-unit="tola" role="radio" aria-checked="true">Tola</button>
+                <button type="button" id="unit-gram" class="seg-btn seg-lg" data-unit="gram" role="radio" aria-checked="false">Grams (g)</button>
+              </div>
+              <div class="cm-box"><input id="gl-weight" type="text" inputmode="decimal" placeholder="e.g. 10" class="cm-input" style="padding-left:12px;" /><span class="cm-suffix" id="weight-unit-label">tola</span></div>
+              <p class="text-[10.5px] mt-1 tabular-nums" style="color:var(--nk-text-tertiary);" id="weight-conv">1 tola ≈ 11.6638 grams</p>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="gl-price">Gold price per tola</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="gl-price" type="text" inputmode="decimal" value={livePrice>0 ? livePrice.toLocaleString('en-IN') : ''} placeholder="e.g. 3,00,000" class="cm-input" /></div>
+              <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">{priceLive ? `Live FENEGOSIDA rate · ${priceDate} — editable.` : `${priceDate ? `Rate as of ${priceDate} — verify before borrowing.` : 'Enter the current rate.'} Gold prices can change daily.`}</p>
+            </div>
+          </div>
+          <div class="mt-2.5">
+            <p class="cm-label mb-1">Gold purity <span class="font-normal" style="color:var(--nk-text-tertiary);">— purity affects estimated gold value</span></p>
+            <div class="flex flex-wrap gap-1.5" id="purity-chips" role="radiogroup" aria-label="Gold purity">
+              {PURITIES.map(p=> <button type="button" class={`chip purity-chip${p.id===DEFAULTS.purity?' chip-active':''}`} data-purity={p.id} role="radio" aria-checked={p.id===DEFAULTS.purity?'true':'false'} title={p.desc}>{p.label}</button>)}
+            </div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">₨</span> Loan Terms</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="gl-ltv">Loan-to-value (LTV)</label><div class="cm-box"><input id="gl-ltv" type="text" inputmode="decimal" value={String(DEFAULTS.ltvPct)} class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">%</span></div>
+              <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">LTV determines how much of the estimated gold value can be borrowed. Lenders set their own limits.</p>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="gl-rate">Interest rate</label><div class="cm-box"><input id="gl-rate" type="text" inputmode="decimal" placeholder="12.5" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">% p.a.</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="gl-tenure">Loan tenure</label>              <div class="cm-box"><input id="gl-tenure" type="text" inputmode="numeric" value={String(DEFAULTS.tenureValue)} class="cm-input" style="padding-left:10px;" />
+              <span class="cm-suffix" role="radiogroup" aria-label="Tenure unit"><button type="button" id="ten-mo" class="unit-mini unit-active" data-tenure-unit="months" role="radio" aria-checked="true">Mo</button><button type="button" id="ten-yr" class="unit-mini" data-tenure-unit="years" role="radio" aria-checked="false">Yr</button></span></div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                {TENURE_QUICK.map(t=> <button type="button" class="chip tenure-chip" data-months={String(t.months)}>{t.label}</button>)}
+              </div>
+            </div>
+            <div class="cm-field"><label class="cm-label">Loan amount</label>
+              <div class="flex gap-1.5 mb-2" role="radiogroup" aria-label="Loan amount mode">
+                <button type="button" class="seg-btn seg-active" data-loanmode="max" role="radio" aria-checked="true">Maximum eligible</button>
+                <button type="button" class="seg-btn" data-loanmode="custom" role="radio" aria-checked="false">Choose amount</button>
+              </div>
+              <div class="cm-box hidden" id="custom-amt-wrap"><span class="cm-prefix">Rs</span><input id="gl-custom" type="text" inputmode="decimal" placeholder="e.g. 3,00,000" class="cm-input" disabled /></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2.5">
+            <div class="cm-field"><label class="cm-label" for="gl-fee">Processing fee <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></label><div class="cm-box"><input id="gl-fee" type="text" inputmode="decimal" placeholder="e.g. 1" class="cm-input" style="padding-left:10px;" />
+              <span class="cm-suffix" role="radiogroup" aria-label="Fee type"><button type="button" id="fee-pct" class="unit-mini unit-active" data-fee="pct" role="radio" aria-checked="true">%</button><button type="button" id="fee-fix" class="unit-mini" data-fee="fixed" role="radio" aria-checked="false">Rs</button></span></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="flex gap-2.5">
+          <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> <span id="calc-label">Calculate Gold Loan</span></button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2 text-[13px] font-semibold" style="border-radius:12px;">Reset</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium" style="color:#DC2626;"></p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated Maximum Loan</p>
+            <p class="text-[26px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter weight, price and loan terms, then click <strong>Calculate Gold Loan</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+            <div class="px-4 pt-4 pb-3 text-center res-hero" style="border-bottom:1px solid var(--nk-border);">
+              <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated Maximum Loan</p>
+              <p class="text-[32px] font-extrabold leading-tight tabular-nums nk-gradient-text" id="res-max">—</p>
+              <p class="text-[11px] tabular-nums mt-1" style="color:var(--nk-text-secondary);">Based on <span id="res-based">—</span></p>
+            </div>
+            <div class="p-3.5 space-y-2.5">
+              <div class="rounded-xl text-[12px]" style="border:1px solid var(--nk-border);" id="res-grid"></div>
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <div class="flex justify-between text-[11.5px] tabular-nums"><span style="color:var(--nk-text-secondary);">Gold value</span><strong style="color:var(--nk-text);" id="res-gold">—</strong></div>
+                <div class="h-2.5 rounded-full mt-1.5 overflow-hidden" style="background:var(--nk-muted);"><div id="res-goldbar" class="h-full rounded-full" style="width:100%; background:var(--nk-border-strong);"></div></div>
+                <div class="flex justify-between text-[11.5px] tabular-nums mt-2"><span style="color:var(--nk-text-secondary);">Loan (<span id="res-ltv-label">—</span>)</span><strong style="color:var(--nk-accent);" id="res-loanbar">—</strong></div>
+                <div class="h-2.5 rounded-full mt-1.5 overflow-hidden" style="background:var(--nk-muted);"><div id="res-loanfill" class="h-full rounded-full" style="width:0%; background:var(--nk-gradient-primary); transition:width 250ms ease;"></div></div>
+              </div>
+              <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+                <strong style="color:var(--nk-text);">Important:</strong> This is an estimate, not a loan offer. Banks and financial institutions in Nepal may use their own gold valuation, purity assessment, LTV limits, interest rates, fees, and eligibility requirements. The final loan amount may therefore differ.
+              </div>
+              <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Gold Loan Calculation Works</h2>
+        <ol class="text-[12.5px] leading-relaxed list-decimal pl-5 space-y-1" style="color:var(--nk-text-secondary);">
+          <li>Enter your gold weight.</li>
+          <li>Select the gold purity.</li>
+          <li>Enter the current gold price.</li>
+          <li>Choose the applicable LTV.</li>
+          <li>Enter the interest rate and loan tenure.</li>
+          <li>SolutionsNepal estimates your maximum loan and repayment amount.</li>
+        </ol>
+      </section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Gold Loan EMI Calculator Nepal</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">A gold loan EMI calculator for Nepal helping you plan repayment against your gold — the same amortisation formula banks use, applied to your eligible amount, interest rate and tenure.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Gold Loan Interest Calculator Nepal</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Compare total interest across tenures before pledging gold: longer terms shrink the EMI but raise the lifetime interest cost on your gold loan amount.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+    </div>
+
+    <Disclaimer variant="finance" />
+    <RelatedTools tools={[{title:'Gold Price Nepal', description:'Today\u2019s gold rate per tola', href:'/nepal/gold-price-nepal'}, {title:'EMI Calculator', description:'Monthly EMI for any loan', href:'/nepal/finance/emi-calculator'}, {title:'Loan Eligibility Calculator', description:'How much can you borrow?', href:'/nepal/finance/loan-eligibility-calculator-nepal'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .sec-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--nk-text); margin-bottom:5px; letter-spacing:-0.01em; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11px; font-weight:500; cursor:pointer; transition:all 140ms ease; font-family:inherit; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .cm-field{ display:flex; flex-direction:column; gap:4px; }
+  .cm-label{ font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:36px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-box.field-error{ border-color:#DC2626; box-shadow:0 0 0 3px #FECACA; }
+  .cm-box.field-error:focus-within{ border-color:#DC2626; box-shadow:0 0 0 3px #FECACA; }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:8px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; outline:none; border-radius:10px; color:var(--nk-text); }
+  .unit-mini{ padding:2px 8px; border-radius:9999px; font-size:10.5px; font-weight:600; border:1px solid transparent; background:transparent; color:var(--nk-text-tertiary); cursor:pointer; font-family:inherit; }
+  .unit-mini.unit-active{ background:var(--nk-accent); color:#fff; }
+  .unit-mini:focus-visible{ outline:2px solid var(--nk-accent); outline-offset:1px; }
+  .seg-btn{ flex:1; display:inline-flex; align-items:center; justify-content:center; height:30px; border-radius:8px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11.5px; font-weight:500; cursor:pointer; transition:all 120ms ease; font-family:inherit; }
+  .seg-btn.seg-active{ background:var(--nk-accent); border-color:var(--nk-accent); color:#fff; font-weight:600; }
+  .seg-btn.seg-lg{ height:38px; font-size:13px; }
+  #gl-weight{ padding-right:56px !important; padding-left:12px !important; }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); }
+  .hidden{ display:none !important; }
+  .calc-loading{ opacity:.65; pointer-events:none; }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input{ font-size:16px !important; }
+  }
+</style>
+
+<script>
+  import { calcGoldLoan, formatNPR, tolaToGrams } from '../../../lib/calculators/gold-loan.js';
+  import { GRAMS_PER_TOLA } from '../../../data/gold-loan.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let unit = 'tola';
+  let purity = '22K';
+  let loanMode = 'max';
+  let tenureUnit = 'months';
+  let feeMode = 'pct';
+
+  function setChip(selector, attr, val){
+    document.querySelectorAll(selector).forEach(c=>{
+      const on=c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+  function setMini(selector, attr, val){
+    document.querySelectorAll(selector).forEach(b=>{
+      const on=b.dataset[attr]===String(val);
+      b.classList.toggle('unit-active', on);
+      b.setAttribute('aria-checked', String(on));
+    });
+  }
+  function markDirty(){ showStale(); }
+  function showStale(){
+    if(!$('res-body') || $('res-body').classList.contains('hidden')) return;
+    if(!$('stale-note')){
+      const d=document.createElement('div');
+      d.id='stale-note';
+      d.className='px-3.5 py-2 text-[11px] font-semibold text-center';
+      d.style.cssText='background:#FFFBEB; border-bottom:1px solid #FDE68A; color:#92400E;';
+      d.textContent='Inputs changed — recalculate to update results';
+      $('result-card').prepend(d);
+    }
+  }
+
+  // unit + purity + tenure + fee controls
+  document.querySelectorAll('[data-unit]').forEach(b=> b.addEventListener('click', ()=>{
+    unit=b.dataset.unit;
+    document.querySelectorAll('[data-unit]').forEach(x=>{
+      const on=x===b;
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    $('weight-unit-label').textContent = unit==='tola' ? 'tola' : 'g';
+    updateConv(); markDirty();
+  }));
+  document.querySelectorAll('.purity-chip').forEach(b=> b.addEventListener('click', ()=>{ purity=b.dataset.purity; setChip('.purity-chip','purity',purity); markDirty(); }));
+  document.querySelectorAll('[data-tenure-unit]').forEach(b=> b.addEventListener('click', ()=>{
+    tenureUnit=b.dataset.tenureUnit; setMini('[data-tenure-unit]','tenureUnit',tenureUnit); markDirty();
+  }));
+  document.querySelectorAll('.tenure-chip').forEach(b=> b.addEventListener('click', ()=>{
+    $('gl-tenure').value=b.dataset.months;
+    tenureUnit='months'; setMini('[data-tenure-unit]','tenureUnit','months');
+    markDirty();
+  }));
+  document.querySelectorAll('[data-fee]').forEach(b=> b.addEventListener('click', ()=>{
+    feeMode=b.dataset.fee; setMini('[data-fee]','fee',feeMode);
+    $('gl-fee').placeholder = feeMode==='fixed' ? 'e.g. 2,000' : 'e.g. 1';
+    markDirty();
+  }));
+  document.querySelectorAll('[data-loanmode]').forEach(b=> b.addEventListener('click', ()=>{
+    loanMode=b.dataset.loanmode;
+    document.querySelectorAll('[data-loanmode]').forEach(x=>{
+      const on=x===b;
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    const custom = loanMode==='custom';
+    $('gl-custom').disabled=!custom;
+    $('custom-amt-wrap').classList.toggle('hidden', !custom);
+    if(!custom) $('gl-custom').value='';
+    if(custom) $('gl-custom')?.focus();
+    markDirty();
+  }));
+
+  function updateConv(){
+    const w=Number(String($('gl-weight').value).replace(/,/g,''))||0;
+    $('weight-conv').textContent = w>0
+      ? (unit==='tola' ? `${w} tola ≈ ${(w*GRAMS_PER_TOLA).toLocaleString('en-IN',{maximumFractionDigits:2})} grams` : `${w} g ≈ ${(w/GRAMS_PER_TOLA).toLocaleString('en-IN',{maximumFractionDigits:3})} tola`)
+      : '1 tola ≈ 11.6638 grams';
+  }
+
+  function clearFieldError(el){
+    el?.closest('.cm-box')?.classList.remove('field-error');
+  }
+  function flagField(id){
+    const el=$(id);
+    const box=el?.closest('.cm-box');
+    if(!box) return;
+    box.classList.remove('field-error');
+    void box.offsetWidth;
+    box.classList.add('field-error');
+    if(box.animate) box.animate(
+      [{transform:'translateX(0)'},{transform:'translateX(4px)'},{transform:'translateX(-4px)'},{transform:'translateX(0)'}],
+      {duration:220}
+    );
+  }
+  // inputs
+  document.querySelectorAll('.cm-input').forEach(el=>{
+    el.addEventListener('input', ()=>{
+      if(el.value.includes('-')) el.value=el.value.replace(/-/g,'');
+      clearFieldError(el);
+      if(el.id==='gl-weight') updateConv();
+      markDirty();
+    });
+    el.addEventListener('blur', ()=>{
+      const raw=String(el.value).replace(/,/g,'').trim();
+      if(raw==='') return;
+      const n=Number(raw);
+      if(Number.isFinite(n) && n>=0) el.value=(Math.round(n*100)/100).toLocaleString('en-IN',{maximumFractionDigits:2});
+      markDirty();
+    });
+    el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  });
+
+  function tenureMonths(){
+    const v=Number(String($('gl-tenure').value).replace(/,/g,''));
+    if(!Number.isFinite(v) || v<=0) return NaN;
+    return tenureUnit==='years' ? Math.round(v*12) : Math.floor(v);
+  }
+
+  function doCalc(){
+    const btn0=$('calc-btn');
+    if(btn0?.classList.contains('calc-loading')) return;
+    const hint=$('calc-hint');
+    if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const wRaw=String($('gl-weight').value).replace(/,/g,'').trim();
+    const w=Number(wRaw)||0;
+    const weightTola = unit==='tola' ? w : w/GRAMS_PER_TOLA;
+    const priceRaw=String($('gl-price').value).replace(/,/g,'').trim();
+    const price=Number(priceRaw)||0;
+    const ltvRaw=String($('gl-ltv').value).replace(/,/g,'').trim();
+    const ltv=ltvRaw==='' ? NaN : Number(ltvRaw);
+    const rateRaw=String($('gl-rate').value).replace(/,/g,'').trim();
+    const rate=rateRaw==='' ? 0 : Number(rateRaw);
+    const n=tenureMonths();
+    const errs=[];
+    if(!(w>0)) errs.push({id:'gl-weight', msg:'Enter a gold weight greater than 0.'});
+    if(!(price>0)) errs.push({id:'gl-price', msg:'Enter a valid gold price per tola.'});
+    if(!Number.isFinite(ltv) || !(ltv>=0 && ltv<=100)) errs.push({id:'gl-ltv', msg:'Enter an LTV between 0 and 100.'});
+    if(!Number.isFinite(rate) || !(rate>=0)) errs.push({id:'gl-rate', msg:'Interest rate cannot be negative.'});
+    if(!Number.isFinite(n) || n<=0) errs.push({id:'gl-tenure', msg:'Enter a valid loan tenure.'});
+    // probe max first for custom-mode cap check
+    const probe=calcGoldLoan({weightTola, pricePerTola:price, purity, ltvPct:ltv, loanAmount:0, annualRatePct:rate, tenureMonths:n, feeMode:'none', feeValue:0});
+    let customAmt=0;
+    if(loanMode==='custom'){
+      customAmt=Number(String($('gl-custom').value).replace(/,/g,''))||0;
+      if(!(customAmt>0)) errs.push({id:'gl-custom', msg:'Enter your chosen loan amount.'});
+      else if(customAmt>probe.maxLoan) errs.push({id:'gl-custom', msg:`Custom amount exceeds the estimated maximum of ${formatNPR(probe.maxLoan)}.`});
+    }
+    if(errs.length){
+      $('res-empty')?.classList.remove('hidden');
+      $('res-body')?.classList.add('hidden');
+      errs.forEach(e=> flagField(e.id));
+      $(errs[0].id)?.focus({preventScroll:true});
+      if(hint){ hint.textContent='⚠ '+errs[0].msg; hint.classList.remove('hidden'); }
+      return;
+    }
+    // loading confirmation
+    const btn=$('calc-btn'), label=$('calc-label');
+    btn.classList.add('calc-loading');
+    const prevLabel=label.textContent;
+    label.textContent='Calculating…';
+    setTimeout(()=>{
+      const r=calcGoldLoan({
+        weightTola, pricePerTola:price, purity, ltvPct:ltv,
+        loanAmount: loanMode==='custom' ? customAmt : probe.maxLoan,
+        annualRatePct:rate, tenureMonths:n,
+        feeMode: $('gl-fee').value.trim()==='' ? 'none' : feeMode,
+        feeValue: $('gl-fee').value,
+      });
+      btn.classList.remove('calc-loading');
+      label.textContent=prevLabel;
+      window.__glCalc=r;
+      $('stale-note')?.remove();
+      $('res-empty')?.classList.add('hidden');
+      $('res-body')?.classList.remove('hidden');
+
+      $('res-max').textContent=formatNPR(r.maxLoan);
+      $('res-based').textContent=`${weightTola.toLocaleString('en-IN',{maximumFractionDigits:3})} tola gold · ${purity} · ${formatNPR(price)}/tola · ${ltv}% LTV`;
+      const rows=[
+        ['Estimated Gold Value', formatNPR(r.goldValue)],
+        [loanMode==='custom' ? 'Selected Loan' : 'Maximum Loan', formatNPR(r.principal)],
+        ['Monthly EMI', `${formatNPR(r.emi)} / mo`],
+        ['Total Interest', formatNPR(r.totalInterest)],
+        ['Total Repayment', formatNPR(r.totalRepayment)],
+        ['Processing Fee', r.fee>0 ? formatNPR(r.fee) : '—'],
+      ];
+      if(r.fee>0) rows.push(['Total Cost (incl. fee)', formatNPR(r.totalCost)]);
+      $('res-grid').innerHTML=rows.map(([k,v],i)=>`<div class="flex justify-between px-3 py-2 tabular-nums"${i>0?' style="border-top:1px solid var(--nk-border);"':''}><span style="color:var(--nk-text-secondary);">${k}</span><strong style="color:var(--nk-text);">${v}</strong></div>`).join('');
+      $('res-gold').textContent=formatNPR(r.goldValue);
+      $('res-loanbar').textContent=formatNPR(r.principal);
+      $('res-ltv-label').textContent=`${ltv}% LTV`;
+      $('res-loanfill').style.width=(r.goldValue>0?Math.min(100,(r.principal/r.goldValue)*100):0)+'%';
+
+      if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+    }, 350);
+  }
+
+  function doReset(){
+    $('gl-weight').value=''; $('gl-custom').value=''; $('gl-fee').value='';
+    $('gl-rate').value=''; $('gl-tenure').value=String(DEFAULTS.tenureValue);
+    unit='tola';
+    document.querySelectorAll('[data-unit]').forEach(x=>{
+      const on=x.dataset.unit==='tola';
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    $('weight-unit-label').textContent='tola';
+    updateConv();
+    purity='22K'; setChip('.purity-chip','purity','22K');
+    $('gl-ltv').value=String(DEFAULTS.ltvPct);
+    loanMode='max';
+    document.querySelectorAll('[data-loanmode]').forEach(x=>{
+      const on=x.dataset.loanmode==='max';
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    $('gl-custom').disabled=true; $('custom-amt-wrap').classList.add('hidden');
+    tenureUnit='months'; setMini('[data-tenure-unit]','tenureUnit','months');
+    feeMode='pct'; setMini('[data-fee]','fee','pct'); $('gl-fee').placeholder='e.g. 1';
+    window.__glCalc=null;
+    document.querySelectorAll('.cm-box.field-error').forEach(b=> b.classList.remove('field-error'));
+    $('stale-note')?.remove();
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalc);
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('copy-btn')?.addEventListener('click', async()=>{
+    if($('res-body')?.classList.contains('hidden')){
+      doCalc();
+      setTimeout(async()=>{
+        if($('res-body')?.classList.contains('hidden')) return;
+        await copySummary();
+      }, 450);
+      return;
+    }
+    await copySummary();
+  });
+  async function copySummary(){
+    const r=window.__glCalc; if(!r) return;
+    const text=`Gold Loan Estimate\nMax loan: ${formatNPR(r.maxLoan)} (${formatNPR(r.principal)} selected)\nEMI: ${formatNPR(r.emi)}/mo × ${r.inputs.months} · Interest ${formatNPR(r.totalInterest)} · Repayment ${formatNPR(r.totalRepayment)}\n— SolutionsNepal gold loan calculator`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const t=b.textContent; b.textContent='Copied!'; setTimeout(()=> b.textContent=t,1500);}catch{}
+  }
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+
+  updateConv();
+</script>

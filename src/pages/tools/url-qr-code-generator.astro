@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import QrCodeGenerator from '../../components/tools/QrCodeGenerator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'URL QR Code Generator – Turn Any Link Into a QR Code | SolutionsNepal';
+const description = 'Convert any website link into a free QR code instantly. Auto-completes bare domains, supports http and https, downloads as PNG or SVG.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'URL QR Generator' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">URL QR Code Generator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Bridge print and web: any poster, card or receipt can carry your link.</p>
+    </div>
+
+    <QrCodeGenerator initialType="url" />
+
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Smart URL handling</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Type <strong>solutionsnepal.com</strong> or <strong>www.solutionsnepal.com/page</strong> and the tool completes it to
+          <strong>https://…</strong> so scanners open the site directly. URLs that already include a scheme — including
+          http:// or anything unusual like ftp:// — are encoded exactly as given; we never rewrite a destination
+          behind your back.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Practical uses</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• Restaurant menus that link to an online menu page</li>
+          <li>• Product packaging linking to manuals or registration</li>
+          <li>• Event posters linking to ticket pages</li>
+          <li>• Business cards pointing to portfolios or LinkedIn profiles</li>
+          <li>• Payment reminders linking to a payment page</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Tip: shorter links make cleaner QRs</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Every character increases QR density. A short canonical URL scans faster from distance and survives
+          small print better. If your link has long tracking parameters, consider a cleaner alias before encoding.
+        </p>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        More: <a class="underline hover:opacity-80" href="/tools/qr-code-generator" style="color:var(--nk-accent);">all QR types</a> ·
+        <a class="underline hover:opacity-80" href="/tools/wifi-qr-code-generator" style="color:var(--nk-accent);">Wi-Fi QR</a> ·
+        <a class="underline hover:opacity-80" href="/tools/email-qr-code-generator" style="color:var(--nk-accent);">Email QR</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

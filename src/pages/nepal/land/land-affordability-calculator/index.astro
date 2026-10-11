@@ -1,0 +1,774 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { MapPin, Layers, Wallet, Calculator, TrendingUp, Clock, Building2, Scale, Home, Info, Share2, Printer } from '@lucide/astro';
+
+// Data is client-side via imports in the island script; keep frontmatter light.
+const title = 'Land Affordability Calculator Nepal | SolutionsNepal';
+const description = 'Calculate how much land you can afford in Nepal based on your income, savings, expenses, down payment and estimated loan EMI.';
+
+const faqItems = [
+  { q: 'How much land can I afford in Nepal?', a: 'It depends on your monthly income, household expenses, existing EMI, savings available for land, and estimated loan terms. Enter those figures to see an estimated maximum land budget and how much area that buys at your local price.' },
+  { q: 'How is land affordability calculated?', a: 'We estimate your monthly cash flow and a planning assumption for EMI to income ratio, then derive the maximum loan you could service and add your available savings minus estimated purchase costs. Assumptions are shown and editable.' },
+  { q: 'How much income do I need to buy land?', a: 'Use the How much income do I need section. Enter target land price, down payment, loan rate and term plus your existing EMI and desired EMI to income ratio to see an estimated minimum monthly income.' },
+  { q: 'Can I buy land with a bank loan in Nepal?', a: 'Many buyers use a land or home loan, but eligibility depends on the lender and your profile. This calculator shows an estimated EMI and affordability status, not a guarantee of approval.' },
+  { q: 'How much down payment do I need?', a: 'It varies by lender and land type. The calculator suggests an estimated down payment and lets you edit it. A larger down payment lowers your loan and EMI.' },
+  { q: 'Does the calculator include registration costs?', a: 'Yes, as configurable estimates for registration, legal, brokerage and contingency. Actual government charges vary by location and transaction, so verify at the relevant office.' },
+  { q: 'Can I calculate land affordability in Aana and Ropani?', a: 'Yes. Choose any supported unit including Aana, Ropani, Paisa, Daam, Dhur, Kattha, Bigha, square feet or square meter. Conversions are handled automatically.' },
+  { q: 'Is the result guaranteed by a bank?', a: 'No. The result is a planning estimate. Loan eligibility, land prices, taxes and fees vary. Verify with your bank, lender or the relevant government office.' },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Land Affordability Calculator Nepal',
+      description: 'Calculate how much land you can afford in Nepal based on your income, savings, expenses, down payment and estimated loan EMI.',
+      url: 'https://solutionsnepal.com/nepal/land/land-affordability-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-4 sm:py-5">
+    <Breadcrumbs items={[{ label: 'Land & Property', href: '/nepal/land' }, { label: 'Land Affordability Calculator' }]} />
+
+    <div class="mb-4">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">Land Affordability Calculator Nepal</h1>
+      <p class="text-[13px] leading-relaxed max-w-[680px]" style="color: var(--nk-text-secondary);">Find out how much land you can realistically afford based on your income, savings, expenses, and financing options.</p>
+      <p class="text-[11px] mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);"><Info size={11} /> Estimates only. Actual loan eligibility, land prices, taxes, and registration costs vary.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4 items-start">
+
+      <!-- LEFT: INPUTS -->
+      <div class="space-y-3 min-w-0">
+
+        <!-- Location -->
+        <section class="nk-card p-4">
+          <h2 class="text-[12px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><MapPin size={13} /> Where are you planning to buy land?</h2>
+          <select id="location" class="nk-input text-[14px]">
+            <option value="kathmandu">Kathmandu</option>
+            <option value="lalitpur">Lalitpur</option>
+            <option value="bhaktapur">Bhaktapur</option>
+            <option value="pokhara">Pokhara</option>
+            <option value="bharatpur">Bharatpur</option>
+            <option value="biratnagar">Biratnagar</option>
+            <option value="butwal">Butwal</option>
+            <option value="dharan">Dharan</option>
+            <option value="nepalgunj">Nepalgunj</option>
+            <option value="other-city">Other major city</option>
+            <option value="terai">Terai</option>
+            <option value="hills">Hills</option>
+            <option value="custom">Custom</option>
+          </select>
+          <input id="custom-location" type="text" placeholder="Enter your location" class="nk-input text-[14px] mt-2 hidden" />
+          <p class="text-[11px] mt-1.5" style="color: var(--nk-text-tertiary);">Your local price matters more than the city name. Enter it below.</p>
+        </section>
+
+        <!-- Land Details -->
+        <section class="nk-card p-4">
+          <h2 class="text-[12px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Layers size={13} /> Land details</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="land-unit" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Land unit</label>
+              <select id="land-unit" class="nk-input text-[14px]">
+                <option value="aana">Aana</option>
+                <option value="ropani">Ropani</option>
+                <option value="paisa">Paisa</option>
+                <option value="daam">Daam</option>
+                <option value="dhur">Dhur</option>
+                <option value="kattha">Kattha</option>
+                <option value="bigha">Bigha</option>
+                <option value="sqft">Square feet</option>
+                <option value="sqm">Square meter</option>
+              </select>
+            </div>
+            <div>
+              <label for="land-size" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Land size</label>
+              <input id="land-size" type="text" inputmode="decimal" placeholder="4" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="price-per-unit" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Price per unit <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+              <input id="price-per-unit" type="text" inputmode="decimal" placeholder="5,00,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+          </div>
+          <p class="text-[12px] mt-3 tabular-nums px-3 py-2 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text);">Estimated land price: <strong id="land-price-preview">—</strong></p>
+        </section>
+
+        <!-- Finances -->
+        <section class="nk-card p-4">
+          <h2 class="text-[12px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color: var(--nk-text);"><Wallet size={13} /> Your finances</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="monthly-income" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Monthly income</label>
+              <input id="monthly-income" type="text" inputmode="decimal" placeholder="80,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="other-income" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Other monthly income</label>
+              <input id="other-income" type="text" inputmode="decimal" placeholder="20,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="existing-emi" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Existing monthly EMI</label>
+              <input id="existing-emi" type="text" inputmode="decimal" placeholder="15,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="monthly-expenses" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Monthly household expenses</label>
+              <input id="monthly-expenses" type="text" inputmode="decimal" placeholder="35,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="current-savings" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Current savings</label>
+              <input id="current-savings" type="text" inputmode="decimal" placeholder="15,00,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="savings-for-land" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Savings available for land</label>
+              <input id="savings-for-land" type="text" inputmode="decimal" placeholder="10,00,000" class="nk-input text-[14px] tabular-nums" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Financing -->
+        <section class="nk-card p-4">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <h2 class="text-[12px] font-semibold uppercase tracking-wider flex items-center gap-1.5" style="color: var(--nk-text);"><Building2 size={13} /> Will you use a land loan?</h2>
+            <label class="flex items-center gap-2 text-[12px] font-medium" style="color: var(--nk-text);">
+              <input type="checkbox" id="use-loan" checked /> Yes
+            </label>
+          </div>
+          <div id="loan-fields" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="interest-rate" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Interest rate <span style="color: var(--nk-text-tertiary);">% p.a.</span></label>
+              <input id="interest-rate" type="text" inputmode="decimal" placeholder="10" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="loan-term" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Loan term</label>
+              <select id="loan-term" class="nk-input text-[14px]">
+                <option value="5">5 years</option>
+                <option value="10" selected>10 years</option>
+                <option value="15">15 years</option>
+                <option value="20">20 years</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div id="custom-term-row" class="hidden">
+              <label for="custom-years" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Custom years</label>
+              <input id="custom-years" type="text" inputmode="decimal" placeholder="12" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="emi-ratio" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Planning assumption <span style="color: var(--nk-text-tertiary);">EMI to income</span></label>
+              <select id="emi-ratio" class="nk-input text-[14px]">
+                <option value="0.3">30% — conservative</option>
+                <option value="0.35" selected>35% — balanced</option>
+                <option value="0.4">40% — stretch</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-[11px] mt-2" style="color: var(--nk-text-tertiary);">Planning assumption only. Actual lender criteria may differ.</p>
+          <div id="emi-preview" class="hidden mt-3 text-[12px] tabular-nums px-3 py-2 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text);"></div>
+        </section>
+
+        <button type="button" id="calculate-btn" class="nk-btn nk-btn-primary w-full justify-center text-[14px] py-3"><Calculator size={16} /> Calculate affordability</button>
+
+        <!-- Additional costs (collapsible) -->
+        <section class="nk-card p-4">
+          <button type="button" id="costs-toggle" class="w-full flex items-center justify-between text-left">
+            <span class="text-[12px] font-semibold uppercase tracking-wider" style="color: var(--nk-text);">Additional purchase costs</span>
+            <span class="text-[11px] px-2 py-1 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">Optional</span>
+          </button>
+          <div id="costs-panel" class="hidden mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="cost-registration" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Registration % <span style="color: var(--nk-text-tertiary);">of land price</span></label>
+              <input id="cost-registration" type="text" inputmode="decimal" placeholder="5" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="cost-legal" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Legal %</label>
+              <input id="cost-legal" type="text" inputmode="decimal" placeholder="1" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="cost-brokerage" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Brokerage %</label>
+              <input id="cost-brokerage" type="text" inputmode="decimal" placeholder="2" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div>
+              <label for="cost-contingency" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Contingency %</label>
+              <input id="cost-contingency" type="text" inputmode="decimal" placeholder="2" class="nk-input text-[14px] tabular-nums" />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="cost-other" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Other costs <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+              <input id="cost-other" type="text" inputmode="decimal" placeholder="0" class="nk-input text-[14px] tabular-nums" />
+            </div>
+          </div>
+        </section>
+
+        <div class="flex flex-wrap gap-2">
+          <button type="button" id="share-btn" class="nk-btn nk-btn-secondary nk-btn-sm"><Share2 size={14} /> Share estimate</button>
+          <button type="button" id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm"><Printer size={14} /> Print</button>
+        </div>
+        <p id="share-status" class="hidden text-[11.5px]" style="color: var(--nk-text-tertiary);" role="status"></p>
+      </div>
+
+      <!-- RIGHT: STICKY RESULTS -->
+      <div class="lg:sticky lg:top-4 space-y-3">
+        <div class="nk-card p-4" id="result-card">
+          <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Your estimated affordability</p>
+          <p class="text-[26px] font-bold tabular-nums mt-1" style="color: var(--nk-text);" id="r-budget">—</p>
+          <p class="text-[11px]" style="color: var(--nk-text-tertiary);">Maximum affordable land budget</p>
+          <div class="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+            <div class="p-2.5 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+              <p style="color: var(--nk-text-tertiary);">Down payment</p>
+              <p class="text-[13px] font-bold tabular-nums" style="color: var(--nk-text);" id="r-down">—</p>
+            </div>
+            <div class="p-2.5 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+              <p style="color: var(--nk-text-tertiary);">Loan amount</p>
+              <p class="text-[13px] font-bold tabular-nums" style="color: var(--nk-text);" id="r-loan">—</p>
+            </div>
+            <div class="p-2.5 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+              <p style="color: var(--nk-text-tertiary);">Estimated EMI</p>
+              <p class="text-[13px] font-bold tabular-nums" style="color: var(--nk-text);" id="r-emi">—</p>
+            </div>
+            <div class="p-2.5 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+              <p style="color: var(--nk-text-tertiary);">EMI to income</p>
+              <p class="text-[13px] font-bold tabular-nums" style="color: var(--nk-text);" id="r-ratio">—</p>
+            </div>
+          </div>
+          <div class="mt-3 p-3 rounded-lg" style="background: var(--nk-accent-subtle); border: 1px solid var(--nk-border);">
+            <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Remaining monthly income</p>
+            <p class="text-[14px] font-bold tabular-nums" style="color: var(--nk-text);" id="r-remaining">—</p>
+          </div>
+          <div class="mt-3 p-2.5 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+            <p class="text-[11px]" style="color: var(--nk-text-tertiary);">Additional purchase costs</p>
+            <p class="text-[12px] font-semibold tabular-nums" style="color: var(--nk-text);" id="r-additional">—</p>
+            <p class="text-[11px] tabular-nums" style="color: var(--nk-text-tertiary);" id="r-cash">—</p>
+          </div>
+          <div class="mt-3" id="affordability-meter" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What land can I afford -->
+    <section class="mt-6 nk-card p-4">
+      <h2 class="text-[14px] font-semibold mb-1" style="color: var(--nk-text);">What land can I afford?</h2>
+      <p class="text-[11px] mb-3" style="color: var(--nk-text-tertiary);">See how much area your budget buys at different local prices.</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-[12px]">
+          <thead>
+            <tr style="color: var(--nk-text-tertiary);">
+              <th class="text-left font-medium py-2 pr-2">Price per <span id="what-unit-label">Aana</span></th>
+              <th class="text-right font-medium py-2 pl-2">Approx. affordable area</th>
+            </tr>
+          </thead>
+          <tbody id="what-table" class="tabular-nums"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Can I afford this land -->
+    <section class="mt-4 nk-card p-4">
+      <h2 class="text-[14px] font-semibold mb-2" style="color: var(--nk-text);">Can I afford this land?</h2>
+      <p class="text-[11px] mb-3" style="color: var(--nk-text-tertiary);">Check a specific plot without changing your main inputs.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <label for="check-price" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Land price <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="check-price" type="text" inputmode="decimal" placeholder="40,00,000" class="nk-input text-[14px] tabular-nums" />
+        </div>
+        <div>
+          <label for="check-down" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Down payment <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="check-down" type="text" inputmode="decimal" placeholder="12,00,000" class="nk-input text-[14px] tabular-nums" />
+        </div>
+        <div>
+          <label for="check-rate" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Interest %</label>
+          <input id="check-rate" type="text" inputmode="decimal" placeholder="10" class="nk-input text-[14px] tabular-nums" />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+        <div>
+          <label for="check-term" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Loan term</label>
+          <select id="check-term" class="nk-input text-[14px]">
+            <option value="5">5 years</option>
+            <option value="10" selected>10 years</option>
+            <option value="15">15 years</option>
+            <option value="20">20 years</option>
+          </select>
+        </div>
+        <div class="p-3 rounded-lg text-[12px] leading-relaxed" style="background: var(--nk-hover); border: 1px solid var(--nk-border);" id="check-result">
+          <p style="color: var(--nk-text-tertiary);">Enter a land price to check affordability.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cost breakdown -->
+    <section class="mt-4 nk-card p-4">
+      <h2 class="text-[14px] font-semibold mb-2" style="color: var(--nk-text);">How much will the purchase really cost?</h2>
+      <div id="cost-breakdown" class="text-[12.5px] leading-relaxed space-y-1.5 tabular-nums"></div>
+      <p class="text-[11px] mt-2" style="color: var(--nk-text-tertiary);">Assumptions are editable above. Actual government charges vary by location and transaction.</p>
+    </section>
+
+    <!-- Down payment planner -->
+    <section class="mt-4 nk-card p-4">
+      <h2 class="text-[14px] font-semibold mb-2" style="color: var(--nk-text);">How long will it take to save?</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <label for="save-required" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Required down payment <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="save-required" type="text" inputmode="decimal" placeholder="15,00,000" class="nk-input text-[14px] tabular-nums" />
+        </div>
+        <div>
+          <label for="save-current" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Current savings <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="save-current" type="text" inputmode="decimal" placeholder="8,00,000" class="nk-input text-[14px] tabular-nums" />
+        </div>
+        <div>
+          <label for="save-monthly" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Monthly savings <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="save-monthly" type="text" inputmode="decimal" placeholder="50,000" class="nk-input text-[14px] tabular-nums" />
+        </div>
+      </div>
+      <div class="mt-3 p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);" id="save-result">
+        <p class="text-[12px]" style="color: var(--nk-text-tertiary);">Enter your savings details to see an estimated timeline.</p>
+      </div>
+    </section>
+
+    <!-- Reverse calculator -->
+    <section class="mt-4 nk-card p-4">
+      <h2 class="text-[14px] font-semibold mb-2" style="color: var(--nk-text);">How much income do I need?</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <label for="need-price" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Target land price <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="need-price" type="text" inputmode="decimal" placeholder="40,00,000" class="nk-input text-[14px] tabular-nums" />
+        </div>
+        <div>
+          <label for="need-down" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Down payment <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="need-down" type="text" inputmode="decimal" placeholder="10,00,000" class="nk-input text-[14px] tabular-nums" />
+        </div>
+        <div>
+          <label for="need-existing" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Existing EMI <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="need-existing" type="text" inputmode="decimal" placeholder="15,000" class="nk-input text-[14px] tabular-nums" />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+        <div>
+          <label for="need-rate" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Interest %</label>
+          <input id="need-rate" type="text" inputmode="decimal" placeholder="10" class="nk-input text-[14px] tabular-nums" />
+        </div>
+        <div>
+          <label for="need-term" class="block text-[11px] font-medium mb-1" style="color: var(--nk-text-secondary);">Loan term</label>
+          <select id="need-term" class="nk-input text-[14px]">
+            <option value="5">5 years</option>
+            <option value="10" selected>10 years</option>
+            <option value="15">15 years</option>
+            <option value="20">20 years</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-3 p-3 rounded-lg text-[12.5px]" style="background: var(--nk-accent-subtle); border: 1px solid var(--nk-border);" id="need-result">
+        <p style="color: var(--nk-text-tertiary);">Enter a target price to estimate required income.</p>
+      </div>
+    </section>
+
+    <!-- Land + House -->
+    <section class="mt-4 nk-card p-4">
+      <h2 class="text-[14px] font-semibold mb-2" style="color: var(--nk-text);">Planning to build a house too?</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[12.5px] tabular-nums">
+        <div class="p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+          <p style="color: var(--nk-text-tertiary);">Land budget</p>
+          <p class="font-bold" style="color: var(--nk-text);" id="cross-land">—</p>
+        </div>
+        <div class="p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);">
+          <label for="cross-house" class="block" style="color: var(--nk-text-tertiary);">House construction budget <span style="color: var(--nk-text-tertiary);">Rs</span></label>
+          <input id="cross-house" type="text" inputmode="decimal" placeholder="60,00,000" class="nk-input text-[14px] tabular-nums mt-1" />
+        </div>
+        <div class="p-3 rounded-lg" style="background: var(--nk-accent-subtle); border: 1px solid var(--nk-border);">
+          <p style="color: var(--nk-text-tertiary);">Total project budget</p>
+          <p class="font-bold" style="color: var(--nk-text);" id="cross-total">—</p>
+        </div>
+      </div>
+      <a href="/nepal/construction/house-construction-cost" class="inline-flex items-center gap-1.5 mt-3 text-[13px] font-semibold" style="color: var(--nk-accent);">Calculate House Construction Cost →</a>
+    </section>
+
+    <!-- Location comparison -->
+    <section class="mt-4 nk-card p-4">
+      <h2 class="text-[14px] font-semibold mb-2" style="color: var(--nk-text);">Compare land prices</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" id="location-compare"></div>
+      <p class="text-[11px] mt-2" style="color: var(--nk-text-tertiary);">Enter your own prices per Aana. Examples are shown for comparison only.</p>
+    </section>
+
+    <!-- Scenario comparison -->
+    <section class="mt-4 nk-card p-4">
+      <h2 class="text-[14px] font-semibold mb-2" style="color: var(--nk-text);">Scenario comparison</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="p-3 rounded-lg space-y-2" style="border: 1px solid var(--nk-border); background: var(--nk-card-bg);">
+          <p class="text-[12px] font-semibold" style="color: var(--nk-text);">Scenario A</p>
+          <input id="sc-a-price" type="text" inputmode="decimal" placeholder="Land price Rs" class="nk-input text-[13px] tabular-nums" />
+          <input id="sc-a-down" type="text" inputmode="decimal" placeholder="Down payment Rs" class="nk-input text-[13px] tabular-nums" />
+          <input id="sc-a-rate" type="text" inputmode="decimal" placeholder="Interest %" class="nk-input text-[13px] tabular-nums" />
+          <select id="sc-a-term" class="nk-input text-[13px]"><option value="5">5 years</option><option value="10" selected>10 years</option><option value="15">15 years</option><option value="20">20 years</option></select>
+        </div>
+        <div class="p-3 rounded-lg space-y-2" style="border: 1px solid var(--nk-border); background: var(--nk-card-bg);">
+          <p class="text-[12px] font-semibold" style="color: var(--nk-text);">Scenario B</p>
+          <input id="sc-b-price" type="text" inputmode="decimal" placeholder="Land price Rs" class="nk-input text-[13px] tabular-nums" />
+          <input id="sc-b-down" type="text" inputmode="decimal" placeholder="Down payment Rs" class="nk-input text-[13px] tabular-nums" />
+          <input id="sc-b-rate" type="text" inputmode="decimal" placeholder="Interest %" class="nk-input text-[13px] tabular-nums" />
+          <select id="sc-b-term" class="nk-input text-[13px]"><option value="5">5 years</option><option value="10" selected>10 years</option><option value="15">15 years</option><option value="20">20 years</option></select>
+        </div>
+      </div>
+      <div id="scenario-result" class="hidden mt-3 p-3 rounded-lg text-[12.5px] leading-relaxed" style="background: var(--nk-hover); border: 1px solid var(--nk-border);"></div>
+    </section>
+
+    <section class="mt-8 max-w-[720px]">
+      <h2 class="text-[18px] font-semibold mb-3" style="color: var(--nk-text);">Frequently asked questions</h2>
+      <div class="space-y-2">
+        {faqItems.map((item) => (
+          <details class="group border rounded-lg" style="border-color: var(--nk-border); background: var(--nk-card-bg);">
+            <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3 text-[13.5px] font-medium" style="color: var(--nk-text);">
+              <span>{item.q}</span>
+              <span class="text-[11px] px-2 py-1 rounded-full shrink-0" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">+</span>
+            </summary>
+            <div class="px-4 pb-3 text-[13px] leading-relaxed" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);">
+              <p class="pt-3">{item.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <p class="mt-6 max-w-[720px] text-[11px] leading-relaxed p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border); color: var(--nk-text-tertiary);">
+      <strong style="color: var(--nk-text);">Disclaimer:</strong> SolutionsNepal's Land Affordability Calculator provides estimates for planning purposes only. Actual land prices, taxes, registration charges, financing rates, loan eligibility, and other purchase costs may vary by location, lender, transaction, and applicable regulations. Always verify current costs and financing terms with the relevant government office, bank, lender, or qualified professional.
+    </p>
+
+    <RelatedTools tools={[
+      { title: 'House Construction Cost', description: 'Estimate house building cost by location and size', href: '/nepal/construction/house-construction-cost' },
+      { title: 'Land Area Converter', description: 'Convert Ropani, Aana and more', href: '/nepal/land/ropani-to-aana' },
+      { title: 'EMI Calculator', description: 'Estimate loan EMI for any principal', href: '/nepal/finance/emi-calculator' },
+    ]} />
+  </div>
+
+  <style>
+    .break-bar { height: 8px; border-radius: 9999px; background: var(--nk-hover); overflow: hidden; border: 1px solid var(--nk-border); }
+    .break-fill { height: 100%; border-radius: 9999px; background: var(--nk-accent); transition: width 200ms ease; }
+    .meter-track { height: 10px; border-radius: 9999px; background: var(--nk-hover); border: 1px solid var(--nk-border); position: relative; overflow: hidden; }
+    .meter-fill { position: absolute; top: 0; bottom: 0; background: var(--nk-accent); }
+    .meter-dot { position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 9999px; background: var(--nk-accent); border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  </style>
+
+  <script>
+    import { calculateTotalLandPrice, calculateAffordableArea, calculateEMI, calculateMaxLoanFromEMI, calculateMaxAffordableBudget, calculateAdditionalCosts, calculateSavingsTimeline, calculateRequiredIncome, formatNPR, formatNumber, sanitizeAmount } from '../../../../lib/calculators/land-affordability.js';
+    import { LAND_UNITS, BUDGET_PRESETS_AANA, COMPARISON_CITIES, AFFORDABILITY_ASSUMPTIONS } from '../../../../data/land/land-affordability.js';
+
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    const locationEl = document.getElementById('location');
+    const customLocationEl = document.getElementById('custom-location');
+    const landUnitEl = document.getElementById('land-unit');
+    const landSizeEl = document.getElementById('land-size');
+    const pricePerUnitEl = document.getElementById('price-per-unit');
+    const landPricePreview = document.getElementById('land-price-preview');
+    const monthlyIncomeEl = document.getElementById('monthly-income');
+    const otherIncomeEl = document.getElementById('other-income');
+    const existingEmiEl = document.getElementById('existing-emi');
+    const monthlyExpensesEl = document.getElementById('monthly-expenses');
+    const currentSavingsEl = document.getElementById('current-savings');
+    const savingsForLandEl = document.getElementById('savings-for-land');
+    const useLoanEl = document.getElementById('use-loan');
+    const loanFields = document.getElementById('loan-fields');
+    const interestRateEl = document.getElementById('interest-rate');
+    const loanTermEl = document.getElementById('loan-term');
+    const customTermRow = document.getElementById('custom-term-row');
+    const customYearsEl = document.getElementById('custom-years');
+    const emiRatioEl = document.getElementById('emi-ratio');
+    const emiPreview = document.getElementById('emi-preview');
+
+    function getLoanYears() {
+      if (loanTermEl.value === 'custom') {
+        const c = Number(String(customYearsEl.value).replace(/,/g, ''));
+        return Number.isFinite(c) && c > 0 ? c : 10;
+      }
+      return Number(loanTermEl.value) || 10;
+    }
+
+    function getTotalIncome() {
+      return sanitizeAmount(monthlyIncomeEl.value) + sanitizeAmount(otherIncomeEl.value);
+    }
+
+    function getLandPrice() {
+      return calculateTotalLandPrice(landSizeEl.value, pricePerUnitEl.value);
+    }
+
+    function getAdditionalTotal() {
+      const reg = Number(String(document.getElementById('cost-registration')?.value).replace(/,/g, '')) || AFFORDABILITY_ASSUMPTIONS.registrationPct * 100;
+      const legal = Number(String(document.getElementById('cost-legal')?.value).replace(/,/g, '')) || AFFORDABILITY_ASSUMPTIONS.legalPct * 100;
+      const brokerage = Number(String(document.getElementById('cost-brokerage')?.value).replace(/,/g, '')) || AFFORDABILITY_ASSUMPTIONS.brokeragePct * 100;
+      const contingency = Number(String(document.getElementById('cost-contingency')?.value).replace(/,/g, '')) || AFFORDABILITY_ASSUMPTIONS.contingencyPct * 100;
+      const other = sanitizeAmount(document.getElementById('cost-other')?.value);
+      const price = getLandPrice();
+      const add = calculateAdditionalCosts(price, {
+        registrationPct: reg / 100,
+        legalPct: legal / 100,
+        brokeragePct: brokerage / 100,
+        contingencyPct: contingency / 100,
+        other,
+      });
+      return add.total;
+    }
+
+    function render() {
+      const landPrice = getLandPrice();
+      landPricePreview.textContent = landPrice ? formatNPR(landPrice) : '—';
+
+      const totalIncome = getTotalIncome();
+      const expenses = sanitizeAmount(monthlyExpensesEl.value);
+      const existing = sanitizeAmount(existingEmiEl.value);
+      const savingsAvailable = sanitizeAmount(savingsForLandEl.value);
+      const useLoan = useLoanEl.checked;
+      const rate = Number(String(interestRateEl.value).replace(/,/g, '')) || 10;
+      const years = getLoanYears();
+      const ratio = Number(emiRatioEl.value) || 0.35;
+      const additional = getAdditionalTotal();
+
+      // Loan toggle visibility
+      loanFields.style.opacity = useLoan ? '1' : '0.5';
+      loanFields.style.pointerEvents = useLoan ? 'auto' : 'none';
+      customTermRow.classList.toggle('hidden', loanTermEl.value !== 'custom');
+
+      // Max affordable
+      let maxBudget = savingsAvailable;
+      let affordableEMI = 0;
+      let maxLoan = 0;
+      let remaining = totalIncome - expenses - existing;
+      let emiRatioVal = 0;
+      if (useLoan) {
+        const res = calculateMaxAffordableBudget({
+          totalMonthlyIncome: totalIncome,
+          monthlyExpenses: expenses,
+          existingEMI: existing,
+          savingsAvailable,
+          annualRatePct: rate,
+          loanYears: years,
+          emiToIncomeRatio: ratio,
+          additionalCosts: additional,
+        });
+        maxBudget = res.maxBudget;
+        affordableEMI = res.affordableEMI;
+        maxLoan = res.maxLoan;
+        remaining = res.remainingIncome;
+        emiRatioVal = res.emiToIncomeRatio;
+        emiPreview.classList.remove('hidden');
+        emiPreview.textContent = `Affordable EMI up to ${formatNPR(affordableEMI)}/mo at ${ratio * 100}% of income for ${years} years. Max loan about ${formatNPR(maxLoan)}.`;
+      } else {
+        emiPreview.classList.add('hidden');
+        maxBudget = Math.max(0, savingsAvailable - additional);
+      }
+
+      // Main result
+      document.getElementById('r-budget').textContent = formatNPR(maxBudget);
+      document.getElementById('r-down').textContent = formatNPR(savingsAvailable);
+      document.getElementById('r-loan').textContent = useLoan ? formatNPR(maxLoan) : '— no loan';
+      document.getElementById('r-emi').textContent = useLoan ? (affordableEMI ? `${formatNPR(affordableEMI)}/mo` : '—') : '—';
+      document.getElementById('r-ratio').textContent = useLoan && affordableEMI ? `${(emiRatioVal * 100).toFixed(1)}%` : '—';
+      document.getElementById('r-remaining').textContent = formatNPR(Math.max(0, remaining));
+      document.getElementById('r-additional').textContent = formatNPR(additional);
+      document.getElementById('r-cash').textContent = `Total cash required about ${formatNPR(landPrice ? landPrice + additional : additional)} for this land price`;
+
+      // Affordability meter
+      const meter = document.getElementById('affordability-meter');
+      let status = { label: 'Enter your finances to see status', desc: '' };
+      let dotPos = 0;
+      if (totalIncome > 0 && useLoan && affordableEMI) {
+        const r = emiRatioVal;
+        if (r <= 0.3) { status = { label: 'Comfortable', desc: 'This purchase appears to fit within your estimated monthly budget.' }; dotPos = 20; }
+        else if (r <= 0.4) { status = { label: 'Stretching your budget', desc: 'This purchase may leave you with limited monthly cash flow.' }; dotPos = 60; }
+        else { status = { label: 'Likely too expensive', desc: 'The estimated EMI and upfront costs are high relative to your current finances.' }; dotPos = 90; }
+      } else if (!useLoan) {
+        status = { label: landPrice <= maxBudget ? 'Comfortable' : 'Likely too expensive', desc: landPrice <= maxBudget ? 'Your savings appear to cover this land price plus estimated costs.' : 'Your available savings are below this land price plus estimated costs.' };
+        dotPos = landPrice <= maxBudget ? 20 : 90;
+      }
+      meter.innerHTML = `
+        <p class="text-[12px] font-semibold" style="color: var(--nk-text);">${status.label}</p>
+        <p class="text-[11px] mb-2" style="color: var(--nk-text-secondary);">${status.desc}</p>
+        <div class="meter-track"><div class="meter-fill" style="left: 0; width: 33%; opacity: 0.5;"></div><div class="meter-fill" style="left: 33%; width: 34%; opacity: 0.7;"></div><div class="meter-fill" style="left: 67%; width: 33%; opacity: 1;"></div><div class="meter-dot" style="left: ${dotPos}%;"></div></div>
+        <p class="text-[11px] mt-1 flex justify-between" style="color: var(--nk-text-tertiary);"><span>Comfortable</span><span>Stretching</span><span>Too expensive</span></p>
+        <p class="text-[11px] mt-1" style="color: var(--nk-text-tertiary);">Planning assumption. Actual lender criteria may differ.</p>
+      `;
+
+      // What land can I afford
+      const whatUnit = landUnitEl.value || 'aana';
+      document.getElementById('what-unit-label').textContent = whatUnit.charAt(0).toUpperCase() + whatUnit.slice(1);
+      const whatBody = document.getElementById('what-table');
+      const prices = BUDGET_PRESETS_AANA.map((p) => p.price);
+      whatBody.innerHTML = prices.map((price) => {
+        const area = calculateAffordableArea(maxBudget, price);
+        return `<tr style="border-top: 1px solid var(--nk-border);"><td class="py-2 pr-2" style="color: var(--nk-text-secondary);">${formatNPR(price)}</td><td class="text-right py-2 pl-2 font-medium" style="color: var(--nk-text);">${area ? `${area.toFixed(2)} ${whatUnit.charAt(0).toUpperCase() + whatUnit.slice(1)}` : '—'}</td></tr>`;
+      }).join('');
+
+      // Can I afford this land
+      const checkPrice = sanitizeAmount(document.getElementById('check-price')?.value);
+      const checkDown = sanitizeAmount(document.getElementById('check-down')?.value);
+      const checkRate = Number(String(document.getElementById('check-rate')?.value).replace(/,/g, '')) || rate;
+      const checkTerm = Number(document.getElementById('check-term')?.value) || years;
+      const checkBox = document.getElementById('check-result');
+      if (checkPrice > 0) {
+        const loan = Math.max(0, checkPrice - checkDown);
+        const emiInfo = calculateEMI(loan, checkRate, checkTerm);
+        const ratioCheck = totalIncome > 0 ? emiInfo.emi / totalIncome : 0;
+        let label = 'Comfortable';
+        if (ratioCheck > 0.4) label = 'Too expensive';
+        else if (ratioCheck > 0.3) label = 'Stretching';
+        checkBox.innerHTML = `
+          <p>Land price <strong>${formatNPR(checkPrice)}</strong> · Down payment <strong>${formatNPR(checkDown)}</strong> · Loan <strong>${formatNPR(loan)}</strong></p>
+          <p>Estimated EMI <strong>${formatNPR(emiInfo.emi)}/mo</strong> · EMI to income <strong>${(ratioCheck * 100).toFixed(1)}%</strong></p>
+          <p class="font-semibold" style="color: var(--nk-text);">${label}</p>
+        `;
+      } else {
+        checkBox.innerHTML = `<p style="color: var(--nk-text-tertiary);">Enter a land price to check affordability.</p>`;
+      }
+
+      // Cost breakdown
+      const breakdownEl = document.getElementById('cost-breakdown');
+      const addDetail = calculateAdditionalCosts(landPrice, {
+        registrationPct: (Number(String(document.getElementById('cost-registration')?.value).replace(/,/g, '')) || 5) / 100,
+        legalPct: (Number(String(document.getElementById('cost-legal')?.value).replace(/,/g, '')) || 1) / 100,
+        brokeragePct: (Number(String(document.getElementById('cost-brokerage')?.value).replace(/,/g, '')) || 2) / 100,
+        contingencyPct: (Number(String(document.getElementById('cost-contingency')?.value).replace(/,/g, '')) || 2) / 100,
+        other: sanitizeAmount(document.getElementById('cost-other')?.value),
+      });
+      breakdownEl.innerHTML = `
+        <div class="flex justify-between"><span>Land price</span><strong>${formatNPR(landPrice)}</strong></div>
+        <div class="flex justify-between"><span>Down payment</span><strong>${formatNPR(savingsAvailable)}</strong></div>
+        <div class="flex justify-between"><span>Loan amount</span><strong>${formatNPR(maxLoan)}</strong></div>
+        <div class="flex justify-between"><span>Registration</span><span>${formatNPR(addDetail.registration)}</span></div>
+        <div class="flex justify-between"><span>Legal</span><span>${formatNPR(addDetail.legal)}</span></div>
+        <div class="flex justify-between"><span>Brokerage</span><span>${formatNPR(addDetail.brokerage)}</span></div>
+        <div class="flex justify-between"><span>Contingency</span><span>${formatNPR(addDetail.contingency)}</span></div>
+        <div class="flex justify-between"><span>Other</span><span>${formatNPR(addDetail.other)}</span></div>
+        <div class="flex justify-between font-semibold pt-2" style="border-top: 1px solid var(--nk-border);"><span>Total cash required</span><span>${formatNPR(landPrice + addDetail.total)}</span></div>
+      `;
+
+      // Down payment planner
+      const saveRequired = sanitizeAmount(document.getElementById('save-required')?.value);
+      const saveCurrent = sanitizeAmount(document.getElementById('save-current')?.value);
+      const saveMonthly = sanitizeAmount(document.getElementById('save-monthly')?.value);
+      const saveEl = document.getElementById('save-result');
+      if (saveRequired > 0) {
+        const t = calculateSavingsTimeline(saveRequired, saveCurrent, saveMonthly);
+        if (t.months === 0) {
+          saveEl.innerHTML = `<p>Required down payment ${formatNPR(saveRequired)} · Current savings ${formatNPR(saveCurrent)} · You already have enough saved.</p><div class="mt-2 h-2 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border);"><div class="h-full rounded-full" style="width: 100%; background: var(--nk-accent);"></div></div>`;
+        } else if (!Number.isFinite(t.months)) {
+          saveEl.innerHTML = `<p>Gap ${formatNPR(t.gap)} · Monthly savings needed to make progress. Saved ${t.percent.toFixed(0)}% so far.</p>`;
+        } else {
+          saveEl.innerHTML = `<p>Required ${formatNPR(saveRequired)} · Current ${formatNPR(saveCurrent)} · Monthly ${formatNPR(saveMonthly)} · Estimated time <strong>${t.months} months</strong> (${(t.months/12).toFixed(1)} years)</p><div class="mt-2 h-2 rounded-full" style="background: var(--nk-hover); border: 1px solid var(--nk-border);"><div class="h-full rounded-full" style="width: ${t.percent.toFixed(0)}%; background: var(--nk-accent);"></div></div>`;
+        }
+      } else {
+        saveEl.innerHTML = `<p style="color: var(--nk-text-tertiary);">Enter your savings details to see an estimated timeline.</p>`;
+      }
+
+      // Reverse calculator
+      const needPrice = sanitizeAmount(document.getElementById('need-price')?.value);
+      const needDown = sanitizeAmount(document.getElementById('need-down')?.value);
+      const needExisting = sanitizeAmount(document.getElementById('need-existing')?.value);
+      const needRate = Number(String(document.getElementById('need-rate')?.value).replace(/,/g, '')) || rate;
+      const needTerm = Number(document.getElementById('need-term')?.value) || years;
+      const needEl = document.getElementById('need-result');
+      if (needPrice > 0) {
+        const need = calculateRequiredIncome({ targetLandPrice: needPrice, downPayment: needDown, annualRatePct: needRate, loanYears: needTerm, existingEMI: needExisting, emiToIncomeRatio: ratio, additionalCosts: additional });
+        needEl.innerHTML = `<p>Target land price ${formatNPR(needPrice)} · Down payment ${formatNPR(needDown)} · Loan ${formatNPR(need.loan)} · EMI ${formatNPR(need.emi)}/mo</p><p class="font-semibold" style="color: var(--nk-text);">Estimated minimum monthly income required about ${formatNPR(need.requiredIncome)}</p><p class="text-[11px]" style="color: var(--nk-text-tertiary);">Planning assumption ${(ratio*100).toFixed(0)}% EMI to income. Actual lender criteria may differ.</p>`;
+      } else {
+        needEl.innerHTML = `<p style="color: var(--nk-text-tertiary);">Enter a target price to estimate required income.</p>`;
+      }
+
+      // Land + House
+      const crossHouse = sanitizeAmount(document.getElementById('cross-house')?.value);
+      document.getElementById('cross-land').textContent = formatNPR(landPrice || maxBudget);
+      document.getElementById('cross-total').textContent = formatNPR((landPrice || maxBudget) + crossHouse);
+
+      // Location comparison
+      const compareEl = document.getElementById('location-compare');
+      compareEl.innerHTML = COMPARISON_CITIES.map((city) => {
+        const area = calculateAffordableArea(maxBudget, city.examplePrice);
+        return `<div class="p-3 rounded-lg" style="background: var(--nk-hover); border: 1px solid var(--nk-border);"><p class="text-[12px] font-semibold" style="color: var(--nk-text);">${city.label}</p><p class="text-[11px]" style="color: var(--nk-text-tertiary);">${formatNPR(city.examplePrice)} / Aana</p><p class="text-[13px] font-bold tabular-nums" style="color: var(--nk-text);">${area ? area.toFixed(2) + ' Aana' : '—'}</p></div>`;
+      }).join('');
+
+      // Scenario comparison
+      const scAPrice = sanitizeAmount(document.getElementById('sc-a-price')?.value);
+      const scADown = sanitizeAmount(document.getElementById('sc-a-down')?.value);
+      const scARate = Number(String(document.getElementById('sc-a-rate')?.value).replace(/,/g, '')) || rate;
+      const scATerm = Number(document.getElementById('sc-a-term')?.value) || years;
+      const scBPrice = sanitizeAmount(document.getElementById('sc-b-price')?.value);
+      const scBDown = sanitizeAmount(document.getElementById('sc-b-down')?.value);
+      const scBRate = Number(String(document.getElementById('sc-b-rate')?.value).replace(/,/g, '')) || years;
+      const scBTerm = Number(document.getElementById('sc-b-term')?.value) || years;
+      const scEl = document.getElementById('scenario-result');
+      if (scAPrice > 0 || scBPrice > 0) {
+        const aLoan = Math.max(0, scAPrice - scADown);
+        const bLoan = Math.max(0, scBPrice - scBDown);
+        const aEmi = calculateEMI(aLoan, scARate, scATerm).emi;
+        const bEmi = calculateEMI(bLoan, scBRate, scBTerm).emi;
+        const aRem = calculateRemainingIncome(totalIncome, expenses, existing, aEmi);
+        const bRem = calculateRemainingIncome(totalIncome, expenses, existing, bEmi);
+        scEl.classList.remove('hidden');
+        scEl.innerHTML = `
+          <div class="grid grid-cols-2 gap-3">
+            <div><p class="font-semibold" style="color: var(--nk-text);">Scenario A</p><p>EMI ${formatNPR(aEmi)}/mo · Remaining ${formatNPR(aRem)}/mo</p></div>
+            <div><p class="font-semibold" style="color: var(--nk-text);">Scenario B</p><p>EMI ${formatNPR(bEmi)}/mo · Remaining ${formatNPR(bRem)}/mo</p></div>
+          </div>
+          <p class="mt-2 font-semibold" style="color: var(--nk-accent);">${aEmi < bEmi ? 'Scenario A has lower monthly burden' : bEmi < aEmi ? 'Scenario B has lower monthly burden' : 'Both scenarios have similar EMI'} · ${aRem > bRem ? 'Scenario A leaves higher remaining income' : bRem > aRem ? 'Scenario B leaves higher remaining income' : ''}</p>
+        `;
+      } else {
+        scEl.classList.add('hidden');
+      }
+
+      window.__lastLandResult = { maxBudget, landPrice, affordableEMI, remaining, totalIncome };
+    }
+
+    // Events
+    const allInputs = $$('input, select');
+    allInputs.forEach((el) => {
+      el.addEventListener('input', render);
+      el.addEventListener('change', render);
+    });
+    document.getElementById('costs-toggle')?.addEventListener('click', () => {
+      document.getElementById('costs-panel').classList.toggle('hidden');
+    });
+    document.getElementById('custom-location')?.addEventListener('input', render);
+    // Custom selects
+    locationEl.addEventListener('change', () => {
+      customLocationEl.classList.toggle('hidden', locationEl.value !== 'custom');
+      render();
+    });
+    loanTermEl.addEventListener('change', render);
+    // Toggle loan
+    useLoanEl.addEventListener('change', render);
+
+    document.getElementById('calculate-btn')?.addEventListener('click', () => {
+      render();
+      document.getElementById('result-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    document.getElementById('share-btn')?.addEventListener('click', async () => {
+      const r = window.__lastLandResult;
+      if (!r) return;
+      const text = `My Land Affordability Estimate\nMax budget: ${formatNPR(r.maxBudget)}\nLand price: ${formatNPR(r.landPrice)}\nRemaining income: ${formatNPR(r.remaining)}/mo\n\nCalculated on SolutionsNepal - https://solutionsnepal.com/nepal/land/land-affordability-calculator`;
+      const status = document.getElementById('share-status');
+      try {
+        if (navigator.share) { await navigator.share({ title: 'Land Affordability Estimate', text }); status.textContent = 'Shared.'; }
+        else if (navigator.clipboard) { await navigator.clipboard.writeText(text); status.textContent = 'Copied to clipboard.'; }
+        else { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); status.textContent = 'Copied to clipboard.'; }
+      } catch { status.textContent = 'Could not share. Copy manually.'; }
+      status.classList.remove('hidden');
+      setTimeout(() => status.classList.add('hidden'), 3000);
+    });
+    document.getElementById('print-btn')?.addEventListener('click', () => window.print());
+
+    // Init with placeholders, no auto values
+    render();
+  </script>
+</BaseLayout>

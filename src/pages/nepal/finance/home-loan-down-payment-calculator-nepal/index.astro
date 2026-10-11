@@ -1,0 +1,401 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Calculator } from '@lucide/astro';
+import { PROPERTY_TYPES, LOCATIONS, DP_PRESETS, SCENARIO_PCTS, TENURE_YEARS, DEFAULTS } from '../../../../data/home-loan-down-payment.js';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+
+const title = 'Home Loan Down Payment Calculator Nepal (2026) | SolutionsNepal';
+const description = 'Calculate your estimated down payment, home loan amount, upfront cash, EMI and LTV for buying a home in Nepal.';
+const canonical = 'https://solutionsnepal.com/nepal/finance/home-loan-down-payment-calculator-nepal';
+
+const faq = [
+  { q:'How much down payment is needed for a home loan in Nepal?', a:'It depends on the lender and your profile — many borrowers plan around 20%, but requirements vary by bank, property type, income and collateral. Enter your planned percentage above to see the cash and loan split instantly. Always confirm the current requirement with your bank.' },
+  { q:'How is home loan down payment calculated?', a:'Down payment = property price × down payment %. For a Rs 1 crore property at 20%, that is Rs 20 lakh down and an Rs 80 lakh estimated loan. The actual lender-required amount can differ.' },
+  { q:'Can I buy a house with 10% down payment in Nepal?', a:'Some lenders may allow lower down payments depending on policy, income and collateral, but a smaller down payment means a bigger loan and higher EMI. Compare 10% vs 20% vs 30% in the table above, then confirm with banks.' },
+  { q:'Does a higher down payment reduce EMI?', a:'Yes. Every extra rupee paid upfront reduces the loan principal, which directly lowers the monthly EMI and the total interest paid over the tenure.' },
+  { q:'What is LTV in a home loan?', a:'Loan-to-value = loan amount ÷ property price × 100. An Rs 80 lakh loan on a Rs 1 crore property is 80% LTV. Lower LTV generally means easier approval and less interest.' },
+  { q:'What other costs should I budget for when buying a home in Nepal?', a:'Beyond the down payment, budget for registration, legal and valuation charges, loan processing fees and moving costs. Add them under Other Upfront Costs to see your full cash requirement.' },
+  { q:'Is down payment the same for every bank in Nepal?', a:'No. Down-payment expectations, LTV limits, rates and fees differ by lender and borrower profile. This tool uses your planned percentage for planning — it is not a universal bank requirement.' },
+  { q:'Does my income affect how much home loan I can get?', a:'Yes. Lenders check repayment capacity against income and existing EMIs. Use the Loan Eligibility Calculator to estimate how much you may be able to borrow on your salary.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'Home Loan Down Payment Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Finance', href:'/nepal/finance'}, {label:'Home Loan Down Payment'}]} />
+
+    <div class="mb-2.5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">🇳🇵 Home financing calculator for Nepal</div>
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">Home Loan Down Payment Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[660px]" style="color:var(--nk-text-secondary);">Calculate your estimated down payment, home loan amount and upfront cash needed to buy a home in Nepal.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.8fr_400px] gap-4 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-2.5 min-w-0">
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">⌂</span> Property Details</p>
+          <div class="cm-field"><label class="cm-label" for="pp-price">Property price</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="pp-price" type="text" inputmode="decimal" placeholder="e.g. 10,000,000" class="cm-input" /></div></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2.5">
+            <div>
+              <p class="cm-label mb-1">Property type</p>
+              <div class="flex flex-wrap gap-1.5" id="pt-chips" role="radiogroup" aria-label="Property type">
+                {PROPERTY_TYPES.map(t=>{
+                  const active = t.id===DEFAULTS.propertyTypeId;
+                  return <button type="button" class={`chip pt-chip${active?' chip-active':''}`} data-pt={t.id} role="radio" aria-checked={active?'true':'false'}>{t.label}</button>
+                })}
+              </div>
+            </div>
+            <div>
+              <p class="cm-label mb-1">Location</p>
+              <div class="flex flex-wrap gap-1.5" id="loc-chips" role="radiogroup" aria-label="Location">
+                {LOCATIONS.map(l=>{
+                  const active = l.id===DEFAULTS.locationId;
+                  return <button type="button" class={`chip loc-chip${active?' chip-active':''}`} data-loc={l.id} role="radio" aria-checked={active?'true':'false'}>{l.label}</button>
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">₨</span> Loan &amp; Financing</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="dp-pct">Down payment %</label><div class="cm-box"><input id="dp-pct" type="text" inputmode="decimal" placeholder="e.g. 20" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">%</span></div>
+              <div class="flex flex-wrap gap-1.5 mt-2" id="dp-chips">
+                {DP_PRESETS.map(p=> <button type="button" class="chip dp-chip" data-dp={String(p)}>{p}%</button>)}
+              </div>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="dp-amt">Down payment amount</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="dp-amt" type="text" inputmode="decimal" placeholder="e.g. 20,00,000" class="cm-input" /></div></div>
+            <p class="text-[10.5px] sm:col-span-2" style="color:var(--nk-text-tertiary);">Edit either field — they stay in sync.</p>
+            <div class="cm-field sm:col-span-2"><label class="cm-label" for="sv-savings">Available savings <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="sv-savings" type="text" inputmode="decimal" placeholder="e.g. 2,000,000" class="cm-input" /></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◎</span> Home Loan Details</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="hl-rate">Interest rate</label><div class="cm-box"><input id="hl-rate" type="text" inputmode="decimal" placeholder="e.g. 9.5" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">% p.a.</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="hl-tenure">Loan tenure</label>
+              <select id="hl-tenure" class="nk-input text-[13px]" style="height:36px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                {TENURE_YEARS.map(y=> <option value={String(y)} selected={y===DEFAULTS.tenureYears}>{y} years</option>)}
+              </select>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="hl-other">Other upfront costs</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="hl-other" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+          <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Include registration, legal, valuation, processing or other costs if you want a broader cash requirement estimate.</p>
+        </section>
+
+        <div class="flex gap-2.5">
+          <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> Calculate</button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2 text-[13px] font-semibold" style="border-radius:12px;">Reset Calculator</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium" style="color:#DC2626;"></p>
+      </div>
+
+      <!-- RIGHT: sticky results -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your Home Purchase Estimate</p>
+            <p class="text-[26px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter the property price and down payment, then click <strong>Calculate</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+          <div class="px-4 pt-4 pb-3 text-center res-hero" style="border-bottom:1px solid var(--nk-border);">
+            <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your Home Purchase Estimate</p>
+            <p class="text-[13px] font-semibold mt-1" style="color:var(--nk-text-secondary);">Down Payment</p>
+            <p class="text-[30px] font-extrabold leading-tight tabular-nums nk-gradient-text" id="r-down">—</p>
+            <p class="text-[11.5px] mt-1 max-w-[300px] mx-auto leading-relaxed" style="color:var(--nk-text-secondary);" id="r-plain">—</p>
+          </div>
+          <div class="p-3.5 space-y-2.5">
+            <div class="rounded-xl text-[12.5px]" style="border:1px solid var(--nk-border);">
+              <div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">You borrow</span><strong style="color:var(--nk-text);" id="r-loan">—</strong></div>
+              <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Monthly EMI</span><strong style="color:var(--nk-text);" id="r-emi">—</strong></div>
+              <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Paid Amount</span><strong style="color:var(--nk-text);" id="r-upfront">—</strong></div>
+            </div>
+
+            <div id="r-save" class="hidden rounded-xl p-3 text-[12px]" style="border:1px solid var(--nk-border);"></div>
+
+            <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+              <div class="h-2.5 rounded-full overflow-hidden flex" style="background:var(--nk-muted);">
+                <div id="r-bar-down" class="h-full" style="width:20%; background:var(--nk-accent); transition:width 200ms ease;"></div>
+                <div id="r-bar-loan" class="h-full" style="width:80%; background:var(--nk-border-strong); transition:width 200ms ease;"></div>
+              </div>
+              <div class="flex justify-between text-[11px] mt-1.5 tabular-nums"><span style="color:var(--nk-accent); font-weight:700;" id="r-bar-down-l">—</span><span style="color:var(--nk-text-tertiary);" id="r-bar-mid">—</span><span style="color:var(--nk-text-secondary); font-weight:600;" id="r-bar-loan-l">—</span></div>
+            </div>
+
+            <div class="rounded-xl overflow-hidden text-[12px]" style="border:1px solid var(--nk-border);">
+              <p class="px-3 py-2 text-[11px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary); background:var(--nk-hover);">Compare down payment options</p>
+              <div class="overflow-x-auto"><table class="w-full tabular-nums whitespace-nowrap">
+                <thead><tr class="text-left text-[10.5px]" style="color:var(--nk-text-tertiary);"><th class="px-3 py-1.5 font-semibold">Down %</th><th class="px-3 py-1.5 font-semibold text-right">Cash needed</th><th class="px-3 py-1.5 font-semibold text-right">Loan</th><th class="px-3 py-1.5 font-semibold text-right">EMI</th></tr></thead>
+                <tbody id="r-scenarios"></tbody>
+              </table></div>
+            </div>
+
+            <p id="r-insight" class="text-[11.5px] leading-relaxed px-1" style="color:var(--nk-text-secondary);"></p>
+
+            <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+              <strong style="color:var(--nk-text);">Important:</strong> This calculator provides estimates for planning purposes only. Actual home-loan requirements, down-payment requirements, loan-to-value limits, interest rates, fees and approval criteria vary by lender and borrower profile. Always confirm current terms with the relevant bank or financial institution.
+            </div>
+
+            <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Down Payment Do You Need for a Home in Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Your property price splits two ways: the part you pay in cash (down payment) and the part the bank finances (loan). The loan-to-value ratio (LTV) expresses the loan as a share of the price, and your EMI follows from the loan amount, interest rate and tenure. A bigger down payment always means a smaller loan — but more cash needed on day one.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Is Home Loan Down Payment Calculated?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">For a property worth Rs 1 crore with a 20% planned down payment: down payment = Rs 20 lakh, estimated loan = Rs 80 lakh. The actual lender-required amount can differ — confirm with your bank.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Why Make a Larger Down Payment?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">It lowers the loan amount, the monthly EMI and the total interest paid over the loan term — at the cost of a greater upfront cash requirement. The comparison table above quantifies the trade-off for your own numbers.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+    </div>
+
+    <Disclaimer variant="finance" />
+    <RelatedTools tools={[{title:'Loan Eligibility Calculator', description:'How much can you borrow?', href:'/nepal/finance/loan-eligibility-calculator-nepal'}, {title:'EMI Calculator', description:'Monthly EMI for any loan', href:'/nepal/finance/emi-calculator'}, {title:'House Construction Cost', description:'Estimate build cost per sq ft', href:'/nepal/construction/house-construction-cost'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .sec-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--nk-text); margin-bottom:5px; letter-spacing:-0.01em; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11px; font-weight:500; cursor:pointer; transition:all 140ms ease; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .cm-field{ display:flex; flex-direction:column; gap:4px; }
+  .cm-label{ font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:36px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; outline:none; border-radius:10px; color:var(--nk-text); }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); }
+  .hidden{ display:none !important; }
+  .scen-active td{ font-weight:700; color:var(--nk-accent) !important; }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input{ font-size:16px !important; }
+  }
+</style>
+
+<script>
+  import { calcDownPayment, calcScenario, formatNPR } from '../../../../lib/calculators/home-loan-down-payment.js';
+  import { SCENARIO_PCTS, DEFAULTS } from '../../../../data/home-loan-down-payment.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let lastEdited = 'pct'; // 'pct' | 'amt'
+  let dpTouched = false; // true once the user sets %/amount/chip themselves
+
+  function num(id){
+    const el=$(id);
+    if(!el) return 0;
+    const n = Number(String(el.value).replace(/,/g,'').trim());
+    return Number.isFinite(n) && n>=0 ? n : NaN;
+  }
+  function setChip(selector, attr, val){
+    document.querySelectorAll(selector).forEach(c=>{
+      const on = c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+  document.querySelectorAll('.pt-chip').forEach(b=> b.addEventListener('click', ()=> setChip('.pt-chip','pt',b.dataset.pt)));
+  document.querySelectorAll('.loc-chip').forEach(b=> b.addEventListener('click', ()=> setChip('.loc-chip','loc',b.dataset.loc)));
+
+  function pctVal(){
+    const n = num('dp-pct');
+    if(Number.isNaN(n)) return NaN;
+    return Math.max(0, Math.min(100, n));
+  }
+  function priceVal(){
+    const n = num('pp-price');
+    return Number.isNaN(n) ? 0 : n;
+  }
+  function syncFromPct(){
+    const pct = pctVal(), price = priceVal();
+    if(!Number.isNaN(pct)) setChip('.dp-chip','dp', String(Math.round(pct))===String(pct) ? pct : -1);
+    const amt=$('dp-amt');
+    if(!Number.isNaN(pct) && price>0) amt.value = Math.round(price*pct/100).toLocaleString('en-IN');
+    else if(price<=0) amt.value='';
+  }
+  function syncFromAmt(){
+    const raw = String($('dp-amt').value).replace(/,/g,'').trim();
+    const amt = raw==='' ? NaN : Number(raw);
+    const price = priceVal();
+    if(!Number.isNaN(amt) && amt>=0 && price>0){
+      const pct = Math.max(0, Math.min(100, (amt/price)*100));
+      $('dp-pct').value = Number(pct.toFixed(2));
+      setChip('.dp-chip','dp', -1);
+    }
+  }
+
+  $('dp-pct')?.addEventListener('input', ()=>{ lastEdited='pct'; dpTouched=true; syncFromPct(); });
+  $('dp-pct')?.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  $('dp-amt')?.addEventListener('input', ()=>{
+    lastEdited='amt';
+    dpTouched=true;
+    if($('dp-amt').value.includes('-')) $('dp-amt').value=$('dp-amt').value.replace(/-/g,'');
+    syncFromAmt();
+  });
+  $('dp-amt')?.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  document.querySelectorAll('.dp-chip').forEach(b=> b.addEventListener('click', ()=>{
+    lastEdited='pct';
+    dpTouched=true;
+    $('dp-pct').value=b.dataset.dp;
+    setChip('.dp-chip','dp',b.dataset.dp);
+    syncFromPct();
+  }));
+  function applyDefaultDownPayment(){
+    // first price entry auto-applies the 10% default until the user overrides it
+    if(dpTouched) return;
+    lastEdited='pct';
+    $('dp-pct').value='10';
+    setChip('.dp-chip','dp','10');
+    syncFromPct();
+  }
+  ['pp-price','hl-rate','sv-savings','hl-other'].forEach(id=>{
+    $(id)?.addEventListener('input', ()=>{
+      if($(id).value.includes('-')) $(id).value=$(id).value.replace(/-/g,'');
+      if(id==='pp-price'){
+        if(!dpTouched) applyDefaultDownPayment();
+        else if(lastEdited==='pct') syncFromPct();
+        else syncFromAmt();
+      }
+    });
+    $(id)?.addEventListener('blur', ()=>{
+      const raw=String($(id).value).replace(/,/g,'').trim();
+      if(raw==='') return;
+      const n=Number(raw);
+      if(Number.isFinite(n) && n>=0) $(id).value=Math.round(n).toLocaleString('en-IN');
+      if(id==='pp-price'){
+        if(!dpTouched) applyDefaultDownPayment();
+        else if(lastEdited==='pct') syncFromPct();
+        else syncFromAmt();
+      }
+    });
+    $(id)?.addEventListener('focus', ()=>{
+      const raw=String($(id).value).replace(/,/g,'');
+      if(raw!=='' && !Number.isNaN(Number(raw))) $(id).value=raw;
+    });
+    $(id)?.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  });
+
+  function collect(){
+    return {
+      propertyPrice: priceVal(),
+      downPaymentPct: pctVal(),
+      annualRatePct: num('hl-rate'),
+      tenureYears: Number($('hl-tenure').value) || 0,
+      savings: num('sv-savings'),
+      otherCosts: num('hl-other'),
+    };
+  }
+
+  function doCalc(){
+    const hint=$('calc-hint');
+    if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const c = collect();
+    if(Number.isNaN(c.propertyPrice) || Number.isNaN(c.downPaymentPct) || Number.isNaN(c.annualRatePct)){
+      if(hint){ hint.textContent='Please enter valid non-negative numbers.'; hint.classList.remove('hidden'); }
+      return;
+    }
+    if(c.propertyPrice<=0){
+      if(hint){ hint.textContent='Enter a property price greater than Rs 0, then click Calculate.'; hint.classList.remove('hidden'); }
+      $('calc-btn')?.animate?.([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],{duration:220});
+      return;
+    }
+    const r = calcDownPayment(c);
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+
+    $('r-down').textContent = formatNPR(r.downPayment);
+    $('r-plain').textContent = r.inputs.price>0
+      ? `Rs ${Math.round(r.inputs.price).toLocaleString('en-IN')} home · ${r.inputs.pct}% down · ${r.ltv.toFixed(0)}% LTV`
+      : 'Enter your property price to see the split.';
+    $('r-loan').textContent = formatNPR(r.loanAmount);
+    $('r-emi').textContent = r.inputs.months>0 ? formatNPR(r.emi)+' / mo' : '—';
+    $('r-upfront').textContent = formatNPR(r.upfront);
+
+    // savings comparison
+    const save=$('r-save');
+    if(r.inputs.hasSavings){
+      save.classList.remove('hidden');
+      if(r.shortfall>0){
+        save.style.background='#FEF2F2'; save.style.borderColor='#FECACA';
+        save.innerHTML=`<p class="font-semibold" style="color:#DC2626;">⚠ You need ${formatNPR(r.shortfall)} more</p>
+          <p class="mt-0.5 tabular-nums" style="color:var(--nk-text-secondary);">Savings ${formatNPR(r.inputs.save)} · Needed ${formatNPR(r.upfront)}</p>`;
+      } else {
+        save.style.background='var(--nk-accent-subtle)'; save.style.borderColor='var(--nk-accent-muted)';
+        save.innerHTML=`<p class="font-semibold" style="color:var(--nk-accent);">✓ Covered — ${formatNPR(r.surplus)} left over</p>`;
+      }
+    } else save.classList.add('hidden');
+
+    // proportion bar
+    const dpShare = r.inputs.price>0 ? (r.downPayment/r.inputs.price)*100 : 0;
+    $('r-bar-down').style.width = dpShare+'%';
+    $('r-bar-loan').style.width = (100-dpShare)+'%';
+    $('r-bar-mid').textContent = `${r.inputs.price>0 ? Math.round(dpShare) : 0}% cash · ${r.inputs.price>0 ? Math.round(100-dpShare) : 0}% loan`;
+    $('r-bar-down-l').textContent = formatNPR(r.downPayment);
+    $('r-bar-loan-l').textContent = formatNPR(r.loanAmount);
+
+    // scenarios
+    const cur = r.inputs.pct;
+    $('r-scenarios').innerHTML = SCENARIO_PCTS.map(p=>{
+      const s = calcScenario(r.inputs.price, p, r.inputs.rate, r.inputs.years, r.inputs.other);
+      const active = Math.abs(p-cur)<1e-9;
+      return `<tr class="${active?'scen-active':''}" style="border-top:1px solid var(--nk-border);">
+        <td class="px-3 py-1.5">${p}%</td>
+        <td class="px-3 py-1.5 text-right">${formatNPR(s.cash)}</td>
+        <td class="px-3 py-1.5 text-right">${formatNPR(s.loan)}</td>
+        <td class="px-3 py-1.5 text-right">${r.inputs.months>0?formatNPR(s.emi):'—'}</td></tr>`;
+    }).join('');
+
+    // insight
+    const ins=$('r-insight');
+    if(r.inputs.hasSavings && r.shortfall>0) ins.textContent='Consider increasing your savings or reducing the property budget before committing to the purchase.';
+    else if(cur<20) ins.textContent='Lower down payment means a larger loan and higher monthly EMI.';
+    else ins.textContent='A larger down payment reduces your loan amount and monthly repayment, but requires more cash upfront.';
+
+    if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+  }
+
+  function doReset(){
+    ['pp-price','dp-pct','dp-amt','sv-savings','hl-rate','hl-other'].forEach(id=>{ $(id).value=''; });
+    lastEdited='pct';
+    dpTouched=false;
+    setChip('.dp-chip','dp',-1);
+    setChip('.pt-chip','pt','house');
+    setChip('.loc-chip','loc','ktm');
+    $('hl-tenure').value='20';
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalc);
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('copy-btn')?.addEventListener('click', async()=>{
+    if($('res-body')?.classList.contains('hidden')){
+      doCalc();
+      if($('res-body')?.classList.contains('hidden')) return;
+    }
+    const text=`Home Purchase Estimate\nDown payment: ${$('r-down').textContent}\nLoan: ${$('r-loan').textContent}\nEMI: ${$('r-emi').textContent}\nUpfront cash: ${$('r-upfront').textContent}\n— SolutionsNepal home loan down payment calculator`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const t=b.textContent; b.textContent='Copied!'; setTimeout(()=> b.textContent=t,1500);}catch{}
+  });
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+</script>

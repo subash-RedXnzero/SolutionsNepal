@@ -1,0 +1,268 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { JOBS, getSectorById, sectorLabel, jobBands, fmtNPR, inr, LEGAL_MINIMUM_NOTE } from '../../../../data/jobs.js';
+
+export async function getStaticPaths() {
+  return JOBS.map((j) => ({ params: { slug: j.id }, props: { job: j } }));
+}
+
+const { job } = Astro.props;
+if (!job) throw new Error('Unknown job');
+
+const sector = getSectorById(job.sector);
+const bands = jobBands(job);
+const midMonthly = Math.round((bands.mid[0] + bands.mid[1]) / 2);
+const related = JOBS.filter((j) => j.sector === job.sector && j.id !== job.id).slice(0, 4);
+
+const title = `${job.title} Salary in Nepal — Monthly Earnings | SolutionsNepal`;
+const description = `${job.title} in Nepal typically earns ${inr(job.min)} – ${inr(job.max)} per month. See entry, mid & senior ranges, required skills, and how to earn more.`;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `${job.title} Salary in Nepal`,
+    description,
+    url: `https://solutionsnepal.com/nepal/utilities/jobs/${job.id}`,
+  }}
+>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-4 sm:py-5 jobs-wrap">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Utilities', href: '/nepal/utilities' },
+      { label: 'Jobs & Earnings', href: '/nepal/utilities/jobs' },
+      { label: job.title },
+    ]} />
+
+    <header class="mb-4">
+      <p class="text-[11.5px] font-medium mb-1" style="color: var(--nk-text-tertiary);">
+        {job.types.join(' · ')} · {sectorLabel(job.sector)}
+      </p>
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
+        {job.title}
+      </h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">{job.blurb}</p>
+      {job.altTitles?.length > 0 && (
+        <p class="text-[12px] mt-1.5" style="color: var(--nk-text-tertiary);">
+          Also called: {job.altTitles.join(', ')}
+        </p>
+      )}
+      <p class="det-verified">✓ Verified {job.lastVerified} · <a href="#job-sources">Sources below</a></p>
+    </header>
+
+    <!-- Earnings -->
+    <section class="nk-card p-4 sm:p-5 mb-5" aria-label="Estimated earnings">
+      <p class="det-kicker">Typical estimated monthly earnings</p>
+      <p class="det-big tabular-nums">Rs {fmtNPR(job.min)} – {fmtNPR(job.max)}</p>
+      <p class="text-[12px] tabular-nums mb-4" style="color: var(--nk-text-secondary);">
+        ≈ {inr(midMonthly * 12)} per year <span style="color: var(--nk-text-tertiary);">(at mid-level)</span>
+      </p>
+      <div class="det-bands">
+        <div class="det-band"><span>Entry <span class="det-hint">(0–2 yrs)</span></span><strong class="tabular-nums">{inr(bands.entry[0])} – {inr(bands.entry[1])}</strong></div>
+        <div class="det-band"><span>Mid <span class="det-hint">(2–5 yrs)</span></span><strong class="tabular-nums">{inr(bands.mid[0])} – {inr(bands.mid[1])}</strong></div>
+        <div class="det-band"><span>Senior <span class="det-hint">(5+ yrs)</span></span><strong class="tabular-nums">{inr(bands.senior[0])} – {inr(bands.senior[1])}</strong></div>
+      </div>
+      <p class="text-[11.5px] mt-3 leading-relaxed" style="color: var(--nk-text-tertiary);">
+        Estimates only — not guaranteed salaries. Kathmandu Valley usually pays 15–25% more than smaller
+        cities; remote and foreign clients often pay above local rates.
+      </p>
+      {job.salaryNote && (
+        <p class="text-[12px] mt-2 leading-relaxed" style="color: var(--nk-text-secondary);">{job.salaryNote}</p>
+      )}
+    </section>
+
+    <!-- Facts -->
+    <section class="nk-card p-4 sm:p-5 mb-5" aria-label="Job facts">
+      <div class="det-facts">
+        <div>
+          <p class="det-kicker">Experience</p>
+          <p class="det-fact tabular-nums">{job.exp}</p>
+        </div>
+        <div>
+          <p class="det-kicker">Key skills</p>
+          <div class="flex flex-wrap gap-1.5 mt-1.5">
+            {job.skills.map((s) => (
+              <span class="det-skill">{s}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About this job -->
+    <section class="nk-card p-4 sm:p-5 mb-5" aria-label="About this job">
+      <p class="det-kicker">About this job</p>
+      <p class="text-[13.5px] leading-relaxed" style="color: var(--nk-text);">{job.description}</p>
+      <div class="flex flex-wrap gap-1.5 mt-3">
+        {job.employment.map((e) => (
+          <span class="det-tag">{e}</span>
+        ))}
+      </div>
+    </section>
+
+    <!-- What you'll do -->
+    <section class="nk-card p-4 sm:p-5 mb-5" aria-label="Key responsibilities">
+      <p class="det-kicker">What you’ll do</p>
+      <ul class="det-list">
+        {job.responsibilities.map((r) => (
+          <li>{r}</li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Skills -->
+    <section class="nk-card p-4 sm:p-5 mb-5" aria-label="Skills needed">
+      <p class="det-kicker">Technical skills</p>
+      <div class="flex flex-wrap gap-1.5 mt-1.5 mb-4">
+        {job.techSkills.map((s) => (
+          <span class="det-skill">{s}</span>
+        ))}
+      </div>
+      <p class="det-kicker">Soft skills</p>
+      <div class="flex flex-wrap gap-1.5 mt-1.5">
+        {job.softSkills.map((s) => (
+          <span class="det-skill det-skill-soft">{s}</span>
+        ))}
+      </div>
+    </section>
+
+    <!-- Education & training -->
+    <section class="nk-card p-4 sm:p-5 mb-5" aria-label="Education and training">
+      <p class="det-kicker">Legally required</p>
+      <p class="text-[13.5px] leading-relaxed mb-3" style="color: var(--nk-text);">{job.eduRequired}</p>
+      <p class="det-kicker">What employers commonly ask</p>
+      <p class="text-[13.5px] leading-relaxed mb-3" style="color: var(--nk-text);">{job.eduCommon}</p>
+      <p class="det-kicker">Training that helps</p>
+      <ul class="det-list">
+        {job.training.map((t) => (
+          <li>{t}</li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Career path & demand -->
+    <section class="nk-card p-4 sm:p-5 mb-5" aria-label="Career path and demand">
+      <p class="det-kicker">Career path</p>
+      <p class="text-[13.5px] leading-relaxed mb-3" style="color: var(--nk-text);">{job.progression}</p>
+      <p class="det-kicker">Demand outlook</p>
+      <p class="text-[13.5px] leading-relaxed" style="color: var(--nk-text);">{job.demand}</p>
+    </section>
+
+    <!-- How to earn more -->
+    {sector && (
+      <section class="nk-card p-4 sm:p-5 mb-5" aria-label="How to earn more">
+        <h2 class="text-[15px] font-bold mb-1.5" style="color: var(--nk-text);">How to earn more as a {job.title}</h2>
+        <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">{sector.advice}</p>
+      </section>
+    )}
+
+    <!-- Related professions -->
+    {related.length > 0 && (
+      <section class="mb-2" aria-label="Related professions">
+        <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-tertiary);">
+          More in {sectorLabel(job.sector)}
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {related.map((r) => (
+            <a class="job-card" href={`/nepal/utilities/jobs/${r.id}`}>
+              <div class="flex-1 min-w-0">
+                <p class="text-[14px] font-semibold leading-snug" style="color: var(--nk-text);">{r.title}</p>
+                <p class="text-[13px] font-bold tabular-nums mt-1" style="color: var(--nk-text);">
+                  Rs {fmtNPR(r.min)} – {fmtNPR(r.max)} <span class="font-normal text-[11px]" style="color: var(--nk-text-tertiary);">/ month</span>
+                </p>
+              </div>
+              <span class="job-go">View <span aria-hidden="true">→</span></span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <RelatedTools tools={[
+      { title: 'Salary Tax Calculator', description: 'Take-home salary after SSF, tax & deductions', href: '/nepal/finance/salary-checker' },
+      { title: 'Cost of Living Calculator', description: 'Monthly expenses by city & household', href: '/nepal/utilities/cost-of-living-calculator' },
+      { title: 'Jobs & Earnings Directory', description: 'Compare all professions', href: '/nepal/utilities/jobs' },
+    ]} />
+
+    <p class="text-[11.5px] leading-relaxed mt-8 max-w-3xl" style="color: var(--nk-text-tertiary);">
+      Methodology: ranges are typical estimated monthly earnings compiled from public job postings,
+      manpower agencies, and worker surveys in Nepal (2024–2026). {LEGAL_MINIMUM_NOTE} Always confirm pay, duties, and
+      contract terms with the employer before accepting a job.
+    </p>
+
+    <!-- Sources -->
+    <section class="nk-card p-4 sm:p-5 mt-5" id="job-sources" aria-label="Sources and verification">
+      <p class="det-kicker">Sources · Last verified {job.lastVerified}</p>
+      <ul class="det-list det-sources">
+        {job.sources.map((s) => (
+          <li>{s}</li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  <style>
+    .jobs-wrap { overflow-x: clip; }
+    .det-kicker {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--nk-text-tertiary); margin: 0 0 3px;
+    }
+    .det-big {
+      font-size: 26px; font-weight: 800; letter-spacing: -0.02em;
+      color: var(--nk-accent); margin: 0;
+    }
+    @media (max-width: 640px) { .det-big { font-size: 22px; } }
+    .det-bands { display: flex; flex-direction: column; gap: 6px; }
+    .det-band {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      font-size: 12.5px; color: var(--nk-text-secondary);
+      border: 1px solid var(--nk-border); border-radius: var(--radius-md);
+      padding: 8px 12px; background: var(--nk-surface);
+    }
+    .det-band strong { color: var(--nk-text); font-weight: 600; }
+    .det-hint { color: var(--nk-text-tertiary); font-size: 11px; }
+    .det-verified {
+      margin: 8px 0 0; font-size: 12px; font-weight: 600; color: var(--nk-accent);
+    }
+    .det-verified a { color: inherit; text-underline-offset: 2px; }
+    .det-tag {
+      display: inline-flex; align-items: center; padding: 4px 11px;
+      font-size: 11.5px; font-weight: 600; border-radius: 9999px;
+      background: var(--nk-accent-subtle); color: var(--nk-accent);
+      border: 1px solid color-mix(in srgb, var(--nk-accent) 22%, transparent);
+    }
+    .det-list { margin: 2px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+    .det-list li { font-size: 13.5px; line-height: 1.6; color: var(--nk-text); }
+    .det-list li::marker { color: var(--nk-accent); }
+    .det-skill-soft { background: transparent; border-style: dashed; }
+    .det-sources li { font-size: 12.5px; color: var(--nk-text-secondary); }
+    .det-facts { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 640px) { .det-facts { grid-template-columns: 220px 1fr; } }
+    .det-fact { font-size: 14px; font-weight: 600; color: var(--nk-text); margin: 0; }
+    .det-skill {
+      display: inline-flex; align-items: center; padding: 5px 12px;
+      font-size: 12px; font-weight: 500; border-radius: 9999px;
+      background: var(--nk-hover); color: var(--nk-text-secondary);
+      border: 1px solid var(--nk-border);
+    }
+    .job-card {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      padding: 13px 14px; border-radius: var(--radius-lg);
+      border: 1px solid var(--nk-border); background-color: var(--nk-card-bg);
+      text-decoration: none; min-width: 0;
+      transition: border-color var(--duration-fast) ease;
+    }
+    .job-card:hover { border-color: var(--nk-border-strong); }
+    .job-card:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+    .job-go {
+      display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
+      font-size: 12px; font-weight: 600; color: var(--nk-accent); white-space: nowrap;
+      padding-top: 2px;
+    }
+  </style>
+</BaseLayout>

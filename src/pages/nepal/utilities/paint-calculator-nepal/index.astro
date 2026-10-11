@@ -1,0 +1,458 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Calculator } from '@lucide/astro';
+import { COAT_OPTIONS, PRIMER_COAT_OPTIONS, CAN_SIZES, DEFAULTS } from '../../../../data/paint-calculator.js';
+import { calcPaint, formatNPR, formatArea, formatLiters } from '../../../../lib/calculators/paint-calculator.js';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+
+const title = 'Paint Calculator Nepal (2026) | SolutionsNepal';
+const description = 'Calculate how much paint you need and estimate the cost for your room, house or project in Nepal.';
+const canonical = 'https://solutionsnepal.com/nepal/utilities/paint-calculator-nepal';
+
+// Worked example using the same engine (clearly labelled as an example).
+const example = calcPaint({
+  length: 12, width: 10, height: 10,
+  doors: 1, doorW: 3, doorH: 7, windows: 2, windowW: 4, windowH: 4,
+  coats: 2, coverage: 120, pricePerLiter: 450,
+});
+
+const faq = [
+  { q:'How much paint is needed for a 10×12 room?', a:'It depends on height, openings, coats and coverage — but as an example, a 12×10 ft room with 10 ft walls, 1 door, 2 windows, 2 coats at 120 sq ft/L needs about 7.1 liters including wastage. Enter your exact room above.' },
+  { q:'How do I calculate wall paint area?', a:'Wall area = 2 × (length + width) × height, all in feet. Measure each wall if the room is not rectangular, add them up, then subtract doors and windows.' },
+  { q:'Should I subtract doors and windows?', a:'Yes, for an accurate estimate. Doors and windows are not painted, so deducting them avoids overbuying. Use “Skip doors & windows” only for a rough upper-bound figure.' },
+  { q:'How many coats of paint should I use?', a:'Two coats are commonly used for better coverage, but actual requirements depend on the paint, surface condition and color change — dark-to-light changes may need an extra coat.' },
+  { q:'How much area does 1 liter of paint cover?', a:'It varies by product — 120 sq ft/L is a common planning figure, but always check the manufacturer\u2019s label for your chosen paint and surface.' },
+  { q:'Do I need primer before painting?', a:'New plaster or highly absorbent surfaces usually benefit from primer for adhesion and even finish. Enable the primer option above to estimate primer quantity and cost separately.' },
+  { q:'How much does it cost to paint a house in Nepal?', a:'Total cost depends on paint brand and type, surface condition, coats, area, primer and labor — there is no fixed national price. This calculator estimates material quantity and cost from your inputs.' },
+  { q:'How accurate is a paint calculator?', a:'It is a planning estimate. Actual coverage depends on the product, surface texture, wall condition, application method, coats and color change — keep a little leftover for touch-ups.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'Paint Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Utilities', href:'/nepal/utilities'}, {label:'Paint Calculator'}]} />
+
+    <div class="mb-2.5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">🇳🇵 Simple paint quantity &amp; cost calculator</div>
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">Paint Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[660px]" style="color:var(--nk-text-secondary);">Calculate how much paint you need and estimate the cost for your room, house or project in Nepal.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.8fr_400px] gap-4 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-2.5 min-w-0">
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◈</span> Calculate By</p>
+          <div class="flex gap-1.5 mb-2.5" role="radiogroup" aria-label="Calculation mode">
+            <button type="button" class="seg-btn seg-active" data-mode="room" role="radio" aria-checked="true">Room Dimensions</button>
+            <button type="button" class="seg-btn" data-mode="custom" role="radio" aria-checked="false">Custom Area</button>
+          </div>
+          <div id="room-inputs" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="rm-length">Room length</label><div class="cm-box"><input id="rm-length" type="text" inputmode="decimal" placeholder="e.g. 12" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="rm-width">Room width</label><div class="cm-box"><input id="rm-width" type="text" inputmode="decimal" placeholder="e.g. 10" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="rm-height">Wall height</label><div class="cm-box"><input id="rm-height" type="text" inputmode="decimal" placeholder="e.g. 10" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">ft</span></div></div>
+          </div>
+          <div id="custom-inputs" class="hidden">
+            <div class="cm-field max-w-[280px]"><label class="cm-label" for="cu-area">Paintable area</label><div class="cm-box"><input id="cu-area" type="text" inputmode="decimal" placeholder="e.g. 800" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">sq ft</span></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;" id="openings-card">
+          <div class="flex items-center justify-between gap-3 mb-2">
+            <p class="sec-head !mb-0"><span class="sec-icon">▤</span> Doors &amp; Windows</p>
+            <label class="inline-flex items-center gap-1.5 text-[11.5px] font-medium cursor-pointer whitespace-nowrap" style="color:var(--nk-text-secondary);"><input id="skip-openings" type="checkbox" style="width:14px; height:14px; accent-color:var(--nk-accent);" /> Skip doors &amp; windows</label>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="openings-grid">
+            <div class="cm-field"><label class="cm-label" for="n-doors">Number of doors</label><div class="cm-box"><input id="n-doors" type="text" inputmode="numeric" placeholder="1" class="cm-input" style="padding-left:10px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="door-w">Door width</label><div class="cm-box"><input id="door-w" type="text" inputmode="decimal" placeholder="3" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="door-h">Door height</label><div class="cm-box"><input id="door-h" type="text" inputmode="decimal" placeholder="7" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="n-windows">Number of windows</label><div class="cm-box"><input id="n-windows" type="text" inputmode="numeric" placeholder="2" class="cm-input" style="padding-left:10px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="win-w">Window width</label><div class="cm-box"><input id="win-w" type="text" inputmode="decimal" placeholder="4" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">ft</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="win-h">Window height</label><div class="cm-box"><input id="win-h" type="text" inputmode="decimal" placeholder="4" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">ft</span></div></div>
+          </div>
+          <label class="flex items-center gap-2 cursor-pointer mt-2.5"><input id="inc-ceiling" type="checkbox" style="width:15px; height:15px; accent-color:var(--nk-accent);" /> <span class="text-[12.5px] font-semibold" style="color:var(--nk-text);">Include ceiling <span class="font-normal" style="color:var(--nk-text-tertiary);">(Length × Width)</span></span></label>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <p class="sec-head"><span class="sec-icon">◎</span> Paint Coats</p>
+              <div class="flex flex-wrap gap-1.5" id="coat-chips" role="radiogroup" aria-label="Number of coats">
+                {COAT_OPTIONS.map(c=> <button type="button" class={`chip coat-chip${c===DEFAULTS.coats?' chip-active':''}`} data-coat={String(c)} role="radio" aria-checked={c===DEFAULTS.coats?'true':'false'}>{c} coat{c===1?'':'s'}</button>)}
+              </div>
+              <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Two coats are commonly used for better coverage, but actual requirements depend on the paint and surface.</p>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="coverage">Area covered by 1 liter</label><div class="cm-box"><input id="coverage" type="text" inputmode="decimal" placeholder="120" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">sq ft/L</span></div>
+              <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Check the paint manufacturer's label for the actual coverage of your chosen product.</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2.5">
+            <div class="cm-field"><label class="cm-label" for="paint-price">Paint price per liter</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="paint-price" type="text" inputmode="decimal" placeholder="e.g. 450" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="wastage">Estimated wastage</label><div class="cm-box"><input id="wastage" type="text" inputmode="decimal" placeholder="10" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">%</span></div></div>
+          </div>
+          <div class="mt-2.5">
+            <p class="cm-label mb-1">Preferred can size <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></p>
+            <div class="flex flex-wrap gap-1.5" id="can-chips" role="radiogroup" aria-label="Can size">
+              {CAN_SIZES.map(c=> <button type="button" class="chip can-chip" data-can={c.id} data-liters={c.liters==null?'':String(c.liters)} role="radio" aria-checked="false">{c.label}</button>)}
+            </div>
+            <div id="can-custom-wrap" class="hidden mt-2 cm-field max-w-[220px]"><label class="cm-label" for="can-custom">Custom can size</label><div class="cm-box"><input id="can-custom" type="text" inputmode="decimal" placeholder="e.g. 5" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">L</span></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <button type="button" id="primer-toggle" class="w-full flex items-center justify-between text-left" aria-expanded="false">
+            <span class="sec-head !mb-0"><span class="sec-icon">◔</span> Optional Primer</span>
+            <span class="text-[11px] font-semibold px-2.5 py-1 rounded-full" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);" id="primer-caret">Show</span>
+          </button>
+          <div id="primer-panel" class="hidden mt-2.5">
+            <label class="flex items-center gap-2 cursor-pointer mb-2.5"><input id="primer-on" type="checkbox" style="width:15px; height:15px; accent-color:var(--nk-accent);" /> <span class="text-[12.5px] font-semibold" style="color:var(--nk-text);">Include primer</span></label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div><p class="cm-label mb-1">Primer coats</p><div class="flex flex-wrap gap-1.5" id="primer-coat-chips" role="radiogroup" aria-label="Primer coats">
+                {PRIMER_COAT_OPTIONS.map(c=> <button type="button" class={`chip primer-coat-chip${c===DEFAULTS.primerCoats?' chip-active':''}`} data-pcoat={String(c)} role="radio" aria-checked={c===DEFAULTS.primerCoats?'true':'false'}>{c}</button>)}
+              </div></div>
+              <div class="cm-field"><label class="cm-label" for="primer-cov">Primer coverage</label><div class="cm-box"><input id="primer-cov" type="text" inputmode="decimal" placeholder="120" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">sq ft/L</span></div></div>
+              <div class="cm-field"><label class="cm-label" for="primer-price">Primer price</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="primer-price" type="text" inputmode="decimal" placeholder="e.g. 350" class="cm-input" /></div></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="flex gap-2.5">
+          <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> Calculate Paint →</button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2 text-[13px] font-semibold" style="border-radius:12px;">Reset</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium" style="color:#DC2626;"></p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Paint Required</p>
+            <p class="text-[26px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter your room details, then click <strong>Calculate Paint</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+            <div id="stale-bar" class="hidden px-3.5 py-2 text-[11px] font-semibold text-center" style="background:#FFFBEB; border-bottom:1px solid #FDE68A; color:#92400E;">Inputs changed — recalculate to update results</div>
+            <div class="px-4 pt-4 pb-3 text-center res-hero" style="border-bottom:1px solid var(--nk-border);">
+              <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Paint Required</p>
+              <p class="text-[32px] font-extrabold leading-tight tabular-nums nk-gradient-text" id="r-liters">—</p>
+              <p class="text-[12px] tabular-nums font-semibold" style="color:var(--nk-text-secondary);">Recommended purchase: <span id="r-buy">—</span></p>
+            </div>
+            <div class="p-3.5 space-y-2.5">
+              <div class="rounded-xl text-[12px]" style="border:1px solid var(--nk-border);">
+                <div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Paintable area</span><strong style="color:var(--nk-text);" id="r-area">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Coats · Coverage</span><strong style="color:var(--nk-text);"><span id="r-coats">—</span> · <span id="r-cov">—</span></strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Estimated paint cost</span><strong style="color:var(--nk-text);" id="r-cost">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);" id="r-can-row"><span style="color:var(--nk-text-secondary);">Recommended cans</span><strong style="color:var(--nk-text);" id="r-cans">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);" id="r-left-row"><span style="color:var(--nk-text-secondary);">Estimated leftover</span><strong style="color:var(--nk-text);" id="r-leftover">—</strong></div>
+              </div>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">Area breakdown</p>
+                <div id="r-areabreak" class="space-y-1 text-[12px] tabular-nums"></div>
+              </div>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">Estimated cost</p>
+                <div id="r-costbreak" class="space-y-1 text-[12px] tabular-nums"></div>
+              </div>
+
+              <div class="rounded-xl p-3 text-[11.5px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+                <strong style="color:var(--nk-text);">Example:</strong> <span id="r-example">—</span> <span style="color:var(--nk-text-tertiary);">(illustrative only)</span>
+              </div>
+
+              <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+                <strong style="color:var(--nk-text);">Important:</strong> Paint requirements are estimates. Actual coverage depends on the paint product, surface texture, wall condition, application method, number of coats and color change. Always check the manufacturer's coverage recommendation before purchasing.
+              </div>
+
+              <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Paint Do I Need for a Room?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Room dimensions set the wall area, doors and windows are deducted, coats multiply the paintable area, and coverage per liter converts it to liters. Larger rooms, more coats and thirstier surfaces all raise the quantity.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How to Calculate Paint Required</h2><div class="rounded-xl p-3 text-[12.5px] font-mono space-y-1" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text);"><p>Wall Area = 2 × (Length + Width) × Height</p><p>Paint Required = Paint Area × Coats ÷ Coverage per Liter</p></div><p class="text-[11.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Deduct doors and windows, then add ~10% wastage on top.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Does It Cost to Paint a House in Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Total cost depends on paint brand and type, surface condition, coats, area, primer and labor — there is no fixed national price, so this calculator estimates material quantity and cost from your own inputs.</p></section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Before You Buy Paint</h2>
+        <ul class="text-[12.5px] leading-relaxed list-disc pl-5 space-y-1" style="color:var(--nk-text-secondary);">
+          <li>Check the manufacturer's stated coverage.</li>
+          <li>Account for the surface condition.</li>
+          <li>New plaster or highly absorbent surfaces may require primer.</li>
+          <li>Dark-to-light color changes may require additional coats.</li>
+          <li>Keep a small amount of leftover paint for future touch-ups.</li>
+          <li>Actual consumption can vary from the calculator estimate.</li>
+        </ul>
+      </section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[{title:'House Construction Cost', description:'Estimate build cost per sq ft', href:'/nepal/construction/house-construction-cost'}, {title:'Cost of Living Calculator', description:'Monthly living expenses', href:'/nepal/utilities/cost-of-living-calculator'}, {title:'Loan Eligibility Calculator', description:'How much can you borrow?', href:'/nepal/finance/loan-eligibility-calculator-nepal'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .sec-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--nk-text); margin-bottom:5px; letter-spacing:-0.01em; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11px; font-weight:500; cursor:pointer; transition:all 140ms ease; font-family:inherit; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .seg-btn{ flex:1; display:inline-flex; align-items:center; justify-content:center; height:34px; border-radius:8px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:12px; font-weight:600; cursor:pointer; transition:all 120ms ease; font-family:inherit; }
+  .seg-btn.seg-active{ background:var(--nk-accent); border-color:var(--nk-accent); color:#fff; font-weight:700; }
+  .cm-field{ display:flex; flex-direction:column; gap:4px; }
+  .cm-label{ font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:36px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; outline:none; border-radius:10px; color:var(--nk-text); }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); }
+  .hidden{ display:none !important; }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input{ font-size:16px !important; }
+  }
+</style>
+
+<script>
+  import { calcPaint, formatNPR, formatArea, formatLiters } from '../../../../lib/calculators/paint-calculator.js';
+  import { CAN_SIZES } from '../../../../data/paint-calculator.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let hasCalculated = false;
+  let mode = 'room';
+  let coats = 2;
+  let canLiters = 0; // 0 = none selected
+  let primerCoats = 1;
+  let primerOn = false;
+
+  function num(id, max){
+    const el=$(id);
+    if(!el) return NaN;
+    const raw=String(el.value).replace(/,/g,'').trim();
+    if(raw==='') return NaN;
+    const n=Number(raw);
+    if(!Number.isFinite(n)) return NaN;
+    return max ? Math.min(n,max) : n;
+  }
+  function setChip(selector, attr, val){
+    document.querySelectorAll(selector).forEach(c=>{
+      const on=c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+  function markDirty(){
+    if(hasCalculated) $('stale-bar')?.classList.remove('hidden');
+  }
+  function clearStale(){ $('stale-bar')?.classList.add('hidden'); }
+
+  // mode
+  document.querySelectorAll('[data-mode]').forEach(b=> b.addEventListener('click', ()=>{
+    mode=b.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(x=>{
+      const on=x===b;
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    $('room-inputs')?.classList.toggle('hidden', mode!=='room');
+    $('custom-inputs')?.classList.toggle('hidden', mode!=='room');
+    $('openings-card')?.classList.toggle('hidden', mode!=='room');
+    markDirty();
+  }));
+  // coats
+  document.querySelectorAll('.coat-chip').forEach(b=> b.addEventListener('click', ()=>{ coats=Number(b.dataset.coat); setChip('.coat-chip','coat',coats); markDirty(); }));
+  // cans
+  document.querySelectorAll('.can-chip').forEach(b=> b.addEventListener('click', ()=>{
+    const id=b.dataset.can;
+    const isActive=b.classList.contains('chip-active');
+    document.querySelectorAll('.can-chip').forEach(c=>{ c.classList.remove('chip-active'); c.setAttribute('aria-checked','false'); });
+    $('can-custom-wrap')?.classList.add('hidden');
+    if(isActive){ canLiters=0; }
+    else {
+      b.classList.add('chip-active'); b.setAttribute('aria-checked','true');
+      if(id==='custom'){ $('can-custom-wrap')?.classList.remove('hidden'); $('can-custom')?.focus(); canLiters=num('can-custom')||0; }
+      else canLiters=Number(b.dataset.liters)||0;
+    }
+    markDirty();
+  }));
+  // primer
+  $('primer-toggle')?.addEventListener('click', ()=>{
+    const panel=$('primer-panel');
+    const open=panel.classList.toggle('hidden');
+    $('primer-toggle').setAttribute('aria-expanded', String(!open));
+    $('primer-caret').textContent=open?'Show':'Hide';
+  });
+  $('primer-on')?.addEventListener('change', markDirty);
+  document.querySelectorAll('.primer-coat-chip').forEach(b=> b.addEventListener('click', ()=>{ primerCoats=Number(b.dataset.pcoat); setChip('.primer-coat-chip','pcoat',primerCoats); markDirty(); }));
+
+  // toggles
+  $('skip-openings')?.addEventListener('change', (e)=>{
+    $('openings-grid').style.opacity=e.target.checked?'0.45':'1';
+    markDirty();
+  });
+  $('inc-ceiling')?.addEventListener('change', markDirty);
+
+  // inputs: clean + mark stale (never auto-calc)
+  document.querySelectorAll('.cm-input').forEach(el=>{
+    el.addEventListener('input', ()=>{
+      if(el.value.includes('-')) el.value=el.value.replace(/-/g,'');
+      markDirty();
+    });
+    el.addEventListener('blur', ()=>{
+      const raw=String(el.value).replace(/,/g,'').trim();
+      if(raw==='') return;
+      const n=Number(raw);
+      if(Number.isFinite(n) && n>=0) el.value=(Math.round(n*100)/100).toLocaleString('en-IN',{maximumFractionDigits:2});
+      markDirty();
+    });
+    el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  });
+
+  function collect(){
+    const get=(id)=>{ const el=$(id); return el?el.value:''; };
+    // Empty field = documented default (shown as placeholder) so results stay sensible.
+    const getOr=(id,def)=>{ const v=String(get(id)).trim(); return v===''?def:v; };
+    return {
+      mode,
+      length: get('rm-length'), width: get('rm-width'), height: get('rm-height'),
+      areaSqft: get('cu-area'),
+      doors: getOr('n-doors', '1'), doorW: getOr('door-w', '3'), doorH: getOr('door-h', '7'),
+      windows: getOr('n-windows', '2'), windowW: getOr('win-w', '4'), windowH: getOr('win-h', '4'),
+      skipOpenings: $('skip-openings').checked,
+      includeCeiling: mode==='room' && $('inc-ceiling').checked,
+      coats, coverage: getOr('coverage', '120'), wastagePct: getOr('wastage', '10'),
+      pricePerLiter: get('paint-price'),
+      canLiters,
+      primerEnabled: $('primer-on').checked,
+      primerCoats, primerCoverage: getOr('primer-cov', '120'), primerPrice: get('primer-price'),
+    };
+  }
+
+  function doCalc(){
+    const hint=$('calc-hint');
+    if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const r = calcPaint(collect());
+    if(!r.valid){
+      $('res-empty')?.classList.remove('hidden');
+      $('res-body')?.classList.add('hidden');
+      if(hint){ hint.textContent=r.errors[0]; hint.classList.remove('hidden'); }
+      $('calc-btn')?.animate?.([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],{duration:220});
+      return;
+    }
+    hasCalculated = true;
+    clearStale();
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+
+    $('r-liters').textContent = formatLiters(r.withWaste);
+    $('r-buy').textContent = r.cans>0 ? `${formatLiters(r.canTotal)} (${r.cans} × ${r.canTotal/r.cans} L)` : formatLiters(r.purchaseLiters);
+    $('r-area').textContent = formatArea(r.paintableTotal);
+    $('r-coats').textContent = `${r.coats} coat${r.coats===1?'':'s'}`;
+    $('r-cov').textContent = `${r.coverage} sq ft/L`;
+    $('r-cost').textContent = formatNPR(r.paintCost);
+    const canRow=$('r-can-row');
+    const leftRow=$('r-left-row');
+    if(r.cans>0){
+      canRow.classList.remove('hidden');
+      leftRow.classList.remove('hidden');
+      $('r-cans').textContent = `${r.cans} × ${r.canTotal/r.cans} L`;
+      $('r-leftover').textContent = formatLiters(r.leftover);
+    } else { canRow.classList.add('hidden'); leftRow.classList.add('hidden'); }
+
+    // area breakdown (signed)
+    const ab=$('r-areabreak');
+    let rows='';
+    if(collect().mode==='custom'){
+      rows+=`<div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Paintable area</span><span style="color:var(--nk-text);">${formatArea(r.paintableTotal)}</span></div>`;
+    } else {
+      rows+=`<div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Walls</span><span style="color:var(--nk-text);">${formatArea(r.wallArea)}</span></div>`;
+      const open=r.doorArea+r.windowArea;
+      if(open>0) rows+=`<div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Doors &amp; windows</span><span style="color:var(--nk-text);">− ${formatArea(open)}</span></div>`;
+      if(r.ceilingArea>0) rows+=`<div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Ceiling</span><span style="color:var(--nk-text);">+ ${formatArea(r.ceilingArea)}</span></div>`;
+      rows+=`<div class="flex justify-between pt-1.5 mt-1" style="border-top:1px solid var(--nk-border); font-weight:700;"><span style="color:var(--nk-text);">Paintable area</span><span style="color:var(--nk-text);">${formatArea(r.paintableTotal)}</span></div>`;
+    }
+    rows+=`<div class="flex justify-between"><span style="color:var(--nk-text-tertiary);">× ${r.coats} coats · ${r.coverage} sq ft/L · +${r.wastagePct}% wastage</span><span style="color:var(--nk-accent); font-weight:700;">${formatLiters(r.withWaste)}</span></div>`;
+    ab.innerHTML=rows;
+
+    // cost breakdown
+    const cb=$('r-costbreak');
+    let crows=`<div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Paint${r.cans>0?` (${r.cans} × ${r.canTotal/r.cans} L)`:''}</span><span style="color:var(--nk-text); font-weight:600;">${formatNPR(r.paintCost)}</span></div>`;
+    if(r.primer){
+      crows+=`<div class="flex justify-between"><span style="color:var(--nk-text-secondary);">Primer (${formatLiters(r.primer.withWaste)})</span><span style="color:var(--nk-text); font-weight:600;">${formatNPR(r.primerCost)}</span></div>`;
+      crows+=`<div class="flex justify-between pt-1.5 mt-1" style="border-top:1px solid var(--nk-border); font-weight:700;"><span style="color:var(--nk-text);">Paint + primer</span><span style="color:var(--nk-text);">${formatNPR(r.totalCost)}</span></div>`;
+      crows+=`<div class="flex justify-between"><span style="color:var(--nk-text-tertiary);">Paint only</span><span style="color:var(--nk-text-tertiary);">${formatNPR(r.paintCost)}</span></div>`;
+    } else {
+      crows+=`<div class="flex justify-between pt-1.5 mt-1" style="border-top:1px solid var(--nk-border); font-weight:700;"><span style="color:var(--nk-text);">Estimated total</span><span style="color:var(--nk-text);">${formatNPR(r.totalCost)}</span></div>`;
+    }
+    cb.innerHTML=crows;
+
+    // quick example line (user's own numbers, plain words)
+    const c=collect();
+    $('r-example').textContent = c.mode==='custom'
+      ? `${formatArea(r.paintableTotal)} at ${r.coats} coats needs about ${formatLiters(r.withWaste)} of paint.`
+      : `A similar room needs about ${formatLiters(r.withWaste)} of paint at ${r.coats} coats.`;
+
+    window.__lastPaint = r;
+    if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+  }
+
+  function doReset(){
+    mode='room'; coats=2; canLiters=0; primerCoats=1;
+    document.querySelectorAll('[data-mode]').forEach(x=>{
+      const on=x.dataset.mode==='room';
+      x.classList.toggle('seg-active', on); x.setAttribute('aria-checked', String(on));
+    });
+    $('room-inputs')?.classList.remove('hidden');
+    $('custom-inputs')?.classList.add('hidden');
+    $('openings-card')?.classList.remove('hidden');
+    ['rm-length','rm-width','rm-height','cu-area','paint-price','can-custom','primer-price'].forEach(id=>{ $(id).value=''; });
+    $('n-doors').value=''; $('door-w').value=''; $('door-h').value='';
+    $('n-windows').value=''; $('win-w').value=''; $('win-h').value='';
+    $('skip-openings').checked=false; $('openings-grid').style.opacity='1';
+    $('inc-ceiling').checked=false;
+    $('coverage').value=''; $('wastage').value='';
+    $('primer-cov').value='';
+    $('primer-on').checked=false;
+    $('can-custom-wrap')?.classList.add('hidden');
+    setChip('.coat-chip','coat',2); setChip('.primer-coat-chip','pcoat',1);
+    document.querySelectorAll('.can-chip').forEach(c=>{ c.classList.remove('chip-active'); c.setAttribute('aria-checked','false'); });
+    $('primer-panel')?.classList.add('hidden');
+    $('primer-toggle').setAttribute('aria-expanded','false');
+    $('primer-caret').textContent='Show';
+    hasCalculated=false; clearStale();
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalc);
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('copy-btn')?.addEventListener('click', async()=>{
+    if($('res-body')?.classList.contains('hidden')){
+      doCalc();
+      if($('res-body')?.classList.contains('hidden')) return;
+    }
+    const r=window.__lastPaint; if(!r) return;
+    const text=`Paint estimate: ${formatLiters(r.withWaste)} required (${formatLiters(r.purchaseLiters)} to buy)\nArea ${formatArea(r.paintableTotal)} · ${r.coats} coats · Paint ${formatNPR(r.paintCost)}${r.primer?` · Primer ${formatNPR(r.primerCost)}`:''} · Total ${formatNPR(r.totalCost)}\n— SolutionsNepal paint calculator`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const t=b.textContent; b.textContent='Copied!'; setTimeout(()=> b.textContent=t,1500);}catch{}
+  });
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+</script>

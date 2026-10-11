@@ -1,0 +1,32 @@
+---
+import { 
+  Calculator, Globe, Scale, CreditCard, Landmark, 
+  Flag, ArrowLeftRight, LayoutGrid, TrendingUp, Shield, 
+  Zap, Clock, Smartphone, ArrowRight, Search, Heart 
+} from '@lucide/astro';
+
+const { name, size = 20, class: className = '' } = Astro.props;
+
+const IconMap: Record<string, any> = {
+  calculator: Calculator,
+  globe: Globe,
+  scale: Scale,
+  card: CreditCard,
+  bank: Landmark,
+  flag: Flag,
+  swap: ArrowLeftRight,
+  grid: LayoutGrid,
+  trending: TrendingUp,
+  shield: Shield,
+  bolt: Zap,
+  clock: Clock,
+  phone: Smartphone,
+  arrow: ArrowRight,
+  search: Search,
+  heart: Heart,
+};
+
+const IconComponent = IconMap[name];
+---
+
+{IconComponent && <IconComponent size={size} class={className} />}

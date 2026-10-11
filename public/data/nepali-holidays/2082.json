@@ -1,0 +1,4212 @@
+{
+  "year": 2082,
+  "syncedAt": "2026-08-31T04:57:22.920Z",
+  "source": "nepali-date-engine-fallback",
+  "months": [
+    {
+      "month": 1,
+      "nameEn": "Baisakh",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "Nepali New Year",
+          "isHoliday": true,
+          "holiFest": [
+            "Nepali New Year"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "Buddha Jayanti",
+          "isHoliday": true,
+          "holiFest": [
+            "Buddha Jayanti"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "Buddha Jayanti",
+          "isHoliday": true,
+          "holiFest": [
+            "Buddha Jayanti"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "अमावस्या",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 31,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Nepali New Year",
+        "Buddha Jayanti",
+        "Buddha Jayanti"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 2,
+      "nameEn": "Jestha",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "औंसी",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "Republic Day",
+          "isHoliday": true,
+          "holiFest": [
+            "Republic Day"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 31,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Republic Day"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 3,
+      "nameEn": "Ashadh",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 31,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 32,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 4,
+      "nameEn": "Shrawan",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "Janai Purnima",
+          "isHoliday": true,
+          "holiFest": [
+            "Janai Purnima"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 31,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Janai Purnima"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 5,
+      "nameEn": "Bhadra",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "तृतीया",
+          "festival": "Haritalika Teej",
+          "isHoliday": true,
+          "holiFest": [
+            "Haritalika Teej"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 31,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Haritalika Teej"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 6,
+      "nameEn": "Ashwin",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "सप्तमी",
+          "festival": "Ghatasthapana",
+          "isHoliday": true,
+          "holiFest": [
+            "Ghatasthapana"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "सप्तमी",
+          "festival": "Fulpati",
+          "isHoliday": true,
+          "holiFest": [
+            "Fulpati"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "Maha Ashtami",
+          "isHoliday": true,
+          "holiFest": [
+            "Maha Ashtami"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "नवमी",
+          "festival": "Maha Navami",
+          "isHoliday": true,
+          "holiFest": [
+            "Maha Navami"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "विजया दशमी",
+          "festival": "Vijaya Dashami",
+          "isHoliday": true,
+          "holiFest": [
+            "Vijaya Dashami"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 31,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Ghatasthapana",
+        "Fulpati",
+        "Maha Ashtami",
+        "Maha Navami",
+        "Vijaya Dashami"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 7,
+      "nameEn": "Kartik",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "अष्टमी",
+          "festival": "Laxmi Puja",
+          "isHoliday": true,
+          "holiFest": [
+            "Laxmi Puja"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "एकादशी",
+          "festival": "Gobardhan Puja",
+          "isHoliday": true,
+          "holiFest": [
+            "Gobardhan Puja"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "एकादशी",
+          "festival": "Bhai Tika",
+          "isHoliday": true,
+          "holiFest": [
+            "Bhai Tika"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Laxmi Puja",
+        "Gobardhan Puja",
+        "Bhai Tika"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 8,
+      "nameEn": "Mangsir",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "Newar New Year",
+          "isHoliday": true,
+          "holiFest": [
+            "Newar New Year"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Newar New Year"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 9,
+      "nameEn": "Poush",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 10,
+      "nameEn": "Magh",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "संक्रान्ति",
+          "festival": "Maghe Sankranti",
+          "isHoliday": true,
+          "holiFest": [
+            "Maghe Sankranti"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Maghe Sankranti"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 11,
+      "nameEn": "Falgun",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "एकादशी",
+          "festival": "Maha Shivaratri",
+          "isHoliday": true,
+          "holiFest": [
+            "Maha Shivaratri"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "Democracy Day",
+          "isHoliday": true,
+          "holiFest": [
+            "Democracy Day"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "Holi",
+          "isHoliday": true,
+          "holiFest": [
+            "Holi"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Maha Shivaratri",
+        "Democracy Day",
+        "Holi"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    },
+    {
+      "month": 12,
+      "nameEn": "Chaitra",
+      "nameNp": "",
+      "days": [
+        {
+          "day": 1,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "प्रतिपदा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 2,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 3,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 4,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 5,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 6,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 7,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 8,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 9,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 10,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 11,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 12,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "Ghode Jatra",
+          "isHoliday": true,
+          "holiFest": [
+            "Ghode Jatra"
+          ],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 13,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 14,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 15,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "पूर्णिमा",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 16,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 17,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 18,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 19,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 20,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 21,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 22,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 23,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 24,
+          "weekday": 2,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 25,
+          "weekday": 3,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 26,
+          "weekday": 4,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 27,
+          "weekday": 5,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 28,
+          "weekday": 6,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 29,
+          "weekday": 0,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        },
+        {
+          "day": 30,
+          "weekday": 1,
+          "ad": "",
+          "tithi": "",
+          "festival": "",
+          "isHoliday": false,
+          "holiFest": [],
+          "marriage": [],
+          "bratabandha": []
+        }
+      ],
+      "holiFest": [
+        "Ghode Jatra"
+      ],
+      "marriage": [],
+      "bratabandha": []
+    }
+  ]
+}

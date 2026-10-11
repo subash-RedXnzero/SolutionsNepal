@@ -1,0 +1,466 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import { SSF_CURRENT } from '../../data/nepal/ssf/current.js';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'SSF Calculator Nepal 2026 | Social Security Fund Calculator';
+const description = 'Calculate SSF contribution in Nepal. Estimate employee and employer Social Security Fund contributions based on your monthly basic salary.';
+
+const faqItems = [
+  {
+    q: 'What is SSF in Nepal?',
+    a: 'SSF is Nepal\u2019s contribution-based Social Security Fund, run under the Contribution Based Social Security Act 2074. It pools monthly contributions to fund medical, maternity, accident, disability, dependent-family and old-age pension protection for enrolled workers.',
+  },
+  {
+    q: 'How much does an employee contribute to SSF?',
+    a: 'An employee contributes 11% of monthly basic salary \u2014 10% to the pension fund and 1% as social security tax. For a basic salary of Rs. 30,000, that is Rs. 3,300 per month, deducted from pay.',
+  },
+  {
+    q: 'How much does an employer contribute to SSF?',
+    a: 'The employer contributes 20% of the employee\u2019s monthly basic salary \u2014 10% pension fund, 8.33% gratuity and 1.67% additional contribution. For a basic salary of Rs. 30,000, that is Rs. 6,000 per month, paid on top of salary.',
+  },
+  {
+    q: 'Is SSF calculated on basic salary?',
+    a: 'Yes. SSF contributions are calculated on basic salary only \u2014 allowances such as dearness, house rent and transport are excluded unless the employer treats a component as basic remuneration. There is no officially confirmed ceiling or minimum on the contribution base.',
+  },
+  {
+    q: 'Does SSF reduce take-home salary?',
+    a: 'Partly. The employee\u2019s 11% share is deducted from salary, so take-home pay falls by that amount. The employer\u2019s 20% share is an additional employer cost paid on top of salary \u2014 it is never deducted from the employee.',
+  },
+  {
+    q: 'How is annual SSF contribution calculated?',
+    a: 'Multiply the monthly contribution by 12. For example, a Rs. 3,300 monthly employee share becomes Rs. 39,600 per year, and a Rs. 6,000 employer share becomes Rs. 72,000 per year.',
+  },
+  {
+    q: 'Is this SSF calculator official?',
+    a: 'No. This is an estimation tool built on the published SSF contribution structure (11% employee + 20% employer of basic salary). Always confirm your exact deduction with your employer\u2019s payroll or the Social Security Fund.',
+  },
+  {
+    q: 'Can SSF rates change?',
+    a: 'Yes. Rates are set by law and can change through amendments to the SSF Act or regulations. This calculator was last verified on 2026-09-11. Rates are subject to change according to official SSF rules.',
+  },
+  {
+    q: 'Is SolutionsNepal an official SSF website?',
+    a: 'No. SolutionsNepal is an independent tools website. This calculator is provided for estimation and informational purposes and is not affiliated with the Social Security Fund.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'SSF Calculator Nepal',
+      description: 'Estimate monthly and annual Social Security Fund contributions for employees and employers in Nepal.',
+      url: 'https://solutionsnepal.com/nepal/ssf-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1000px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'SSF Calculator' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">SSF Calculator Nepal</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Calculate your monthly Social Security Fund (SSF) contribution in Nepal for employees and employers.</p>
+      <p class="text-[13px] leading-relaxed mt-1" style="color:var(--nk-text-secondary);">Estimate employee contribution, employer contribution, and total monthly SSF contribution.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-5 items-start">
+
+      <!-- ═══ LEFT: INPUTS ═══ -->
+      <div class="nk-card p-5 space-y-4">
+        <!-- Basic salary -->
+        <div>
+          <label for="ssf-salary" class="block text-[13px] font-medium mb-1" style="color:var(--nk-text-secondary);">
+            Enter monthly basic salary
+          </label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+            <input id="ssf-salary" type="number" min="0" step="any" placeholder="30,000" class="nk-input text-[15px]" style="padding-left:3rem;" inputmode="decimal" />
+          </div>
+          <p id="ssf-error" class="hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+        </div>
+
+        <!-- Employment type -->
+        <div>
+          <label for="ssf-role" class="block text-[13px] font-medium mb-1" style="color:var(--nk-text-secondary);">Employment type</label>
+          <select id="ssf-role" class="nk-input text-[13px]">
+            <option value="employee">Employee</option>
+            <option value="employer">Employer / Business</option>
+          </select>
+        </div>
+
+        <!-- Employer toggle -->
+        <div class="flex items-center justify-between gap-3">
+          <span class="text-[12px] font-medium" style="color:var(--nk-text-secondary);" id="ssf-toggle-label">Include employer contribution</span>
+          <button id="ssf-toggle" type="button" role="switch" aria-checked="true" aria-labelledby="ssf-toggle-label ssf-toggle-state" class="ssf-switch is-on">
+            <span class="ssf-knob" aria-hidden="true"></span>
+            <span id="ssf-toggle-state" class="ssf-state">ON</span>
+          </button>
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <button id="ssf-calc" class="flex-1 text-[13px] font-semibold py-2.5 rounded-lg transition-all" style="background-color:var(--nk-accent);color:#fff;min-height:44px;">Calculate SSF</button>
+          <button id="ssf-reset" class="text-[12px] font-medium px-4 py-2 rounded-lg border transition-colors" style="border-color:var(--nk-border);color:var(--nk-text-secondary);">Reset</button>
+        </div>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="md:sticky md:top-4">
+        <div class="nk-card p-5">
+          <!-- Initial state -->
+          <div id="ssf-empty">
+            <div class="mx-auto mb-3 rounded-xl flex items-center justify-center" style="width:52px;height:52px;background-color:var(--nk-bg);border:1px solid var(--nk-border);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color:var(--nk-accent);" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.2h18"/><circle cx="16.6" cy="14.6" r="1.1"/></svg>
+            </div>
+            <p class="text-center text-[14px] font-semibold" style="color:var(--nk-text);">Calculate Your SSF Contribution</p>
+            <p class="text-center text-[12px] mt-1 leading-relaxed" style="color:var(--nk-text-secondary);">Enter your monthly basic salary to calculate employee and employer SSF contributions.</p>
+          </div>
+
+          <!-- Result state -->
+          <div id="ssf-result" class="hidden">
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">Monthly breakdown</p>
+            <div class="space-y-2 text-[13px]">
+              <div class="flex items-center justify-between">
+                <span style="color:var(--nk-text-secondary);">Monthly Basic Salary</span>
+                <strong class="font-semibold" style="color:var(--nk-text);" id="ssf-r-salary">—</strong>
+              </div>
+              <div class="flex items-center justify-between">
+                <span style="color:var(--nk-text-secondary);">Employee Contribution <span id="ssf-r-emp-rate" class="tabular-nums"></span></span>
+                <strong class="font-semibold" style="color:var(--nk-text);" id="ssf-r-emp">—</strong>
+              </div>
+              <div class="flex items-center justify-between" id="ssf-row-emr">
+                <span style="color:var(--nk-text-secondary);">Employer Contribution <span id="ssf-r-emr-rate" class="tabular-nums"></span></span>
+                <strong class="font-semibold" style="color:var(--nk-text);" id="ssf-r-emr">—</strong>
+              </div>
+            </div>
+
+            <div class="rounded-xl px-4 py-3.5 text-center my-3" style="background-color:var(--nk-accent-subtle);">
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-0.5" style="color:var(--nk-text-secondary);">Total SSF Contribution</p>
+              <p class="text-[24px] font-bold tracking-tight leading-none" style="color:var(--nk-accent);" id="ssf-r-total">—</p>
+            </div>
+
+            <!-- Visual breakdown -->
+            <div class="space-y-2.5" id="ssf-bars">
+              <div>
+                <div class="flex items-center justify-between text-[11px] font-semibold mb-1">
+                  <span style="color:var(--nk-text-secondary);">EMPLOYEE <span id="ssf-bar-emp-pct"></span></span>
+                  <span style="color:var(--nk-text);" id="ssf-bar-emp-amt"></span>
+                </div>
+                <div class="h-2 rounded-full" style="background-color:var(--nk-bg);">
+                  <div id="ssf-bar-emp-fill" class="h-2 rounded-full transition-all" style="width:0%;background-color:var(--nk-accent);"></div>
+                </div>
+              </div>
+              <div id="ssf-bar-emr-wrap">
+                <div class="flex items-center justify-between text-[11px] font-semibold mb-1">
+                  <span style="color:var(--nk-text-secondary);">EMPLOYER <span id="ssf-bar-emr-pct"></span></span>
+                  <span style="color:var(--nk-text);" id="ssf-bar-emr-amt"></span>
+                </div>
+                <div class="h-2 rounded-full" style="background-color:var(--nk-bg);">
+                  <div id="ssf-bar-emr-fill" class="h-2 rounded-full transition-all" style="width:0%;background-color:var(--nk-text-tertiary);"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between text-[11px] font-semibold mb-1">
+                  <span style="color:var(--nk-text-secondary);">TOTAL <span id="ssf-bar-total-pct"></span></span>
+                  <span style="color:var(--nk-accent);" id="ssf-bar-total-amt"></span>
+                </div>
+                <div class="h-2 rounded-full" style="background-color:var(--nk-bg);">
+                  <div class="h-2 rounded-full" style="width:100%;background-color:var(--nk-accent);"></div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="my-3" style="border-color:var(--nk-border);" />
+
+            <!-- Annual -->
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">Annual contribution</p>
+            <div class="space-y-2 text-[13px]">
+              <div class="flex items-center justify-between">
+                <span style="color:var(--nk-text-secondary);">Employee Annual Contribution</span>
+                <strong class="font-semibold" style="color:var(--nk-text);" id="ssf-r-emp-annual">—</strong>
+              </div>
+              <div class="flex items-center justify-between" id="ssf-row-emr-annual">
+                <span style="color:var(--nk-text-secondary);">Employer Annual Contribution</span>
+                <strong class="font-semibold" style="color:var(--nk-text);" id="ssf-r-emr-annual">—</strong>
+              </div>
+              <div class="flex items-center justify-between">
+                <span style="color:var(--nk-text-secondary);">Total Annual Contribution</span>
+                <strong class="font-semibold" style="color:var(--nk-accent);" id="ssf-r-total-annual">—</strong>
+              </div>
+            </div>
+
+            <hr class="my-3" style="border-color:var(--nk-border);" />
+
+            <!-- Table -->
+            <table class="w-full text-[12px]" style="border-collapse:collapse;">
+              <caption class="sr-only">Monthly and annual SSF breakdown</caption>
+              <thead>
+                <tr style="color:var(--nk-text-tertiary);">
+                  <th scope="col" class="text-left font-semibold py-1 pr-2"></th>
+                  <th scope="col" class="text-right font-semibold py-1 pr-2">Monthly</th>
+                  <th scope="col" class="text-right font-semibold py-1">Annual</th>
+                </tr>
+              </thead>
+              <tbody style="color:var(--nk-text);">
+                <tr style="border-top:1px solid var(--nk-border);">
+                  <th scope="row" class="text-left font-medium py-1.5 pr-2" style="color:var(--nk-text-secondary);">Basic Salary</th>
+                  <td class="text-right tabular-nums py-1.5 pr-2" id="ssf-t-basic-m">—</td>
+                  <td class="text-right tabular-nums py-1.5" id="ssf-t-basic-a">—</td>
+                </tr>
+                <tr style="border-top:1px solid var(--nk-border);">
+                  <th scope="row" class="text-left font-medium py-1.5 pr-2" style="color:var(--nk-text-secondary);">Employee SSF</th>
+                  <td class="text-right tabular-nums py-1.5 pr-2" id="ssf-t-emp-m">—</td>
+                  <td class="text-right tabular-nums py-1.5" id="ssf-t-emp-a">—</td>
+                </tr>
+                <tr style="border-top:1px solid var(--nk-border);" id="ssf-t-emr-row">
+                  <th scope="row" class="text-left font-medium py-1.5 pr-2" style="color:var(--nk-text-secondary);">Employer SSF</th>
+                  <td class="text-right tabular-nums py-1.5 pr-2" id="ssf-t-emr-m">—</td>
+                  <td class="text-right tabular-nums py-1.5" id="ssf-t-emr-a">—</td>
+                </tr>
+                <tr style="border-top:1px solid var(--nk-border);">
+                  <th scope="row" class="text-left font-semibold py-1.5 pr-2">Total SSF</th>
+                  <td class="text-right tabular-nums font-semibold py-1.5 pr-2" style="color:var(--nk-accent);" id="ssf-t-total-m">—</td>
+                  <td class="text-right tabular-nums font-semibold py-1.5" style="color:var(--nk-accent);" id="ssf-t-total-a">—</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="text-[11px] mt-3 leading-relaxed" style="color:var(--nk-text-tertiary);" id="ssf-role-note"></p>
+            <p class="text-[11px] mt-2 leading-relaxed" style="color:var(--nk-text-tertiary);">
+              Last verified: <span id="ssf-verified">—</span>. Rates are subject to change according to official SSF rules.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO / educational content -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">What is SSF in Nepal?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">The Social Security Fund (SSF) is Nepal's contribution-based social protection system, established under the Contribution Based Social Security Act 2074 and run by the Social Security Fund (ssf.gov.np). Enrolled employers and employees contribute a fixed share of basic salary every month, which funds medical, maternity, accident, disability, dependent-family and old-age pension protection. Registration is mandatory for most formal private-sector employers.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">How is SSF contribution calculated?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Contributions use the monthly <strong style="color:var(--nk-text);">basic salary</strong> as the base — allowances are excluded and there is no official ceiling. The employee pays <strong style="color:var(--nk-text);" id="ssf-info-emp">11%</strong> (10% pension fund + 1% social security tax) and the employer pays <strong style="color:var(--nk-text);" id="ssf-info-emr">20%</strong> (10% pension fund + 8.33% gratuity + 1.67% additional), for a combined <strong style="color:var(--nk-text);" id="ssf-info-total">31%</strong>. Example: on Rs. 30,000 basic salary, the employee share is Rs. 3,300 and the employer share is Rs. 6,000 — Rs. 9,300 in total per month.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Who needs to contribute to SSF?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Private-sector employers must register with the SSF and enroll their employees, then remit both shares every month through the SSF portal. Public enterprises, NGOs and INGOs operating in Nepal are also covered. If you receive a payslip with an SSF line, your employer is already deducting the 11% employee share; business owners use the employer view to budget the additional 20% cost per employee.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Does SSF contribution reduce take-home salary?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">The employee's 11% is deducted from salary, so take-home pay falls by exactly that amount — Rs. 3,300 less per month on a Rs. 30,000 basic salary. The employer's 20% never comes out of the employee's pocket: it is an extra cost the business pays on top of salary, subject to the same payroll and tax rules as other employer contributions.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related Nepal calculators</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/salary-checker" style="color:var(--nk-accent);">Salary Calculator</a> — check take-home pay after SSF and tax</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/salary-tax" style="color:var(--nk-accent);">Salary Tax Calculator</a> — estimate income tax slabs</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance" style="color:var(--nk-accent);">All finance tools</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <Disclaimer variant="finance" />
+    <RelatedTools tools={[
+      { title: 'Salary Calculator', description: 'Take-home pay with SSF & tax deductions', href: '/nepal/finance/salary-checker' },
+      { title: 'EMI Calculator', description: 'Calculate home & car loan EMIs', href: '/nepal/finance/emi-calculator' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .ssf-switch {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: inherit; font-size: 12px; font-weight: 700;
+    color: var(--nk-text-secondary); background: transparent;
+    border: 1px solid var(--nk-border);
+    border-radius: 999px; padding: 4px 12px 4px 5px; cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .ssf-knob {
+    position: relative; width: 30px; height: 18px; border-radius: 999px;
+    background: var(--nk-border); transition: background-color 0.18s ease; flex-shrink: 0;
+  }
+  .ssf-knob::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: transform 0.18s ease;
+  }
+  .ssf-switch.is-on { color: var(--nk-accent); border-color: var(--nk-accent); }
+  .ssf-switch.is-on .ssf-knob { background: var(--nk-accent); }
+  .ssf-switch.is-on .ssf-knob::after { transform: translateX(12px); }
+  .ssf-switch:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    .ssf-switch, .ssf-knob, .ssf-knob::after, #ssf-bar-emp-fill, #ssf-bar-emr-fill { transition: none; }
+  }
+</style>
+
+<script>
+  import { SSF_CURRENT, calculateSSFContributions } from '../../data/nepal/ssf/current.js';
+
+  const $ = (id) => document.getElementById(id);
+
+  const salaryInput = $('ssf-salary');
+  const roleSelect = $('ssf-role');
+  const toggleBtn = $('ssf-toggle');
+  const toggleState = $('ssf-toggle-state');
+  const errorEl = $('ssf-error');
+
+  let includeEmployer = true;
+  let copyTimer = null;
+
+  const fmt = (n) => 'Rs. ' + new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(Math.round(n));
+  const pct = (r) => (Math.round(r * 10000) / 100) + '%';
+
+  function setError(msg) {
+    errorEl.textContent = msg || '';
+    errorEl.classList.toggle('hidden', !msg);
+  }
+
+  function showEmpty() {
+    $('ssf-empty').classList.remove('hidden');
+    $('ssf-result').classList.add('hidden');
+  }
+
+  function parseSalary() {
+    const raw = salaryInput.value.trim();
+    if (raw === '' || isNaN(Number(raw))) return { ok: false, error: 'Please enter a valid salary amount.' };
+    const v = Number(raw);
+    if (!(v > 0)) return { ok: false, error: 'Please enter a salary greater than Rs 0.' };
+    return { ok: true, value: v };
+  }
+
+  function render(result, base) {
+    const empRate = SSF_CURRENT.employee.rate;
+    const emrRate = SSF_CURRENT.employer.rate;
+    const combined = includeEmployer ? empRate + emrRate : empRate;
+
+    $('ssf-r-salary').textContent = fmt(base);
+    $('ssf-r-emp-rate').textContent = '(' + pct(empRate) + ')';
+    $('ssf-r-emp').textContent = fmt(result.employee.total);
+    $('ssf-r-emr-rate').textContent = includeEmployer ? '(' + pct(emrRate) + ')' : '';
+    $('ssf-r-emr').textContent = includeEmployer ? fmt(result.employer.total) : '—';
+
+    const total = includeEmployer ? result.combined : result.employee.total;
+    $('ssf-r-total').textContent = fmt(total);
+
+    // Bars scale against the combined 31% so widths stay comparable
+    const full = empRate + emrRate;
+    $('ssf-bar-emp-pct').textContent = pct(empRate);
+    $('ssf-bar-emp-amt').textContent = fmt(result.employee.total);
+    $('ssf-bar-emp-fill').style.width = (empRate / full * 100).toFixed(1) + '%';
+    $('ssf-bar-emr-wrap').classList.toggle('hidden', !includeEmployer);
+    if (includeEmployer) {
+      $('ssf-bar-emr-pct').textContent = pct(emrRate);
+      $('ssf-bar-emr-amt').textContent = fmt(result.employer.total);
+      $('ssf-bar-emr-fill').style.width = (emrRate / full * 100).toFixed(1) + '%';
+    }
+    $('ssf-bar-total-pct').textContent = pct(includeEmployer ? full : empRate);
+    $('ssf-bar-total-amt').textContent = fmt(total);
+
+    // Annual
+    $('ssf-r-emp-annual').textContent = fmt(result.employee.total * 12);
+    $('ssf-row-emr-annual').classList.toggle('hidden', !includeEmployer);
+    $('ssf-r-emr-annual').textContent = includeEmployer ? fmt(result.employer.total * 12) : '—';
+    $('ssf-r-total-annual').textContent = fmt(total * 12);
+
+    // Table
+    $('ssf-t-basic-m').textContent = fmt(base);
+    $('ssf-t-basic-a').textContent = fmt(base * 12);
+    $('ssf-t-emp-m').textContent = fmt(result.employee.total);
+    $('ssf-t-emp-a').textContent = fmt(result.employee.total * 12);
+    $('ssf-t-emr-row').classList.toggle('hidden', !includeEmployer);
+    $('ssf-t-emr-m').textContent = includeEmployer ? fmt(result.employer.total) : '—';
+    $('ssf-t-emr-a').textContent = includeEmployer ? fmt(result.employer.total * 12) : '—';
+    $('ssf-t-total-m').textContent = fmt(total);
+    $('ssf-t-total-a').textContent = fmt(total * 12);
+
+    // Context notes
+    const role = roleSelect.value;
+    $('ssf-role-note').textContent = role === 'employer'
+      ? 'Viewed as an employer: the ' + fmt(result.employer.total) + ' monthly share is an additional business cost on top of salary.'
+      : 'Viewed as an employee: the ' + fmt(result.employee.total) + ' monthly share is deducted from salary.';
+    $('ssf-verified').textContent = SSF_CURRENT.lastVerified;
+
+    $('ssf-empty').classList.add('hidden');
+    $('ssf-result').classList.remove('hidden');
+  }
+
+  function calculate() {
+    const parsed = parseSalary();
+    if (!parsed.ok) {
+      setError(parsed.error);
+      showEmpty();
+      return;
+    }
+    setError(null);
+    render(calculateSSFContributions(parsed.value), parsed.value);
+  }
+
+  // ── Events ──
+  $('ssf-calc').addEventListener('click', calculate);
+  salaryInput.addEventListener('input', () => { if (!$('ssf-result').classList.contains('hidden')) calculate(); });
+  salaryInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+  roleSelect.addEventListener('change', () => { if (!$('ssf-result').classList.contains('hidden')) calculate(); });
+  toggleBtn.addEventListener('click', () => {
+    includeEmployer = !includeEmployer;
+    toggleBtn.classList.toggle('is-on', includeEmployer);
+    toggleBtn.setAttribute('aria-checked', String(includeEmployer));
+    toggleState.textContent = includeEmployer ? 'ON' : 'OFF';
+    if (!$('ssf-result').classList.contains('hidden')) calculate();
+  });
+  $('ssf-reset').addEventListener('click', () => {
+    salaryInput.value = '';
+    roleSelect.value = 'employee';
+    if (!includeEmployer) toggleBtn.click();
+    setError(null);
+    showEmpty();
+    salaryInput.focus();
+  });
+
+  // Rate labels + verified date come from the central config, never hardcoded
+  $('ssf-info-emp').textContent = pct(SSF_CURRENT.employee.rate);
+  $('ssf-info-emr').textContent = pct(SSF_CURRENT.employer.rate);
+  $('ssf-info-total').textContent = pct(SSF_CURRENT.employee.rate + SSF_CURRENT.employer.rate);
+</script>

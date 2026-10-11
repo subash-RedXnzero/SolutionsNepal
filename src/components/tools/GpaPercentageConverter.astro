@@ -1,0 +1,776 @@
+---
+/**
+ * GpaPercentageConverter — GPA ↔ Percentage ↔ Division.
+ *
+ * Three modes:
+ *   1. GPA → Percentage
+ *   2. Percentage → GPA
+ *   3. GPA → Division
+ */
+---
+
+<div id="gpc-root" class="gpc-wrapper">
+
+  <!-- ═══ HEADER ═══ -->
+  <div class="gpc-header">
+    <div class="gpc-header-left">
+      <h2 class="gpc-title">GPA Converter</h2>
+      <p class="gpc-subtitle">Convert your GPA to percentage accurately</p>
+    </div>
+    <span class="gpc-badge">Simple &amp; Fast</span>
+  </div>
+
+  <!-- ═══ CONVERSION TYPE CARD ═══ -->
+  <div class="gpc-card">
+    <p class="gpc-card-label">Conversion Type</p>
+    <div class="gpc-tabs">
+      <button id="gpc-mode-gpa-pct" class="gpc-tab gpc-tab--active"><span class="gpc-tab-check">✓</span>GPA → Percentage</button>
+      <button id="gpc-mode-pct-gpa" class="gpc-tab"><span class="gpc-tab-check">✓</span>Percentage → GPA</button>
+      <button id="gpc-mode-gpa-div" class="gpc-tab"><span class="gpc-tab-check">✓</span>GPA → Division</button>
+    </div>
+  </div>
+
+  <!-- ═══ INPUT CARD ═══ -->
+  <div class="gpc-card">
+    <p class="gpc-card-label">Enter Your Details</p>
+
+    <div class="gpc-inputs">
+
+      <!-- Grading System (always visible) -->
+      <div class="gpc-field">
+        <label class="gpc-field-label">Grading System</label>
+        <select id="gpc-system" class="gpc-select">
+          <option value="">Select grading system</option>
+          <option value="standard-4">4.0 Scale (Standard)</option>
+          <option value="10-point">10.0 Scale</option>
+        </select>
+      </div>
+
+      <!-- GPA → Percentage -->
+      <div id="gpc-gpa-pct-panel" class="gpc-field">
+        <label class="gpc-field-label">GPA</label>
+        <input id="gpc-gpa-input" type="number" step="0.01" min="0" placeholder="3.6" class="gpc-input" />
+      </div>
+
+      <!-- Percentage → GPA -->
+      <div id="gpc-pct-gpa-panel" class="gpc-field gpc-field--hidden">
+        <label class="gpc-field-label">Percentage</label>
+        <div class="gpc-input-wrap">
+          <input id="gpc-pct-input" type="number" step="0.1" min="0" max="100" placeholder="85" class="gpc-input gpc-input--pr" />
+          <span class="gpc-input-suffix">%</span>
+        </div>
+      </div>
+
+      <!-- GPA → Division -->
+      <div id="gpc-gpa-div-panel" class="gpc-field gpc-field--hidden">
+        <label class="gpc-field-label">GPA</label>
+        <input id="gpc-div-input" type="number" step="0.01" min="0" placeholder="3.2" class="gpc-input" />
+      </div>
+
+    </div>
+
+    <!-- Quick examples -->
+    <div class="gpc-examples-wrap">
+      <p class="gpc-examples-label">Quick examples</p>
+      <div id="gpc-examples" class="gpc-examples">
+        <div id="gpc-examples-list" class="gpc-examples-list"></div>
+      </div>
+    </div>
+
+    <!-- Convert -->
+    <button id="gpc-convert" class="gpc-btn-convert">
+      Convert
+    </button>
+
+    <!-- Error -->
+    <p id="gpc-error" class="gpc-error"></p>
+  </div>
+
+  <!-- ═══ RESULT CARD ═══ -->
+  <div id="gpc-result" class="gpc-card gpc-result-card gpc-result--hidden">
+    <p class="gpc-card-label">Your Result</p>
+    <div class="gpc-result-center">
+      <p id="gpc-result-value" class="gpc-result-value">—</p>
+      <p id="gpc-result-label" class="gpc-result-sublabel">—</p>
+      <p id="gpc-result-note" class="gpc-result-note">—</p>
+    </div>
+    <div class="gpc-result-actions">
+      <button id="gpc-copy" class="gpc-btn-copy">Copy Result</button>
+      <button id="gpc-reset" class="gpc-btn-reset">Reset</button>
+    </div>
+  </div>
+
+  <!-- About this grading system -->
+  <div id="gpc-info-wrap" class="gpc-info-wrap gpc-field--hidden">
+    <details>
+      <summary class="gpc-info-summary">ⓘ About this grading system</summary>
+      <div id="gpc-info" class="gpc-info-body"></div>
+    </details>
+  </div>
+
+  <!-- Footer -->
+  <p class="gpc-footer">
+    GPA and percentage conversion can vary by institution and grading system.<br/>
+    Select the grading system that applies to you.
+  </p>
+
+</div>
+
+<script>
+  import { getGradingSystem } from '../../data/grading-systems.js';
+
+  const $ = (sel: string) => document.getElementById(sel);
+
+  // Elements
+  const modeGPAPct = $('gpc-mode-gpa-pct')!;
+  const modePctGPA = $('gpc-mode-pct-gpa')!;
+  const modeGPADiv = $('gpc-mode-gpa-div')!;
+  const gpaPctPanel = $('gpc-gpa-pct-panel')!;
+  const pctGPAPanel = $('gpc-pct-gpa-panel')!;
+  const gpaDivPanel = $('gpc-gpa-div-panel')!;
+  const systemSelect = $('gpc-system') as HTMLSelectElement;
+  const gpaInput = $('gpc-gpa-input') as HTMLInputElement;
+  const pctInput = $('gpc-pct-input') as HTMLInputElement;
+  const divInput = $('gpc-div-input') as HTMLInputElement;
+  const resultBox = $('gpc-result')!;
+  const resultValue = $('gpc-result-value')!;
+  const resultLabel = $('gpc-result-label')!;
+  const resultNote = $('gpc-result-note')!;
+  const errorEl = $('gpc-error')!;
+  const infoWrap = $('gpc-info-wrap')!;
+  const infoEl = $('gpc-info')!;
+  const examplesList = $('gpc-examples-list')!;
+
+  // Tab elements (for styling)
+  const tabs = [modeGPAPct, modePctGPA, modeGPADiv];
+
+  let mode = 'gpa-pct'; // 'gpa-pct' | 'pct-gpa' | 'gpa-div'
+  let lastResultText = '';
+
+  const EXAMPLES: Record<string, { value: string; label: string }[]> = {
+    'gpa-pct': [
+      { value: '3.0', label: '3.0' },
+      { value: '3.2', label: '3.2' },
+      { value: '3.5', label: '3.5' },
+      { value: '3.6', label: '3.6' },
+    ],
+    'pct-gpa': [
+      { value: '70', label: '70%' },
+      { value: '75', label: '75%' },
+      { value: '80', label: '80%' },
+      { value: '85', label: '85%' },
+    ],
+    'gpa-div': [
+      { value: '2.8', label: '2.8' },
+      { value: '3.0', label: '3.0' },
+      { value: '3.2', label: '3.2' },
+      { value: '3.6', label: '3.6' },
+    ],
+  };
+
+  // ── Mode toggle ──────────────────────────────────────────
+  function setMode(m: string) {
+    mode = m;
+    gpaPctPanel.classList.add('gpc-field--hidden');
+    pctGPAPanel.classList.add('gpc-field--hidden');
+    gpaDivPanel.classList.add('gpc-field--hidden');
+    resultBox.classList.add('gpc-result--hidden');
+    errorEl.style.display = 'none';
+
+    // Show grading system + the relevant input panel
+    const panels: Record<string, HTMLElement> = {
+      'gpa-pct': gpaPctPanel,
+      'pct-gpa': pctGPAPanel,
+      'gpa-div': gpaDivPanel,
+    };
+    if (panels[m]) panels[m].classList.remove('gpc-field--hidden');
+
+    // Update tabs
+    tabs.forEach(btn => btn.classList.remove('gpc-tab--active'));
+    if (m === 'gpa-pct') modeGPAPct.classList.add('gpc-tab--active');
+    else if (m === 'pct-gpa') modePctGPA.classList.add('gpc-tab--active');
+    else modeGPADiv.classList.add('gpc-tab--active');
+
+    renderExamples();
+  }
+
+  // ── Examples ─────────────────────────────────────────────
+  function renderExamples() {
+    examplesList.innerHTML = '';
+    const items = EXAMPLES[mode] || [];
+    items.forEach(ex => {
+      const btn = document.createElement('button');
+      btn.className = 'gpc-example-chip';
+      btn.textContent = ex.label;
+      btn.addEventListener('click', () => {
+        if (mode === 'gpa-pct') gpaInput.value = ex.value;
+        else if (mode === 'pct-gpa') pctInput.value = ex.value;
+        else divInput.value = ex.value;
+      });
+      examplesList.appendChild(btn);
+    });
+  }
+
+  // ── Info panel ───────────────────────────────────────────
+  function updateInfo() {
+    const sys = getGradingSystem(systemSelect.value);
+    if (sys && sys.info) {
+      infoEl.textContent = sys.info;
+      infoWrap.classList.remove('gpc-field--hidden');
+    } else {
+      infoWrap.classList.add('gpc-field--hidden');
+    }
+  }
+
+  // ── Convert ──────────────────────────────────────────────
+  function convert() {
+    errorEl.style.display = 'none';
+    resultBox.classList.add('gpc-result--hidden');
+
+    const sys = getGradingSystem(systemSelect.value);
+    if (!sys) {
+      errorEl.textContent = 'Please select a grading system.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    if (mode === 'gpa-pct') {
+      const gpa = parseFloat(gpaInput.value);
+      if (!Number.isFinite(gpa) || gpa < 0) {
+        errorEl.textContent = 'Please enter a valid GPA.';
+        errorEl.style.display = 'block';
+        return;
+      }
+      if (gpa > sys.maxPoint) {
+        errorEl.textContent = `GPA must not exceed ${sys.maxPoint} for this grading system.`;
+        errorEl.style.display = 'block';
+        return;
+      }
+      if (!sys.percentFormula) {
+        resultValue.textContent = '—';
+        resultLabel.textContent = 'A percentage conversion is not available for this grading system.';
+        resultNote.textContent = '';
+        resultBox.classList.remove('gpc-result--hidden');
+        return;
+      }
+      const pct = sys.percentFormula(gpa, sys.maxPoint);
+      resultValue.textContent = pct + '%';
+      resultLabel.textContent = sys.percentLabel || 'Estimated Percentage';
+      resultNote.textContent = `Based on: ${sys.label}`;
+      lastResultText = `GPA: ${gpa}\nEstimated Percentage: ${pct}%\nGrading System: ${sys.label}`;
+    } else if (mode === 'pct-gpa') {
+      const pct = parseFloat(pctInput.value);
+      if (!Number.isFinite(pct) || pct < 0 || pct > 100) {
+        errorEl.textContent = 'Percentage must be between 0 and 100.';
+        errorEl.style.display = 'block';
+        return;
+      }
+      if (!sys.percentToGpa) {
+        resultValue.textContent = '—';
+        resultLabel.textContent = 'A GPA conversion is not available for this grading system.';
+        resultNote.textContent = '';
+        resultBox.classList.remove('gpc-result--hidden');
+        return;
+      }
+      const gpa = sys.percentToGpa(pct, sys.maxPoint);
+      resultValue.textContent = gpa.toFixed(2);
+      resultLabel.textContent = 'Estimated GPA';
+      resultNote.textContent = `Based on: ${sys.label}`;
+      lastResultText = `Percentage: ${pct}%\nEstimated GPA: ${gpa.toFixed(2)}\nGrading System: ${sys.label}`;
+    } else {
+      const gpa = parseFloat(divInput.value);
+      if (!Number.isFinite(gpa) || gpa < 0) {
+        errorEl.textContent = 'Please enter a valid GPA.';
+        errorEl.style.display = 'block';
+        return;
+      }
+      if (gpa > sys.maxPoint) {
+        errorEl.textContent = `GPA must not exceed ${sys.maxPoint} for this grading system.`;
+        errorEl.style.display = 'block';
+        return;
+      }
+      if (!sys.divisions || sys.divisions.length === 0) {
+        resultValue.textContent = '—';
+        resultLabel.textContent = 'Division classification is not defined for this grading system.';
+        resultNote.textContent = '';
+        resultBox.classList.remove('gpc-result--hidden');
+        return;
+      }
+      const div = sys.divisions.find(d => gpa >= d.min && gpa <= d.max);
+      if (!div) {
+        resultValue.textContent = '—';
+        resultLabel.textContent = 'Division could not be determined.';
+        resultNote.textContent = '';
+        resultBox.classList.remove('gpc-result--hidden');
+        return;
+      }
+      resultValue.textContent = div.label;
+      resultLabel.textContent = 'Division';
+      resultNote.textContent = `GPA ${gpa.toFixed(2)} on ${sys.label}`;
+      lastResultText = `GPA: ${gpa.toFixed(2)}\nDivision: ${div.label}\nGrading System: ${sys.label}`;
+    }
+
+    resultBox.classList.remove('gpc-result--hidden');
+  }
+
+  // ── Events ───────────────────────────────────────────────
+  modeGPAPct.addEventListener('click', () => setMode('gpa-pct'));
+  modePctGPA.addEventListener('click', () => setMode('pct-gpa'));
+  modeGPADiv.addEventListener('click', () => setMode('gpa-div'));
+  $('gpc-convert')?.addEventListener('click', convert);
+  systemSelect.addEventListener('change', () => { updateInfo(); resultBox.classList.add('gpc-result--hidden'); errorEl.style.display = 'none'; });
+
+  // Clear result on input change
+  [gpaInput, pctInput, divInput].forEach(el => {
+    el?.addEventListener('input', () => { resultBox.classList.add('gpc-result--hidden'); errorEl.style.display = 'none'; });
+  });
+
+  // Copy
+  $('gpc-copy')?.addEventListener('click', async () => {
+    if (!lastResultText) return;
+    try { await navigator.clipboard.writeText(lastResultText); } catch {}
+    const btn = $('gpc-copy');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Result'; }, 2000); }
+  });
+
+  // Reset
+  $('gpc-reset')?.addEventListener('click', () => {
+    gpaInput.value = ''; pctInput.value = ''; divInput.value = '';
+    systemSelect.value = '';
+    setMode('gpa-pct');
+    resultBox.classList.add('gpc-result--hidden');
+    errorEl.style.display = 'none';
+    infoWrap.classList.add('gpc-field--hidden');
+    lastResultText = '';
+  });
+
+  // Init
+  setMode('gpa-pct');
+</script>
+
+<style>
+  /* ═══ WRAPPER ═══ */
+  .gpc-wrapper {
+    width: 100%;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* ═══ HEADER ═══ */
+  .gpc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 16px;
+  }
+  .gpc-header-left {
+    flex: 1;
+  }
+  .gpc-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #1F2937;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    margin: 0;
+  }
+  .gpc-subtitle {
+    font-size: 15px;
+    color: #6B7280;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .gpc-badge {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6B7280;
+    background: #F3F4F6;
+    border: 1px solid #E5E7EB;
+    border-radius: 20px;
+    padding: 5px 14px;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+
+  /* ═══ CARDS ═══ */
+  .gpc-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 13px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+  .gpc-card-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1F2937;
+    margin: 0 0 16px 0;
+  }
+
+  /* ═══ SEGMENTED TABS ═══ */
+  .gpc-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #F9FAFB;
+  }
+  .gpc-tab {
+    cursor: pointer;
+    font-family: 'Inter', system-ui, sans-serif;
+    border: none;
+    outline: none;
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    background: transparent;
+    transition: all 0.15s ease;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .gpc-tab:not(:last-child) {
+    border-right: 1px solid #E5E7EB;
+  }
+  .gpc-tab:hover:not(.gpc-tab--active) {
+    background: #F3F4F6;
+  }
+  .gpc-tab--active {
+    background: #C62820;
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  .gpc-tab-check {
+    display: none;
+  }
+
+  /* ═══ INPUTS ═══ */
+  .gpc-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .gpc-field {
+    display: flex;
+    flex-direction: column;
+  }
+  .gpc-field--hidden {
+    display: none;
+  }
+  .gpc-field-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #6B7280;
+    margin-bottom: 8px;
+  }
+  .gpc-select,
+  .gpc-input {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border-radius: 10px;
+    border: 1px solid #E5E7EB;
+    background: #FFFFFF;
+    color: #1F2937;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+  }
+  .gpc-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+  .gpc-select:focus,
+  .gpc-input:focus {
+    outline: none;
+    border-color: #C62820;
+    box-shadow: 0 0 0 3px rgba(198, 40, 32, 0.1);
+  }
+  .gpc-select::placeholder,
+  .gpc-input::placeholder {
+    color: #9CA3AF;
+  }
+  .gpc-input-wrap {
+    position: relative;
+  }
+  .gpc-input--pr {
+    padding-right: 40px;
+  }
+  .gpc-input-suffix {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    font-weight: 500;
+    color: #9CA3AF;
+    pointer-events: none;
+  }
+
+  /* When a single input panel is shown, make it full-width */
+  .gpc-inputs:has(.gpc-field--hidden ~ .gpc-field--hidden) .gpc-field:not(.gpc-field--hidden) {
+    grid-column: 1 / -1;
+  }
+  /* When only grading system is visible + one hidden pair, the grading system spans full */
+  .gpc-inputs:has(.gpc-field--hidden:not(.gpc-field--hidden)) {
+    /* fallback */
+  }
+
+  /* ═══ QUICK EXAMPLES ═══ */
+  .gpc-examples-wrap {
+    margin-bottom: 24px;
+  }
+  .gpc-examples-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #9CA3AF;
+    margin: 0 0 10px 0;
+  }
+  .gpc-examples {
+    display: flex;
+  }
+  .gpc-examples-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .gpc-example-chip {
+    cursor: pointer;
+    font-family: 'Inter', system-ui, sans-serif;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 16px;
+    transition: all 0.15s ease;
+  }
+  .gpc-example-chip:hover {
+    border-color: #C62820;
+    color: #C62820;
+    background: #FFF5F5;
+  }
+
+  /* ═══ CONVERT BUTTON ═══ */
+  .gpc-btn-convert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 52px;
+    border: none;
+    border-radius: 11px;
+    background: #C62820;
+    color: #FFFFFF;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .gpc-btn-convert:hover {
+    background: #A61B16;
+  }
+  .gpc-btn-convert:active {
+    transform: scale(0.99);
+  }
+
+  /* ═══ ERROR ═══ */
+  .gpc-error {
+    display: none;
+    margin-top: 12px;
+    font-size: 13px;
+    text-align: center;
+    color: #DC2626;
+  }
+
+  /* ═══ RESULT CARD ═══ */
+  .gpc-result-card {
+    border-color: #FEE2E2;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFFBFB 100%);
+  }
+  .gpc-result--hidden {
+    display: none;
+  }
+  .gpc-result-center {
+    text-align: center;
+    padding: 12px 0 20px;
+  }
+  .gpc-result-value {
+    font-size: 44px;
+    font-weight: 700;
+    color: #C62820;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .gpc-result-sublabel {
+    font-size: 15px;
+    font-weight: 500;
+    color: #6B7280;
+    margin: 8px 0 0;
+  }
+  .gpc-result-note {
+    font-size: 12px;
+    color: #9CA3AF;
+    margin: 4px 0 0;
+  }
+  .gpc-result-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding-top: 4px;
+  }
+  .gpc-btn-copy {
+    cursor: pointer;
+    font-family: 'Inter', system-ui, sans-serif;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 24px;
+    transition: all 0.15s ease;
+  }
+  .gpc-btn-copy:hover {
+    border-color: #C62820;
+    color: #C62820;
+    background: #FFF5F5;
+  }
+  .gpc-btn-reset {
+    cursor: pointer;
+    font-family: 'Inter', system-ui, sans-serif;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #6B7280;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 16px;
+    transition: all 0.15s ease;
+  }
+  .gpc-btn-reset:hover {
+    color: #1F2937;
+    background: #F3F4F6;
+  }
+
+  /* ═══ INFO ═══ */
+  .gpc-info-wrap {
+    margin-top: 16px;
+  }
+  .gpc-info-wrap summary {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6B7280;
+    cursor: pointer;
+  }
+  .gpc-info-wrap summary:hover {
+    color: #1F2937;
+  }
+  .gpc-info-body {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #6B7280;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+  }
+
+  /* ═══ FOOTER ═══ */
+  .gpc-footer {
+    margin-top: 24px;
+    font-size: 12px;
+    color: #9CA3AF;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media (max-width: 640px) {
+    .gpc-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .gpc-badge {
+      margin-top: 0;
+    }
+    .gpc-card {
+      padding: 22px 20px;
+    }
+    .gpc-title {
+      font-size: 24px;
+    }
+    .gpc-tabs {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      border: none;
+      background: transparent;
+    }
+    .gpc-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 10px;
+      border: 1px solid #E5E7EB;
+      background: #FFFFFF;
+      color: #374151;
+      font-weight: 500;
+      padding: 14px 16px;
+      border-right: 1px solid #E5E7EB;
+    }
+    .gpc-tab:not(:last-child) {
+      border-bottom: 1px solid #E5E7EB;
+      border-right: 1px solid #E5E7EB;
+    }
+    .gpc-tab-check {
+      display: none;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .gpc-tab--active {
+      background: #FEECEB;
+      color: #C62820;
+      border-color: #FECACA;
+      font-weight: 600;
+    }
+    .gpc-tab--active .gpc-tab-check {
+      display: inline;
+    }
+    .gpc-inputs {
+      grid-template-columns: 1fr;
+    }
+    .gpc-result-value {
+      font-size: 36px;
+    }
+    .gpc-result-actions {
+      flex-direction: column;
+      gap: 8px;
+    }
+    .gpc-btn-copy,
+    .gpc-btn-reset {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

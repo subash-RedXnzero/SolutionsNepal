@@ -1,0 +1,37 @@
+// AUTO-GENERATED from Guideedit/ + Blogedit/ — edit the .md files, not this file.
+// Fields: id (= slug), slug, title, description, image, category, date, author, readTime, tags, headings, sections (= content).
+export const landMeasurementNepalPost = {
+  id: 'land-measurement-nepal',
+  slug: 'land-measurement-nepal',
+  category: 'Nepal',
+  title: 'Land Measurement Units in Nepal',
+  description: 'Ropani, Aana, Paisa, Daam (Dam) — plus Terai Bigha, Kattha and Dhur — understand Nepali land units.',
+  author: 'SolutionsNepal Team',
+  authorCredential: 'Financial analysts and Nepal tax experts',
+  date: 'August 12, 2026',
+  readTime: '5 min read',
+  image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&h=630&fit=crop',
+  tags: ['Nepal', 'Land', 'Measurement', 'Converter'],
+  headings: [
+    { id: 'introduction', text: 'Introduction', level: 2 },
+    { id: 'units', text: 'Nepali Land Units', level: 2 },
+    { id: 'conversion', text: 'Conversion Table', level: 2 },
+    { id: 'conclusion', text: 'Conclusion', level: 2 },
+  ],
+  sections: [
+    { type: 'heading', level: 2, id: 'introduction', text: 'Introduction' },
+    { type: 'paragraph', content: 'Nepal uses traditional land measurement units that differ from the metric system. Understanding these units is essential for buying, selling, or registering land.' },
+    { type: 'heading', level: 2, id: 'units', text: 'Nepali Land Units' },
+    { type: 'paragraph', content: 'Nepal uses two traditional systems: the hill system (Ropani-based) and the Terai system (Bigha-based), alongside metric units. Understanding these units is essential for buying, selling, or registering land.' },
+    { type: 'paragraph', content: '<strong>Hill system:</strong>' },
+    { type: 'list', style: 'ul', items: ['<strong>Ropani</strong> — the largest common hill unit (≈508.74 sq meters; some sources cite 508.72 — confirm against the official survey record for legal use)', '<strong>Aana</strong> — 1 Ropani = 16 Aana', '<strong>Paisa</strong> — 1 Aana = 4 Paisa', '<strong>Daam</strong> (also spelled <strong>Dam</strong>) — 1 Paisa = 4 Daam'] },
+    { type: 'paragraph', content: '<strong>Terai system:</strong>' },
+    { type: 'list', style: 'ul', items: ['<strong>Bigha</strong> — the largest common Terai unit (≈6,772.63 sq meters / about 1.67 acres)', '<strong>Kattha</strong> — 1 Bigha = 20 Kattha (≈338.63 sq meters)', '<strong>Dhur</strong> — 1 Kattha = 20 Dhur (≈16.93 sq meters)'] },
+    { type: 'callout', style: 'accent', bold: 'Approximate values:', content: 'metric equivalents above are commonly cited conversions (last checked October 2026), not legal survey figures. For transactions, rely on the kitta area in the official Lalpurja and survey records.' },
+    { type: 'heading', level: 2, id: 'conversion', text: 'Conversion Table' },
+    { type: 'list', style: 'ul', items: ['**1 Ropani** — 16 Aana ≈ 508.74 m² (some sources 508.72)', '**1 Aana** — 4 Paisa ≈ 31.80 m²', '**1 Paisa** — 4 Daam (Dam) ≈ 7.95 m²', '**1 Bigha** — 20 Kattha ≈ 6,772.63 m²', '**1 Kattha** — 20 Dhur ≈ 338.63 m²', '**1 Dhur** ≈ 16.93 m²'] },
+    { type: 'heading', level: 2, id: 'conclusion', text: 'Conclusion' },
+    { type: 'paragraph', content: 'Use our <a href="/nepal/land/ropani-to-aana">Land Converter</a> to instantly convert between Nepali land units and square feet or meters.' },
+    { type: 'callout', style: 'accent', bold: 'Sources (last checked October 2026):', content: 'conversions above are commonly cited standard equivalents; for authoritative survey figures consult the Survey Department / <a href="https://dolma.gov.np">Department of Land Management and Archives</a> and the kitta record on your Lalpurja.' },
+  ],
+};

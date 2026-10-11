@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import DiscountCalculator from '../../components/tools/DiscountCalculator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Nepal Discount Calculator – Calculate Sale Price & VAT | SolutionsNepal';
+const description = 'Calculate discounts, sale prices and VAT instantly. Enter original price and discount percentage to see how much you save and the final price. SolutionsNepal.';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Nepal Discount Calculator',
+      description: 'Calculate discounts, sale prices and VAT instantly. Free online calculator.',
+      url: 'https://solutionsnepal.com/tools/discount-calculator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+  ]}
+>
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <Breadcrumbs items={[
+      { label: 'Tools', href: '/nepal' },
+      { label: 'Discount Calculator' },
+    ]} />
+    <!-- Hero -->
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">Discount Calculator</h1>
+      <p class="mt-2 text-sm max-w-lg mx-auto" style="color:var(--nk-text-secondary);">Calculate discounts, sale prices and VAT instantly. See how much you save and the final price.</p>
+    </div>
+
+    <!-- Calculator -->
+    <div class="max-w-md mx-auto">
+      <DiscountCalculator />
+    </div>
+
+    <!-- SEO Content -->
+    <section class="mt-12 space-y-8 text-sm max-w-3xl" style="color:var(--nk-text-secondary);">
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">Discount Calculator for Nepal</h2>
+        <p>SolutionsNepal's discount calculator helps you quickly figure out how much you save during sales and what the final price is after any discount. Whether you are shopping in Kathmandu, browsing online stores, or comparing deals, this tool gives you instant, accurate results.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">How to Calculate a Discount</h3>
+        <p>The formula for calculating a discount is simple:</p>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">Discount Amount = Original Price × (Discount % ÷ 100)</div>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">Final Price = Original Price − Discount Amount</div>
+        <p>For example, if a Rs. 5,000 item has a 20% discount: you save Rs. 1,000 and pay Rs. 4,000.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Discount + VAT in Nepal</h3>
+        <p>In Nepal, VAT (Value Added Tax) is currently charged at 13% on most goods and services. When a discount is applied, VAT is calculated on the discounted price, not the original price.</p>
+        <p class="mt-2">Example: Original price Rs. 5,000, 20% discount, 13% VAT:</p>
+        <ul class="mt-1.5 space-y-1 list-disc list-inside">
+          <li>Discount: Rs. 1,000</li>
+          <li>Price after discount: Rs. 4,000</li>
+          <li>VAT (13% of Rs. 4,000): Rs. 520</li>
+          <li>Final price: Rs. 4,520</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Common Discount Examples</h3>
+        <ul class="space-y-1.5 list-disc list-inside">
+          <li>10% off Rs. 1,000 → Save Rs. 100 → Pay Rs. 900</li>
+          <li>15% off Rs. 2,000 → Save Rs. 300 → Pay Rs. 1,700</li>
+          <li>20% off Rs. 5,000 → Save Rs. 1,000 → Pay Rs. 4,000</li>
+          <li>25% off Rs. 8,000 → Save Rs. 2,000 → Pay Rs. 6,000</li>
+          <li>50% off Rs. 3,000 → Save Rs. 1,500 → Pay Rs. 1,500</li>
+        </ul>
+      </div>
+
+      <div class="pt-4" style="border-top:1px solid var(--nk-border);">
+        <p class="text-xs" style="color:var(--nk-text-tertiary);">SolutionsNepal's discount calculator works instantly in your browser. No data is stored or sent anywhere. Free, fast, and accurate.</p>
+      </div>
+    </section>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'Percentage Calculator', description: 'Percentages and changes', href: '/tools/percentage-calculator' },
+      { title: 'VAT Calculator Nepal', description: 'Add or remove 13% VAT', href: '/nepal/finance/vat-calculator' },
+      { title: 'Online Selling Profit', description: 'Real margin per order', href: '/nepal/finance/online-selling-profit-calculator-nepal' },
+      { title: 'All Tools', description: 'Browse every tool', href: '/nepal' },
+    ]} />
+  </main>
+</BaseLayout>

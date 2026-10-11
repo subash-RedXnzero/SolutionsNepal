@@ -1,0 +1,210 @@
+---
+// SolutionsNepal Footer — Simple & Clean
+---
+
+<footer class="nk-footer">
+  <div class="nk-footer-inner">
+    <div class="nk-footer-brand">
+      <div class="nk-footer-logo">
+        <span class="nk-logo-mark">S</span>
+        <span class="nk-logo-text">SolutionsNepal</span>
+      </div>
+      <p class="nk-footer-desc">Simple tools and useful information for everyday Nepal.</p>
+    </div>
+
+    <div class="nk-footer-links">
+      <div class="nk-footer-col">
+        <p class="nk-footer-heading">Tools</p>
+        <a href="/nepal" class="nk-footer-link">All Calculators</a>
+        <a href="/nepal/finance" class="nk-footer-link">Finance</a>
+        <a href="/nepal/gold" class="nk-footer-link">Gold</a>
+        <a href="/nepal/land" class="nk-footer-link">Land & Property</a>
+        <a href="/nepal/date" class="nk-footer-link">Date & Calendar</a>
+      </div>
+      <div class="nk-footer-col">
+        <p class="nk-footer-heading">More</p>
+        <a href="/nepal/education" class="nk-footer-link">Education</a>
+        <a href="/nepal/tools" class="nk-footer-link">Language & Text</a>
+        <a href="/nepal/nepse" class="nk-footer-link">NEPSE</a>
+        <a href="/nepal/utilities" class="nk-footer-link">Utilities</a>
+        <a href="/nepal/transport" class="nk-footer-link">Transport</a>
+      </div>
+      <div class="nk-footer-col">
+        <p class="nk-footer-heading">About</p>
+        <a href="/about" class="nk-footer-link">About</a>
+        <a href="/blog" class="nk-footer-link">Blog</a>
+        <a href="/guides" class="nk-footer-link">Guides</a>
+        <a href="/contact" class="nk-footer-link">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nk-footer-disclaimer">
+    <div class="nk-footer-disclaimer-inner">
+      <p><strong>Disclaimer:</strong> All calculators, converters, and price information on SolutionsNepal are provided for general informational and planning purposes only. Results are estimates based on the information you enter and publicly available rules or rates at the time of calculation. They are not financial, legal, tax, medical, or professional advice. Actual amounts, charges, and eligibility may vary by provider, municipality, and current government rules. Always verify with the relevant bank, government office, or qualified professional before making decisions.</p>
+    </div>
+  </div>
+
+  <div class="nk-footer-bottom">
+    <div class="nk-footer-bottom-inner">
+      <span>© {new Date().getFullYear()} SolutionsNepal — All original content. Factual rates/fees from official public sources (NRB, IRD, DoTM, OCR) cited per page.</span>
+      <span class="nk-footer-made">Made with ♥ in Nepal · <a href="/about" class="nk-footer-bottom-link">About</a> · <a href="/contact" class="nk-footer-bottom-link">Contact</a></span>
+    </div>
+    <div class="nk-footer-copy">
+      Blog images via Unsplash (<a href="https://unsplash.com/license" target="_blank" rel="noopener">Unsplash License</a>) · Icons: Lucide (ISC) · Fonts: Caveat (OFL), Inter/Noto via Google Fonts · Code: see README for third-party licenses. No article text is copy-pasted — all guides are original SolutionsNepal writing.
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* ═══ Accessibility note ═══
+     Footer text uses the global --nk-text-secondary/--nk-text-tertiary tokens,
+     which are tuned to WCAG AA (≥4.5:1) in both themes — no scoped overrides. */
+
+  .nk-footer {
+    border-top: 1px solid var(--nk-border);
+    background: var(--nk-surface);
+    margin-top: auto;
+  }
+  .nk-footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 32px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+  }
+
+  .nk-footer-brand { }
+  .nk-footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .nk-logo-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-md);
+    background: var(--nk-accent);
+    color: #fff;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nk-logo-text {
+    font-size: var(--fs-md);
+    font-weight: 700;
+    color: var(--nk-text);
+    letter-spacing: -0.02em;
+  }
+  .nk-footer-desc {
+    font-size: var(--fs-body);
+    color: color-mix(in srgb, var(--nk-text) 72%, transparent);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  .nk-footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .nk-footer-heading {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--nk-text);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin: 0 0 10px;
+  }
+  .nk-footer-link {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    font-size: var(--fs-body);
+    color: color-mix(in srgb, var(--nk-text) 80%, transparent);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .nk-footer-link:hover {
+    color: var(--nk-accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .nk-footer-disclaimer {
+    border-top: 1px solid var(--nk-border);
+    background: var(--nk-bg);
+    padding: 16px 24px;
+  }
+  .nk-footer-disclaimer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .nk-footer-disclaimer-inner p {
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--nk-text-tertiary);
+    margin: 0;
+  }
+  .nk-footer-disclaimer-inner strong {
+    color: var(--nk-text-secondary);
+    font-weight: 700;
+  }
+
+  .nk-footer-bottom {
+    border-top: 1px solid var(--nk-border);
+    padding: 18px 24px;
+  }
+  .nk-footer-bottom-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: var(--fs-sm);
+    color: var(--nk-text-tertiary);
+    flex-wrap: wrap;
+  }
+  .nk-footer-bottom-link { color: var(--nk-text-secondary); text-decoration: none; }
+  .nk-footer-bottom-link:hover { color: var(--nk-accent); text-decoration: underline; text-underline-offset: 3px; }
+  .nk-footer-copy {
+    max-width: 1100px;
+    margin: 12px auto 0;
+    font-size: 10.5px;
+    line-height: 1.6;
+    color: var(--nk-text-tertiary);
+    text-align: center;
+  }
+  .nk-footer-copy a { color: var(--nk-text-secondary); text-decoration: underline; text-underline-offset: 2px; }
+  .nk-footer-copy a:hover { color: var(--nk-accent); }
+  .nk-footer-made { color: color-mix(in srgb, var(--nk-text) 72%, transparent); }
+
+  @media (max-width: 768px) {
+    .nk-footer-inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 32px 16px 24px;
+    }
+    .nk-footer-links {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .nk-footer-link { min-height: 40px; }  /* comfortable touch targets */
+    .nk-footer-bottom-inner {
+      flex-direction: column;
+      gap: 6px;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nk-footer-links {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

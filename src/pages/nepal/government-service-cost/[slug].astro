@@ -1,0 +1,510 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import {
+  ArrowLeft, BadgeCheck, AlertCircle, Printer, Download,
+  Clock, MapPin, ClipboardList, CalendarCheck, FileCheck2,
+  CircleAlert, ExternalLink, Eraser, Check, UserCheck,
+} from '@lucide/astro';
+import {
+  SERVICES,
+  SERVICE_CATEGORIES,
+  getServiceBySlug,
+  getRelatedServices,
+  serviceIsVerified,
+  formatNPR,
+} from '../../../data/government-services.js';
+
+export async function getStaticPaths() {
+  return SERVICES.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+const { service } = Astro.props;
+const category = SERVICE_CATEGORIES.find((c) => c.id === service.category);
+const verified = serviceIsVerified(service);
+const related = getRelatedServices(service.slug, 4);
+const backCat = (Astro.url.searchParams.get('category') || 'all').toLowerCase();
+const backHref = backCat !== 'all'
+  ? `/nepal/government-service-cost?category=${encodeURIComponent(backCat)}`
+  : '/nepal/government-service-cost';
+
+const pageUrl = `https://solutionsnepal.com/nepal/government-service-cost/${service.slug}`;
+const hasFixedFees = service.fees.some((f) => typeof f.amount === 'number');
+const title = `${service.name} — Fees & Documents Nepal | SolutionsNepal`;
+const description = `${service.name} in Nepal: ${service.description} Fees, documents, processing time and steps.`;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'GovernmentService',
+      name: service.name,
+      description: service.description,
+      url: pageUrl,
+      areaServed: 'NP',
+      serviceType: category ? category.name : 'Government service',
+      provider: { '@type': 'GovernmentOrganization', name: service.office },
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-4 sm:py-5">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Government Service Cost', href: '/nepal/government-service-cost' },
+      { label: service.name },
+    ]} />
+
+    <a href={backHref} class="back-link">
+      <ArrowLeft size={14} /> Back to all services
+    </a>
+
+    <div class="mt-2 mb-4">
+      <p class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">
+        Nepal {category ? category.name : 'Government'}
+      </p>
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mt-1 mb-1" style="color: var(--nk-text);">
+        {service.name}
+      </h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">{service.description}</p>
+      {service.eligibility && (
+        <p class="elig-row">
+          <UserCheck size={14} />
+          <span>Who can apply: <strong>{service.eligibility}</strong></span>
+        </p>
+      )}
+      <p class="flex items-center gap-2 flex-wrap mt-2">
+        {verified
+          ? <span class="v-badge v-ok"><BadgeCheck size={11} /> Verified fees</span>
+          : <span class="v-badge v-warn"><AlertCircle size={11} /> Example fees — confirm at office</span>}
+        <span class="text-[11.5px]" style="color: var(--nk-text-tertiary);">
+          {service.lastUpdated ? `Last checked: ${service.lastUpdated}` : 'Not yet verified'} · {service.office}
+        </span>
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-4 items-start">
+
+      <!-- RIGHT (first on mobile): checklist + actions -->
+      <aside class="md:order-2 md:sticky md:top-4 space-y-3" aria-label="Document checklist">
+        <div class="nk-card p-4" id="checklist-card">
+          <p class="flex items-center justify-between gap-2 mb-1">
+            <span class="text-[13px] font-semibold flex items-center gap-1.5" style="color: var(--nk-text);">
+              <FileCheck2 size={14} /> Required Documents
+            </span>
+            <button type="button" id="doc-clear" class="nk-btn nk-btn-ghost nk-btn-sm">
+              <Eraser size={13} /> Clear
+            </button>
+          </p>
+          <p id="doc-progress-text" class="text-[12px] tabular-nums mb-2" style="color: var(--nk-text-secondary);" aria-live="polite"></p>
+          <div class="progress-track mb-3" aria-hidden="true"><div class="progress-fill" id="doc-progress-fill"></div></div>
+          <ul id="doc-list" class="space-y-1.5">
+            {service.documents.map((doc, i) => (
+              <li>
+                <label class="doc-row" data-doc-index={i}>
+                  <input type="checkbox" class="doc-check sr-only" data-doc-index={i} />
+                  <span class="doc-box" aria-hidden="true"><Check size={14} /></span>
+                  <span class="min-w-0">
+                    <span class="doc-label">{doc.label}</span>
+                    {doc.note && <span class="doc-note">{doc.note}</span>}
+                  </span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          <div class="flex flex-col gap-2 mt-3 pt-3" style="border-top: 1px solid var(--nk-border);">
+            <button type="button" id="btn-pdf" class="nk-btn nk-btn-primary w-full">
+              <Download size={15} /> Download Checklist PDF
+            </button>
+            <button type="button" id="btn-print" class="nk-btn nk-btn-secondary w-full">
+              <Printer size={15} /> Print Checklist
+            </button>
+          </div>
+          <p id="pdf-status" class="hidden text-[11.5px] mt-2" style="color: var(--nk-text-secondary);" role="status"></p>
+        </div>
+      </aside>
+
+      <!-- LEFT: main information -->
+      <div class="md:order-1 space-y-4 min-w-0">
+        <section class="nk-card p-4" aria-labelledby="fee-h">
+          <h2 id="fee-h" class="text-[15px] font-semibold mb-2" style="color: var(--nk-text);">Government Fee</h2>
+          {service.fees.length === 0 ? (
+            <p class="text-[13px]" style="color: var(--nk-text-secondary);">No fixed government fee is published for this service — confirm at the office.</p>
+          ) : (
+            <div class="overflow-x-auto">
+              <table class="fee-table">
+                <thead>
+                  <tr><th scope="col">Service</th><th scope="col" class="text-right">Cost</th></tr>
+                </thead>
+                <tbody>
+                  {service.fees.map((fee) => (
+                    <tr>
+                      <td>
+                        {fee.label}
+                        {fee.note && <span class="block text-[11.5px] font-normal mt-0.5" style="color: var(--nk-text-tertiary);">{fee.note}</span>}
+                      </td>
+                      <td class="text-right tabular-nums whitespace-nowrap">
+                        <strong>{formatNPR(fee.amount)}</strong>
+                        {typeof fee.amount === 'number' && !fee.verified && <span class="unv-dot" title="Example amount — confirm at the office">●</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {!hasFixedFees && (
+            <div class="varies-box">
+              <CircleAlert size={14} />
+              <p><strong>No fixed fee to show.</strong> This cost depends on your specific case — ask the office for your exact figure, or try a related estimator linked at the bottom of this page.</p>
+            </div>
+          )}
+          <p class="text-[11.5px] mt-2 leading-relaxed" style="color: var(--nk-text-tertiary);">
+            Government fees only — photocopies, agent help and travel cost extra.
+            {!verified && hasFixedFees && <> Amounts marked <span class="unv-dot">●</span> are examples: confirm before paying.</>}
+          </p>
+          <div class="notice-box mt-3">
+            <CircleAlert size={14} />
+            <p>Fees and requirements may change. Verify the latest information with the relevant government office before applying.</p>
+          </div>
+          {service.officialSource && service.officialSource.url && (
+            <p class="mt-3 pt-3 text-[12.5px]" style="border-top: 1px solid var(--nk-border);">
+              <span class="font-semibold" style="color: var(--nk-text);">Official source: </span>
+              <a href={service.officialSource.url} target="_blank" rel="noopener" class="official-link">
+                {service.officialSource.label} <ExternalLink size={13} />
+              </a>
+            </p>
+          )}
+        </section>
+
+        <section class="nk-card p-4" aria-labelledby="proc-h">
+          <h2 id="proc-h" class="text-[15px] font-semibold mb-2" style="color: var(--nk-text);">Processing Information</h2>
+          <dl class="info-rows">
+            <div><dt><Clock size={13} /> Processing Time</dt><dd>{service.processingTime}</dd></div>
+            <div><dt><MapPin size={13} /> Where to Apply</dt><dd>{service.office}</dd></div>
+            <div><dt><ClipboardList size={13} /> Application</dt><dd>{service.method}</dd></div>
+            <div><dt><CalendarCheck size={13} /> Validity</dt><dd>{service.validity}</dd></div>
+          </dl>
+        </section>
+
+        <section class="nk-card p-4" aria-labelledby="steps-h">
+          <h2 id="steps-h" class="text-[15px] font-semibold mb-2" style="color: var(--nk-text);">Application Process</h2>
+          <ol class="steps-list">
+            {service.steps.map((step) => (
+              <li>
+                <span class="step-num" aria-hidden="true"></span>
+                <div class="min-w-0">
+                  <p class="text-[13.5px] font-semibold" style="color: var(--nk-text);">{step.title}</p>
+                  <p class="text-[12.5px] leading-relaxed" style="color: var(--nk-text-secondary);">{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section class="nk-card p-4" aria-labelledby="notes-h">
+          <h2 id="notes-h" class="text-[15px] font-semibold mb-2" style="color: var(--nk-text);">Important Notes</h2>
+          <ul class="notes-list">
+            {service.notes.map((note) => <li>{note}</li>)}
+            <li>Always verify information from the relevant official government authority.</li>
+          </ul>
+        </section>
+
+        {related.length > 0 && (
+          <section aria-label="Related services">
+            <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">
+              More in {category ? category.name : 'government services'}
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {related.map((r) => (
+                <a href={`/nepal/government-service-cost/${r.slug}?category=${backCat}`} class="svc-card">
+                  <span class="text-[13px] font-medium" style="color: var(--nk-text);">{r.name}</span>
+                  <span class="svc-go">View →</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <RelatedTools tools={[
+          { title: 'Government Service Cost', description: 'All fees & checklists', href: '/nepal/government-service-cost' },
+          ...service.links
+            .filter((link) => link.href !== '/tools/passport-photo-resizer')
+            .map((link) => ({ title: link.label, description: '', href: link.href })),
+          { title: 'Passport Size Photo', description: '2×2 inch photo for applications', href: '/tools/passport-photo-resizer' },
+        ].slice(0, 4)} />
+      </div>
+    </div>
+  </div>
+
+  <!-- Print-only checklist document -->
+  <div id="print-doc" aria-hidden="true">
+    <p class="print-doc-title">{service.name} — Document Checklist (SolutionsNepal)</p>
+    <p>Fees, documents, steps and notes as shown on this page. Verify with the relevant office before applying.</p>
+    {service.eligibility && <p>Who can apply: {service.eligibility}</p>}
+    <h2>Government Fee</h2>
+    <ul>
+      {service.fees.map((fee) => (
+        <li>{fee.label}: {formatNPR(fee.amount)}{fee.note ? ` (${fee.note})` : ''}</li>
+      ))}
+    </ul>
+    <h2>Required Documents</h2>
+    <ul id="print-doc-list">
+      {service.documents.map((doc) => (
+        <li data-print-doc={doc.label}>{doc.label}{doc.note ? ` (${doc.note})` : ''}</li>
+      ))}
+    </ul>
+    <h2>Application Steps</h2>
+    <ol>
+      {service.steps.map((step) => (
+        <li><strong>{step.title}:</strong> {step.text}</li>
+      ))}
+    </ol>
+    <h2>Important Notes</h2>
+    <ul>
+      {service.notes.map((note) => <li>{note}</li>)}
+    </ul>
+    <p>Official source: {service.officialSource ? `${service.officialSource.label} — ${service.officialSource.url}` : 'Confirm at the relevant office.'}</p>
+  </div>
+
+  <script>
+    // NOTE: bare <script> (no attributes, no define:vars) so Astro/Vite
+    // bundles it into a real module chunk. Script tags carrying id/data-*
+    // attributes or define:vars are inlined verbatim, which leaves import()
+    // URLs pointing at source files that do not exist in production.
+    import { buildChecklistPdf } from '../../../lib/pdf/checklist-pdf.js';
+    import { getServiceBySlug } from '../../../data/government-services.js';
+
+    const slug = window.location.pathname.split('/').filter(Boolean).pop();
+    const STORAGE_KEY = `govcheck:${slug}`;
+    const checks = Array.from(document.querySelectorAll('.doc-check'));
+    const progressText = document.getElementById('doc-progress-text');
+    const progressFill = document.getElementById('doc-progress-fill');
+    const clearBtn = document.getElementById('doc-clear');
+    const pdfBtn = document.getElementById('btn-pdf');
+    const printBtn = document.getElementById('btn-print');
+    const pdfStatus = document.getElementById('pdf-status');
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr.filter((i) => Number.isInteger(i) && i >= 0 && i < checks.length) : [];
+      } catch {
+        return [];
+      }
+    }
+    function saveState(checked) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(checked)); } catch { /* private mode */ }
+    }
+    function currentChecked() {
+      return checks.filter((c) => c.checked).map((c) => Number(c.dataset.docIndex));
+    }
+    function render() {
+      const checked = currentChecked();
+      checks.forEach((c) => {
+        c.closest('.doc-row').classList.toggle('done', c.checked);
+      });
+      progressText.textContent = `${checked.length} of ${checks.length} documents ready`;
+      progressFill.style.width = checks.length === 0 ? '0%' : `${Math.round((checked.length / checks.length) * 100)}%`;
+      // Mirror state into the print document
+      document.querySelectorAll('#print-doc-list li').forEach((li, i) => {
+        li.textContent = `${checked.includes(i) ? '[x]' : '[ ]'} ${li.dataset.printDoc}`;
+      });
+      saveState(checked);
+    }
+
+    checks.forEach((c) => {
+      const saved = loadState();
+      if (saved.includes(Number(c.dataset.docIndex))) c.checked = true;
+      c.addEventListener('change', render);
+    });
+    // Enter/Space on the row label is native via the checkbox input.
+    clearBtn.addEventListener('click', () => {
+      checks.forEach((c) => { c.checked = false; });
+      render();
+    });
+    printBtn.addEventListener('click', () => window.print());
+
+    pdfBtn.addEventListener('click', async () => {
+      pdfStatus.classList.remove('hidden');
+      pdfStatus.textContent = 'Preparing your PDF…';
+      pdfBtn.disabled = true;
+      try {
+        const service = getServiceBySlug(slug);
+        const bytes = await buildChecklistPdf(service, currentChecked());
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `solutionsnepal-${slug}-checklist.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+        pdfStatus.textContent = 'Downloaded. Check your downloads folder.';
+      } catch (err) {
+        console.error('Checklist PDF failed:', err);
+        pdfStatus.textContent = 'Could not build the PDF right now — use Print Checklist instead.';
+      } finally {
+        pdfBtn.disabled = false;
+      }
+    });
+
+    render();
+  </script>
+
+  <style>
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500; color: var(--nk-text-secondary);
+      text-decoration: none; padding: 6px 0;
+    }
+    .back-link:hover { color: var(--nk-accent); }
+    .back-link:focus-visible, .svc-card:focus-visible, .official-link:focus-visible {
+      outline: 2px solid var(--nk-accent); outline-offset: 2px;
+    }
+    .v-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 2px 7px; border-radius: 9999px; white-space: nowrap;
+    }
+    .v-ok { background: rgba(22,163,74,0.1); color: #15803d; border: 1px solid rgba(22,163,74,0.25); }
+    .v-warn { background: rgba(217,119,6,0.1); color: #b45309; border: 1px solid rgba(217,119,6,0.25); }
+    [data-theme="dark"] .v-ok { color: #4ade80; }
+    [data-theme="dark"] .v-warn { color: #fbbf24; }
+    .fee-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .fee-table th {
+      text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--nk-text-tertiary);
+      padding: 6px 8px 6px 0; border-bottom: 1px solid var(--nk-border);
+    }
+    .fee-table th.text-right, .fee-table td.text-right { text-align: right; }
+    .fee-table td {
+      padding: 9px 8px 9px 0; border-bottom: 1px solid var(--nk-border);
+      color: var(--nk-text); vertical-align: top;
+    }
+    .fee-table tr:last-child td { border-bottom: none; }
+    .fee-table td strong { font-variant-numeric: tabular-nums; }
+    .unv-dot { color: #d97706; font-size: 9px; margin-left: 5px; vertical-align: 2px; }
+    [data-theme="dark"] .unv-dot { color: #fbbf24; }
+    .elig-row {
+      display: flex; align-items: center; gap: 8px;
+      margin: 10px 0 0; padding: 9px 12px;
+      font-size: 12.5px; color: var(--nk-text-secondary);
+      background: var(--nk-hover); border: 1px solid var(--nk-border);
+      border-radius: var(--radius-md); max-width: 560px;
+    }
+    .elig-row svg { flex-shrink: 0; color: var(--nk-accent); }
+    .elig-row strong { color: var(--nk-text); }
+    .varies-box {
+      display: flex; gap: 8px; align-items: flex-start;
+      padding: 10px 12px; border-radius: var(--radius-md); margin-top: 10px;
+      background: var(--nk-hover); border: 1px solid var(--nk-border);
+      font-size: 12.5px; line-height: 1.55; color: var(--nk-text);
+    }
+    .varies-box svg { flex-shrink: 0; margin-top: 2px; color: var(--nk-text-secondary); }
+    .notice-box {
+      display: flex; gap: 8px; align-items: flex-start;
+      padding: 10px 12px; border-radius: var(--radius-md);
+      background: rgba(217,119,6,0.08); border: 1px solid rgba(217,119,6,0.25);
+      font-size: 12.5px; line-height: 1.55; color: var(--nk-text);
+    }
+    .notice-box svg { flex-shrink: 0; margin-top: 2px; color: #b45309; }
+    [data-theme="dark"] .notice-box svg { color: #fbbf24; }
+    .info-rows { display: grid; gap: 0; }
+    .info-rows > div {
+      display: grid; grid-template-columns: 150px 1fr; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--nk-border);
+      font-size: 13px;
+    }
+    .info-rows > div:last-child { border-bottom: none; }
+    .info-rows dt {
+      display: flex; align-items: center; gap: 6px;
+      font-weight: 600; color: var(--nk-text-secondary); font-size: 12.5px;
+    }
+    .info-rows dd { margin: 0; color: var(--nk-text); font-weight: 600; }
+    .steps-list { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; gap: 0; position: relative; }
+    .steps-list::before {
+      content: ''; position: absolute; left: 12.5px; top: 30px; bottom: 30px; width: 2px;
+      background: var(--nk-border); border-radius: 2px;
+    }
+    .steps-list li { position: relative; display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--nk-border); background: var(--nk-card-bg); }
+    .steps-list li:last-child { border-bottom: none; }
+    .step-num {
+      counter-increment: step; flex-shrink: 0;
+      width: 26px; height: 26px; border-radius: 9999px;
+      background: var(--nk-accent-subtle); color: var(--nk-accent);
+      font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .step-num::before { content: counter(step, decimal-leading-zero); }
+    .notes-list { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13px; color: var(--nk-text-secondary); line-height: 1.55; }
+    .official-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13.5px; font-weight: 600; color: var(--nk-accent); text-decoration: none;
+    }
+    .official-link:hover { text-decoration: underline; }
+    .svc-card {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 11px 13px; border-radius: var(--radius-lg);
+      border: 1px solid var(--nk-border); background-color: var(--nk-card-bg);
+      text-decoration: none; transition: border-color var(--duration-fast) ease;
+    }
+    .svc-card:hover { border-color: var(--nk-border-strong); }
+    .svc-go { font-size: 12px; font-weight: 600; color: var(--nk-accent); white-space: nowrap; }
+    /* Checklist */
+    .doc-row {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 9px 10px; border-radius: var(--radius-md);
+      border: 1px solid var(--nk-border); cursor: pointer;
+      transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease;
+      min-height: 44px;
+    }
+    .doc-row:hover { border-color: var(--nk-border-strong); }
+    .doc-row.done { background: rgba(22,163,74,0.06); border-color: rgba(22,163,74,0.3); }
+    .doc-row:focus-within { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+    .doc-box {
+      flex-shrink: 0; margin-top: 1px;
+      width: 20px; height: 20px; border-radius: 6px;
+      border: 1.5px solid var(--nk-border-strong);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: transparent; background: transparent;
+      transition: all var(--duration-fast) ease;
+    }
+    .doc-box svg { display: block; }
+    .doc-row.done .doc-box { background: #15803d; border-color: #15803d; color: #fff; }
+    [data-theme="dark"] .doc-row.done .doc-box { background: #4ade80; border-color: #4ade80; color: #052e16; }
+    .doc-label { display: block; font-size: 13px; font-weight: 500; color: var(--nk-text); line-height: 1.45; }
+    .doc-row.done .doc-label { text-decoration: line-through; text-decoration-thickness: 1px; }
+    .doc-note { display: block; font-size: 11.5px; color: var(--nk-text-tertiary); margin-top: 1px; }
+    .progress-track { height: 6px; border-radius: 9999px; background: var(--nk-hover); overflow: hidden; }
+    .progress-fill {
+      height: 100%; width: 0%; border-radius: 9999px;
+      background: var(--nk-gradient-primary); transition: width 200ms ease;
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+    /* Print: clean checklist document only */
+    #print-doc { display: none; }
+    .print-doc-title { font-size: 20px; font-weight: 700; margin: 0 0 4px; }
+    @media print {
+      #checklist-card .nk-btn, #btn-pdf, #btn-print, .back-link, .svc-go { display: none !important; }
+      body * { visibility: hidden; }
+      #print-doc, #print-doc * { visibility: visible; }
+      #print-doc {
+        display: block; position: absolute; left: 0; top: 0; width: 100%;
+        padding: 24px; color: #000; background: #fff;
+      }
+      #print-doc h2 { font-size: 14px; margin: 16px 0 6px; }
+      #print-doc .print-doc-title { font-size: 20px; font-weight: 700; margin: 0 0 4px; color: #000; }
+      #print-doc p, #print-doc li { font-size: 12px; line-height: 1.6; }
+      #print-doc ul, #print-doc ol { margin: 0 0 8px 20px; padding: 0; }
+    }
+  </style>
+</BaseLayout>

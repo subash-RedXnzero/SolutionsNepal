@@ -1,0 +1,347 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import {
+  Search, X, ArrowRight, BadgeCheck, AlertCircle, Building2,
+  IdCard, BookOpen, Car, Fingerprint, ReceiptText, Truck,
+  Briefcase, Landmark, Plane, LayoutGrid,
+} from '@lucide/astro';
+import {
+  SERVICES,
+  SERVICE_CATEGORIES,
+  POPULAR_SERVICES,
+  getServiceBySlug,
+  serviceIsVerified,
+  serviceFeeFrom,
+  formatNPR,
+} from '../../../data/government-services.js';
+
+const title = 'Government Service Fees & Document Checklist Nepal | SolutionsNepal';
+const description =
+  'Check Nepal government service fees, required documents, processing time, application steps, and official sources with SolutionsNepal.';
+
+const CATEGORY_ICONS = {
+  all: LayoutGrid,
+  citizenship: IdCard,
+  passport: BookOpen,
+  'driving-license': Car,
+  'national-id': Fingerprint,
+  tax: ReceiptText,
+  vehicles: Truck,
+  business: Briefcase,
+  land: Landmark,
+  'foreign-employment': Plane,
+};
+
+const popular = POPULAR_SERVICES.map((p) => getServiceBySlug(p.slug))
+  .filter(Boolean)
+  .map((s) => ({
+    ...s,
+    label: (POPULAR_SERVICES.find((p) => p.slug === s.slug) || {}).label || s.name,
+  }));
+
+const initialCategory = (Astro.url.searchParams.get('category') || 'all').toLowerCase();
+const validInitial = ['all', ...SERVICE_CATEGORIES.map((c) => c.id)].includes(initialCategory)
+  ? initialCategory
+  : 'all';
+
+const categoryCounts = Object.fromEntries(
+  SERVICE_CATEGORIES.map((c) => [c.id, SERVICES.filter((s) => s.category === c.id).length]),
+);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'Government Service Cost & Document Checklist Nepal',
+      description,
+      url: 'https://solutionsnepal.com/nepal/government-service-cost',
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: SERVICES.length,
+        itemListElement: SERVICES.map((s, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          url: `https://solutionsnepal.com/nepal/government-service-cost/${s.slug}`,
+          name: s.name,
+        })),
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Where can I check Nepal government service fees?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'This page lists government fees, required documents, processing time and application steps for common services in Nepal, with links to official sources. Always verify with the relevant office before applying.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Are the fees on this page official?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Fees marked Verified are backed by an official source or corroborated reports. Amounts marked Example are realistic placeholders — confirm them at the relevant government office before paying.',
+          },
+        },
+      ],
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-4 sm:py-5">
+    <Breadcrumbs items={[
+      { label: 'Tools', href: '/nepal' },
+      { label: 'Government Service Cost' },
+    ]} />
+
+    <div class="mb-4">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
+        Government Service Cost &amp; Document Checklist
+      </h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+        Check government fees, required documents, processing time, and application steps in Nepal.
+        Fees marked <strong>Verified</strong> are backed by a source — <strong>Example</strong> amounts must be confirmed at the office.
+      </p>
+    </div>
+
+    <!-- Search -->
+    <div class="relative mb-3">
+      <span class="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style="color: var(--nk-text-tertiary);">
+        <Search size={17} />
+      </span>
+      <input
+        id="gov-search"
+        type="search"
+        autocomplete="off"
+        placeholder="Search a government service..."
+        aria-label="Search a government service"
+        class="nk-input text-[15px]"
+        style="padding-left: 2.75rem; padding-right: 2.75rem;"
+      />
+      <button
+        id="gov-clear"
+        type="button"
+        aria-label="Clear search"
+        class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 nk-btn-icon"
+        style="width: 30px; height: 30px;"
+      >
+        <X size={15} />
+      </button>
+    </div>
+
+    <!-- Popular -->
+    <div class="mb-3">
+      <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">Popular services</p>
+      <div class="flex flex-wrap gap-1.5" id="popular-row">
+        {popular.map((s) => (
+          <button type="button" class="pop-chip" data-popular={s.name}>
+            <Building2 size={13} /> {s.label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="cat-scroll mb-1" role="radiogroup" aria-label="Filter by category">
+      <button type="button" class={`cat-chip${validInitial === 'all' ? ' cat-active' : ''}`} data-cat="all" role="radio" aria-checked={validInitial === 'all' ? 'true' : 'false'}>
+        <LayoutGrid size={13} /> All <span class="cat-count">{SERVICES.length}</span>
+      </button>
+      {SERVICE_CATEGORIES.map((c) => {
+        const Icon = CATEGORY_ICONS[c.id] || LayoutGrid;
+        const active = validInitial === c.id;
+        return (
+          <button type="button" class={`cat-chip${active ? ' cat-active' : ''}`} data-cat={c.id} role="radio" aria-checked={active ? 'true' : 'false'}>
+            <Icon size={13} /> {c.name} <span class="cat-count">{categoryCounts[c.id] || 0}</span>
+          </button>
+        );
+      })}
+    </div>
+
+    <!-- Result count -->
+    <div class="mt-3 mb-2">
+      <p id="gov-count" class="text-[12px] tabular-nums" style="color: var(--nk-text-secondary);" aria-live="polite"></p>
+    </div>
+
+    <!-- Service list -->
+    <div id="service-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+      {SERVICES.map((s) => {
+        const cat = SERVICE_CATEGORIES.find((c) => c.id === s.category);
+        const verified = serviceIsVerified(s);
+        const from = serviceFeeFrom(s);
+        const searchBlob = [
+          s.name, s.description, cat ? cat.name : '', s.office,
+          ...s.documents.map((d) => `${d.label} ${d.note || ''}`),
+        ].join(' ').toLowerCase();
+        return (
+          <a
+            href={`/nepal/government-service-cost/${s.slug}?category=${validInitial}`}
+            class="svc-card"
+            data-cat={s.category}
+            data-search={searchBlob}
+            data-name={s.name}
+          >
+            <div class="flex-1 min-w-0">
+              <p class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-[14px] font-semibold" style="color: var(--nk-text);">{s.name}</span>
+                {verified
+                  ? <span class="v-badge v-ok"><BadgeCheck size={11} /> Verified</span>
+                  : <span class="v-badge v-warn"><AlertCircle size={11} /> Example</span>}
+              </p>
+              <p class="text-[12.5px] leading-relaxed mt-0.5" style="color: var(--nk-text-secondary);">{s.description}</p>
+              <p class="text-[11.5px] mt-1.5 tabular-nums" style="color: var(--nk-text-tertiary);">
+                {from === null ? 'Fee varies' : `Fee from ${formatNPR(from)}`} · {s.processingTime}
+              </p>
+            </div>
+            <span class="svc-go">View Details <ArrowRight size={13} /></span>
+          </a>
+        );
+      })}
+    </div>
+
+    <!-- Empty state -->
+    <div id="gov-empty" class="hidden nk-card p-8 text-center mt-1">
+      <p class="text-[15px] font-semibold mb-1" style="color: var(--nk-text);">No service found</p>
+      <p class="text-[13px]" style="color: var(--nk-text-secondary);">
+        Try a different keyword like “passport”, “license” or “PAN” — or browse a category above.
+      </p>
+      <button type="button" id="gov-empty-reset" class="nk-btn nk-btn-secondary nk-btn-sm mt-3">Show all services</button>
+    </div>
+
+    <RelatedTools tools={[
+      { title: 'Vehicle Tax, Fine & Renewal', description: 'Calculate vehicle tax & renewal costs', href: '/nepal/transport/vehicle-tax' },
+      { title: 'Business Registration Cost', description: 'Estimate company registration costs', href: '/business-registration-cost-nepal' },
+      { title: 'Land Registration Fee', description: 'Estimate land registration fees', href: '/nepal/property/land-registration' },
+      { title: 'Passport Size Photo', description: '2×2 inch photo for applications', href: '/tools/passport-photo-resizer' },
+    ]} />
+  </div>
+
+  <script define:vars={{ initialCategory: validInitial }}>
+    const searchInput = document.getElementById('gov-search');
+    const clearBtn = document.getElementById('gov-clear');
+    const countEl = document.getElementById('gov-count');
+    const emptyEl = document.getElementById('gov-empty');
+    const cards = Array.from(document.querySelectorAll('.svc-card'));
+    const catBtns = Array.from(document.querySelectorAll('.cat-chip'));
+    let activeCat = initialCategory || 'all';
+
+    function setCat(cat, updateUrl = true) {
+      activeCat = cat;
+      catBtns.forEach((b) => {
+        const on = b.dataset.cat === cat;
+        b.classList.toggle('cat-active', on);
+        b.setAttribute('aria-checked', String(on));
+      });
+      if (updateUrl) {
+        const url = new URL(window.location.href);
+        if (cat === 'all') url.searchParams.delete('category');
+        else url.searchParams.set('category', cat);
+        window.history.replaceState(null, '', url.toString());
+      }
+      // Keep detail links carrying the active category for Back navigation
+      cards.forEach((c) => {
+        const slug = c.getAttribute('href').split('?')[0].split('/').pop();
+        c.setAttribute('href', `/nepal/government-service-cost/${slug}?category=${cat}`);
+      });
+      applyFilter();
+    }
+
+    function applyFilter() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+      const words = q.split(/\s+/).filter(Boolean);
+      let shown = 0;
+      cards.forEach((c) => {
+        const catOk = activeCat === 'all' || c.dataset.cat === activeCat;
+        const blob = c.dataset.search || '';
+        const qOk = words.every((w) => blob.includes(w));
+        const show = catOk && qOk;
+        c.classList.toggle('hidden', !show);
+        if (show) shown += 1;
+      });
+      const total = cards.length;
+      countEl.textContent = shown === total
+        ? `Showing all ${total} services`
+        : `Showing ${shown} of ${total} services`;
+      emptyEl.classList.toggle('hidden', shown !== 0);
+      clearBtn.classList.toggle('hidden', q.length === 0);
+    }
+
+    catBtns.forEach((b) => b.addEventListener('click', () => setCat(b.dataset.cat)));
+    searchInput.addEventListener('input', applyFilter);
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      searchInput.focus();
+      applyFilter();
+    });
+    document.querySelectorAll('[data-popular]').forEach((b) => b.addEventListener('click', () => {
+      searchInput.value = b.dataset.popular;
+      applyFilter();
+      document.getElementById('service-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+    document.getElementById('gov-empty-reset').addEventListener('click', () => {
+      searchInput.value = '';
+      setCat('all');
+    });
+
+    setCat(activeCat, false);
+  </script>
+
+  <style>
+    .pop-chip, .cat-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 500;
+      padding: 7px 13px; border-radius: 9999px;
+      border: 1px solid var(--nk-border);
+      color: var(--nk-text-secondary); background: var(--nk-surface);
+      cursor: pointer; transition: all 150ms ease; white-space: nowrap;
+      font-family: var(--font-sans);
+    }
+    .pop-chip:hover, .cat-chip:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+    .cat-chip.cat-active { background: var(--nk-gradient-primary); color: white; border-color: transparent; font-weight: 600; }
+    .cat-count {
+      font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 9999px;
+      background: var(--nk-hover); color: var(--nk-text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+    .cat-chip.cat-active .cat-count { background: rgba(255,255,255,0.22); color: white; }
+    .cat-scroll {
+      display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+    .svc-card {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      padding: 14px 15px; border-radius: var(--radius-lg);
+      border: 1px solid var(--nk-border); background-color: var(--nk-card-bg);
+      text-decoration: none;
+      transition: border-color var(--duration-fast) ease;
+    }
+    .svc-card:hover { border-color: var(--nk-border-strong); }
+    .svc-go {
+      display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
+      font-size: 12px; font-weight: 600; color: var(--nk-accent); white-space: nowrap;
+      margin-top: 2px;
+    }
+    .svc-card:hover .svc-go svg { transform: translateX(2px); }
+    .svc-go svg { transition: transform var(--duration-fast) ease; }
+    .v-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 2px 7px; border-radius: 9999px; white-space: nowrap;
+    }
+    .v-ok { background: rgba(22,163,74,0.1); color: #15803d; border: 1px solid rgba(22,163,74,0.25); }
+    .v-warn { background: rgba(217,119,6,0.1); color: #b45309; border: 1px solid rgba(217,119,6,0.25); }
+    [data-theme="dark"] .v-ok { color: #4ade80; }
+    [data-theme="dark"] .v-warn { color: #fbbf24; }
+    @media print {
+      #gov-search, #popular-row, .cat-scroll, .svc-go, .nk-btn { display: none !important; }
+    }
+  </style>
+</BaseLayout>

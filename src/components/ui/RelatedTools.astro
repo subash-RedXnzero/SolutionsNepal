@@ -1,0 +1,41 @@
+---
+const { tools } = Astro.props;
+---
+
+{tools.length > 0 && (
+  <div class="mt-8">
+    <h2 class="text-[13px] font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-tertiary);">Related tools</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-px" style="background-color: var(--nk-border); border: 1px solid var(--nk-border); border-radius: var(--radius-lg); overflow: hidden;">
+      {tools.map(tool => (
+        <a
+          href={tool.href}
+          class="flex items-center justify-between gap-3 px-4 py-3 transition-colors duration-100 group"
+          style="background-color: var(--nk-surface); text-decoration: none; color: var(--nk-text);"
+        >
+          <div class="flex-1 min-w-0">
+            <p class="text-[13px] font-medium truncate" style="color: var(--nk-text);">{tool.title}</p>
+            {tool.description && (
+              <p class="text-[11px] truncate mt-0.5" style="color: var(--nk-text-tertiary);">{tool.description}</p>
+            )}
+          </div>
+          <svg
+            class="w-3.5 h-3.5 shrink-0 transition-all duration-100 opacity-0 group-hover:opacity-60 group-hover:translate-x-0.5"
+            style="color: var(--nk-text-tertiary);"
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </a>
+      ))}
+    </div>
+  </div>
+)}

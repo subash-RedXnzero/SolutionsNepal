@@ -1,0 +1,198 @@
+---
+/**
+ * Shared client-side image format converter.
+ * Props:
+ * - fromLabel:  "JPG" (shown in UI)
+ * - fromMimes:  ["image/jpeg"] (accepted uploads)
+ * - fromAccept: "image/jpeg" (file input accept attr)
+ * - toMime:     "image/png" (canvas output)
+ * - toLabel:    "PNG"
+ * - toExt:      "png"
+ * - defaultQuality: 0.92 (used for JPEG/WebP output)
+ * - showQuality: show the quality slider (lossy outputs only)
+ */
+import { formatBytes } from '../../lib/converters/image-compress.js';
+
+const {
+  fromLabel,
+  fromMimes,
+  fromAccept,
+  toMime,
+  toLabel,
+  toExt,
+  defaultQuality = 0.92,
+  showQuality = true,
+} = Astro.props;
+---
+
+<div class="rounded-xl border overflow-hidden" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+  <!-- Upload Area -->
+  <div data-conv="upload" class="p-6 sm:p-8 text-center cursor-pointer transition-colors" style="border-bottom:1px dashed var(--nk-border);" tabindex="0" role="button" aria-label="Upload image">
+    <input data-conv="file" type="file" accept={fromAccept} aria-label="Choose image file" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;" />
+    <div>
+      <div class="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center" style="background-color:var(--nk-bg);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--nk-text-secondary);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+      </div>
+      <p class="text-sm font-medium mb-0.5" style="color:var(--nk-text);">Click to upload or drag and drop</p>
+      <p class="text-[11px]" style="color:var(--nk-text-secondary);">{fromLabel} → {toLabel}</p>
+    </div>
+  </div>
+
+  <!-- Image Info -->
+  <div data-conv="info" class="hidden px-4 py-3" style="border-bottom:1px solid var(--nk-border);">
+    <div class="flex items-center gap-3">
+      <div class="flex-shrink-0 rounded-md overflow-hidden" style="background-color:var(--nk-bg);width:48px;height:48px;">
+        <img data-conv="preview" class="w-full h-full object-cover" alt="Image preview" />
+      </div>
+      <div class="flex-1 min-w-0">
+        <p data-conv="name" class="text-[13px] font-medium truncate" style="color:var(--nk-text);"></p>
+        <p class="text-[11px] mt-0.5" style="color:var(--nk-text-secondary);"><span data-conv="size"></span> · <span data-conv="dims"></span></p>
+      </div>
+      <button data-conv="remove" class="flex-shrink-0 p-1.5 rounded-md transition-colors hover:opacity-70" style="color:var(--nk-text-secondary);" aria-label="Remove image">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quality (lossy outputs) -->
+  {showQuality && (
+    <div data-conv="quality" class="hidden px-4 py-3" style="border-bottom:1px solid var(--nk-border);">
+      <div class="flex items-center justify-between mb-1.5">
+        <p class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--nk-text-secondary);">Quality</p>
+        <p class="text-[11px] font-semibold" style="color:var(--nk-text);"><span data-conv="qval">{Math.round(defaultQuality * 100)}</span>%</p>
+      </div>
+      <input data-conv="qslider" type="range" min="10" max="100" value={Math.round(defaultQuality * 100)} class="w-full" aria-label="Output quality" />
+      <p class="text-[10px] mt-1" style="color:var(--nk-text-secondary);">Higher = better look, bigger file. 90–92% looks identical for most photos.</p>
+    </div>
+  )}
+
+  <!-- Convert Button -->
+  <div data-conv="actions" class="hidden px-4 py-3">
+    <button data-conv="convert" class="w-full py-2.5 text-[13px] font-semibold rounded-lg transition-all" style="background-color:var(--nk-accent);color:white;">
+      Convert to {toLabel}
+    </button>
+  </div>
+
+  <!-- Result -->
+  <div data-conv="result" class="hidden px-4 py-3" style="border-top:1px solid var(--nk-border);background-color:var(--nk-bg);">
+    <div class="grid grid-cols-2 gap-2 mb-2">
+      <div class="text-center py-2 rounded-md" style="background-color:var(--nk-surface);border:1px solid var(--nk-border);">
+        <p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">Original</p>
+        <p data-conv="res-orig" class="text-sm font-bold" style="color:var(--nk-text);"></p>
+      </div>
+      <div class="text-center py-2 rounded-md" style="background-color:var(--nk-surface);border:1px solid var(--nk-border);">
+        <p class="text-[9px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-secondary);">{toLabel} file</p>
+        <p data-conv="res-new" class="text-sm font-bold" style="color:var(--nk-accent);"></p>
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <a data-conv="download" class="flex-1 text-center py-2 text-[12px] font-semibold rounded-lg transition-all" style="background-color:var(--nk-accent);color:white;text-decoration:none;" aria-label="Download converted image" download>Download {toLabel}</a>
+      <button data-conv="reset" class="px-3 py-2 text-[12px] font-medium rounded-lg border transition-all" style="border-color:var(--nk-border);color:var(--nk-text-secondary);" aria-label="Reset and choose another image">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ fromMimes, toMime, toExt, defaultQuality }}>
+  function formatBytes(bytes) {
+    if (!bytes) return '0 B';
+    const units = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return (bytes / Math.pow(1024, i)).toFixed(i > 0 ? 1 : 0) + ' ' + units[i];
+  }
+
+  const q = (sel) => document.querySelector(`[data-conv="${sel}"]`);
+
+  const upload = q('upload'), fileInput = q('file'), info = q('info'),
+    qualityBox = q('quality'), actions = q('actions'), result = q('result'),
+    preview = q('preview'), nameEl = q('name'), sizeEl = q('size'), dimsEl = q('dims'),
+    convertBtn = q('convert'), downloadBtn = q('download'),
+    resOrig = q('res-orig'), resNew = q('res-new'),
+    qslider = q('qslider'), qval = q('qval');
+
+  let currentFile = null;
+  let quality = defaultQuality;
+  let resultUrl = null;
+
+  function show(el, on) { el.classList.toggle('hidden', !on); }
+
+  function resetAll() {
+    currentFile = null;
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    fileInput.value = '';
+    show(upload, true); show(info, false);
+    if (qualityBox) show(qualityBox, false);
+    show(actions, false); show(result, false);
+  }
+
+  function handleFile(file) {
+    if (!file || !fromMimes.includes(file.type)) {
+      alert('Please upload a supported image for this converter.');
+      return;
+    }
+    currentFile = file;
+    const url = URL.createObjectURL(file);
+    preview.src = url;
+    nameEl.textContent = file.name;
+    sizeEl.textContent = formatBytes(file.size);
+    preview.onload = () => { dimsEl.textContent = preview.naturalWidth + ' × ' + preview.naturalHeight; };
+    show(upload, false); show(info, true);
+    if (qualityBox) show(qualityBox, true);
+    show(actions, true); show(result, false);
+  }
+
+  upload.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
+  upload.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+  upload.addEventListener('dragover', (e) => { e.preventDefault(); upload.style.borderColor = 'var(--nk-accent)'; });
+  upload.addEventListener('dragleave', () => { upload.style.borderColor = ''; });
+  upload.addEventListener('drop', (e) => { e.preventDefault(); upload.style.borderColor = ''; if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+  q('remove').addEventListener('click', resetAll);
+  q('reset').addEventListener('click', resetAll);
+
+  if (qslider) qslider.addEventListener('input', () => {
+    quality = parseInt(qslider.value) / 100;
+    qval.textContent = qslider.value;
+    show(result, false);
+  });
+
+  convertBtn.addEventListener('click', () => {
+    if (!currentFile) return;
+    convertBtn.disabled = true;
+    convertBtn.textContent = 'Converting…';
+    const img = new Image();
+    const url = URL.createObjectURL(currentFile);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      try {
+        if (img.naturalWidth > 8192 || img.naturalHeight > 8192) throw new Error('too big');
+        const c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        const ctx = c.getContext('2d');
+        if (toMime === 'image/jpeg') { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, c.width, c.height); }
+        ctx.drawImage(img, 0, 0);
+        c.toBlob((blob) => {
+          convertBtn.disabled = false;
+          convertBtn.textContent = 'Convert to ' + (toExt || '').toUpperCase();
+          if (!blob) { alert('Conversion failed. Please try a different image.'); return; }
+          if (resultUrl) URL.revokeObjectURL(resultUrl);
+          resultUrl = URL.createObjectURL(blob);
+          resOrig.textContent = formatBytes(currentFile.size);
+          resNew.textContent = formatBytes(blob.size);
+          downloadBtn.href = resultUrl;
+          downloadBtn.download = currentFile.name.replace(/\.[^.]+$/, '') + '-converted.' + toExt;
+          show(result, true);
+        }, toMime, quality);
+      } catch {
+        convertBtn.disabled = false;
+        convertBtn.textContent = 'Convert to ' + (toExt || '').toUpperCase();
+        alert('Conversion failed. Please try a different image.');
+      }
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      convertBtn.disabled = false;
+      alert('Could not read this image. Please try another file.');
+    };
+    img.src = url;
+  });
+</script>

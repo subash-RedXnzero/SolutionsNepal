@@ -1,0 +1,714 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+import {
+  getDefaultTariff,
+  getCustomerCategories,
+  getPipeSizes,
+  isPipeSizeRequired,
+} from '../../../data/nepal/water/kukl-tariffs.js';
+
+const tariff = getDefaultTariff();
+const categories = getCustomerCategories();
+const pipeSizes = getPipeSizes();
+
+const relatedTools = [
+  { title: 'NEA Electricity Bill', description: 'Estimate your NEA electricity bill', href: '/nepal/utilities/electricity-bill' },
+  { title: 'Fuel Cost', description: 'Calculate trip fuel cost', href: '/nepal/vehicle/fuel-cost' },
+  { title: 'Nepal Salary Calculator', description: 'Calculate take-home salary', href: '/nepal/finance/salary-checker' },
+];
+
+const faqItems = [
+  {
+    question: 'What does m³ mean?',
+    answer: 'm³ stands for cubic meter, the standard unit used to measure water volume. Your KUKL water meter displays water usage in m³. One m³ equals 1,000 litres.',
+  },
+  {
+    question: 'How do I read my water meter?',
+    answer: 'Your KUKL water meter displays a number that increases as you use water. Write down the numbers shown (ignoring any red digits or decimals). Next billing period, read it again. The difference between the two readings is your water consumption in m³.',
+  },
+  {
+    question: 'How do I calculate my water consumption?',
+    answer: 'Subtract your previous meter reading from your current reading. For example, if your previous reading was 1250 m³ and your current reading is 1268 m³, your consumption is 18 m³.',
+  },
+  {
+    question: 'How is a KUKL water bill calculated?',
+    answer: 'Your bill has three main parts: (1) water charge based on consumption slabs — the rate increases as you use more water; (2) a fixed service charge; and (3) a sewerage charge (25% of the water charge). If your consumption is very low, a minimum charge applies instead.',
+  },
+  {
+    question: 'Can I calculate my bill without a previous meter reading?',
+    answer: 'Yes. Switch to the "Enter Consumption" mode and enter your total water consumption in m³ directly.',
+  },
+  {
+    question: 'Does KUKL charge a minimum amount?',
+    answer: 'Yes, KUKL has a minimum monthly charge. If your water charge based on consumption is lower than the minimum, the minimum charge is applied instead.',
+  },
+  {
+    question: 'Does the KUKL bill include sewerage charges?',
+    answer: 'Yes, sewerage charges are included in the bill. They are calculated as a percentage of the water charge (25%).',
+  },
+  {
+    question: 'What pipe size do I have?',
+    answer: 'Check the diameter of the pipe entering your meter. Most household connections use 0.5" or 0.75" pipes. You can also ask your plumber or check your KUKL connection documents.',
+  },
+];
+---
+
+<BaseLayout
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Utilities', href: '/nepal/utilities' },
+      { label: 'KUKL Water Bill' },
+    ]} />
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">KUKL Water Bill Calculator</h1>
+      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Estimate your KUKL water bill quickly and easily</p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CALCULATOR                                  -->
+    <!-- ============================================ -->
+    <div class="rounded-xl border overflow-hidden" style="background-color: var(--nk-surface); border-color: var(--nk-border);">
+      <div class="px-5 sm:px-6 pt-6 pb-6 space-y-6">
+
+        <!-- INPUT MODE TOGGLE -->
+        <div>
+          <p class="text-sm font-medium mb-3" style="color: var(--nk-text);">How do you want to enter your water usage?</p>
+          <div class="flex rounded-lg overflow-hidden border" style="border-color: var(--nk-border);">
+            <button
+              id="mode-meter"
+              class="flex-1 py-2.5 text-sm font-medium transition-all duration-200"
+              style="background-color: var(--nk-accent); color: white;"
+              role="tab"
+              aria-selected="true"
+              aria-controls="panel-meter"
+            >
+              Meter Reading
+            </button>
+            <button
+              id="mode-consumption"
+              class="flex-1 py-2.5 text-sm font-medium transition-all duration-200"
+              style="background-color: var(--nk-surface); color: var(--nk-text-secondary);"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panel-consumption"
+            >
+              Enter Consumption
+            </button>
+          </div>
+        </div>
+
+        <!-- METER READING MODE -->
+        <div id="panel-meter" role="tabpanel" aria-labelledby="mode-meter">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="prev-reading" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Previous Reading</label>
+              <div class="relative">
+                <input inputmode="decimal"
+                  id="prev-reading"
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="1250"
+                  class="w-full pl-3 pr-10 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                  style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  aria-describedby="meter-error-msg"
+                />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">m³</span>
+              </div>
+            </div>
+            <div>
+              <label for="curr-reading" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Current Reading</label>
+              <div class="relative">
+                <input inputmode="decimal"
+                  id="curr-reading"
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="1268"
+                  class="w-full pl-3 pr-10 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+                  style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+                  aria-describedby="meter-error-msg"
+                />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">m³</span>
+              </div>
+            </div>
+          </div>
+          <p id="meter-error-msg" class="text-xs mt-1.5 hidden" style="color: var(--nk-accent);" role="alert"></p>
+        </div>
+
+        <!-- ENTER CONSUMPTION MODE -->
+        <div id="panel-consumption" class="hidden" role="tabpanel" aria-labelledby="mode-consumption">
+          <label for="manual-consumption" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Water Consumption</label>
+          <div class="relative">
+            <input inputmode="decimal"
+              id="manual-consumption"
+              type="number"
+              min="0"
+              step="1"
+              placeholder="18"
+              class="w-full pl-3 pr-10 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">m³</span>
+          </div>
+          <p class="text-xs mt-1.5" style="color: var(--nk-text-secondary);">m³ means cubic meter, the standard unit used to measure water volume.</p>
+        </div>
+
+        <!-- WATER CONSUMED DISPLAY -->
+        <div id="water-consumed-display" class="hidden">
+          <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--nk-text-secondary);">Water Consumed</p>
+            <div class="flex items-baseline gap-2">
+              <span id="consumption-display" class="text-3xl font-bold tabular-nums" style="color: var(--nk-accent);">0</span>
+              <span class="text-sm font-medium" style="color: var(--nk-text-secondary);">m³</span>
+            </div>
+          </div>
+        </div>
+
+        <hr style="border-color: var(--nk-border);" />
+
+        <!-- CUSTOMER TYPE -->
+        <div>
+          <p class="text-sm font-medium mb-3" style="color: var(--nk-text);">Who is the water connection for?</p>
+          <div class="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Customer type">
+            {categories.map(ct => (
+              <button
+                class={`customer-card group flex flex-col items-center gap-1.5 p-4 rounded-lg border text-center transition-all duration-150 ${ct.id === 'household' ? 'customer-card--active' : ''}`}
+                data-category={ct.id}
+                role="radio"
+                aria-checked={ct.id === 'household' ? 'true' : 'false'}
+                tabindex={ct.id === 'household' ? '0' : '-1'}
+                style={ct.id === 'household'
+                  ? 'background-color: var(--nk-accent-subtle); border-color: var(--nk-accent); color: var(--nk-text);'
+                  : 'background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text);'}
+              >
+                <span class="text-2xl" aria-hidden="true">{ct.icon}</span>
+                <span class="text-sm font-semibold">{ct.label}</span>
+                <span class="text-xs" style="color: var(--nk-text-secondary);">{ct.description}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- PIPE SIZE (conditional) -->
+        <div id="pipe-size-section" class="hidden">
+          <label for="pipe-size" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Pipe Size</label>
+          <div class="relative">
+            <select
+              id="pipe-size"
+              class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            >
+              {pipeSizes.map(ps => (
+                <option value={ps.id}>{ps.label}</option>
+              ))}
+            </select>
+            <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+          <details class="mt-2">
+            <summary class="text-xs cursor-pointer" style="color: var(--nk-text-secondary);">Don't know your pipe size?</summary>
+            <p class="text-xs mt-1.5" style="color: var(--nk-text-secondary);">Check the diameter of the pipe entering your meter. Most household connections use 0.5" or 0.75" pipes. You can also ask your plumber or check your KUKL connection documents.</p>
+          </details>
+        </div>
+
+        <!-- CALCULATE -->
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Calculate Water Bill
+        </button>
+
+        <!-- ============================================ -->
+        <!-- RESULTS                                      -->
+        <!-- ============================================ -->
+        <div id="result" class="hidden">
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- TOTAL BILL HERO -->
+          <div class="text-center py-6">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Estimated KUKL Water Bill</p>
+            <p id="total-bill" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+          </div>
+
+          <!-- BREAKDOWN -->
+          <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Water Consumption</span>
+                <span id="bd-consumption" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Water Charge</span>
+                <span id="bd-water-charge" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Service Charge</span>
+                <span id="bd-service-charge" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Sewerage Charge</span>
+                <span id="bd-sewerage" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-other-row" class="flex justify-between text-sm hidden">
+                <span style="color: var(--nk-text-secondary);">Other Charges</span>
+                <span id="bd-other" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <hr style="border-color: var(--nk-border);" />
+              <div class="flex justify-between text-base font-bold">
+                <span style="color: var(--nk-text);">Total</span>
+                <span id="bd-total" style="color: var(--nk-accent);"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="flex gap-2 mt-4">
+            <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copy Result
+            </button>
+            <button id="recalculate-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+              Recalculate
+            </button>
+          </div>
+
+          <!-- HOW IS THIS CALCULATED? -->
+          <details class="mt-4 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <summary class="text-xs font-semibold uppercase tracking-wider cursor-pointer" style="color: var(--nk-text-secondary);">How is this calculated?</summary>
+
+            <div class="mt-3 space-y-3">
+              <div>
+                <p class="text-xs font-medium mb-0.5" style="color: var(--nk-text);">Water consumption</p>
+                <p class="text-xs" style="color: var(--nk-text-secondary);">
+                  <span id="calc-consumption"></span> m³
+                </p>
+              </div>
+
+              <div>
+                <p class="text-xs font-medium mb-0.5" style="color: var(--nk-text);">Applicable tariff</p>
+                <p class="text-xs" style="color: var(--nk-text-secondary);">
+                  <span id="calc-category"></span>
+                  <span id="calc-pipe"></span>
+                </p>
+              </div>
+
+              <div id="calc-slab-section">
+                <p class="text-xs font-medium mb-1" style="color: var(--nk-text);">Water charge breakdown</p>
+                <div id="calc-slabs" class="space-y-1"></div>
+                <div class="flex justify-between text-xs mt-1.5">
+                  <span style="color: var(--nk-text-secondary);">Total water charge</span>
+                  <span id="calc-water-total" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+              </div>
+
+              <div id="calc-minimum-note" class="hidden">
+                <p class="text-xs" style="color: var(--nk-text-secondary);">
+                  Minimum charge of <span id="calc-minimum"></span> was applied because consumption was low.
+                </p>
+              </div>
+
+              <div>
+                <p class="text-xs font-medium mb-0.5" style="color: var(--nk-text);">Other applicable charges</p>
+                <div class="space-y-1">
+                  <div class="flex justify-between text-xs">
+                    <span style="color: var(--nk-text-secondary);">Service charge</span>
+                    <span id="calc-service" class="font-medium" style="color: var(--nk-text);"></span>
+                  </div>
+                  <div class="flex justify-between text-xs">
+                    <span style="color: var(--nk-text-secondary);">Sewerage (<span id="calc-sewerage-pct"></span> of water charge)</span>
+                    <span id="calc-sewerage" class="font-medium" style="color: var(--nk-text);"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2" style="border-top: 1px solid var(--nk-border);">
+                <div class="flex justify-between text-sm font-bold">
+                  <span style="color: var(--nk-text);">Total</span>
+                  <span id="calc-total" style="color: var(--nk-accent);"></span>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- VIEW FULL TARIFF -->
+          <details class="mt-2 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <summary class="text-xs font-semibold uppercase tracking-wider cursor-pointer" style="color: var(--nk-text-secondary);">View full tariff</summary>
+            <div id="full-tariff-content" class="mt-3 space-y-3"></div>
+          </details>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="mt-6 px-5 py-4 rounded-lg text-xs" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p>This is an estimated bill based on the information provided and applicable tariff rules. Your actual KUKL bill may differ.</p>
+      <p class="mt-1.5">Tariff information last verified: <strong>{tariff.lastVerified}</strong> · Source: KUKL</p>
+    </div>
+
+    <!-- HOW KUKL WATER BILLS WORK -->
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">How KUKL Water Bills Work</h2>
+      <div class="space-y-4 text-sm" style="color: var(--nk-text-secondary);">
+        <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+          <p class="font-semibold mb-1" style="color: var(--nk-text);">Reading Your Meter</p>
+          <p>Your KUKL water meter shows numbers that increase as you use water. To find your consumption, subtract the previous reading from the current reading. The difference is your consumption in m³.</p>
+        </div>
+        <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+          <p class="font-semibold mb-1" style="color: var(--nk-text);">Understanding m³</p>
+          <p>m³ (cubic meter) is the standard unit used to measure water volume. Your KUKL meter reads in m³. One m³ equals 1,000 litres. If your meter went from 1250 m³ to 1268 m³, you used 18 m³ of water.</p>
+        </div>
+        <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+          <p class="font-semibold mb-1" style="color: var(--nk-text);">How Your Bill Is Calculated</p>
+          <p>KUKL uses a slab-based tariff. The more water you use, the higher the rate per m³. Your bill includes:</p>
+          <ul class="list-disc list-inside mt-2 space-y-0.5">
+            <li>Water charge (based on consumption slabs)</li>
+            <li>Service charge (fixed monthly fee)</li>
+            <li>Sewerage charge (25% of water charge)</li>
+          </ul>
+        </div>
+        <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+          <p class="font-semibold mb-1" style="color: var(--nk-text);">Minimum Bill</p>
+          <p>Even if your consumption is very low, KUKL applies a minimum monthly charge to cover basic service costs.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg overflow-hidden" style="background-color: var(--nk-muted);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color: var(--nk-text);">{item.question}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color: var(--nk-text-secondary);">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <script>
+    import {
+      calculateWaterBill,
+      validateMeterReadings,
+      formatNPR,
+      formatNumber,
+    } from '../../../lib/calculators/kukl-water.js';
+    import {
+      CUSTOMER_CATEGORIES,
+      PIPE_SIZES,
+      getDefaultTariff,
+      isPipeSizeRequired,
+    } from '../../../data/nepal/water/kukl-tariffs.js';
+
+    // DOM refs
+    const modeMeter = document.getElementById('mode-meter');
+    const modeConsumption = document.getElementById('mode-consumption');
+    const panelMeter = document.getElementById('panel-meter');
+    const panelConsumption = document.getElementById('panel-consumption');
+    const waterConsumedDisplay = document.getElementById('water-consumed-display');
+    const prevReading = document.getElementById('prev-reading');
+    const currReading = document.getElementById('curr-reading');
+    const manualConsumption = document.getElementById('manual-consumption');
+    const consumptionDisplayEl = document.getElementById('consumption-display');
+    const meterError = document.getElementById('meter-error-msg');
+    const pipeSizeSection = document.getElementById('pipe-size-section');
+    const pipeSizeSelect = document.getElementById('pipe-size');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const copyBtn = document.getElementById('copy-btn');
+    const recalcBtn = document.getElementById('recalculate-btn');
+    const customerCards = document.querySelectorAll('.customer-card');
+
+    let currentMode = 'meter';
+    let selectedCategory = 'household';
+    let lastResult = null;
+    const tariff = getDefaultTariff();
+
+    // === MODE TOGGLE ===
+    function setMode(mode) {
+      currentMode = mode;
+      const isMeter = mode === 'meter';
+
+      modeMeter.style.backgroundColor = isMeter ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      modeMeter.style.color = isMeter ? 'white' : 'var(--nk-text-secondary)';
+      modeMeter.setAttribute('aria-selected', isMeter ? 'true' : 'false');
+      modeMeter.tabIndex = isMeter ? 0 : -1;
+
+      modeConsumption.style.backgroundColor = !isMeter ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      modeConsumption.style.color = !isMeter ? 'white' : 'var(--nk-text-secondary)';
+      modeConsumption.setAttribute('aria-selected', !isMeter ? 'true' : 'false');
+      modeConsumption.tabIndex = !isMeter ? 0 : -1;
+
+      panelMeter.classList.toggle('hidden', !isMeter);
+      panelConsumption.classList.toggle('hidden', isMeter);
+
+      updateConsumptionDisplay();
+    }
+
+    modeMeter?.addEventListener('click', () => setMode('meter'));
+    modeConsumption?.addEventListener('click', () => setMode('consumption'));
+
+    // === CUSTOMER TYPE CARDS ===
+    function setCustomerCategory(categoryId) {
+      selectedCategory = categoryId;
+      customerCards.forEach(card => {
+        const isActive = card.dataset.category === categoryId;
+        card.classList.toggle('customer-card--active', isActive);
+        card.setAttribute('aria-checked', isActive ? 'true' : 'false');
+        card.tabIndex = isActive ? 0 : -1;
+        card.style.backgroundColor = isActive ? 'var(--nk-accent-subtle)' : 'var(--nk-bg)';
+        card.style.borderColor = isActive ? 'var(--nk-accent)' : 'var(--nk-border)';
+      });
+
+      const showPipe = isPipeSizeRequired(categoryId);
+      pipeSizeSection.classList.toggle('hidden', !showPipe);
+    }
+
+    customerCards.forEach(card => {
+      card.addEventListener('click', () => setCustomerCategory(card.dataset.category));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setCustomerCategory(card.dataset.category);
+        }
+        const cards = Array.from(customerCards);
+        const idx = cards.indexOf(card);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const next = cards[(idx + 1) % cards.length];
+          next.focus();
+          setCustomerCategory(next.dataset.category);
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prev = cards[(idx - 1 + cards.length) % cards.length];
+          prev.focus();
+          setCustomerCategory(prev.dataset.category);
+        }
+      });
+    });
+
+    // === CONSUMPTION DISPLAY ===
+    function getConsumption() {
+      if (currentMode === 'meter') {
+        const prev = parseFloat(prevReading?.value);
+        const curr = parseFloat(currReading?.value);
+        if (!isNaN(prev) && !isNaN(curr) && curr >= prev) {
+          return curr - prev;
+        }
+        return null;
+      } else {
+        const val = parseFloat(manualConsumption?.value);
+        if (!isNaN(val) && val >= 0) {
+          return val;
+        }
+        return null;
+      }
+    }
+
+    function updateConsumptionDisplay() {
+      if (currentMode === 'meter') {
+        const prev = parseFloat(prevReading?.value);
+        const curr = parseFloat(currReading?.value);
+        if (!isNaN(prev) && !isNaN(curr)) {
+          const validation = validateMeterReadings(prev, curr);
+          if (!validation.valid) {
+            meterError.textContent = validation.error;
+            meterError.classList.remove('hidden');
+            waterConsumedDisplay.classList.add('hidden');
+            return;
+          }
+        }
+      }
+
+      meterError.classList.add('hidden');
+
+      const consumption = getConsumption();
+      if (consumption !== null && consumption >= 0) {
+        waterConsumedDisplay.classList.remove('hidden');
+        consumptionDisplayEl.textContent = formatNumber(consumption);
+      } else {
+        waterConsumedDisplay.classList.add('hidden');
+      }
+    }
+
+    [prevReading, currReading, manualConsumption].forEach(el => {
+      el?.addEventListener('input', updateConsumptionDisplay);
+      el?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    });
+
+    // === CALCULATE ===
+    function calculate() {
+      const consumption = getConsumption();
+      if (consumption === null || consumption < 0) return;
+
+      const r = calculateWaterBill({
+        consumption,
+        customerCategory: selectedCategory,
+        pipeSize: pipeSizeSelect?.value || 'half',
+      });
+
+      lastResult = r;
+
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+      // Total bill hero
+      set('total-bill', formatNPR(r.totalBill));
+
+      // Breakdown
+      set('bd-consumption', `${formatNumber(r.input.consumption)} m³`);
+      set('bd-water-charge', formatNPR(r.waterCharges.effectiveTotal));
+      set('bd-service-charge', formatNPR(r.serviceCharge));
+      set('bd-sewerage', formatNPR(r.sewerageCharge));
+      set('bd-total', formatNPR(r.totalBill));
+
+      // Other charges
+      const otherRow = document.getElementById('bd-other-row');
+      if (r.otherCharges > 0) {
+        otherRow?.classList.remove('hidden');
+        set('bd-other', formatNPR(r.otherCharges));
+      } else {
+        otherRow?.classList.add('hidden');
+      }
+
+      // "How is this calculated?" details
+      set('calc-consumption', formatNumber(r.input.consumption));
+      set('calc-category', r.input.customerCategoryLabel);
+      set('calc-pipe', r.input.pipeSizeRequired ? ` · Pipe: ${r.input.pipeSizeLabel}` : '');
+
+      // Slab breakdown
+      const calcSlabs = document.getElementById('calc-slabs');
+      if (calcSlabs) {
+        if (r.waterCharges.slabs.length > 0) {
+          calcSlabs.innerHTML = r.waterCharges.slabs.map(s => `
+            <div class="flex justify-between text-xs">
+              <span style="color: var(--nk-text-secondary);">${s.label} × NPR ${s.rate}</span>
+              <span class="font-medium" style="color: var(--nk-text);">${formatNPR(s.charge)} (${s.m3InSlab} m³)</span>
+            </div>
+          `).join('');
+        } else {
+          calcSlabs.innerHTML = '<p class="text-xs" style="color: var(--nk-text-secondary);">No water charges (0 m³)</p>';
+        }
+      }
+
+      set('calc-water-total', formatNPR(r.waterCharges.total));
+
+      const minNote = document.getElementById('calc-minimum-note');
+      if (r.waterCharges.minimumApplied) {
+        minNote?.classList.remove('hidden');
+        set('calc-minimum', formatNPR(r.waterCharges.minimumCharge));
+      } else {
+        minNote?.classList.add('hidden');
+      }
+
+      set('calc-service', formatNPR(r.serviceCharge));
+      set('calc-sewerage-pct', `${r.sewerageRate * 100}%`);
+      set('calc-sewerage', formatNPR(r.sewerageCharge));
+      set('calc-total', formatNPR(r.totalBill));
+
+      // Full tariff view
+      renderFullTariff(r);
+
+      resultDiv?.classList.remove('hidden');
+
+      // Smooth scroll to result on mobile
+      if (window.innerWidth < 640) {
+        setTimeout(() => {
+          resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+
+    function renderFullTariff(r) {
+      const container = document.getElementById('full-tariff-content');
+      if (!container) return;
+
+      const catRules = tariff.categories[selectedCategory];
+      let html = `<p class="text-xs font-medium" style="color: var(--nk-text);">KUKL ${r.input.customerCategoryLabel} Tariff</p>`;
+
+      html += '<div class="space-y-1.5">';
+      for (const slab of catRules.slabs) {
+        html += `<div class="flex justify-between text-xs">
+          <span style="color: var(--nk-text-secondary);">${slab.label}</span>
+          <span class="font-medium" style="color: var(--nk-text);">NPR ${slab.rate} / m³</span>
+        </div>`;
+      }
+      html += '</div>';
+
+      html += '<hr style="border-color: var(--nk-border);">';
+      html += `<div class="space-y-1.5">
+        <div class="flex justify-between text-xs">
+          <span style="color: var(--nk-text-secondary);">Minimum charge</span>
+          <span class="font-medium" style="color: var(--nk-text);">NPR ${catRules.charges.minimumCharge}</span>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span style="color: var(--nk-text-secondary);">Service charge</span>
+          <span class="font-medium" style="color: var(--nk-text);">NPR ${catRules.charges.serviceCharge}/month</span>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span style="color: var(--nk-text-secondary);">Sewerage</span>
+          <span class="font-medium" style="color: var(--nk-text);">${catRules.charges.sewerageRate * 100}% of water charge</span>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span style="color: var(--nk-text-secondary);">Measurement unit</span>
+          <span class="font-medium" style="color: var(--nk-text);">m³ (cubic meter)</span>
+        </div>
+      </div>`;
+
+      container.innerHTML = html;
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+
+    // === COPY ===
+    copyBtn?.addEventListener('click', async () => {
+      if (!lastResult) return;
+      const r = lastResult;
+      const lines = [
+        `KUKL Water Bill Estimate`,
+        ``,
+        `Water consumption: ${formatNumber(r.input.consumption)} m³`,
+        ``,
+        `Water charge:    ${formatNPR(r.waterCharges.effectiveTotal)}`,
+        `Service charge:  ${formatNPR(r.serviceCharge)}`,
+        `Sewerage charge: ${formatNPR(r.sewerageCharge)}`,
+        `Other charges:   ${formatNPR(r.otherCharges)}`,
+        ``,
+        `Estimated total: ${formatNPR(r.totalBill)}`,
+      ].join('\n');
+      try {
+        await navigator.clipboard.writeText(lines);
+        if (copyBtn) {
+          copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+          setTimeout(() => {
+            copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy Result`;
+          }, 2000);
+        }
+      } catch {}
+    });
+
+    // === RECALCULATE ===
+    recalcBtn?.addEventListener('click', () => {
+      resultDiv?.classList.add('hidden');
+      lastResult = null;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</BaseLayout>

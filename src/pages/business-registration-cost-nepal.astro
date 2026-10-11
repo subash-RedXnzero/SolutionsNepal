@@ -1,0 +1,650 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../components/ui/RelatedTools.astro';
+import { Building2, User, Users, Landmark, Info, Calculator, Pencil, RotateCcw } from '@lucide/astro';
+import { PROVINCES } from '../data/nepal/property/land-reg-locations.js';
+import { BUSINESS_CATEGORIES, SOURCE } from '../data/business-registration.js';
+
+const title = 'Business Registration Cost Estimator Nepal | SolutionsNepal';
+const description = 'Estimate business registration costs in Nepal for private limited companies, sole proprietorships, partnership firms, and public companies.';
+
+const faqItems = [
+  {
+    q: 'How much does it cost to register a Pvt. Ltd. in Nepal?',
+    a: 'The OCR registration fee starts at Rs. 1,000 for authorized capital up to Rs. 1,00,000. For example, Rs. 5,00,000 of authorized capital costs Rs. 4,500, and Rs. 25,00,000 costs Rs. 9,500. Enter your capital above for an exact estimate.',
+  },
+  {
+    q: 'Does the company registration fee depend on capital?',
+    a: 'Yes. For private and public limited companies, the Office of Company Registrar charges a fee based on authorized capital slabs — higher capital means a higher fee. Sole proprietorships and partnerships register locally, where fees depend on the municipality, not capital.',
+  },
+  {
+    q: 'What is authorized capital?',
+    a: 'Authorized capital is the maximum share capital a company is registered to issue. It is different from issued capital (shares actually issued) and paid-up capital (amount shareholders have actually paid). The OCR fee is calculated on authorized capital.',
+  },
+  {
+    q: 'Is PAN registration included in this estimate?',
+    a: 'No. PAN registration at the Inland Revenue Department is a separate step with its own process and is not included in this estimate.',
+  },
+  {
+    q: 'Are local government fees included?',
+    a: 'No. Ward office registration, trade licences and municipality charges vary by local body and are not included. They are shown as "varies by municipality" rather than guessed.',
+  },
+  {
+    q: 'Can registration fees change?',
+    a: 'Yes. Government fees and requirements can change. This estimate follows the published OCR schedule, but always verify the final amount with the Office of Company Registrar before making payment.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Business Registration Cost Estimator Nepal',
+      description: 'Estimate business registration costs in Nepal for private limited companies, sole proprietorships, partnership firms, and public companies.',
+      url: 'https://solutionsnepal.com/business-registration-cost-nepal',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1000px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Business Registration Cost' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Business Registration Cost Estimator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">How much will it cost to register your business in Nepal? Pick a business type, enter a few details, and get an estimate.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-5 items-start">
+
+      <!-- ═══ LEFT: BUSINESS TYPE + INPUTS ═══ -->
+      <div class="nk-card p-5 space-y-5">
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">1 · Business type</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" role="radiogroup" aria-label="Business type">
+            <button type="button" class="type-card type-active" data-type="private" role="radio" aria-checked="true">
+              <span class="type-icon"><Building2 size={18} /></span>
+              <span class="type-text"><strong>Private Limited Company</strong><small>Register a Pvt. Ltd. company</small></span>
+            </button>
+            <button type="button" class="type-card" data-type="sole" role="radio" aria-checked="false">
+              <span class="type-icon"><User size={18} /></span>
+              <span class="type-text"><strong>Sole Proprietorship</strong><small>Business owned by one person</small></span>
+            </button>
+            <button type="button" class="type-card" data-type="partnership" role="radio" aria-checked="false">
+              <span class="type-icon"><Users size={18} /></span>
+              <span class="type-text"><strong>Partnership Firm</strong><small>Owned by two or more partners</small></span>
+            </button>
+            <button type="button" class="type-card" data-type="public" role="radio" aria-checked="false">
+              <span class="type-icon"><Landmark size={18} /></span>
+              <span class="type-text"><strong>Public Limited Company</strong><small>Registered as a public company</small></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ── PRIVATE PANEL ── -->
+        <div id="panel-private" class="form-panel space-y-4">
+          <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">2 · Your details</p>
+          <div>
+            <label for="private-capital" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">How much authorized capital do you plan to register?</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] font-medium" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="private-capital" type="text" class="nk-input text-[15px] tabular-nums" style="padding-left:3rem;" inputmode="numeric" autocomplete="off" placeholder="5,00,000" />
+            </div>
+            <div class="flex flex-wrap gap-1.5 mt-2" id="capital-quick">
+              <button type="button" class="quick-btn" data-capital="100000">Rs. 1 lakh</button>
+              <button type="button" class="quick-btn" data-capital="500000">Rs. 5 lakh</button>
+              <button type="button" class="quick-btn" data-capital="1000000">Rs. 10 lakh</button>
+              <button type="button" class="quick-btn" data-capital="2500000">Rs. 25 lakh</button>
+              <button type="button" class="quick-btn" data-capital="5000000">Rs. 50 lakh</button>
+              <button type="button" class="quick-btn" data-capital="10000000">Rs. 1 crore</button>
+            </div>
+            <p id="private-capital-error" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+          </div>
+          <div class="flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5" style="border-color:var(--nk-border);">
+            <div>
+              <p class="text-[12.5px] font-medium" style="color:var(--nk-text);">Number of shareholders</p>
+              <p class="text-[11px]" style="color:var(--nk-text-tertiary);">Fee is based on capital — this is for your reference.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" class="stepper-btn" id="sh-dec" aria-label="Fewer shareholders">−</button>
+              <span id="sh-count" class="text-[14px] font-semibold tabular-nums w-6 text-center" style="color:var(--nk-text);">1</span>
+              <button type="button" class="stepper-btn" id="sh-inc" aria-label="More shareholders">+</button>
+            </div>
+          </div>
+          <p id="private-sh-error" class="hidden text-[11px]" style="color:#dc2626;" role="alert"></p>
+          <button type="button" id="calc-private" class="nk-btn nk-btn-primary w-full">
+            <Calculator size={15} /> Calculate cost
+          </button>
+        </div>
+
+        <!-- ── SOLE PANEL ── -->
+        <div id="panel-sole" class="form-panel hidden space-y-4">
+          <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">2 · Where &amp; what is the business?</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="sole-province" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Province</label>
+              <select id="sole-province" class="nk-input text-[13.5px]">
+                {PROVINCES.map((p) => (<option value={p.id}>{p.name}</option>))}
+              </select>
+            </div>
+            <div>
+              <label for="sole-district" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">District</label>
+              <select id="sole-district" class="nk-input text-[13.5px]"><option value="">Select district</option></select>
+            </div>
+            <div>
+              <label for="sole-local" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Local level</label>
+              <select id="sole-local" class="nk-input text-[13.5px]"><option value="">Select local level</option></select>
+            </div>
+            <div>
+              <label for="sole-category" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Business type</label>
+              <select id="sole-category" class="nk-input text-[13.5px]">
+                {BUSINESS_CATEGORIES.map((c) => (<option value={c}>{c}</option>))}
+              </select>
+            </div>
+          </div>
+          <p id="sole-error" class="hidden text-[11px]" style="color:#dc2626;" role="alert"></p>
+          <button type="button" id="calc-sole" class="nk-btn nk-btn-primary w-full">
+            <Calculator size={15} /> Calculate cost
+          </button>
+        </div>
+
+        <!-- ── PARTNERSHIP PANEL ── -->
+        <div id="panel-partnership" class="form-panel hidden space-y-4">
+          <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">2 · Partners, location &amp; business</p>
+          <div class="flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5" style="border-color:var(--nk-border);">
+            <div>
+              <p class="text-[12.5px] font-medium" style="color:var(--nk-text);">Number of partners</p>
+              <p class="text-[11px]" style="color:var(--nk-text-tertiary);">A partnership needs at least 2 partners.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" class="stepper-btn" id="pt-dec" aria-label="Fewer partners">−</button>
+              <span id="pt-count" class="text-[14px] font-semibold tabular-nums w-6 text-center" style="color:var(--nk-text);">2</span>
+              <button type="button" class="stepper-btn" id="pt-inc" aria-label="More partners">+</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="pt-province" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Province</label>
+              <select id="pt-province" class="nk-input text-[13.5px]">
+                {PROVINCES.map((p) => (<option value={p.id}>{p.name}</option>))}
+              </select>
+            </div>
+            <div>
+              <label for="pt-district" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">District</label>
+              <select id="pt-district" class="nk-input text-[13.5px]"><option value="">Select district</option></select>
+            </div>
+            <div>
+              <label for="pt-local" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Local level</label>
+              <select id="pt-local" class="nk-input text-[13.5px]"><option value="">Select local level</option></select>
+            </div>
+            <div>
+              <label for="pt-category" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Business type</label>
+              <select id="pt-category" class="nk-input text-[13.5px]">
+                {BUSINESS_CATEGORIES.map((c) => (<option value={c}>{c}</option>))}
+              </select>
+            </div>
+          </div>
+          <p id="pt-error" class="hidden text-[11px]" style="color:#dc2626;" role="alert"></p>
+          <button type="button" id="calc-partnership" class="nk-btn nk-btn-primary w-full">
+            <Calculator size={15} /> Calculate cost
+          </button>
+        </div>
+
+        <!-- ── PUBLIC PANEL ── -->
+        <div id="panel-public" class="form-panel hidden space-y-4">
+          <div class="rounded-lg px-3 py-2.5 text-[12px] leading-relaxed flex gap-2" style="background-color:var(--nk-accent-subtle);color:var(--nk-text-secondary);">
+            <span class="shrink-0 mt-0.5" style="color:var(--nk-accent);"><Info size={14} /></span>
+            <span>A public company requires different registration requirements from a private company — at least 7 founders and higher capital.</span>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">2 · Your details</p>
+          <div>
+            <label for="public-capital" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">How much authorized capital do you plan to register?</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] font-medium" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input id="public-capital" type="text" class="nk-input text-[15px] tabular-nums" style="padding-left:3rem;" inputmode="numeric" autocomplete="off" placeholder="1,00,00,000" />
+            </div>
+            <div class="flex flex-wrap gap-1.5 mt-2" id="public-quick">
+              <button type="button" class="quick-btn" data-capital="10000000">Rs. 1 crore</button>
+              <button type="button" class="quick-btn" data-capital="50000000">Rs. 5 crore</button>
+              <button type="button" class="quick-btn" data-capital="100000000">Rs. 10 crore</button>
+              <button type="button" class="quick-btn" data-capital="200000000">Rs. 20 crore</button>
+            </div>
+            <p id="public-capital-error" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+            <p id="public-capital-note" class="hidden text-[11px] mt-1" style="color:var(--nk-text-secondary);">Note: public companies generally require at least Rs. 1,00,00,000 capital — the OCR fee below still applies to any amount.</p>
+          </div>
+          <div class="flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5" style="border-color:var(--nk-border);">
+            <div>
+              <p class="text-[12.5px] font-medium" style="color:var(--nk-text);">Number of founders</p>
+              <p class="text-[11px]" style="color:var(--nk-text-tertiary);">Minimum 7 founders required.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" class="stepper-btn" id="fd-dec" aria-label="Fewer founders">−</button>
+              <span id="fd-count" class="text-[14px] font-semibold tabular-nums w-6 text-center" style="color:var(--nk-text);">7</span>
+              <button type="button" class="stepper-btn" id="fd-inc" aria-label="More founders">+</button>
+            </div>
+          </div>
+          <p id="public-founders-error" class="hidden text-[11px]" style="color:#dc2626;" role="alert"></p>
+          <button type="button" id="calc-public" class="nk-btn nk-btn-primary w-full">
+            <Calculator size={15} /> Calculate cost
+          </button>
+        </div>
+
+        <!-- ── TERMINOLOGY ── -->
+        <details class="rounded-lg border" style="border-color:var(--nk-border);">
+          <summary class="px-4 py-2.5 text-[13px] font-medium cursor-pointer" style="color:var(--nk-text);">What does authorized capital mean?</summary>
+          <div class="px-4 pb-3.5 pt-1 text-[12.5px] leading-relaxed space-y-2" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);">
+            <p class="pt-2.5"><strong style="color:var(--nk-text);">Authorized capital</strong> — the maximum share capital the company is registered to issue. The OCR fee is based on this number.</p>
+            <p><strong style="color:var(--nk-text);">Issued capital</strong> — the shares the company actually issues to shareholders.</p>
+            <p><strong style="color:var(--nk-text);">Paid-up capital</strong> — the amount shareholders have actually paid for their shares.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="md:sticky md:top-4">
+        <div class="nk-card p-5" aria-live="polite">
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">Your estimate</p>
+
+          <div id="result-empty">
+            <div class="rounded-xl px-4 py-6 text-center" style="background-color:var(--nk-accent-subtle);">
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-secondary);">Estimated government cost</p>
+              <p class="text-[24px] font-bold tracking-tight" style="color:var(--nk-text-tertiary);">—</p>
+              <p class="text-[11.5px] mt-1.5" style="color:var(--nk-text-secondary);">Choose a business type and click <strong>Calculate cost</strong>.</p>
+            </div>
+          </div>
+
+          <div id="result-filled" class="hidden">
+            <div class="rounded-xl px-4 py-4 text-center" style="background-color:var(--nk-accent-subtle);">
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-0.5" style="color:var(--nk-text-secondary);">Business Registration Cost</p>
+              <p class="text-[26px] font-bold tracking-tight leading-tight tabular-nums" style="color:var(--nk-accent);" id="result-total">—</p>
+              <p class="text-[11.5px]" style="color:var(--nk-text-secondary);">Estimated government registration fee</p>
+            </div>
+            <div id="result-rows" class="mt-3"></div>
+            <hr class="my-2.5" style="border-color:var(--nk-border);" />
+            <div class="flex items-center justify-between py-1">
+              <span class="text-[13px] font-semibold" style="color:var(--nk-text);">Estimated government cost</span>
+              <strong class="text-[15px] font-bold tabular-nums" style="color:var(--nk-accent);" id="result-total-2">—</strong>
+            </div>
+            <p id="result-meta" class="text-[11px] mt-1.5 leading-relaxed" style="color:var(--nk-text-tertiary);"></p>
+            <div class="flex gap-2 mt-3">
+              <button type="button" id="edit-btn" class="nk-btn-ghost-sm flex-1 justify-center"><Pencil size={13} /> Edit details</button>
+              <button type="button" id="again-btn" class="nk-btn-ghost-sm flex-1 justify-center"><RotateCcw size={13} /> Calculate again</button>
+            </div>
+          </div>
+
+          <div class="rounded-lg px-3 py-2.5 mt-4 text-[11.5px] leading-relaxed space-y-1.5" style="background-color:var(--nk-hover);border:1px solid var(--nk-border);color:var(--nk-text-secondary);">
+            <p><strong style="color:var(--nk-text);">What is included?</strong> Government/company registration fee for the selected business type, based on the official OCR fee schedule.</p>
+            <p><strong style="color:var(--nk-text);">What is not included?</strong> Local business registration, industry registration, business-specific licences, document preparation, consultant/service fees, and other applicable government fees — shown as <em>Not included</em> where SolutionsNepal has no verified official data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SOURCE / TRUST ═══ -->
+    <div class="mt-5 rounded-xl px-4 py-3.5 text-[12px] leading-relaxed nk-card" style="color:var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color:var(--nk-text);">Fee information</p>
+      <p>Source: {SOURCE.name} — <a class="underline hover:opacity-80" href={SOURCE.portalUrl} target="_blank" rel="noopener" style="color:var(--nk-accent);">ocr.gov.np</a></p>
+      <p class="mt-0.5">Last checked: <strong>{SOURCE.lastChecked}</strong></p>
+      <p class="mt-1.5">Government fees and registration requirements can change. Verify the final amount with the relevant government authority before making payment. This estimate is a guide, not an official quotation.</p>
+    </div>
+
+    <!-- ═══ EDUCATIONAL CONTENT ═══ -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">How much does it cost to register a business in Nepal?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">It depends on five things: the <strong>business/company type</strong> (company, sole proprietorship, partnership), the <strong>authorized capital</strong> for companies, the <strong>location</strong> (municipality and ward), the <strong>business activity</strong>, and the <strong>licences and registrations</strong> your activity needs (PAN, VAT, industry registration, local trade licence). Company fees are fixed national slabs; local fees differ from place to place.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">What do I need to register a company?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Typically: a reserved company name, citizenship documents of shareholders/directors, a registered office address, a Memorandum and Articles of Association, and the OCR registration fee. After incorporation you generally still need PAN registration, ward office registration, and any sector licences. This is a general overview — confirm the current checklist on ocr.gov.np or with a legal professional.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related Nepal calculators</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/vat-calculator" style="color:var(--nk-accent);">VAT Calculator</a> — add or remove 13% VAT</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/property/land-registration" style="color:var(--nk-accent);">Land Registration Fee</a> — estimate Malpot costs</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance" style="color:var(--nk-accent);">All finance tools</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <RelatedTools tools={[
+      { title: 'VAT Calculator', description: 'Add or remove 13% VAT from any price', href: '/nepal/finance/vat-calculator' },
+      { title: 'Land Registration Fee', description: 'Estimate land registration & transfer costs', href: '/nepal/property/land-registration' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .type-card {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius-lg);
+    border: 1px solid var(--nk-border); background: transparent;
+    color: var(--nk-text); cursor: pointer; text-align: left;
+    transition: border-color 150ms ease, background-color 150ms ease;
+    font: inherit;
+  }
+  .type-card:hover { border-color: var(--nk-border-strong); }
+  .type-card.type-active {
+    border-color: var(--nk-accent);
+    background-color: var(--nk-accent-subtle);
+  }
+  .type-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    background-color: var(--nk-hover); color: var(--nk-text-secondary);
+  }
+  .type-active .type-icon { background-color: var(--nk-accent); color: #fff; }
+  .type-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .type-text strong { font-size: 13px; font-weight: 600; line-height: 1.35; }
+  .type-text small { font-size: 11px; line-height: 1.4; color: var(--nk-text-secondary); }
+  .quick-btn {
+    font-size: 10.5px; font-weight: 600;
+    padding: 0.25rem 0.6rem; border-radius: 9999px;
+    border: 1px solid var(--nk-border);
+    color: var(--nk-text-secondary); background: transparent;
+    cursor: pointer; transition: all 150ms;
+  }
+  .quick-btn:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+  .stepper-btn {
+    width: 28px; height: 28px; border-radius: 8px;
+    border: 1px solid var(--nk-border); background: transparent;
+    color: var(--nk-text); font-size: 15px; font-weight: 600; line-height: 1;
+    cursor: pointer; transition: all 150ms;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .stepper-btn:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+  .result-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 6px 0; font-size: 13px;
+  }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+</style>
+
+<script>
+  import {
+    formatNPR, formatNumberIN, parseCapitalInput,
+    validateCapital, validateShareholders, validateFounders, validatePartners,
+    estimatePrivateLimited, estimatePublicLimited,
+  } from '../lib/calculators/business-registration.js';
+  import { getDistricts, getMunicipalities } from '../data/nepal/property/land-reg-locations.js';
+
+  const $ = (id) => document.getElementById(id);
+
+  // ── State ────────────────────────────────────────────────
+  let businessType = 'private';
+  let shareholders = 1;
+  let partners = 2;
+  let founders = 7;
+  let lastCalc = null; // () => void — re-run for "Calculate again"
+
+  const typeCards = [...document.querySelectorAll('.type-card')];
+  const panels = {
+    private: $('panel-private'),
+    sole: $('panel-sole'),
+    partnership: $('panel-partnership'),
+    public: $('panel-public'),
+  };
+
+  function setType(t) {
+    businessType = t;
+    typeCards.forEach((c) => {
+      const active = c.dataset.type === t;
+      c.classList.toggle('type-active', active);
+      c.setAttribute('aria-checked', String(active));
+    });
+    Object.entries(panels).forEach(([k, el]) => el.classList.toggle('hidden', k !== t));
+    hideResult();
+  }
+  typeCards.forEach((c) => c.addEventListener('click', () => setType(c.dataset.type)));
+
+  // ── Capital inputs: format Nepal-style on blur, keep raw while typing ──
+  function wireCapital(inputId, quickId) {
+    const input = $(inputId);
+    input.addEventListener('blur', () => {
+      const n = parseCapitalInput(input.value);
+      if (Number.isFinite(n) && n > 0) input.value = formatNumberIN(Math.floor(n));
+    });
+    const quick = $(quickId);
+    if (quick) {
+      quick.querySelectorAll('.quick-btn').forEach((b) => {
+        b.addEventListener('click', () => {
+          input.value = formatNumberIN(Number(b.dataset.capital));
+        });
+      });
+    }
+  }
+  wireCapital('private-capital', 'capital-quick');
+  wireCapital('public-capital', 'public-quick');
+
+  // ── Steppers ─────────────────────────────────────────────
+  function wireStepper(decId, incId, countId, get, set) {
+    $(decId).addEventListener('click', () => { set(get() - 1); $(countId).textContent = String(get()); });
+    $(incId).addEventListener('click', () => { set(get() + 1); $(countId).textContent = String(get()); });
+  }
+  wireStepper('sh-dec', 'sh-inc', 'sh-count', () => shareholders, (v) => { shareholders = Math.min(1000, Math.max(0, v)); });
+  wireStepper('pt-dec', 'pt-inc', 'pt-count', () => partners, (v) => { partners = Math.min(1000, Math.max(0, v)); });
+  wireStepper('fd-dec', 'fd-inc', 'fd-count', () => founders, (v) => { founders = Math.min(100000, Math.max(0, v)); });
+
+  // ── Location selects (sole + partnership share the same dataset) ──
+  function wireLocation(pId, dId, lId) {
+    const p = $(pId), d = $(dId), l = $(lId);
+    function fillDistricts() {
+      d.innerHTML = '<option value="">Select district</option>';
+      getDistricts(p.value).forEach((x) => {
+        const o = document.createElement('option');
+        o.value = x.id; o.textContent = x.name; d.appendChild(o);
+      });
+      fillLocal();
+    }
+    function fillLocal() {
+      l.innerHTML = '<option value="">Select local level</option>';
+      getMunicipalities(p.value, d.value).forEach((x) => {
+        const o = document.createElement('option');
+        o.value = x.name; o.textContent = `${x.name} (${x.type})`; l.appendChild(o);
+      });
+      if (!getMunicipalities(p.value, d.value).length) {
+        const o = document.createElement('option');
+        o.value = '__other'; o.textContent = 'Other / not listed'; l.appendChild(o);
+      }
+    }
+    p.addEventListener('change', fillDistricts);
+    d.addEventListener('change', fillLocal);
+    fillDistricts();
+  }
+  wireLocation('sole-province', 'sole-district', 'sole-local');
+  wireLocation('pt-province', 'pt-district', 'pt-local');
+
+  // ── Result rendering ─────────────────────────────────────
+  function setError(id, msg) {
+    const el = $(id);
+    el.textContent = msg || '';
+    el.classList.toggle('hidden', !msg);
+  }
+
+  function showResult({ totalText, totalText2, rows, meta }) {
+    $('result-empty').classList.add('hidden');
+    $('result-filled').classList.remove('hidden');
+    $('result-total').textContent = totalText;
+    $('result-total-2').textContent = totalText2;
+    $('result-rows').innerHTML = rows.map(([label, value, accent]) =>
+      `<div class="result-row"><span style="color:var(--nk-text-secondary);">${label}</span>` +
+      `<strong class="font-semibold tabular-nums" style="color:${accent ? 'var(--nk-accent)' : 'var(--nk-text)'};">${value}</strong></div>`
+    ).join('');
+    $('result-meta').textContent = meta || '';
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      $('result-filled').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function hideResult() {
+    $('result-filled').classList.add('hidden');
+    $('result-empty').classList.remove('hidden');
+  }
+
+  const NOT_INCLUDED = 'Not included';
+  const VARIES = 'Varies by municipality';
+
+  // ── PRIVATE ──────────────────────────────────────────────
+  function calcPrivate() {
+    setError('private-capital-error', null);
+    setError('private-sh-error', null);
+    const sh = validateShareholders(shareholders);
+    if (!sh.ok) { setError('private-sh-error', sh.error); return; }
+    let est;
+    try {
+      est = estimatePrivateLimited($('private-capital').value);
+    } catch (e) {
+      setError('private-capital-error', e.message);
+      return;
+    }
+    const meta = `OCR registration fee · ${est.bracketLabel}` +
+      (est.overTop
+        ? ` — above Rs. 10,00,00,000, plus Rs. 30 per extra Rs. 1 lakh.`
+        : ` · Capital ${formatNPR(est.capital)}, ${sh.value} shareholder${sh.value === 1 ? '' : 's'}.`);
+    showResult({
+      totalText: formatNPR(est.fee),
+      totalText2: formatNPR(est.total),
+      rows: [
+        ['OCR registration fee', formatNPR(est.fee), true],
+        ['Local registration', VARIES, false],
+        ['Other applicable fees', NOT_INCLUDED, false],
+      ],
+      meta,
+    });
+  }
+
+  // ── SOLE ─────────────────────────────────────────────────
+  function calcSole() {
+    setError('sole-error', null);
+    const district = $('sole-district').value;
+    const local = $('sole-local').value;
+    if (!district || !local) {
+      setError('sole-error', 'Please select a district and local level first.');
+      return;
+    }
+    const provinceName = $('sole-province').selectedOptions[0].textContent;
+    const districtName = $('sole-district').selectedOptions[0].textContent;
+    const localName = $('sole-local').selectedOptions[0].textContent;
+    const category = $('sole-category').value;
+    showResult({
+      totalText: VARIES,
+      totalText2: VARIES,
+      rows: [
+        ['Business registration fee', VARIES, false],
+        ['Local registration fee', VARIES, false],
+        ['Other applicable fees', NOT_INCLUDED, false],
+      ],
+      meta: `Sole proprietorships register locally, not at the OCR. Fees for a ${category} business in ${localName}, ${districtName} (${provinceName}) are set by the local body — no verified national schedule exists, so no amount is guessed.`,
+    });
+  }
+
+  // ── PARTNERSHIP ──────────────────────────────────────────
+  function calcPartnership() {
+    setError('pt-error', null);
+    const pv = validatePartners(partners);
+    if (!pv.ok) { setError('pt-error', pv.error); return; }
+    const district = $('pt-district').value;
+    const local = $('pt-local').value;
+    if (!district || !local) {
+      setError('pt-error', 'Please select a district and local level first.');
+      return;
+    }
+    const provinceName = $('pt-province').selectedOptions[0].textContent;
+    const districtName = $('pt-district').selectedOptions[0].textContent;
+    const localName = $('pt-local').selectedOptions[0].textContent;
+    const category = $('pt-category').value;
+    showResult({
+      totalText: VARIES,
+      totalText2: VARIES,
+      rows: [
+        ['Business registration fee', VARIES, false],
+        ['Local registration fee', VARIES, false],
+        ['Other applicable fees', NOT_INCLUDED, false],
+      ],
+      meta: `Partnership firms with ${pv.value} partners register locally. Fees for a ${category} business in ${localName}, ${districtName} (${provinceName}) are set by the local body — no verified national schedule exists, so no amount is guessed.`,
+    });
+  }
+
+  // ── PUBLIC ───────────────────────────────────────────────
+  function calcPublic() {
+    setError('public-capital-error', null);
+    setError('public-founders-error', null);
+    const fd = validateFounders(founders);
+    if (!fd.ok) { setError('public-founders-error', fd.error); return; }
+    let est;
+    try {
+      est = estimatePublicLimited($('public-capital').value);
+    } catch (e) {
+      setError('public-capital-error', e.message);
+      return;
+    }
+    $('public-capital-note').classList.toggle('hidden', est.capital >= 10000000);
+    showResult({
+      totalText: formatNPR(est.fee),
+      totalText2: formatNPR(est.total),
+      rows: [
+        ['OCR registration fee', formatNPR(est.fee), true],
+        ['Local registration', VARIES, false],
+        ['Other applicable fees', NOT_INCLUDED, false],
+      ],
+      meta: `OCR registration fee · Capital ${formatNPR(est.capital)}, ${fd.value} founders` +
+        (est.overTop ? ` — above Rs. 50,00,00,000, plus Rs. 3,000 per extra Rs. 1 crore.` : `.`),
+    });
+  }
+
+  $('calc-private').addEventListener('click', () => { lastCalc = calcPrivate; calcPrivate(); });
+  $('calc-sole').addEventListener('click', () => { lastCalc = calcSole; calcSole(); });
+  $('calc-partnership').addEventListener('click', () => { lastCalc = calcPartnership; calcPartnership(); });
+  $('calc-public').addEventListener('click', () => { lastCalc = calcPublic; calcPublic(); });
+
+  ['private-capital', 'public-capital'].forEach((id) => {
+    $(id).addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        (businessType === 'public' ? calcPublic : calcPrivate)();
+        lastCalc = businessType === 'public' ? calcPublic : calcPrivate;
+      }
+    });
+  });
+
+  $('edit-btn').addEventListener('click', () => {
+    const panel = { private: 'panel-private', sole: 'panel-sole', partnership: 'panel-partnership', public: 'panel-public' }[businessType];
+    $(panel).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const firstInput = $(panel).querySelector('input, select');
+    if (firstInput) firstInput.focus({ preventScroll: true });
+  });
+  $('again-btn').addEventListener('click', () => { if (lastCalc) lastCalc(); });
+</script>

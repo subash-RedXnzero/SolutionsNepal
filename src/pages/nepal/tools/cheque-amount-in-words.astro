@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import NepaliNumberConverter from '../../../components/tools/NepaliNumberConverter.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'Cheque Amount in Words Nepal – Write Cheque Amounts Correctly | SolutionsNepal';
+const description = 'Write cheque amounts in words correctly in Nepal: रुपैयाँ … मात्र and Rupees … Only, generated automatically for any amount including paisa.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-[1000px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Tools', href: '/nepal' },
+      { label: 'Cheque Amount in Words' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Cheque Amount in Words</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Generate the exact wording banks expect on Nepali cheques — in both नेपाली and English.</p>
+    </div>
+
+    <NepaliNumberConverter initialInput="250000" />
+
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">How to fill the amount-in-words line on a cheque</h2>
+        <ol class="text-sm leading-relaxed space-y-1.5 list-decimal list-inside" style="color:var(--nk-text-secondary);">
+          <li>Enter the numeric amount above (with paisa if any).</li>
+          <li>Open the <strong>Cheque</strong> tab — both language versions appear with मात्र / Only already added.</li>
+          <li>Copy the text and write it exactly on the cheque's words line, starting as close to the left edge as practical.</li>
+          <li>Match the figure box: if words say बाह्र लाख पचास हजार मात्र, figures must read Rs. 12,50,000.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Why the wording matters</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Legally, the amount-in-words takes precedence over figures when they disagree — which is why banks
+          scrutinize this line. Ending with मात्र/Only prevents words being appended after it, and starting near
+          the left edge prevents words being inserted before it. Avoid overwriting; if you make a mistake,
+          cancel the cheque and start a new one.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Example cheque wordings</h3>
+        <ul class="text-sm leading-relaxed space-y-1.5" style="color:var(--nk-text-secondary);">
+          <li>Rs. 25,000 → <span lang="ne">रुपैयाँ पच्चीस हजार मात्र</span> / Rupees Twenty-Five Thousand Only</li>
+          <li>Rs. 5,40,500 → <span lang="ne">रुपैयाँ पाँच लाख चालीस हजार पाँच सय मात्र</span> / Rupees Five Lakh Forty Thousand Five Hundred Only</li>
+          <li>Rs. 9,800.25 → <span lang="ne">रुपैयाँ नौ हजार आठ सय र पच्चीस पैसा मात्र</span> / Rupees Nine Thousand Eight Hundred and Twenty-Five Paisa Only*</li>
+        </ul>
+        <p class="mt-1.5 text-[10.5px]" style="color:var(--nk-text-tertiary);">*Paisa conventions vary slightly by bank — many prefer writing paisa in figures only.</p>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        More: <a class="underline hover:opacity-80" href="/nepal/tools/nepali-number-to-words" style="color:var(--nk-accent);">full converter</a> ·
+        <a class="underline hover:opacity-80" href="/nepal/tools/rupees-to-words" style="color:var(--nk-accent);">rupees to words</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

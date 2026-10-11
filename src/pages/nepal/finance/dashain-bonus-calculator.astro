@@ -1,0 +1,306 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'Dashain Bonus Calculator Nepal 2083 | SolutionsNepal';
+const description = 'Calculate your Dashain bonus (festival expense) under Labour Act, 2074 Section 37 — one month’s basic remuneration, proportional for service under a year.';
+
+const faqItems = [
+  {
+    q: 'How much Dashain bonus am I entitled to under Nepal law?',
+    a: 'Labour Act, 2074 Section 37(1) entitles each labour to one month’s basic remuneration each year as festival expense, for the festival celebrated according to their religion, culture and tradition. If you have not completed one year of service by payment day, Section 37(3) gives it in proportion to the service you completed — that is exactly what this calculator computes.',
+  },
+  {
+    q: 'When is the festival expense paid — always at Dashain?',
+    a: 'You may request it in writing for your main festival; on such a request the Act (Section 37(2)) says it is provided at Dashain every year. Confirm the payout timing with your employer’s HR.',
+  },
+  {
+    q: 'What is the difference between festival expense and the statutory bonus?',
+    a: 'Festival expense (Labour Act s.37) is one month’s basic remuneration, paid whether or not the company made a profit. The statutory bonus (Bonus Act, 2030) is a share of enterprise profit: 10% of net profit forms a pool, each employee’s share is B × their total yearly salary where B = (pool × 100) ÷ (total salary of all eligible staff), capped at 8 months’ salary (or 6 months for higher-paid staff), paid in cash within 8 months of the fiscal year end. In a loss-making year there is no statutory bonus — but festival expense is still due.',
+  },
+  {
+    q: 'Who qualifies for the statutory profit bonus?',
+    a: 'Under Bonus Act Section 6, employees who worked at least half the fiscal year — casual and shift-basis workers are excluded, as are employees dismissed for misconduct such as theft or illegal strikes. Paid leave, reserve periods and accident disablement count as working time.',
+  },
+  {
+    q: 'Is Dashain bonus taxable in Nepal?',
+    a: 'Bonuses and allowances paid by employers are generally treated as taxable employment income in the year they are paid, with tax typically handled through employer withholding. Confirm the current treatment with your employer or IRD Nepal.',
+  },
+  {
+    q: 'Where can I verify the current official rules?',
+    a: 'Read Labour Act, 2074 Section 37 (festival expense) and the Bonus Act, 2030 (profit bonus, eligibility, caps) in full, plus current notices from the Department of Labour and Occupational Safety and your employer’s HR policy. The Act provisions quoted on this page were verified on 2026-10-11.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Dashain Bonus Calculator Nepal',
+      description: 'Calculate Dashain bonus (festival expense) under Labour Act, 2074 Section 37 — one month’s basic remuneration, proportional for service under a year.',
+      url: 'https://solutionsnepal.com/nepal/finance/dashain-bonus-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1200px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'Dashain Bonus Calculator' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Dashain Bonus Calculator Nepal</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">How much festival expense (chadparva kharcha) are you entitled to? Under Labour Act, 2074 Section 37 it is one month’s basic remuneration each year — proportional if you served under a year.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 items-start">
+
+      <!-- ═══ LEFT: INPUTS ═══ -->
+      <div class="nk-card p-5 space-y-4">
+        <div>
+          <label for="db-salary" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Monthly basic remuneration</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+            <input inputmode="decimal" id="db-salary" type="number" min="0" step="1000" placeholder="e.g. 30000" class="nk-input" style="padding-left:3rem;" aria-describedby="db-salary-err" />
+          </div>
+          <p id="db-salary-err" class="field-error hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+          <p class="text-[11px] mt-1 leading-relaxed" style="color:var(--nk-text-tertiary);">Basic remuneration only — allowances excluded, per Labour Act s.37(1).</p>
+        </div>
+
+        <div>
+          <label for="db-months" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Service completed in the year (months)</label>
+          <input inputmode="numeric" id="db-months" type="number" min="1" max="12" step="1" placeholder="e.g. 12" class="nk-input" aria-describedby="db-months-err" />
+          <p id="db-months-err" class="field-error hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+          <p class="text-[11px] mt-1 leading-relaxed" style="color:var(--nk-text-tertiary);">Under a year of service is paid in proportion to service completed — s.37(3).</p>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="db-calc" class="nk-btn nk-btn-primary flex-1 py-2.5">Calculate</button>
+          <button id="db-reset" class="nk-btn nk-btn-secondary py-2.5" type="button">Reset</button>
+        </div>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="md:sticky md:top-4 space-y-4">
+        <div class="nk-card p-5" id="db-result-card" style="display:none;" aria-live="polite">
+          <div id="db-amount-wrap" class="rounded-xl py-5 px-4 text-center mb-3" style="background-color:var(--nk-accent-subtle);">
+            <p class="text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Festival expense (Labour Act s.37)</p>
+            <p class="text-[28px] sm:text-[32px] font-bold tracking-tight leading-none" style="color:var(--nk-accent);" id="db-total">—</p>
+          </div>
+
+          <dl class="text-[14px]">
+            <div class="flex items-center justify-between py-2" style="border-top:1px solid var(--nk-border);">
+              <dt style="color:var(--nk-text-secondary);">Monthly basic remuneration</dt>
+              <dd class="font-semibold" style="color:var(--nk-text);" id="db-r-salary">—</dd>
+            </div>
+            <div class="flex items-center justify-between py-2" style="border-top:1px solid var(--nk-border);">
+              <dt style="color:var(--nk-text-secondary);">Service completed</dt>
+              <dd class="font-semibold" style="color:var(--nk-text);" id="db-r-months">—</dd>
+            </div>
+            <div class="flex items-center justify-between py-2" style="border-top:1px solid var(--nk-border);border-bottom:1px solid var(--nk-border);">
+              <dt style="color:var(--nk-text-secondary);">Proportion (s.37(3))</dt>
+              <dd class="font-semibold" style="color:var(--nk-text);" id="db-r-base">—</dd>
+            </div>
+          </dl>
+
+          <p class="text-[11.5px] mt-3 leading-relaxed" style="color:var(--nk-text-tertiary);">Formula: <code id="db-formula" class="text-[11px]">—</code></p>
+          <p class="text-[11px] mt-2 leading-relaxed" style="color:var(--nk-text-tertiary);">Payable at Dashain on written request for your main festival — s.37(2). Confirm timing with your employer.</p>
+
+          <button id="db-copy" class="nk-btn nk-btn-ghost w-full py-2 mt-2 text-[12.5px]" type="button">Copy result</button>
+        </div>
+
+        <div class="nk-card p-5 hidden md:block" id="db-empty-note">
+          <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Enter your salary and months worked — the estimate updates as you type.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO content -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">What Dashain bonus means in Nepal</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">“Dashain bonus” is the common name for what the law calls <strong style="color:var(--nk-text);">festival expense (chadparva kharcha)</strong>. Labour Act, 2074 Section 37(1) entitles each labour to one month’s basic remuneration every year for the festival celebrated according to their religion, culture and tradition — and Section 37(2) says that on a written request for your main festival, it is paid at Dashain. This calculator applies that rule directly.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Festival expense vs statutory bonus</h2>
+        <div class="text-sm leading-relaxed space-y-2" style="color:var(--nk-text-secondary);">
+          <p><strong style="color:var(--nk-text);">Festival expense (Labour Act, 2074 s.37).</strong> One month’s basic remuneration, paid whether or not the company made a profit. Under a year of service is paid proportionally (s.37(3)). This is what the calculator above computes.</p>
+          <p><strong style="color:var(--nk-text);">Statutory bonus (Bonus Act, 2030).</strong> A share of enterprise profit, not a fixed month of salary: the enterprise sets aside 10% of net profit, and each eligible employee receives B × their total salary for the year, where B = (bonus pool × 100) ÷ (total salary of all eligible staff). Payouts are capped — up to 8 months’ salary for lower-paid staff and 6 months for higher-paid staff — paid in cash within 8 months of the fiscal year end. Whatever remains goes 70% to the enterprise welfare fund and 30% to the National Welfare Fund. In a loss-making year there is no pool — and no bonus.</p>
+          <p>Do not confuse the two: festival money arrives even in bad years; the profit bonus does not.</p>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">How service months change the amount (s.37(3))</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">The Act is explicit: a labour who has not completed one year of service by payment day gets festival expense <em>in proportion to the service completed</em>. The formula is <code class="text-[12px] px-1 rounded" style="background-color:var(--nk-bg);">basic remuneration × months served / 12</code> — for example, Rs. 30,000 basic with 6 months served gives Rs. 15,000. Twelve months gives the full one month’s basic.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Why your actual payout may still differ</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">The calculator assumes you are covered as a labour under the Act with the basic remuneration you entered. Government and contract-specific rules, probation terms, company policy and collective agreements can change timing and treatment, and employer withholding applies to the payout — this calculator deducts no tax.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Where to verify current official rules</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="https://nepallaws.com/Laws/labour-act-2074/chapter-8-provisions-relating-to-remuneration/section-37-entitlement-to-festival-expense/" target="_blank" rel="noopener" style="color:var(--nk-accent);">Labour Act, 2074, Section 37</a> — festival expense, full legal text</li>
+          <li>• Bonus Act, 2030 — profit bonus, eligibility (s.6), caps (s.7), residual pool (s.13); check the current text including amendments</li>
+          <li>• Department of Labour and Occupational Safety — annual festival-allowance notices to employers</li>
+          <li>• Your employer’s HR policy and appointment letter — the document that governs your payout timing</li>
+          <li>• IRD Nepal or your employer’s payroll team — current tax and withholding treatment</li>
+        </ul>
+        <p class="text-[12px] mt-2 leading-relaxed" style="color:var(--nk-text-tertiary);">Section 37 was verified against the published Act text and the Bonus Act figures against a legal explainer on 2026-10-11. Statutes are amended from time to time — confirm the current text before acting.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related finance tools</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/salary-checker" style="color:var(--nk-accent);">Salary Calculator</a> — find your take-home pay after SSF and tax</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/overtime-calculator" style="color:var(--nk-accent);">Overtime Calculator</a> — estimate OT pay under the Labour Act</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/vat-calculator" style="color:var(--nk-accent);">VAT Calculator</a> — add or remove 13% VAT from festival purchases</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance" style="color:var(--nk-accent);">All finance tools</a> — EMI, SIP, FD, rent and more</li>
+        </ul>
+      </section>
+    </div>
+
+    <Disclaimer variant="finance" lastVerified="2026-10-11" sources={['Labour Act, 2074 s.37 (Act text)', 'Bonus Act, 2030 explainer (Jul 2023)', 'Dept. of Labour notices (Oct 2026)']} />
+    <RelatedTools tools={[
+      { title: 'Salary Calculator', description: 'Take-home salary with SSF & tax', href: '/nepal/finance/salary-checker' },
+      { title: 'Overtime Calculator', description: 'Estimate overtime pay', href: '/nepal/finance/overtime-calculator' },
+      { title: 'VAT Calculator', description: 'Add or remove 13% VAT', href: '/nepal/finance/vat-calculator' },
+      { title: 'EMI Calculator', description: 'Monthly loan EMI & interest', href: '/nepal/finance/emi-calculator' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<script>
+  import {
+    calculateDashainBonus,
+    formatNPR,
+    summarizeDashainBonus,
+  } from '../../../lib/calculators/dashain-bonus.js';
+
+  const $ = (id) => document.getElementById(id);
+  const salaryInput = $('db-salary');
+  const monthsInput = $('db-months');
+  const resultCard = $('db-result-card');
+  const emptyNote = $('db-empty-note');
+  let hasCalculated = false;
+
+  function showError(id, msg) {
+    const err = $(id);
+    if (!err) return;
+    err.textContent = msg || '';
+    err.classList.toggle('hidden', !msg);
+  }
+  function clearErrors() {
+    ['db-salary-err', 'db-months-err'].forEach((id) => showError(id, ''));
+  }
+
+  function currentResult() {
+    return calculateDashainBonus({
+      monthlyBasicSalary: salaryInput.value,
+      monthsWorked: monthsInput.value,
+    });
+  }
+
+  function paintErrors(r) {
+    // Map the single engine error onto the right field for clarity.
+    if (r.valid || !hasCalculated) return;
+    const msg = r.error || 'Check your inputs.';
+    if (/salary|remuneration/i.test(msg)) showError('db-salary-err', msg);
+    else if (/month|service/i.test(msg)) showError('db-months-err', msg);
+    else showError('db-salary-err', msg);
+  }
+
+  function recalc() {
+    clearErrors();
+    const r = currentResult();
+    if (!r.valid) {
+      resultCard.style.display = 'none';
+      if (emptyNote) emptyNote.classList.remove('hidden');
+      paintErrors(r);
+      return;
+    }
+    $('db-total').textContent = formatNPR(r.festivalExpense);
+    $('db-r-salary').textContent = formatNPR(r.monthlyBasicSalary);
+    $('db-r-months').textContent = `${r.monthsWorked} of 12 months`;
+    $('db-r-base').textContent = `${r.monthsWorked}/12`;
+    $('db-formula').textContent = r.formula;
+
+    resultCard.style.display = '';
+    if (emptyNote) emptyNote.classList.add('hidden');
+  }
+
+  $('db-calc').addEventListener('click', () => { hasCalculated = true; recalc(); });
+
+  // Typing never calculates — it only clears the old result.
+  // A fresh result appears solely on Calculate (click or Enter).
+  function invalidate() {
+    clearErrors();
+    resultCard.style.display = 'none';
+    if (emptyNote) emptyNote.classList.remove('hidden');
+  }
+  [salaryInput, monthsInput].forEach((el) => {
+    el.addEventListener('input', invalidate);
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); hasCalculated = true; recalc(); }
+    });
+  });
+
+  $('db-copy').addEventListener('click', async () => {
+    const btn = $('db-copy');
+    const original = btn.textContent;
+    const text = summarizeDashainBonus(currentResult());
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.textContent = 'Copied ✓';
+    } catch {
+      btn.textContent = 'Copy failed — select the result manually';
+    }
+    setTimeout(() => { btn.textContent = original; }, 2200);
+  });
+
+  $('db-reset').addEventListener('click', () => {
+    salaryInput.value = '';
+    monthsInput.value = '';
+    hasCalculated = false;
+    clearErrors();
+    resultCard.style.display = 'none';
+    if (emptyNote) emptyNote.classList.remove('hidden');
+    salaryInput.focus();
+  });
+</script>

@@ -1,0 +1,240 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CalculatorCard from '../../../components/calculator/CalculatorCard.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolSeoContent from '../../../components/seo/ToolSeoContent.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'SIP Calculator Nepal', description: 'Project mutual-fund SIP growth', href: '/nepal/finance/sip-calculator' },
+  { title: 'EMI Calculator Nepal', description: 'Monthly loan EMI', href: '/nepal/finance/emi-calculator' },
+  { title: 'Percentage Calculator', description: 'Returns and changes in %', href: '/tools/percentage-calculator' },
+  { title: 'All NEPSE Tools', description: 'Browse NEPSE calculators', href: '/nepal/nepse' },
+];
+---
+
+<BaseLayout
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'NEPSE', href: '/nepal/nepse' },
+      { label: 'Profit/Loss Calculator' },
+    ]} />
+
+    <CalculatorCard
+      title="NEPSE Profit/Loss Calculator"
+      description="Net profit or loss on NEPSE trades after broker commission, SEBON fee, DP charge and capital-gains tax — by holding period."
+    >
+      <div class="space-y-4">
+        <div>
+          <label for="buy-price" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+            Buy Price per Share
+          </label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+            <input inputmode="decimal"
+              id="buy-price"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="1,000"
+              class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="sell-price" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+            Sell Price per Share
+          </label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+            <input inputmode="decimal"
+              id="sell-price"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="1,200"
+              class="w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="quantity" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+              Quantity
+            </label>
+            <input inputmode="decimal"
+              id="quantity"
+              type="number"
+              min="1"
+              step="1"
+              placeholder="100"
+              class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            />
+          </div>
+          <div>
+            <label for="holding-period" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+              Holding Period
+            </label>
+            <select
+              id="holding-period"
+              class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            >
+              <option value="0">Less than 1 year</option>
+              <option value="365">1 year or more</option>
+            </select>
+          </div>
+        </div>
+
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Calculate Profit/Loss
+        </button>
+
+        <div id="result" class="hidden">
+          <hr class="my-4" style="border-color: var(--nk-border);" />
+          
+          <!-- Net Profit/Loss -->
+          <div class="text-center py-4 mb-4">
+            <p id="result-label" class="text-sm font-medium mb-1" style="color: var(--nk-text-secondary);"></p>
+            <p id="result-value" class="text-4xl sm:text-5xl font-bold tracking-tight"></p>
+            <p id="result-percent" class="text-sm mt-1" style="color: var(--nk-text-secondary);"></p>
+          </div>
+
+          <!-- Breakdown -->
+          <div class="space-y-2 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <div class="flex justify-between text-sm">
+              <span style="color: var(--nk-text-secondary);">Buy Total</span>
+              <span id="breakdown-buy" class="font-medium" style="color: var(--nk-text);"></span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span style="color: var(--nk-text-secondary);">Sell Total</span>
+              <span id="breakdown-sell" class="font-medium" style="color: var(--nk-text);"></span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span style="color: var(--nk-text-secondary);">Total Charges</span>
+              <span id="breakdown-charges" class="font-medium" style="color: var(--nk-text);"></span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span style="color: var(--nk-text-secondary);">Capital Gains Tax</span>
+              <span id="breakdown-tax" class="font-medium" style="color: var(--nk-text);"></span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              Copy Result
+            </button>
+            <button id="reset-btn" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </CalculatorCard>
+
+    <ToolSeoContent
+      howTo={[
+        { t: 'Enter buy and sell price', d: 'Per-share prices in NPR plus quantity. Select holding period for correct capital-gains tax.' },
+        { t: 'Review charges', d: 'Broker commission uses NEPSE slabs, plus SEBON 0.015% and Rs. 25 DP charge per side.' },
+        { t: 'Check net', d: 'Net profit deducts all charges and CGT — the figure you actually keep.' },
+      ]}
+      formula="Net = (sell − buy) × qty − broker − SEBON − DP − capital-gains tax"
+      example={{ t: 'Buy 100 shares at Rs. 1,000, sell at Rs. 1,200:', d: 'gross Rs. 20,000 gain; after roughly Rs. 200–400 charges plus CGT, net is shown instantly.' }}
+      faqs={[
+        { q: 'What charges apply on NEPSE trades?', a: 'Broker commission by slab (lower % on larger turnover), SEBON fee 0.015% of turnover, and Rs. 25 DP charge per transaction side. Both buy and sell legs incur them.' },
+        { q: 'How is capital-gains tax applied?', a: 'Individuals pay 5% if held over a year and 7.5% if shorter; institutions differ. The calculator applies the individual rule by holding period.' },
+        { q: 'What do I need for an accurate result?', a: 'Buy price, sell price, quantity and holding period. Use contract notes for exact broker rates if your broker discounts.' },
+      ]}
+      related={relatedTools}
+    />
+
+    <Disclaimer variant="investment" />
+  </div>
+
+  <script>
+    import { calculateNEPSETrade } from '../../../lib/calculators/nepse.js';
+    import { formatNPR } from '../../../lib/utils/format.js';
+
+    const buyInput = document.getElementById('buy-price');
+    const sellInput = document.getElementById('sell-price');
+    const quantityInput = document.getElementById('quantity');
+    const holdingSelect = document.getElementById('holding-period');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const resultLabel = document.getElementById('result-label');
+    const resultValue = document.getElementById('result-value');
+    const resultPercent = document.getElementById('result-percent');
+    const buyEl = document.getElementById('breakdown-buy');
+    const sellEl = document.getElementById('breakdown-sell');
+    const chargesEl = document.getElementById('breakdown-charges');
+    const taxEl = document.getElementById('breakdown-tax');
+    const copyBtn = document.getElementById('copy-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    let lastResult = null;
+
+    function calculate() {
+      const buyPrice = parseFloat(buyInput?.value) || 0;
+      const sellPrice = parseFloat(sellInput?.value) || 0;
+      const quantity = parseInt(quantityInput?.value) || 0;
+      const holdingPeriod = parseInt(holdingSelect?.value) || 0;
+
+      if (buyPrice <= 0 || sellPrice <= 0 || quantity <= 0) return;
+
+      const result = calculateNEPSETrade({
+        buyPrice,
+        sellPrice,
+        quantity,
+        holdingPeriodDays: holdingPeriod,
+      });
+
+      lastResult = result;
+
+      if (resultLabel) resultLabel.textContent = result.isProfit ? 'Net Profit' : 'Net Loss';
+      if (resultValue) {
+        resultValue.textContent = formatNPR(Math.abs(result.finalProfit));
+        resultValue.style.color = result.isProfit ? '#059669' : '#DC143C';
+      }
+      if (resultPercent) {
+        resultPercent.textContent = `${result.isProfit ? '+' : ''}${result.returnPercent}% return`;
+      }
+
+      if (buyEl) buyEl.textContent = formatNPR(result.buyTotal);
+      if (sellEl) sellEl.textContent = formatNPR(result.sellTotal);
+      if (chargesEl) chargesEl.textContent = formatNPR(result.totalCharges);
+      if (taxEl) taxEl.textContent = formatNPR(result.capitalGainsTax);
+
+      resultDiv?.classList.remove('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    [buyInput, sellInput, quantityInput].forEach(el => {
+      el?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      if (lastResult) {
+        const text = `NEPSE Trade Calculation\nBuy: ${formatNPR(lastResult.buyTotal)}\nSell: ${formatNPR(lastResult.sellTotal)}\nCharges: ${formatNPR(lastResult.totalCharges)}\nTax: ${formatNPR(lastResult.capitalGainsTax)}\nNet ${lastResult.isProfit ? 'Profit' : 'Loss'}: ${formatNPR(Math.abs(lastResult.finalProfit))}`;
+        try { await navigator.clipboard.writeText(text); if (copyBtn) copyBtn.textContent = 'Copied!'; setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy Result'; }, 2000); } catch {}
+      }
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (buyInput) buyInput.value = '';
+      if (sellInput) sellInput.value = '';
+      if (quantityInput) quantityInput.value = '';
+      resultDiv?.classList.add('hidden');
+    });
+  </script>
+</BaseLayout>

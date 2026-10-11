@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import QrCodeGenerator from '../../components/tools/QrCodeGenerator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Free QR Code Generator — PNG & SVG | SolutionsNepal';
+const description = 'Create free QR codes for text, URLs, Wi-Fi, phone numbers, email, WhatsApp and contacts. Download high-quality PNG or SVG QR codes instantly.';
+
+const faqItems = [
+  {
+    q: 'What can I create a QR code for?',
+    a: 'Plain text, website links, Wi-Fi networks, phone numbers, email messages, WhatsApp chats and contact cards (vCard). Pick a type, enter your information, press Generate QR Code, then download it.',
+  },
+  {
+    q: 'Can I create a Wi-Fi QR code?',
+    a: 'Yes. Choose Wi-Fi, enter your network name, password and security type. When scanned, phones offer to connect automatically — great for cafés, hotels and home guests.',
+  },
+  {
+    q: 'Can I download my QR code as PNG?',
+    a: 'Yes — press Download PNG. You get a high-resolution solutionsnepal-qr.png that works on screens, documents and messaging apps.',
+  },
+  {
+    q: 'Can I download my QR code as SVG?',
+    a: 'Yes — press Download SVG. SVG is vector-based, so it prints crisply at any size: posters, business cards, flyers, shop windows.',
+  },
+  {
+    q: 'Can I create QR codes with Nepali text?',
+    a: 'Yes. The generator fully supports Nepali Unicode — including mixed Nepali + English text, numbers, symbols and emojis like नमस्ते नेपाल 🇳🇵.',
+  },
+  {
+    q: 'Is my QR code data uploaded?',
+    a: 'No. Everything is generated locally in your browser using JavaScript. Your Wi-Fi passwords, contacts and other content never leave your device.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'QR Code Generator',
+      description,
+      url: 'https://solutionsnepal.com/tools/qr-code-generator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'QR Code Generator' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">QR Code Generator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Create a QR code instantly — free, private, and easy to use.</p>
+    </div>
+
+    <QrCodeGenerator />
+
+    <!-- SEO content -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">One generator for every everyday QR need</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Share your restaurant's Wi-Fi without spelling out the password, put a WhatsApp chat on your
+          shop window, hand customers a scannable contact card, or simply link printed materials to your
+          website. Each type uses its proper standard — WIFI:, tel:, mailto:, wa.me links and vCard — so
+          scanning does the right thing on both Android and iPhone.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">PNG vs SVG downloads</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          PNG suits screens, messaging apps and documents. SVG is vector graphics: it stays razor-sharp at
+          any size, which makes it the right choice for printing on posters, business cards, product packaging
+          or vehicle decals. Both downloads use meaningful filenames — solutionsnepal-qr.png and solutionsnepal-qr.svg.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">नेपाली र English — both work</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Type in Devanagari, Roman script or a mix of both. Multi-line notes, numbers, symbols and emoji are
+          encoded correctly with full UTF-8 support, so a QR that says नमस्ते scans exactly the way you typed it.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Private by design</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Your QR code is generated directly in your browser. Your entered information is not uploaded to SolutionsNepal —
+          there is no account, no tracking and no server round-trip involved.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related tools</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/tools/wifi-qr-code-generator" style="color:var(--nk-accent);">Wi-Fi QR Code Generator</a></li>
+          <li>• <a class="underline hover:opacity-80" href="/tools/url-qr-code-generator" style="color:var(--nk-accent);">URL QR Code Generator</a></li>
+          <li>• <a class="underline hover:opacity-80" href="/tools/whatsapp-qr-code-generator" style="color:var(--nk-accent);">WhatsApp QR Generator</a></li>
+          <li>• <a class="underline hover:opacity-80" href="/tools/vcard-qr-code-generator" style="color:var(--nk-accent);">vCard QR Generator</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'Image Compressor', description: 'Compress JPG, PNG and WebP images', href: '/tools/image-compressor' },
+      { title: 'Passport Photo Resizer', description: 'Crop & compress photos to ID sizes', href: '/tools/passport-photo-resizer' },
+    ]} />
+  </div>
+</BaseLayout>

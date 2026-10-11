@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+import PdfTool from '../../components/tools/PdfTool.astro';
+const title = 'PDF to Word Converter — Editable DOCX Online | SolutionsNepal';
+const description = 'Convert PDFs to editable Word (.docx) documents in your browser. Free PDF-to-Word converter preserving text flow.';
+const faqs = [
+  { q: 'How accurate is the conversion?', a: 'Text-based PDFs convert cleanly with layout preserved. Scanned or image-based PDFs need OCR for editable text — the tool extracts what it can.' },
+  { q: 'What happens to scanned PDFs?', a: 'Scanned pages become images inside the DOCX. For editable text, use an OCR tool first or copy text manually.' },
+  { q: 'Does it preserve formatting?', a: 'Simple layouts (headings, paragraphs, tables) convert well. Complex multi-column layouts may need manual cleanup in Word.' },
+  { q: 'Can I convert password-protected PDFs?', a: 'Only if you provide the password. Encrypted files must be unlocked first.' },
+];
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'PDF to Word Converter', description: 'Convert PDFs to editable Word documents in your browser.', url: 'https://solutionsnepal.com/tools/pdf-to-word', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'PDF Tools', href: '/tools/pdf' }, { label: 'PDF to Word' }]} />
+    <div class="mb-5 text-center"><h1 class="text-[28px] font-bold sm:text-[36px] tracking-tight mx-auto" style="color:var(--nk-text);">PDF to Word Converter</h1><p class="mt-2 text-[15px] sm:text-[16px] mx-auto text-center leading-relaxed" style="color:var(--nk-text-secondary);">Convert PDF documents into editable Word files.</p></div>
+    <PdfTool mode="pdf-to-word" />
+    <p class="mt-5 text-xs" style="color:var(--nk-text-secondary);"><strong>Private by design</strong> — your files are processed directly in your browser. Text is extracted into a real .docx; complex layouts and scans may need cleanup.</p>
+
+    <section class="mt-10 space-y-4 text-[15px] leading-relaxed" style="color:var(--nk-text);">
+      <h2 class="text-xl font-semibold mt-6">How to Convert PDF to Word</h2>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Drop your PDF into the converter.</li>
+        <li>Wait while text is extracted into a .docx file.</li>
+        <li>Download the Word document and edit as needed.</li>
+      </ol>
+      <h2 class="text-xl font-semibold mt-6">When You Need PDF to Word</h2>
+      <p>Government forms, job applications and academic templates often arrive as PDFs but need editing. Converting to Word lets you fill in fields, correct errors and reformat without recreating the document from scratch.</p>
+      <h2 class="text-xl font-semibold mt-6">Frequently Asked Questions</h2>
+      {faqs.map(f => (
+        <details class="group border-b py-3" style="border-color:var(--nk-border);">
+          <summary class="cursor-pointer font-medium list-none flex justify-between items-center">{f.q}<span class="ml-2 text-lg transition-transform group-open:rotate-45">+</span></summary>
+          <p class="mt-2 text-sm" style="color:var(--nk-text-secondary);">{f.a}</p>
+        </details>
+      ))}
+    </section>
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[{ title: 'PDF to JPG', description: 'Extract pages as images', href: '/tools/pdf-to-jpg' }, { title: 'Merge PDF', description: 'Combine multiple PDFs', href: '/tools/merge-pdf' }, { title: 'Compress PDF', description: 'Reduce PDF file size', href: '/tools/compress-pdf' }, { title: 'JPG to PDF', description: 'Turn images into a PDF', href: '/tools/jpg-to-pdf' }]} />
+  </div>
+</BaseLayout>

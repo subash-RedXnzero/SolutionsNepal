@@ -1,0 +1,305 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolSeoContent from '../../../components/seo/ToolSeoContent.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'Loan Eligibility Calculator', description: 'How much can you borrow in Nepal', href: '/nepal/finance/loan-eligibility-calculator-nepal' },
+  { title: 'Home Loan Down Payment', description: 'Down payment, LTV & EMI', href: '/nepal/finance/home-loan-down-payment-calculator-nepal' },
+  { title: 'Nepal Salary Calculator', description: 'Take-home pay after SSF & tax', href: '/nepal/finance/salary-checker' },
+  { title: 'All Finance Tools', description: 'Browse finance calculators', href: '/nepal/finance' },
+];
+---
+
+<BaseLayout>
+  <div class="mx-auto max-w-[1200px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'EMI Calculator' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
+        EMI Calculator Nepal
+      </h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+        Monthly EMI for home, car and personal loans in Nepal — enter amount, interest rate and tenure for instant EMI, total interest and total payment.
+      </p>
+    </div>
+
+    <!-- Two-Column: Inputs | Result -->
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-5 items-start">
+
+      <!-- LEFT: Inputs -->
+      <div class="nk-card p-5 space-y-4">
+        <div>
+          <p class="text-[13px] font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-tertiary);">Loan details</p>
+          <div class="space-y-3">
+            <div>
+              <label for="principal" class="block text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Loan amount <span class="font-normal">— after down payment</span></label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[13px]" style="color: var(--nk-text-tertiary);">NPR</span>
+                <input inputmode="decimal"
+                  id="principal"
+                  type="number"
+                  min="0"
+                  step="10000"
+                  placeholder="500,000"
+                  class="nk-input"
+                  style="padding-left: 3rem;"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label for="rate" class="block text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Interest rate <span class="font-normal">— per year</span></label>
+                <div class="relative">
+                  <input inputmode="decimal" id="rate" type="number" min="0" max="50" step="0.1" placeholder="12" class="nk-input" style="padding-right: 2rem;" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[13px]" style="color: var(--nk-text-tertiary);">%</span>
+                </div>
+                <p class="mt-1 text-[13px]" style="color: var(--nk-text-tertiary);">Banks usually quote 8–13%</p>
+              </div>
+              <div>
+                <label for="tenure" class="block text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Loan duration</label>
+                <input inputmode="decimal" id="tenure" type="number" min="1" max="3600" placeholder="20" class="nk-input" />
+                <div class="flex mt-1.5" style="gap: 2px;">
+                  <button id="unit-years" class="unit-btn unit-active" data-unit="years">Years</button>
+                  <button id="unit-months" class="unit-btn" data-unit="months">Months</button>
+                </div>
+                <input type="hidden" id="tenure-unit" value="years" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button id="calculate-btn" class="nk-btn nk-btn-primary w-full py-2.5">
+          Calculate EMI
+        </button>
+        <p class="text-center text-[13px]" style="color: var(--nk-text-tertiary);">Result updates automatically as you type</p>
+      </div>
+
+      <!-- RIGHT: Result (stacks below inputs on mobile, sticky on desktop) -->
+      <div class="block emi-result">
+        <div class="nk-card overflow-hidden">
+          <!-- Primary result -->
+          <div class="p-5 text-center" style="background: var(--nk-accent-subtle);">
+            <p class="text-xs font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Monthly EMI</p>
+            <p id="emi-value" class="text-[32px] font-bold tracking-[-0.02em] mt-1" style="color: var(--nk-accent);">—</p>
+          </div>
+
+          <!-- Breakdown -->
+          <div id="breakdown" class="hidden">
+            <div class="px-5 py-4 space-y-2" style="border-top: 1px solid var(--nk-border);">
+              <div class="flex justify-between text-[13px]">
+                <span style="color: var(--nk-text-tertiary);">Principal amount</span>
+                <span id="breakdown-principal" class="font-medium tabular-nums" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-[13px]">
+                <span style="color: var(--nk-text-tertiary);">Total interest</span>
+                <span id="breakdown-interest" class="font-medium tabular-nums" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-[13px] font-semibold" style="border-top: 1px solid var(--nk-border); padding-top: 8px;">
+                <span style="color: var(--nk-text);">Total payment</span>
+                <span id="breakdown-total" class="tabular-nums" style="color: var(--nk-text);"></span>
+              </div>
+            </div>
+
+            <div class="px-5 py-3 flex gap-2" style="border-top: 1px solid var(--nk-border);">
+              <button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy result</button>
+              <button id="copy-link-btn" class="nk-btn nk-btn-ghost nk-btn-sm flex-1">Copy link</button>
+              <button id="reset-btn" class="nk-btn nk-btn-ghost nk-btn-sm">Reset</button>
+            </div>
+          </div>
+
+          <!-- Placeholder -->
+          <div id="result-placeholder" class="p-6 text-center" style="border-top: 1px solid var(--nk-border);">
+            <p class="text-[13px]" style="color: var(--nk-text-tertiary);">Your EMI appears here automatically</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ToolSeoContent
+      howTo={[
+        { t: 'Enter loan amount', d: 'The principal in NPR, e.g. Rs. 50,00,000 for a Kathmandu apartment down-payment balance.' },
+        { t: 'Enter annual interest rate', d: 'Banks in Nepal currently quote roughly 8–13% for home loans; use your offer letter rate.' },
+        { t: 'Choose tenure', d: 'Switch between years and months. Longer tenure lowers EMI but raises total interest sharply.' },
+        { t: 'Compare', d: 'Try 15 vs 20 vs 25 years and watch total interest — then check affordability with the Loan Eligibility calculator.' },
+      ]}
+      formula="EMI = P × r × (1+r)^n / ((1+r)^n − 1), where r is monthly rate and n is months (reducing-balance method banks use)"
+      example={{ t: 'Rs. 50,00,000 at 10% for 20 years:', d: 'monthly EMI is about Rs. 48,251, total interest about Rs. 65,80,000 — you repay roughly Rs. 1.16 crore.' }}
+      note="Nepali banks use the reducing-balance method and quote rates per annum. Processing fees (0.5–1%), insurance and prepayment charges are extra and not in EMI."
+      faqs={[
+        { q: 'How is EMI calculated in Nepal?', a: 'With the reducing-balance formula: EMI = P × r × (1+r)^n / ((1+r)^n − 1). Interest is charged only on the outstanding principal each month, which is why early payments are mostly interest.' },
+        { q: 'What loan details do I need?', a: 'Just three: principal (NPR), annual interest rate, and tenure in years or months. Optional: processing fee and insurance for the true upfront cost.' },
+        { q: 'Should I choose a longer tenure for lower EMI?', a: 'Only if cash flow demands it. A 25-year term can nearly double total interest versus 15 years. Pick the shortest EMI you can comfortably pay — generally under 40–50% of monthly income.' },
+        { q: 'Is this calculator accurate?', a: 'Yes for standard reducing-balance loans (home, car, personal). It matches bank math to the rupee; final sanctioned EMI may differ by rounding, disbursement date or fees.' },
+      ]}
+      related={relatedTools}
+    />
+
+    <Disclaimer variant="finance" />
+  </div>
+
+  <script>
+    import { calculateEMI, tenureFromYears, tenureFromMonths } from '../../../lib/calculators/emi.js';
+    import { formatNPR } from '../../../lib/utils/format.js';
+    import { readSharedParams, syncUrl, copyLink } from '../../../lib/share-params.js';
+
+    // Shareable result links: param → input id (unit tracked via hidden field).
+    const EMI_PARAMS = { p: 'principal', rate: 'rate', tenure: 'tenure', unit: 'tenure-unit' };
+
+    const principalInput = document.getElementById('principal');
+    const rateInput = document.getElementById('rate');
+    const tenureInput = document.getElementById('tenure');
+    const tenureUnitInput = document.getElementById('tenure-unit');
+    const unitYearsBtn = document.getElementById('unit-years');
+    const unitMonthsBtn = document.getElementById('unit-months');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('breakdown');
+    const emiEl = document.getElementById('emi-value');
+    const principalEl = document.getElementById('breakdown-principal');
+    const interestEl = document.getElementById('breakdown-interest');
+    const totalEl = document.getElementById('breakdown-total');
+    const placeholder = document.getElementById('result-placeholder');
+    const copyBtn = document.getElementById('copy-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    let currentUnit = 'years';
+
+    function switchUnit(unit) {
+      if (unit === currentUnit) return;
+      const val = parseFloat(tenureInput?.value) || 0;
+      if (val > 0) {
+        tenureInput.value = currentUnit === 'years' ? String(Math.round(val * 12)) : String(Math.round(val / 12));
+      }
+      currentUnit = unit;
+      if (tenureUnitInput) tenureUnitInput.value = unit;
+      unitYearsBtn?.classList.toggle('unit-active', unit === 'years');
+      unitMonthsBtn?.classList.toggle('unit-active', unit === 'months');
+      syncUrl(EMI_PARAMS);
+    }
+
+    unitYearsBtn?.addEventListener('click', () => switchUnit('years'));
+    unitMonthsBtn?.addEventListener('click', () => switchUnit('months'));
+
+    function calculate() {
+      const principal = parseFloat(principalInput?.value) || 0;
+      const rate = parseFloat(rateInput?.value) || 0;
+      const time = parseFloat(tenureInput?.value) || 0;
+      if (principal <= 0 || rate <= 0 || time <= 0) {
+        // Nothing entered yet: show the empty-state panel, never stale numbers.
+        if (emiEl) emiEl.textContent = '—';
+        resultDiv?.classList.add('hidden');
+        placeholder?.classList.remove('hidden');
+        return;
+      }
+      syncUrl(EMI_PARAMS);
+
+      const tenureMonths = currentUnit === 'years' ? tenureFromYears(time) : tenureFromMonths(time);
+      const result = calculateEMI(principal, rate, tenureMonths);
+
+      if (emiEl) emiEl.textContent = formatNPR(result.emi);
+      if (principalEl) principalEl.textContent = formatNPR(result.principal);
+      if (interestEl) interestEl.textContent = formatNPR(result.totalInterest);
+      if (totalEl) totalEl.textContent = formatNPR(result.totalPayment);
+
+      resultDiv?.classList.remove('hidden');
+      placeholder?.classList.add('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    // Live result: recalculate as the user types (button kept for keyboard/mouse users).
+    [principalInput, rateInput, tenureInput].forEach(el => {
+      el?.addEventListener('input', calculate);
+      el?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      const principal = parseFloat(principalInput?.value) || 0;
+      const rate = parseFloat(rateInput?.value) || 0;
+      const time = parseFloat(tenureInput?.value) || 0;
+      if (principal > 0 && rate > 0 && time > 0) {
+        const tenureMonths = currentUnit === 'years' ? tenureFromYears(time) : tenureFromMonths(time);
+        const result = calculateEMI(principal, rate, tenureMonths);
+        const unitLabel = currentUnit === 'years' ? 'years' : 'months';
+        const text = `EMI Calculation\nLoan: ${formatNPR(result.principal)}\nRate: ${result.annualRate}%\nTime: ${time} ${unitLabel}\nMonthly EMI: ${formatNPR(result.emi)}\nTotal Interest: ${formatNPR(result.totalInterest)}`;
+        try { await navigator.clipboard.writeText(text); if (copyBtn) copyBtn.textContent = 'Copied!'; setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy result'; }, 2000); } catch {}
+      }
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (principalInput) principalInput.value = '';
+      if (rateInput) rateInput.value = '';
+      if (tenureInput) tenureInput.value = '';
+      calculate();
+      syncUrl(EMI_PARAMS);
+    });
+
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+    copyLinkBtn?.addEventListener('click', async () => {
+      syncUrl(EMI_PARAMS);
+      const ok = await copyLink();
+      const original = copyLinkBtn.textContent;
+      copyLinkBtn.textContent = ok ? 'Link copied!' : 'Copy failed';
+      setTimeout(() => { copyLinkBtn.textContent = original; }, 2000);
+    });
+
+    // Shareable result links (?p=&rate=&tenure=&unit=), plus legacy
+    // ?amount= deep-link support (e.g. from smart search "10 लाख loan को EMI").
+    (function () {
+      const applied = readSharedParams(EMI_PARAMS, window.location.search);
+      const u = tenureUnitInput?.value;
+      if (u === 'months' || u === 'years') {
+        currentUnit = u;
+        unitYearsBtn?.classList.toggle('unit-active', u === 'years');
+        unitMonthsBtn?.classList.toggle('unit-active', u === 'months');
+      }
+      if (!applied.p) {
+        const amount = Number(new URLSearchParams(window.location.search).get('amount'));
+        if (amount > 0 && principalInput) {
+          principalInput.value = String(amount);
+          principalInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          rateInput?.focus({ preventScroll: true });
+          return;
+        }
+      }
+      calculate(); // Inputs start empty (placeholder only); result panel fills in as the user types
+    })();
+  </script>
+
+  <style>
+    @media (min-width: 768px) {
+      .emi-result { position: sticky; top: 64px; }
+    }
+    .unit-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 26px;
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid var(--nk-border);
+      cursor: pointer;
+      transition: all 0.1s ease;
+      color: var(--nk-text-secondary);
+      background: var(--nk-surface);
+      font-family: var(--font-sans);
+    }
+    .unit-btn:hover {
+      border-color: var(--nk-border-strong);
+      color: var(--nk-text);
+    }
+    .unit-btn.unit-active {
+      background: var(--nk-accent);
+      border-color: var(--nk-accent);
+      color: white;
+      font-weight: 600;
+    }
+  </style>
+</BaseLayout>

@@ -1,0 +1,82 @@
+---
+// GuideCard — one reusable card for the Guides library grid.
+// Props: post = { slug, title, description, image, category, author, readTime }
+// To change the guides look, edit ONLY this file.
+// To change text/images, edit the .md file in Guideedit/ (never edit this file for content).
+// NOTE: class "gd-card" + data-category are required — guides.astro filter JS uses them.
+import Image from '../ui/Image.astro';
+
+const { post } = Astro.props;
+---
+<a href={`/guides/${post.slug}`} class="gd-card" data-category={post.category || 'General'}>
+  <div class="gd-thumb">
+    <Image src={post.image} alt={post.title} width={400} height={240} loading="lazy" wrapper={false} />
+  </div>
+  <div class="gd-body">
+    <span class="gd-category">{post.category}</span>
+    <h2 class="gd-title">{post.title}</h2>
+    <p class="gd-excerpt">{post.description}</p>
+    <div class="gd-meta">
+      <span class="gd-author">{post.author}</span>
+      <span class="gd-dot"></span>
+      <span class="gd-read">{post.readTime}</span>
+    </div>
+  </div>
+</a>
+
+<style>
+  .gd-card {
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-lg);
+    background: var(--nk-card-bg);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .gd-card:hover {
+    border-color: var(--nk-border-strong);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .gd-card.hidden { display: none; }
+  .gd-thumb { aspect-ratio: 16/10; overflow: hidden; background: var(--nk-muted); }
+  .gd-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+  .gd-card:hover .gd-thumb img { transform: scale(1.03); }
+  .gd-body { padding: 20px 20px 18px; }
+  .gd-category {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--nk-accent);
+    margin-bottom: 10px;
+  }
+  .gd-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--nk-text);
+    margin: 0 0 8px;
+  }
+  .gd-excerpt {
+    font-size: 13.5px;
+    color: var(--nk-text-secondary);
+    line-height: 1.55;
+    margin: 0 0 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .gd-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--nk-border);
+  }
+  .gd-author { font-size: 12px; font-weight: 500; color: var(--nk-text); }
+  .gd-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--nk-border); }
+  .gd-read { font-size: 11px; color: var(--nk-text-tertiary); }
+</style>

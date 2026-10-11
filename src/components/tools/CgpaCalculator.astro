@@ -1,0 +1,393 @@
+---
+/**
+ * CgpaCalculator — Semester GPA + CGPA with configurable grading systems.
+ *
+ * Two modes:
+ *   1. Semester GPA — enter subjects with grade + credits
+ *   2. CGPA — enter semesters with GPA + credits
+ */
+---
+
+<div id="cgpa-root" class="cgpa-layout">
+  <!-- Left: form -->
+  <div class="nk-card overflow-hidden">
+    <div class="p-5 sm:p-6">
+
+      <!-- Mode toggle -->
+      <div class="mb-4 text-center">
+        <div class="inline-flex rounded-lg overflow-hidden" style="border:1px solid var(--nk-border);">
+          <button id="cgpa-mode-semester" class="cgpa-mode px-5 py-1.5 text-[13px] font-semibold transition-all" style="background:var(--nk-accent);color:#fff;">Semester GPA</button>
+          <button id="cgpa-mode-cgpa" class="cgpa-mode px-5 py-1.5 text-[13px] font-medium transition-all" style="background:var(--nk-surface);color:var(--nk-text-secondary);">CGPA</button>
+        </div>
+      </div>
+
+      <!-- Grading system -->
+      <div class="mb-4">
+        <label class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Grading System</label>
+        <select id="cgpa-system" class="w-full nk-input text-[13px]" style="color:var(--nk-text);">
+          <option value="standard-4">4.0 Scale (Standard)</option>
+          <option value="standard-4-aplus">4.0 Scale (with A+)</option>
+          <option value="see-nepal">SEE Nepal (10-point)</option>
+          <option value="10-point">10.0 Scale</option>
+        </select>
+      </div>
+
+      <!-- ═══ SEMESTER GPA MODE ═══ -->
+      <div id="cgpa-semester-panel">
+        <div class="cgpa-cols" aria-hidden="true">
+          <span>Subject</span><span>Grade</span><span class="cgpa-cols-c">Credits</span><span></span>
+        </div>
+        <div id="cgpa-subjects" class="space-y-2 mb-3">
+          <!-- Subject rows rendered by JS -->
+        </div>
+        <button id="cgpa-add-subject" class="text-[12px] font-medium px-3 py-1.5 rounded-md border transition-colors mb-4" style="border-color:var(--nk-border);color:var(--nk-accent);">+ Add Subject</button>
+      </div>
+
+      <!-- ═══ CGPA MODE ═══ -->
+      <div id="cgpa-cgpa-panel" class="hidden">
+        <div id="cgpa-semesters" class="space-y-2 mb-3">
+          <!-- Semester rows rendered by JS -->
+        </div>
+        <button id="cgpa-add-semester" class="text-[12px] font-medium px-3 py-1.5 rounded-md border transition-colors mb-4" style="border-color:var(--nk-border);color:var(--nk-accent);">+ Add Semester</button>
+      </div>
+
+      <!-- Calculate -->
+      <button id="cgpa-calc" class="w-full py-2.5 rounded-lg text-[14px] font-semibold transition-all hover:opacity-90 active:scale-[0.99]" style="background-color:var(--nk-accent);color:#fff;">
+        Calculate GPA
+      </button>
+
+      <!-- Error -->
+      <p id="cgpa-error" class="hidden mt-3 text-[12px] text-center" style="color:var(--nk-danger, #dc2626);"></p>
+
+    </div>
+  </div>
+
+  <!-- Right: sticky result -->
+  <aside class="nk-card overflow-hidden cgpa-side" aria-label="Result">
+    <div class="p-5">
+      <!-- Result -->
+      <div id="cgpa-result" class="hidden rounded-lg p-5 text-center" style="background:var(--nk-bg);">
+        <p id="cgpa-result-label" class="text-[11px] font-medium mb-1" style="color:var(--nk-text-tertiary);">Semester GPA</p>
+        <p id="cgpa-value" class="text-[48px] font-bold tracking-[-0.02em] leading-tight" style="color:var(--nk-accent);">—</p>
+        <p id="cgpa-sublabel" class="text-[13px] font-medium mt-1" style="color:var(--nk-text-secondary);">—</p>
+        <div id="cgpa-credits-row" class="mt-2 text-[13px]" style="color:var(--nk-text-secondary);">
+          Total Credits: <span id="cgpa-credits" class="font-semibold" style="color:var(--nk-text);">—</span>
+        </div>
+        <div id="cgpa-percent-row" class="hidden mt-1 text-[13px]" style="color:var(--nk-text-secondary);">
+          <span id="cgpa-percent-label">Estimated Percentage</span>: <span id="cgpa-percent" class="font-semibold" style="color:var(--nk-text);">—</span>
+        </div>
+      </div>
+      <div id="cgpa-result-empty" class="rounded-lg p-5 text-center" style="background:var(--nk-bg);">
+        <p class="text-[48px] font-bold tracking-[-0.02em] leading-tight" style="color:var(--nk-text-tertiary);">—</p>
+        <p class="text-[12px] mt-1" style="color:var(--nk-text-tertiary);">Your result will appear here</p>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-4 flex gap-2">
+        <button id="cgpa-copy" class="nk-btn nk-btn-secondary nk-btn-sm flex-1 text-[12px]">Copy Result</button>
+        <button id="cgpa-reset" class="nk-btn nk-btn-ghost nk-btn-sm text-[12px]">Reset</button>
+      </div>
+    </div>
+  </aside>
+</div>
+<p class="mt-3 text-[10px] text-center max-w-xl mx-auto" style="color:var(--nk-text-tertiary);">Grading systems can differ between universities, colleges, and programs in Nepal. Select the grading scale that applies to your institution.</p>
+
+<script>
+  import { GRADING_SYSTEMS, getGradeOptions, calculateGpaFromSubjects, calculateCgpa } from '../../data/grading-systems.js';
+
+  const $ = (sel: string) => document.getElementById(sel);
+
+  // Elements
+  const modeSemesterBtn = $('cgpa-mode-semester')!;
+  const modeCgpaBtn = $('cgpa-mode-cgpa')!;
+  const semesterPanel = $('cgpa-semester-panel')!;
+  const cgpaPanel = $('cgpa-cgpa-panel')!;
+  const systemSelect = $('cgpa-system') as HTMLSelectElement;
+  const subjectsContainer = $('cgpa-subjects')!;
+  const semestersContainer = $('cgpa-semesters')!;
+  const resultBox = $('cgpa-result')!;
+  const resultEmpty = $('cgpa-result-empty')!;
+  const resultLabel = $('cgpa-result-label')!;
+  const cgpaValue = $('cgpa-value')!;
+  const cgpaSublabel = $('cgpa-sublabel')!;
+  const creditsEl = $('cgpa-credits')!;
+  const percentRow = $('cgpa-percent-row')!;
+  const percentLabel = $('cgpa-percent-label')!;
+  const percentEl = $('cgpa-percent')!;
+  const errorEl = $('cgpa-error')!;
+
+  let mode = 'semester'; // 'semester' | 'cgpa'
+  let lastResultText = '';
+  let subjectCounter = 0;
+  let semesterCounter = 0;
+
+  // ── Helpers ──────────────────────────────────────────────
+  function getGradeOptionsHtml() {
+    const opts = getGradeOptions(systemSelect.value);
+    return '<option value="">Select</option>' + opts.map(g => `<option value="${g.grade}">${g.grade} (${g.point})</option>`).join('');
+  }
+
+  function getGpaLabel(gpa: number) {
+    if (gpa >= 3.8) return 'Outstanding';
+    if (gpa >= 3.5) return 'Excellent';
+    if (gpa >= 3.0) return 'Very Good';
+    if (gpa >= 2.5) return 'Good';
+    if (gpa >= 2.0) return 'Average';
+    if (gpa >= 1.0) return 'Below Average';
+    return 'Needs Improvement';
+  }
+
+  // ── Subject rows ─────────────────────────────────────────
+  function addSubjectRow(name = '', grade = '', credits = '3') {
+    subjectCounter++;
+    const row = document.createElement('div');
+    row.className = 'cgpa-subj-row rounded-lg p-2.5';
+    row.style.cssText = 'background:var(--nk-surface);border:1px solid var(--nk-border);';
+    row.innerHTML = `
+      <input type="text" placeholder="Enter subject name" value="${name}" aria-label="Subject name" class="cgpa-subj-name min-w-0 nk-input text-[13px] py-2" style="color:var(--nk-text);" />
+      <select class="cgpa-subj-grade min-w-0 nk-input text-[12px] py-1.5" aria-label="Grade" style="color:var(--nk-text);">${getGradeOptionsHtml()}</select>
+      <input type="number" min="0" step="0.5" placeholder="3" value="${credits}" aria-label="Credit hours" class="cgpa-subj-credits nk-input text-[12px] py-1.5 text-center tabular-nums" style="color:var(--nk-text);" />
+      <button class="cgpa-remove-row w-7 h-7 rounded-md flex items-center justify-center text-[14px] font-bold transition-all hover:opacity-60" style="color:var(--nk-text-secondary);background:var(--nk-bg);" title="Remove subject" aria-label="Remove subject">×</button>
+    `;
+    if (grade) {
+      const sel = row.querySelector('.cgpa-subj-grade') as HTMLSelectElement;
+      if (sel) sel.value = grade;
+    }
+    row.querySelector('.cgpa-remove-row')!.addEventListener('click', () => { row.remove(); calculate(true); });
+    const recalc = () => calculate(true);
+    row.addEventListener('input', recalc);
+    row.addEventListener('change', recalc);
+    subjectsContainer.appendChild(row);
+  }
+
+  function getSubjects() {
+    const cards = subjectsContainer.querySelectorAll('.cgpa-subj-row');
+    const subjects: { grade: string; credits: number }[] = [];
+    cards.forEach(card => {
+      const grade = (card.querySelector('.cgpa-subj-grade') as HTMLSelectElement)?.value || '';
+      const credits = parseFloat((card.querySelector('.cgpa-subj-credits') as HTMLInputElement)?.value || '0');
+      if (grade) subjects.push({ grade, credits: Number.isFinite(credits) ? credits : 0 });
+    });
+    return subjects;
+  }
+
+  // ── Semester rows ────────────────────────────────────────
+  function addSemesterRow(gpa = '', credits = '') {
+    semesterCounter++;
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-2';
+    row.innerHTML = `
+      <span class="text-[12px] font-medium flex-shrink-0 w-20" style="color:var(--nk-text-secondary);">Semester ${semesterCounter}</span>
+      <input type="number" step="0.01" min="0" max="4" placeholder="GPA" value="${gpa}" class="cgpa-sem-gpa nk-input text-[12px] py-1.5 flex-1 text-center tabular-nums" style="color:var(--nk-text);" />
+      <input type="number" min="0" step="1" placeholder="Credits" value="${credits}" class="cgpa-sem-credits nk-input text-[12px] py-1.5 w-20 text-center tabular-nums" style="color:var(--nk-text);" />
+      <button class="cgpa-remove-row flex-shrink-0 w-7 h-7 rounded-md flex items-center justify-center text-[14px] font-bold transition-opacity hover:opacity-60" style="color:var(--nk-text-secondary);">×</button>
+    `;
+    row.querySelector('.cgpa-remove-row')!.addEventListener('click', () => { row.remove(); calculate(true); });
+    const recalcSem = () => calculate(true);
+    row.addEventListener('input', recalcSem);
+    row.addEventListener('change', recalcSem);
+    semestersContainer.appendChild(row);
+  }
+
+  function getSemesters() {
+    const rows = semestersContainer.querySelectorAll('.cgpa-sem-gpa');
+    const semesters: { gpa: number; credits: number }[] = [];
+    rows.forEach(row => {
+      const gpa = parseFloat((row as HTMLInputElement).value);
+      const credits = parseFloat((row.parentElement!.querySelector('.cgpa-sem-credits') as HTMLInputElement).value);
+      if (Number.isFinite(gpa) && Number.isFinite(credits)) semesters.push({ gpa, credits });
+    });
+    return semesters;
+  }
+
+  // ── Mode toggle ──────────────────────────────────────────
+  function setMode(m: string) {
+    mode = m;
+    if (m === 'semester') {
+      modeSemesterBtn.style.background = 'var(--nk-accent)'; modeSemesterBtn.style.color = '#fff'; modeSemesterBtn.style.fontWeight = '600';
+      modeCgpaBtn.style.background = 'var(--nk-surface)'; modeCgpaBtn.style.color = 'var(--nk-text-secondary)'; modeCgpaBtn.style.fontWeight = '500';
+      semesterPanel.classList.remove('hidden'); cgpaPanel.classList.add('hidden');
+    } else {
+      modeCgpaBtn.style.background = 'var(--nk-accent)'; modeCgpaBtn.style.color = '#fff'; modeCgpaBtn.style.fontWeight = '600';
+      modeSemesterBtn.style.background = 'var(--nk-surface)'; modeSemesterBtn.style.color = 'var(--nk-text-secondary)'; modeSemesterBtn.style.fontWeight = '500';
+      cgpaPanel.classList.remove('hidden'); semesterPanel.classList.add('hidden');
+    }
+    resultBox.classList.add('hidden');
+    resultEmpty.classList.remove('hidden');
+    errorEl.classList.add('hidden');
+    calculate(true);
+  }
+
+  // ── Calculate ────────────────────────────────────────────
+  // silent=true: refresh quietly for live updates (no error flash on empty input)
+  function calculate(silent: boolean = false) {
+    errorEl.classList.add('hidden');
+    resultBox.classList.add('hidden');
+    resultEmpty.classList.remove('hidden');
+
+    if (mode === 'semester') {
+      const subjects = getSubjects();
+      if (subjects.length === 0) {
+        if (!silent) {
+          errorEl.textContent = 'Please add at least one subject with a grade.';
+          errorEl.classList.remove('hidden');
+        }
+        return;
+      }
+      const result = calculateGpaFromSubjects(subjects, systemSelect.value);
+      if (result.totalCredits === 0) {
+        if (!silent) {
+          errorEl.textContent = 'Please enter valid credit hours for at least one subject.';
+          errorEl.classList.remove('hidden');
+        }
+        return;
+      }
+      resultLabel.textContent = 'Semester GPA';
+      cgpaValue.textContent = result.gpa.toFixed(2);
+      cgpaSublabel.textContent = getGpaLabel(result.gpa);
+      creditsEl.textContent = String(result.totalCredits);
+      if (result.percentage !== null && result.percentageLabel) {
+        percentLabel.textContent = result.percentageLabel;
+        percentEl.textContent = result.percentage + '%';
+        percentRow.classList.remove('hidden');
+      } else {
+        percentRow.classList.add('hidden');
+      }
+      lastResultText = `Semester GPA: ${result.gpa.toFixed(2)}\nTotal Credits: ${result.totalCredits}${result.percentage !== null ? '\n' + (result.percentageLabel || 'Percentage') + ': ' + result.percentage + '%' : ''}`;
+    } else {
+      const semesters = getSemesters();
+      if (semesters.length === 0) {
+        if (!silent) {
+          errorEl.textContent = 'Please add at least one semester with GPA and credits.';
+          errorEl.classList.remove('hidden');
+        }
+        return;
+      }
+      const result = calculateCgpa(semesters, systemSelect.value);
+      if (result.totalCredits === 0) {
+        if (!silent) {
+          errorEl.textContent = 'Please enter valid credit hours for at least one semester.';
+          errorEl.classList.remove('hidden');
+        }
+        return;
+      }
+      resultLabel.textContent = 'CGPA';
+      cgpaValue.textContent = result.cgpa.toFixed(2);
+      cgpaSublabel.textContent = getGpaLabel(result.cgpa);
+      creditsEl.textContent = String(result.totalCredits);
+      if (result.percentage !== null && result.percentageLabel) {
+        percentLabel.textContent = result.percentageLabel;
+        percentEl.textContent = result.percentage + '%';
+        percentRow.classList.remove('hidden');
+      } else {
+        percentRow.classList.add('hidden');
+      }
+      lastResultText = `CGPA: ${result.cgpa.toFixed(2)}\nTotal Credits: ${result.totalCredits}${result.percentage !== null ? '\n' + (result.percentageLabel || 'Percentage') + ': ' + result.percentage + '%' : ''}`;
+    }
+
+    resultBox.classList.remove('hidden');
+    resultEmpty.classList.add('hidden');
+  }
+
+  // ── Events ───────────────────────────────────────────────
+  modeSemesterBtn.addEventListener('click', () => setMode('semester'));
+  modeCgpaBtn.addEventListener('click', () => setMode('cgpa'));
+  $('cgpa-calc')?.addEventListener('click', () => calculate(false));
+
+  $('cgpa-add-subject')?.addEventListener('click', () => addSubjectRow());
+  $('cgpa-add-semester')?.addEventListener('click', () => addSemesterRow());
+
+  // Update grade dropdowns when system changes
+  systemSelect.addEventListener('change', () => {
+    subjectsContainer.querySelectorAll('.cgpa-subj-grade').forEach(sel => {
+      const options = getGradeOptionsHtml();
+      const current = (sel as HTMLSelectElement).value;
+      (sel as HTMLSelectElement).innerHTML = options;
+      (sel as HTMLSelectElement).value = current;
+    });
+    calculate(true);
+  });
+
+  // Copy
+  $('cgpa-copy')?.addEventListener('click', async () => {
+    if (!lastResultText) return;
+    try { await navigator.clipboard.writeText(lastResultText); } catch {}
+    const btn = $('cgpa-copy');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Result'; }, 2000); }
+  });
+
+  // Reset
+  $('cgpa-reset')?.addEventListener('click', () => {
+    subjectsContainer.innerHTML = '';
+    semestersContainer.innerHTML = '';
+    subjectCounter = 0;
+    semesterCounter = 0;
+    setMode('semester');
+    resultBox.classList.add('hidden');
+    resultEmpty.classList.remove('hidden');
+    errorEl.classList.add('hidden');
+    lastResultText = '';
+    // Add default rows
+    addSubjectRow('', '', '3');
+    addSubjectRow('', '', '3');
+    addSubjectRow('', '', '4');
+    addSemesterRow('', '');
+    addSemesterRow('', '');
+  });
+
+  // Init — default rows
+  addSubjectRow('', '', '3');
+  addSubjectRow('', '', '3');
+  addSubjectRow('', '', '4');
+  addSemesterRow('', '');
+  addSemesterRow('', '');
+</script>
+
+<style is:global>
+  /* global: subject/semester rows are rendered by JS, so these selectors
+     must match elements created at runtime (no scope hash) */
+  .cgpa-mode { cursor: pointer; font-family: var(--font-sans); border: none; outline: none; }
+  /* Two-column tool layout: form left, sticky result right */
+  .cgpa-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+  .cgpa-side { position: sticky; top: 20px; }
+  @media (max-width: 900px) {
+    .cgpa-layout { grid-template-columns: 1fr; }
+    .cgpa-side { position: static; }
+  }
+  .cgpa-subj-name::placeholder {
+    color: var(--nk-text-secondary) !important;
+    opacity: 1 !important;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .cgpa-subj-name:focus::placeholder {
+    opacity: 0.4 !important;
+  }
+  .cgpa-subj-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) 76px 28px;
+    gap: 8px;
+    align-items: center;
+    transition: border-color 0.15s ease;
+  }
+  .cgpa-subj-row:hover {
+    border-color: var(--nk-accent) !important;
+  }
+  /* Column titles, aligned with the row grid */
+  .cgpa-cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) 76px 28px;
+    gap: 8px;
+    padding: 0 11px;
+    margin-bottom: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--nk-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .cgpa-cols-c { text-align: center; }
+  @media (max-width: 480px) {
+    .cgpa-subj-row, .cgpa-cols { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 68px 28px; gap: 6px; }
+  }
+</style>

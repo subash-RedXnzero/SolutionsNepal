@@ -1,0 +1,448 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import Image from '../../components/ui/Image.astro';
+import BlogCard from '../../components/blog/BlogCard.astro';
+import { getJournalPosts } from '../../data/guides.js';
+
+// CONTENT: posts come from Blogedit/*.md (one file = one post).
+// DESIGN: grid card look lives in src/components/blog/BlogCard.astro.
+// To add/edit a post, edit the .md file only — never this page.
+
+// Step-by-step how-tos live on /guides — the journal keeps stories,
+// current rates and explainers only.
+const journalPosts = getJournalPosts();
+
+export async function getStaticPaths() {
+  // NOTE: getStaticPaths runs isolated from other frontmatter bindings,
+  // so the list is rebuilt here instead of reusing the module const below.
+  const journalPosts = getJournalPosts();
+  const POSTS_PER_PAGE = 12;
+  const totalPages = Math.ceil(journalPosts.length / POSTS_PER_PAGE);
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: i === 0 ? undefined : String(i + 1) },
+    props: {
+      posts: journalPosts.slice(i * POSTS_PER_PAGE, (i + 1) * POSTS_PER_PAGE),
+      page: i + 1,
+      totalPages,
+      totalPosts: journalPosts.length,
+    },
+  }));
+}
+
+const { posts, page, totalPages, totalPosts } = Astro.props;
+
+// Each page renders ONLY its own slice — previously every page rendered allPosts,
+// so /blog, /blog/2, /blog/3 and /blog/4 all showed identical content.
+// Page 1: featured hero + 4 sidebar minis + recent grid = this page's 12 posts.
+// Pages 2+: plain card grid of that page's posts.
+const featured = posts[0];
+const sidebarPosts = posts.slice(1, 5);
+const recentPosts = posts.slice(5);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "SolutionsNepal Blog — Stories, Rates & Explainers",
+    "description": "Cost-of-living comparisons, legal explainers and current rates for Nepal.",
+    "url": "https://solutionsnepal.com/blog",
+    "numberOfItems": totalPosts,
+    "blogPost": journalPosts.slice(0, 10).map(p => ({
+      "@type": "BlogPosting",
+      "headline": p.title,
+      "url": `https://solutionsnepal.com/blog/${p.slug}`,
+      "datePublished": p.date,
+      "image": p.image
+    })),
+    "publisher": { "@type": "Organization", "name": "SolutionsNepal", "url": "https://solutionsnepal.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://solutionsnepal.com" },
+      { "@type": "ListItem", "position": 2, "name": "Blog" }
+    ]
+  }
+];
+
+function getPageUrl(p: number) {
+  if (p === 1) return '/blog';
+  return `/blog/${p}`;
+}
+---
+
+<BaseLayout
+  title={page === 1 ? "Blog — Stories & Explainers | SolutionsNepal" : `Blog — Page ${page} | SolutionsNepal`}
+  description="Stories, cost-of-living comparisons, legal explainers and current rates for Nepal. For step-by-step how-tos, visit the SolutionsNepal Guides library."
+  ogImage="/og-default.png"
+  jsonLd={jsonLd}
+>
+  <div class="blog-layout">
+
+    <Breadcrumbs items={[{ label: 'Blog' }]} />
+
+    <header class="blog-header">
+      <h1 class="blog-h1">SolutionsNepal Blog</h1>
+      <p class="blog-sub">Stories, comparisons and explainers from Nepal — plus a pointer to <a href="/guides" style="color: var(--nk-accent); font-weight: 600; text-decoration: none;">step-by-step Guides →</a></p>
+    </header>
+
+    <!-- ═══ FEATURED SECTION ═══ -->
+    <section class="featured-section">
+      <a href={`/blog/${featured.slug}`} class="featured-hero">
+        <Image src={featured.image} alt={featured.title} width={800} height={450} loading="eager" wrapper={false} class="featured-hero-img" />
+        <div class="featured-overlay">
+          <span class="featured-badge">{featured.category}</span>
+          <h2 class="featured-title">{featured.title}</h2>
+        </div>
+      </a>
+
+      <div class="sidebar-posts">
+        <h3 class="sidebar-heading">Other featured posts</h3>
+        {sidebarPosts.map(post => (
+          <a href={`/blog/${post.slug}`} class="sidebar-item">
+            <div class="sidebar-thumb">
+              <Image src={post.image} alt={post.title} width={120} height={80} loading="eager" wrapper={false} />
+            </div>
+            <span class="sidebar-title">{post.title}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- ═══ RECENT POSTS ═══ -->
+    <section class="recent-section">
+      <div class="recent-header">
+        <h2 class="recent-title">{page === 1 ? 'Recent Posts' : `All posts — page ${page}`}</h2>
+        {page === 1 && <a href="/blog" class="all-posts-btn">All Posts</a>}
+      </div>
+
+      <div class="recent-grid">
+        {recentPosts.map(post => <BlogCard post={post} />)}
+      </div>
+    </section>
+
+    <!-- Pagination -->
+    {totalPages > 1 && (
+      <nav class="pagination" aria-label="Blog pagination">
+        {page > 1 ? (
+          <a href={getPageUrl(page - 1)} class="page-btn page-prev">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+            Previous
+          </a>
+        ) : (
+          <span class="page-btn page-prev page-disabled">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+            Previous
+          </span>
+        )}
+
+        <div class="page-numbers">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+            p === page ? (
+              <span class="page-num active" aria-current="page">{p}</span>
+            ) : (
+              <a href={getPageUrl(p)} class="page-num">{p}</a>
+            )
+          ))}
+        </div>
+
+        {page < totalPages ? (
+          <a href={getPageUrl(page + 1)} class="page-btn page-next">
+            Next
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        ) : (
+          <span class="page-btn page-next page-disabled">
+            Next
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </span>
+        )}
+      </nav>
+    )}
+
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-layout {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px clamp(20px, 3.5vw, 44px) 88px;
+  }
+
+  /* ═══ PAGE HEADER ═══ */
+  .blog-header { margin: 8px 0 36px; }
+  .blog-h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--nk-text);
+    margin: 0 0 10px;
+  }
+  .blog-sub {
+    font-size: 16px;
+    color: var(--nk-text-secondary);
+    max-width: 640px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ═══ FEATURED SECTION — 70/30 editorial split ═══ */
+  .featured-section {
+    display: grid;
+    grid-template-columns: minmax(0, 70fr) minmax(0, 30fr);
+    gap: 32px;
+    margin-bottom: 56px;
+    align-items: start;
+  }
+
+  .featured-hero {
+    display: block;
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    text-decoration: none;
+    color: inherit;
+  }
+  .featured-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .featured-hero:hover img { transform: scale(1.03); }
+  .featured-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px;
+  }
+  .featured-badge {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(4px);
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .featured-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #fff;
+    margin: 0;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .sidebar-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--nk-text);
+    margin: 0 0 18px;
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--nk-border);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+  .sidebar-item:first-of-type { padding-top: 0; }
+  .sidebar-item:last-child { border-bottom: none; }
+  .sidebar-item:hover { background: var(--nk-hover); }
+  .sidebar-thumb {
+    width: 84px;
+    height: 58px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--nk-muted);
+  }
+  .sidebar-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sidebar-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--nk-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ═══ RECENT POSTS ═══ */
+  .recent-section {
+    margin-bottom: 48px;
+  }
+  .recent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .recent-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--nk-text);
+    margin: 0;
+  }
+  .all-posts-btn {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    text-decoration: none;
+    padding: 8px 18px;
+    border: 1px solid var(--nk-border);
+    border-radius: 8px;
+    transition: all 0.15s;
+  }
+  .all-posts-btn:hover {
+    border-color: var(--nk-accent);
+    color: var(--nk-accent);
+  }
+
+  .recent-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  /* Card look lives in src/components/blog/BlogCard.astro */
+
+  /* ── Pagination ── */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--nk-border);
+  }
+  .page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    text-decoration: none;
+    transition: all 0.1s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .page-btn:hover:not(.page-disabled) {
+    border-color: var(--nk-accent);
+    color: var(--nk-accent);
+  }
+  .page-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .page-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.1s ease;
+  }
+  .page-num:hover:not(.active) {
+    background: var(--nk-hover);
+    color: var(--nk-text);
+  }
+  .page-num.active {
+    background: var(--nk-accent);
+    color: white;
+    border-color: var(--nk-accent);
+    font-weight: 600;
+  }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media (max-width: 1024px) {
+    .blog-layout { padding: 24px 24px 72px; }
+    .featured-section {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      margin-bottom: 44px;
+    }
+    .sidebar-posts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .sidebar-heading {
+      grid-column: 1 / -1;
+    }
+    .sidebar-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--nk-border);
+      border-radius: var(--radius-lg);
+    }
+    .sidebar-thumb { width: 100%; height: auto; aspect-ratio: 16/10; }
+    .recent-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  }
+
+  @media (max-width: 640px) {
+    .blog-layout { padding: 16px 16px 56px; }
+    .featured-section { gap: 24px; margin-bottom: 36px; }
+    .featured-title { font-size: 19px; }
+    .featured-overlay { padding: 20px; }
+    .sidebar-posts {
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .recent-grid { grid-template-columns: 1fr; gap: 16px; }
+    .recent-title { font-size: 20px; }
+    .pagination { gap: 8px; }
+    .page-btn { padding: 6px 12px; font-size: 12px; }
+    .page-num { width: 28px; height: 28px; font-size: 12px; }
+  }
+
+  @media (max-width: 440px) {
+    .sidebar-posts { grid-template-columns: 1fr; }
+    .featured-title { font-size: 18px; }
+  }
+</style>

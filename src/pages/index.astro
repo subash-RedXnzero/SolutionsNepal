@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Homepage from '../components/home/Homepage.astro';
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SolutionsNepal",
+    "url": "https://solutionsnepal.com",
+    "logo": "https://solutionsnepal.com/favicon.svg",
+    "description": "Free calculators, converters, and utilities for everyday life in Nepal.",
+    "sameAs": [
+      "https://facebook.com/solutionsnepal",
+      "https://x.com/solutionsnepal"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "hello@solutionsnepal.com",
+      "contactType": "customer service"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SolutionsNepal",
+    "url": "https://solutionsnepal.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://solutionsnepal.com/nepal?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is SolutionsNepal?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SolutionsNepal is a free collection of calculators, converters, and utility tools built for everyday life in Nepal. It includes salary calculators, date converters, gold weight converters, vehicle tax calculators, and more. All calculations run in your browser — no data is sent to any server."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is SolutionsNepal free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, SolutionsNepal is completely free. There are no sign-ups, no subscriptions, no ads, and no data collection. All tools work entirely in your browser."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate are SolutionsNepal calculators?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SolutionsNepal uses verified tax rules from IRD Nepal, SSF rates from the Social Security Fund, and NRB exchange rates. The salary calculator supports multiple fiscal years with verified rates. However, always confirm with your employer or IRD Nepal for official purposes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SolutionsNepal work on mobile phones?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, SolutionsNepal is fully responsive and works on all devices — phones, tablets, and desktops. The calculators are optimized for mobile use with comfortable touch targets and clean layouts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What Nepal-specific tools does SolutionsNepal offer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SolutionsNepal offers BS ↔ AD date converter, Nepal salary calculator with SSF and income tax, vehicle tax and fine calculator, NEA electricity bill calculator, KUKL water bill calculator, gold weight converter (Tola ↔ Gram), land measurement converter (Ropani ↔ Aana), NEPSE profit/loss calculator, remittance calculator with NRB rates, and Nepali Unicode typing tool."
+        }
+      }
+    ]
+  }
+];
+---
+
+<BaseLayout 
+  title="SolutionsNepal — Everyday Tools for Nepal" 
+  description="Free calculators, converters, and utilities for everyday life in Nepal. Salary calculator, BS ↔ AD date converter, gold weight converter, vehicle tax calculator, and more."
+  jsonLd={jsonLd}
+>
+  <Homepage />
+</BaseLayout>

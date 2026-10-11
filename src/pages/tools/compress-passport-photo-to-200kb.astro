@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import PassportPhotoResizer from '../../components/tools/PassportPhotoResizer.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Compress Passport Photo to 200 KB Online Free | SolutionsNepal';
+const description = 'Compress a passport or visa photo to 200 KB online. Smart compression lands as close to 200 KB as possible — never far below, never above your original. 100% in your browser.';
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Compress Passport Photo to 200KB', description: 'Compress a passport or visa photo to 200 KB with smart quality targeting.', url: 'https://solutionsnepal.com/tools/compress-passport-photo-to-200kb', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: [
+    { '@type': 'Question', name: 'How do I compress my passport photo to 200 KB?', acceptedAnswer: { '@type': 'Answer', text: 'Upload your photo — the 200 KB target is already selected. Crop if needed and click Download; the final size shown will be close to 200 KB.' } },
+    { '@type': 'Question', name: 'Will the compressed photo still look good?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The compressor uses the highest JPEG quality that fits under 200 KB, so artifacts are minimal for any standard passport crop.' } },
+    { '@type': 'Question', name: 'Is my photo uploaded to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. Compression runs entirely in your browser — nothing is transmitted or stored anywhere.' } },
+  ] },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'Compress Passport Photo to 200 KB' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color:var(--nk-text);">Compress Passport Photo to 200 KB</h1>
+      <p class="mt-1 text-xs sm:text-sm" style="color:var(--nk-text-secondary);">Hit the 200 KB upload limit exactly — smart targeting keeps your photo at the highest quality that fits.</p>
+    </div>
+
+    <PassportPhotoResizer initialPreset="nepal-passport" initialTargetKB={200} />
+
+    <div class="mt-10 space-y-8 max-w-3xl">
+      <section>
+        <h2 class="text-base font-bold" style="color:var(--nk-text);">Why "close to 200 KB" beats "well under 200 KB"</h2>
+        <p class="text-sm leading-relaxed mt-2" style="color:var(--nk-text-secondary);">
+          Most compressors apply one fixed quality slider, dumping your photo at 40–60 KB when you asked for
+          200 KB — wasting detail you could have kept. This tool works backwards from your target: it tries
+          successive quality levels, measures each real file size, and returns the result closest to 200 KB.
+          A typical phone photo (1–3 MB) ends up around 195–200 KB with visibly better quality than a naive fix.
+        </p>
+        <div class="mt-3 rounded-lg border px-4 py-3 font-mono text-[11px] leading-relaxed overflow-x-auto" style="border-color:var(--nk-border);background-color:var(--nk-bg);color:var(--nk-text-secondary);">
+          1.8 MB → try q=0.92 → 620 KB → q=0.71 → 288 KB → q=0.58 → 213 KB → q=0.54 → 199 KB ✓
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold" style="color:var(--nk-text);">Guarantees</h3>
+        <ul class="text-sm leading-relaxed mt-2 space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• The output is based on the <strong>actual generated file size</strong>, not an estimate.</li>
+          <li>• The result is <strong>never larger than your original photo</strong>.</li>
+          <li>• Quality drops before dimensions shrink — your photo is only resized if quality alone can't reach the target.</li>
+          <li>• Aspect ratio stays locked to the passport requirement throughout.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="mt-3 space-y-2">
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">How do I compress my passport photo to 200 KB?</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">Upload your photo above — the 200 KB target is already selected. Crop if needed and click Download; the final size shown will be close to 200 KB.</p></div>
+          </details>
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">Will the compressed photo still look good?</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">Yes for typical use. Because the compressor uses the highest JPEG quality that fits under the target, artifacts are minimal at 200 KB for any standard passport crop.</p></div>
+          </details>
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">Is my photo uploaded to a server?</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">No. Compression runs entirely in your browser — nothing is transmitted or stored anywhere.</p></div>
+          </details>
+        </div>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        Other targets: <a class="underline hover:opacity-80" href="/tools/compress-photo-to-100kb" style="color:var(--nk-accent);">100 KB</a> ·
+        <a class="underline hover:opacity-80" href="/tools/compress-photo-to-50kb" style="color:var(--nk-accent);">50 KB</a> ·
+        <a class="underline hover:opacity-80" href="/tools/passport-photo-resizer" style="color:var(--nk-accent);">full resizer</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

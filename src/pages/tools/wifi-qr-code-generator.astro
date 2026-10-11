@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import QrCodeGenerator from '../../components/tools/QrCodeGenerator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'WiFi QR Code Generator – Share Wi-Fi Without Typing Passwords | SolutionsNepal';
+const description = 'Create a Wi-Fi QR code guests can scan to connect instantly. Supports WPA/WPA2, WEP and open networks. Generated privately in your browser — your password is never uploaded.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'WiFi QR Generator' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Wi-Fi QR Code Generator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Let guests join your network with one scan — no more reading passwords aloud.</p>
+    </div>
+
+    <QrCodeGenerator initialType="wifi" />
+
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">How a Wi-Fi QR code works</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          The QR encodes a standard <code class="text-[12px] px-1 rounded" style="background-color:var(--nk-bg);">WIFI:</code> payload
+          containing the network name (SSID), password and security type. When a phone's camera scans it,
+          Android and iOS offer to join that network immediately — no manual typing, no "what's the password?"
+          at the counter.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Where to use one</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• Cafés & restaurants — table tents that actually get used</li>
+          <li>• Hotels & guesthouses — check-in cards and room walls</li>
+          <li>• Home — guests connect without you sharing the password verbally</li>
+          <li>• Offices — visitor networks with clear signage</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Is my password safe here?</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Yes — this tool runs entirely in your browser. Your SSID and password never leave your device;
+          there is no server involved in generating the code. Print the QR instead of sharing the password in
+          plain text, and rotate your password periodically (regenerating the QR takes seconds).
+        </p>
+      </section>
+
+      <p class="text-sm" style="color:var(--nk-text-secondary);">
+        Other types: <a class="underline hover:opacity-80" href="/tools/qr-code-generator" style="color:var(--nk-accent);">all QR types</a> ·
+        <a class="underline hover:opacity-80" href="/tools/url-qr-code-generator" style="color:var(--nk-accent);">URL QR</a> ·
+        <a class="underline hover:opacity-80" href="/tools/vcard-qr-code-generator" style="color:var(--nk-accent);">vCard QR</a>.
+      </p>
+    </div>
+  </div>
+  <Disclaimer variant="general" />
+</BaseLayout>

@@ -1,0 +1,1116 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import { categories, getActiveCategories } from '../../data/categories.js';
+import { tools } from '../../data/tools.js';
+
+/* ── Sidebar categories: only ones that actually contain tools, ordered like the reference ── */
+const sidebarCats = getActiveCategories();
+
+const totalTools = tools.length;
+
+/* ── Filter sheet groups: merged where tools overlap (photo formats share one
+   filter; land + construction share one) so users face fewer, clearer choices ── */
+const FILTER_GROUPS = [
+  { label: 'All tools', value: '' },
+  { label: 'Date & Calendar', value: 'date' },
+  { label: 'Finance', value: 'finance' },
+  { label: 'NEPSE', value: 'nepse' },
+  { label: 'Property & Construction', value: 'land construction' },
+  { label: 'Gold & Silver', value: 'gold' },
+  { label: 'Education', value: 'education' },
+  { label: 'Language & Text', value: 'language' },
+  { label: 'Photos & Images', value: 'photo image-convert' },
+  { label: 'PDF & Documents', value: 'pdf' },
+  { label: 'Utilities', value: 'utilities' },
+  { label: 'Vehicles & Transport', value: 'vehicle transport' },
+  { label: 'Names', value: 'names' },
+];
+
+/* Featured cards — real registry tools, chosen for usefulness (no fabricated stats) */
+const FEATURED_IDS = ['nepali-calendar', 'salary-checker', 'neb-gpa', 'bs-to-ad'];
+const featured = FEATURED_IDS
+  .map(id => tools.find(t => t.id === id))
+  .filter(Boolean);
+
+/* ── All Tools groups: same category order, tools as stored in the registry ── */
+const groups = sidebarCats.map(c => ({
+  cat: c,
+  items: tools.filter(t => t.category === c.id),
+}));
+
+/* Small icon set (inline SVG paths, lucide-style, 1.8 stroke) */
+const iconPaths = {
+  calendar: '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>',
+  banknote: '<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+  'trending-up': '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  'land-plot': '<rect width="14" height="10" x="5" y="11" rx="1"/><circle cx="12" cy="6" r="2.2"/>',
+  gem: '<path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
+  'graduation-cap': '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 6 3 12 0v-5"/>',
+  languages: '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
+  droplets: '<path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>',
+  truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  camera: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+  image: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+  car: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/>',
+  baby: '<circle cx="12" cy="8" r="4"/><path d="M12 4c.6 1.2.6 2.8 0 4M9 13c-2 1-3 3-3 6h12c0-3-1-5-3-6"/>',
+};
+---
+
+<BaseLayout
+  title="Nepal Tools — Calculators, Converters & Utilities"
+  description="Browse all Nepal-focused calculators, converters, and tools. Finance, date, land, gold, education, and more."
+>
+  <div class="tl-page">
+    <!-- ═══ LEFT SIDEBAR (desktop) ═══ -->
+    <aside class="tl-side" aria-label="Tool categories">
+      <nav class="tl-side-sticky">
+        <p class="tl-side-label" id="tl-side-label">Tools</p>
+        <ul class="tl-side-list" aria-labelledby="tl-side-label">
+          <li>
+            <a href="/nepal" class="tl-side-item tl-side-all" aria-current="page">
+              <span class="tl-side-dot" aria-hidden="true"></span>
+              <span class="tl-side-name">All Tools</span>
+              <span class="tl-side-count">{totalTools}</span>
+            </a>
+          </li>
+          {sidebarCats.map(cat => (
+            <li>
+              <a href={cat.href} class="tl-side-item">
+                <span class="tl-side-icon" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={iconPaths[cat.icon] || iconPaths.wrench} />
+                </span>
+                <span class="tl-side-name">{cat.name}</span>
+                <span class="tl-side-count">{cat.count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="tl-main">
+      <Breadcrumbs items={[{ label: 'Tools' }]} />
+
+      <!-- Hero header + search -->
+      <header class="tl-hero">
+        <h1 class="tl-title">Nepal Tools</h1>
+        <p class="tl-sub">Simple tools made for everyday life in Nepal.</p>
+
+        <div class="tl-search-wrap">
+          <label class="tl-sr-only" for="tl-search">Search tools</label>
+          <div class="tl-search">
+            <svg class="tl-search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="tl-search" class="tl-search-input" type="search" placeholder={`Search ${totalTools}+ Nepal tools...`}
+                   autocomplete="off" spellcheck="false"
+                   aria-describedby="tl-search-hint" />
+            <button id="tl-search-clear" class="tl-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
+            <kbd class="tl-kbd" aria-hidden="true">/</kbd>
+          </div>
+          <p id="tl-search-hint" class="tl-sr-only">Press slash to search tools. Results filter instantly.</p>
+        </div>
+      </header>
+
+      <!-- Count + compact filter button (replaces the long chip list) -->
+      <div class="tl-toolbar">
+        <p class="tl-count" id="tl-count" aria-live="polite">{totalTools} tools</p>
+        <div class="tl-toolbar-actions">
+          <button type="button" class="tl-back-btn" id="tl-back-btn" hidden
+                  aria-label="Clear filter and show all tools">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+            <span>All tools</span>
+          </button>
+          <button type="button" class="tl-filter-btn" id="tl-filter-btn"
+                  aria-haspopup="dialog" aria-expanded="false" aria-controls="tl-sheet">
+            <svg class="tl-filter-ic" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+            <span class="tl-filter-label" id="tl-filter-label">Filter</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Featured tools -->
+      <section class="tl-sec" aria-labelledby="tl-pop-h">
+        <div class="tl-pop-head-row">
+          <h2 class="tl-h2" id="tl-pop-h">Popular Tools</h2>
+          <a href="#tl-all" class="tl-pop-all">View all <span class="tl-pop-all-n">{totalTools}</span> <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="tl-pop-grid" id="tl-pop-grid">
+          {featured.map(tool => (
+            <a href={tool.href} class="tl-pop-card" data-tool={tool.id}>
+              <span class="tl-pop-head">
+                <span class="tl-pop-icon" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={iconPaths[(categories.find(c => c.id === tool.category)?.icon)] || iconPaths.wrench} />
+                </span>
+                <span class="tl-arr" aria-hidden="true">→</span>
+              </span>
+              <span class="tl-pop-body">
+                <span class="tl-pop-name">{tool.title}</span>
+                <span class="tl-pop-desc">{tool.description}</span>
+              </span>
+              <span class="tl-pop-cta">Open tool <span class="tl-arr tl-arr-cta" aria-hidden="true">→</span></span>
+            </a>
+          ))}
+          <a href="#tl-all" class="tl-pop-card tl-pop-more" aria-label={`View all ${totalTools} tools`}>
+            <span class="tl-pop-more-count">{totalTools}</span>
+            <span class="tl-pop-more-text">View all tools <span aria-hidden="true">→</span></span>
+          </a>
+        </div>
+        <div class="tl-pop-dots" id="tl-pop-dots" aria-hidden="true">
+          {featured.map((_, i) => (
+            <span class:list={['tl-pop-dot', i === 0 && 'on']} />
+          ))}
+          <span class="tl-pop-dot" />
+        </div>
+      </section>
+
+      <!-- All tools by category — enhanced with color-coded category differentiation -->
+      <section id="tl-all" class="tl-sec" aria-labelledby="tl-all-h">
+        <div class="tl-all-head">
+          <h2 class="tl-h2" id="tl-all-h">All Tools</h2>
+          <p class="tl-all-hint">Browse categories</p>
+        </div>
+
+        <!-- Category jump chips — slider on mobile, wrapped grid on desktop -->
+        <div class="tl-cat-slider at-start" id="tl-cat-slider">
+          <button type="button" class="tl-cat-arrow tl-cat-prev" id="tl-cat-prev" aria-label="Scroll categories left" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <nav class="tl-cat-nav" id="tl-cat-nav" aria-label="Jump to category">
+            <a href="#tl-all" class="tl-cat-chip tl-cat-chip--all is-active" data-cat="">
+              All <span class="tl-cat-count">{totalTools}</span>
+            </a>
+            {groups.map(g => (
+              <a href={`#cat-${g.cat.id}`} class="tl-cat-chip" data-cat={g.cat.id}>
+                <span class="tl-cat-chip-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={iconPaths[g.cat.icon] || iconPaths.wrench} /></span>
+                {g.cat.name} <span class="tl-cat-count">{g.items.length}</span>
+              </a>
+            ))}
+          </nav>
+          <button type="button" class="tl-cat-arrow tl-cat-next" id="tl-cat-next" aria-label="Scroll categories right">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+        {groups.map(g => (
+          <div class="tl-group" id={`cat-${g.cat.id}`} data-cat={g.cat.id}>
+            <div class="tl-group-head">
+              <div class="tl-group-title">
+                <h3 class="tl-group-name">
+                  <span class="tl-group-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={iconPaths[g.cat.icon] || iconPaths.wrench} /></span>
+                  {g.cat.name}
+                  <span class="tl-group-count">{g.items.length}</span>
+                </h3>
+                <p class="tl-group-desc">{g.cat.description}</p>
+              </div>
+              {g.items.length >= 5 && <a href={g.cat.href} class="tl-viewall">View all <span class="tl-arr" aria-hidden="true">→</span></a>}
+            </div>
+            <div class="tl-grid">
+              {g.items.map(t => (
+                <a href={t.href} class="tl-card" data-tool={t.id}>
+                  <span class="tl-card-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={iconPaths[g.cat.icon] || iconPaths.wrench} /></span>
+                  <span class="tl-card-body"><span class="tl-card-name">{t.title}</span><span class="tl-card-desc">{t.description}</span></span>
+                  <span class="tl-card-arr" aria-hidden="true">→</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+        <!-- Search empty state -->
+        <div class="tl-empty" id="tl-empty" hidden>
+          <p class="tl-empty-title">No tools found</p>
+          <p class="tl-empty-sub">Try a different keyword — e.g. “salary”, “gold”, “BS to AD”.</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ═══ Filter bottom sheet ═══ -->
+  <div class="tl-sheet-root" id="tl-sheet" role="dialog" aria-modal="true" aria-labelledby="tl-sheet-title" data-total={totalTools} hidden>
+    <div class="tl-sheet-backdrop" data-sheet-close></div>
+    <div class="tl-sheet">
+      <div class="tl-sheet-head">
+        <h2 class="tl-sheet-title" id="tl-sheet-title">Filter tools</h2>
+        <button type="button" class="tl-sheet-x" data-sheet-close aria-label="Close filter">&times;</button>
+      </div>
+      <fieldset class="tl-sheet-opts">
+        <legend class="tl-sr-only">Choose a category</legend>
+        {FILTER_GROUPS.map(f => (
+          <label class="tl-opt">
+            <input type="radio" name="tl-filter" value={f.value} checked={f.value === ''} />
+            <span class="tl-opt-label">{f.label}</span>
+            <span class="tl-opt-check" aria-hidden="true">✓</span>
+          </label>
+        ))}
+      </fieldset>
+      <button type="button" class="tl-sheet-apply" id="tl-sheet-apply">Show {totalTools} tools</button>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     Nepal Tools — premium utility layout
+     Layout: centered 1440px container · 240px sidebar · fluid main
+     ═══════════════════════════════════════════════════════════ */
+  .tl-page {
+    display: flex;
+    gap: 32px;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px 24px 96px;
+    align-items: stretch;
+  }
+  .tl-side { width: 240px; flex-shrink: 0; }
+  .tl-side-sticky { position: sticky; top: 84px; }
+  .tl-main { flex: 1; min-width: 0; }
+
+  .tl-sr-only {
+    position: absolute; width: 1px; height: 1px;
+    margin: -1px; padding: 0; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* ═══ Sidebar ═══ */
+  .tl-side-label {
+    margin: 0 0 10px; padding: 0 12px;
+    font-size: var(--fs-2xs); font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--nk-text-tertiary);
+  }
+  .tl-side-list {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-lg);
+    background: var(--nk-sidebar-bg);
+    overflow: hidden;
+  }
+  .tl-side-item {
+    position: relative;
+    display: flex; align-items: center; gap: 10px;
+    min-height: 40px; padding: 8px 12px 8px 14px;
+    font-size: var(--fs-sm); color: var(--nk-text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--nk-hairline);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .tl-side-list li:last-child .tl-side-item { border-bottom: none; }
+  .tl-side-item:hover { background: var(--nk-hover); color: var(--nk-text); }
+  .tl-side-item:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: -2px; }
+  /* Active category: accent bar + tint — recognizable without color alone (bar + bold) */
+  .tl-side-item.is-active {
+    background: var(--nk-sidebar-active);
+    color: var(--nk-accent);
+    font-weight: 600;
+  }
+  .tl-side-item.is-active::before {
+    content: '';
+    position: absolute; left: 0; top: 8px; bottom: 8px;
+    width: 3px; border-radius: 0 2px 2px 0;
+    background: var(--nk-accent);
+  }
+  .tl-side-dot {
+    width: 7px; height: 7px; margin: 0 4px;
+    border-radius: var(--radius-full);
+    background: var(--nk-accent);
+    flex-shrink: 0;
+  }
+  .tl-side-icon { display: flex; width: 20px; height: 20px; align-items: center; justify-content: center; color: var(--nk-text-tertiary); flex-shrink: 0; }
+  .tl-side-item:hover .tl-side-icon { color: var(--nk-text); }
+  .tl-side-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tl-side-count {
+    font-size: var(--fs-2xs); font-weight: 600; font-variant-numeric: tabular-nums;
+    color: var(--nk-text-tertiary);
+    background: var(--nk-tertiary-subtle);
+    border-radius: var(--radius-full);
+    padding: 1px 7px;
+  }
+  .tl-side-all { color: var(--nk-text); font-weight: 500; background: var(--nk-sidebar-active); }
+  .tl-side-all .tl-side-count { color: var(--nk-accent); background: var(--nk-accent-subtle); }
+
+  /* ═══ Hero header + search ═══ */
+  .tl-hero { margin: 6px 0 30px; }
+  .tl-title {
+    margin: 0 0 6px;
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--nk-text);
+  }
+  .tl-sub {
+    margin: 0 0 20px;
+    font-size: var(--fs-md);
+    color: var(--nk-text-secondary);
+  }
+  .tl-search-wrap { max-width: 820px; }
+  .tl-search {
+    display: flex; align-items: center; gap: 12px;
+    height: 50px; padding: 0 14px 0 16px;
+    background: var(--nk-card-bg);
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tl-search:focus-within { border-color: var(--nk-accent); box-shadow: 0 0 0 3px var(--nk-accent-subtle); }
+  .tl-search-icon { color: var(--nk-text-tertiary); flex-shrink: 0; }
+  .tl-search-input {
+    flex: 1; min-width: 0; height: 100%;
+    border: none; outline: none; background: transparent;
+    font: inherit; font-size: 15px; color: var(--nk-text);
+  }
+  .tl-search-input::placeholder { color: var(--nk-text-tertiary); }
+  .tl-search-clear {
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; flex-shrink: 0;
+    border: none; border-radius: var(--radius-full);
+    background: var(--nk-tertiary-subtle); color: var(--nk-text-secondary);
+    font-size: var(--fs-md); line-height: 1; cursor: pointer;
+  }
+  .tl-search-clear:hover { background: var(--nk-hover); color: var(--nk-text); }
+  .tl-kbd {
+    flex-shrink: 0;
+    font-family: inherit; font-size: var(--fs-2xs); font-weight: 600;
+    color: var(--nk-text-tertiary);
+    border: 1px solid var(--nk-border); border-bottom-width: 2px;
+    border-radius: var(--radius-sm);
+    padding: 2px 8px;
+    background: var(--nk-tertiary-subtle);
+  }
+
+  /* ═══ Sections ═══ */
+  .tl-sec { margin-bottom: 40px; }
+  .tl-sec:last-child { margin-bottom: 0; }
+  .tl-h2 {
+    margin: 0 0 16px;
+    font-size: 19px; font-weight: 700;
+    letter-spacing: -0.015em; color: var(--nk-text);
+  }
+
+  /* ═══ Featured tools ═══ */
+  .tl-pop-head-row {
+    display:flex; align-items:baseline; justify-content:space-between;
+    gap:12px; margin:0 0 16px;
+  }
+  .tl-pop-head-row .tl-h2 { margin:0; }
+  .tl-pop-all {
+    flex-shrink:0;
+    font-size:var(--fs-sm); font-weight:600;
+    color:var(--nk-accent); text-decoration:none; white-space:nowrap;
+  }
+  .tl-pop-all:hover { text-decoration:underline; text-underline-offset:3px; }
+  .tl-pop-all span { display:inline-block; transition:transform .15s ease; }
+  .tl-pop-all:hover span { transform:translateX(3px); }
+  .tl-pop-all:focus-visible { outline:2px solid var(--nk-accent); outline-offset:2px; }
+  .tl-pop-grid {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
+  }
+  .tl-pop-card {
+    display: flex; flex-direction: column; gap: 14px;
+    padding: 20px 20px 17px;
+    background: var(--nk-card-bg);
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .tl-pop-card:hover { border-color: var(--nk-border-strong); background: var(--nk-hover); }
+  .tl-pop-card:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .tl-pop-head { display: flex; align-items: center; justify-content: space-between; }
+  .tl-pop-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--nk-accent-subtle); color: var(--nk-accent);
+  }
+  .tl-pop-card .tl-arr { color: var(--nk-text-tertiary); font-size: 15px; transition: transform 0.15s ease, color 0.15s ease; }
+  .tl-pop-card:hover .tl-arr { color: var(--nk-accent); transform: translateX(2px); }
+  .tl-pop-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+  .tl-pop-name { font-size: 15px; font-weight: 600; color: var(--nk-text); }
+  .tl-pop-desc {
+    font-size: 12.5px; line-height: 1.5; color: var(--nk-text-secondary);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .tl-pop-cta {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12.5px; font-weight: 600; color: var(--nk-accent);
+  }
+  .tl-arr-cta { font-size: 12.5px; }
+  .tl-pop-card:hover .tl-arr-cta { transform: translateX(3px); }
+  /* "View all" end-card — mobile carousel only */
+  .tl-pop-more { display: none; }
+  /* Position dots — mobile carousel only */
+  .tl-pop-dots { display: none; }
+
+  /* ═══ All Tools header + category differentiation ═══ */
+  .tl-all-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+  .tl-all-hint { margin:0; font-size:12px; font-weight:600; color:var(--nk-accent); background:var(--nk-accent-subtle); border:1px solid color-mix(in srgb, var(--nk-accent) 25%, transparent); padding:5px 12px; border-radius:9999px; }
+  .tl-cat-nav {
+    display:flex; gap:8px; flex-wrap:wrap;
+    padding:12px; margin:0 0 22px;
+    background:var(--nk-card-bg); border:1px solid var(--nk-border); border-radius:16px;
+    position:sticky; top:64px; z-index:5;
+  }
+  /* Slider wrapper is invisible on desktop (chips wrap); arrows hidden. */
+  .tl-cat-slider { display:contents; }
+  .tl-cat-arrow { display:none; }
+  .tl-cat-chip {
+    display:inline-flex; align-items:center; gap:6px;
+    min-height:34px; padding:6px 12px;
+    font-size:12.5px; font-weight:500; color:var(--nk-text-secondary);
+    background:var(--nk-tertiary-subtle); border:1px solid var(--nk-border); border-radius:9999px;
+    text-decoration:none; white-space:nowrap;
+    transition: all .15s ease;
+  }
+  .tl-cat-chip:hover { background:var(--nk-hover); color:var(--nk-text); border-color:var(--nk-border-strong); transform:translateY(-1px); }
+  .tl-cat-chip:focus-visible { outline:2px solid var(--nk-accent); outline-offset:2px; }
+  .tl-cat-chip.is-active { background:var(--nk-accent); color:#fff; border-color:var(--nk-accent); font-weight:600; }
+  .tl-cat-chip--all { background:var(--nk-accent-subtle); color:var(--nk-accent); border-color:var(--nk-accent); }
+  .tl-cat-chip--all.is-active { background:var(--nk-accent); color:#fff; }
+  .tl-cat-chip-icon {
+    display:flex; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:6px; flex-shrink:0;
+    background:var(--nk-accent-subtle); color:var(--nk-accent);
+    border:1px solid transparent;
+  }
+  .tl-cat-chip.is-active .tl-cat-chip-icon { background:rgba(255,255,255,.22) !important; color:#fff !important; border-color:rgba(255,255,255,.35) !important; }
+  .tl-cat-count {
+    font-size:11px; font-weight:700; font-variant-numeric:tabular-nums;
+    background:var(--nk-bg); color:var(--nk-text-tertiary);
+    padding:1px 6px; border-radius:9999px; border:1px solid var(--nk-border);
+  }
+  .tl-cat-chip.is-active .tl-cat-count { background:rgba(255,255,255,.22); color:#fff; border-color:rgba(255,255,255,.35); }
+
+  /* ═══ All tools groups — single project accent ═══ */
+  .tl-group {
+    margin-bottom:28px;
+    background:var(--nk-card-bg);
+    border:1px solid var(--nk-border);
+    border-radius:16px;
+    padding:16px;
+    scroll-margin-top:132px;
+  }
+  .tl-group:last-of-type { margin-bottom:0; }
+  .tl-group-head {
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:16px; margin-bottom:14px;
+    padding-bottom:12px; border-bottom:1px solid var(--nk-hairline);
+  }
+  .tl-group-name {
+    display:flex; align-items:center; gap:10px;
+    margin:0 0 4px;
+    font-size:16px; font-weight:800; color:var(--nk-text);
+    letter-spacing:-0.015em;
+  }
+  .tl-group-icon {
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border-radius:9px; flex-shrink:0;
+    color:var(--nk-accent);
+    background:var(--nk-accent-subtle);
+    border:1px solid color-mix(in srgb, var(--nk-accent) 22%, var(--nk-border));
+  }
+  .tl-group-count {
+    font-size:11px; font-weight:700; font-variant-numeric:tabular-nums;
+    padding:2px 8px; border-radius:9999px;
+    color:var(--nk-accent);
+    background:var(--nk-accent-subtle);
+    border:1px solid color-mix(in srgb, var(--nk-accent) 18%, var(--nk-border));
+  }
+  .tl-group-desc {
+    margin:0 0 0 42px;
+    font-size:12.5px; color:var(--nk-text-secondary); line-height:1.5;
+  }
+  .tl-viewall {
+    display:inline-flex; align-items:center; gap:4px;
+    flex-shrink:0;
+    font-size:12.5px; font-weight:700;
+    color:var(--nk-accent);
+    text-decoration:none; min-height:32px;
+    padding:6px 12px; border-radius:9999px;
+    background:color-mix(in srgb, var(--nk-accent) 10%, transparent);
+    border:1px solid color-mix(in srgb, var(--nk-accent) 18%, var(--nk-border));
+    transition: all .15s ease;
+  }
+  .tl-viewall:hover { background:var(--nk-accent); color:#fff !important; border-color:var(--nk-accent); }
+  .tl-viewall:hover .tl-arr { transform:translateX(3px); }
+  .tl-viewall:focus-visible { outline:2px solid var(--nk-accent); outline-offset:2px; }
+  .tl-grid {
+    display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px;
+  }
+  .tl-card:last-child:nth-child(odd) { grid-column:1 / -1; }
+  .tl-card {
+    display:flex; align-items:center; gap:12px;
+    min-height:68px;
+    padding:12px 14px;
+    background:var(--nk-surface);
+    border:1px solid var(--nk-border);
+    border-radius:12px;
+    text-decoration:none;
+    transition: all .15s ease;
+  }
+  .tl-card:hover {
+    border-color:var(--nk-accent);
+    background:color-mix(in srgb, var(--nk-accent) 5%, var(--nk-surface));
+    transform:translateY(-1px);
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+  }
+  .tl-card:focus-visible { outline:2px solid var(--nk-accent); outline-offset:2px; }
+  .tl-card-icon {
+    display:flex; align-items:center; justify-content:center;
+    width:34px; height:34px; flex-shrink:0;
+    border-radius:9px;
+    color:var(--nk-accent);
+    background:var(--nk-accent-subtle);
+    border:1px solid color-mix(in srgb, var(--nk-accent) 18%, var(--nk-border));
+    transition: all .15s ease;
+  }
+  .tl-card:hover .tl-card-icon { transform:scale(1.05); }
+  .tl-card-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .tl-card-name {
+    font-size:14.5px; font-weight:700; color:var(--nk-text);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .tl-card-desc {
+    font-size:12px; color:var(--nk-text-secondary); line-height:1.4;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .tl-card-arr { font-size:14px; color:var(--nk-text-tertiary); flex-shrink:0; transition: transform .15s ease, color .15s ease; }
+  .tl-card:hover .tl-card-arr { transform:translateX(3px); color:var(--nk-accent); }
+
+  /* ═══ Empty state ═══ */
+  .tl-empty { padding: 36px 0 8px; text-align: center; }
+  .tl-empty-title { margin: 0 0 4px; font-size: var(--fs-body); font-weight: 600; color: var(--nk-text); }
+  .tl-empty-sub { margin: 0; font-size: var(--fs-sm); color: var(--nk-text-secondary); }
+
+  /* ═══ Toolbar: count + filter button ═══ */
+  .tl-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin: 0 0 24px;
+  }
+  .tl-count { margin: 0; font-size: var(--fs-sm); color: var(--nk-text-secondary); }
+  /* [hidden] must win over display:flex utilities so JS filtering/search works */
+  .tl-page [hidden] { display: none !important; }
+  #tl-all { scroll-margin-top: 132px; }
+  .tl-toolbar-actions { display: flex; align-items: center; gap: 8px; }
+  /* Back-to-all button: appears only while a filter is active */
+  .tl-back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 40px; padding: 8px 14px 8px 10px;
+    font: inherit; font-size: var(--fs-sm); font-weight: 500;
+    color: var(--nk-accent);
+    background: var(--nk-card-bg);
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .tl-back-btn[hidden] { display: none; }
+
+  .tl-back-btn:hover { border-color: var(--nk-accent); background: var(--nk-sidebar-active); }
+  .tl-back-btn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .tl-back-btn svg { flex-shrink: 0; }
+  .tl-filter-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 40px; padding: 8px 16px;
+    font: inherit; font-size: var(--fs-sm); font-weight: 500;
+    color: var(--nk-text);
+    background: var(--nk-tertiary-subtle);
+    border: 1px solid var(--nk-border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .tl-filter-btn:hover { background: var(--nk-hover); border-color: var(--nk-border-strong); }
+  .tl-filter-btn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .tl-filter-ic { color: var(--nk-text-secondary); }
+  .tl-filter-btn:hover .tl-filter-ic { color: var(--nk-accent); }
+  /* Active filter state: red accent on icon + label + tinted pill */
+  .tl-filter-btn.is-active { background: var(--nk-sidebar-active); border-color: var(--nk-accent); }
+  .tl-filter-btn.is-active .tl-filter-ic,
+  .tl-filter-btn.is-active .tl-filter-label { color: var(--nk-accent); font-weight: 600; }
+
+  /* ═══ Filter bottom sheet ═══ */
+  .tl-sheet-root {
+    position: fixed; inset: 0; z-index: 80;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .tl-sheet-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(23, 23, 23, 0.45);
+  }
+  .tl-sheet {
+    position: relative; width: 100%; max-width: 560px;
+    max-height: 82vh; overflow-y: auto;
+    background: var(--nk-card-bg);
+    border: 1px solid var(--nk-border);
+    border-radius: 20px 20px 0 0;
+    padding: 18px 20px calc(18px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -8px 32px rgba(23, 23, 23, 0.18);
+  }
+  .tl-sheet-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .tl-sheet-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--nk-text); }
+  .tl-sheet-x {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border: none; border-radius: var(--radius-full);
+    background: var(--nk-tertiary-subtle); color: var(--nk-text-secondary);
+    font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .tl-sheet-x:hover { background: var(--nk-hover); color: var(--nk-text); }
+  .tl-sheet-opts { border: none; margin: 0; padding: 0 0 6px; }
+  .tl-opt {
+    display: flex; align-items: center; gap: 10px;
+    min-height: 48px; padding: 10px 4px;
+    border-bottom: 1px solid var(--nk-hairline);
+    cursor: pointer;
+  }
+  .tl-opt:last-child { border-bottom: none; }
+  .tl-opt:hover { background: var(--nk-hover); }
+  .tl-opt input { position: absolute; opacity: 0; }
+  .tl-opt-label { flex: 1; font-size: var(--fs-body); color: var(--nk-text); }
+  .tl-opt-check {
+    display: flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; flex-shrink: 0;
+    border-radius: var(--radius-full);
+    font-size: 13px; font-weight: 700; line-height: 1;
+    color: transparent;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+  /* Selected: red check — also conveyed by position in the group for SRs */
+  .tl-opt input:checked ~ .tl-opt-check { color: #fff; background: var(--nk-accent); }
+  .tl-opt input:checked ~ .tl-opt-label { color: var(--nk-accent); font-weight: 600; }
+  .tl-opt input:focus-visible ~ .tl-opt-label { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .tl-sheet-apply {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 50px;
+    font: inherit; font-size: var(--fs-body); font-weight: 600;
+    color: #fff; background: var(--nk-accent);
+    border: none; border-radius: 12px;
+    cursor: pointer; margin-top: 12px;
+    transition: filter 0.15s ease;
+  }
+  .tl-sheet-apply:hover { filter: brightness(0.96); }
+  .tl-sheet-apply:focus-visible { outline: 2px solid var(--nk-text); outline-offset: 2px; }
+
+  /* ═══ RESPONSIVE ═══ */
+  /* Keep descriptions readable: the grid itself is narrow, so let tool
+     descriptions wrap onto a second line instead of clipping. */
+  .tl-card-desc {
+    overflow: visible; text-overflow: clip; white-space: normal;
+  }
+  .tl-pop-desc {
+    overflow: visible; text-overflow: clip; -webkit-line-clamp: unset; -webkit-box-orient: unset;
+  }
+  @media (max-width: 1199px) {
+    .tl-pop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 1023px) {
+    .tl-page { gap: 28px; padding: 24px 24px 72px; }
+    .tl-side { width: 200px; }
+  }
+  @media (max-width: 767px) {
+    /* Sidebar collapses into the Filter button + bottom sheet. */
+    .tl-page { flex-direction: column; gap: 0; padding: 20px 20px 64px; align-items: stretch; }
+    .tl-side { display: none; }
+    .tl-main :global(.breadcrumb-nav) { display: none; }
+    .tl-hero { margin-bottom: 20px; }
+    .tl-title { font-size: 26px; margin-bottom: 12px; }
+    .tl-sub { margin-bottom: 16px; }
+    .tl-search-wrap { max-width: none; }
+    .tl-search { height: 48px; }
+    .tl-search-clear { width:40px; height:40px; font-size:20px; }
+    .tl-kbd { display:none; }
+    .tl-sub { display:none; }
+    .tl-toolbar { margin-bottom: 16px; }
+    .tl-cat-slider {
+      display:block;
+      position:sticky; top:60px; z-index:5;
+      margin:0 -4px 12px;
+    }
+    .tl-cat-nav {
+      flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+      position:static;
+      padding:6px 48px 6px 6px; margin:0; border-radius:14px;
+      scroll-padding:0 56px;
+      box-shadow:0 6px 18px -12px rgba(23, 33, 43, 0.25);
+    }
+    .tl-cat-nav::-webkit-scrollbar { display:none; }
+    .tl-cat-chip { flex-shrink:0; scroll-snap-align:start; min-height:40px; font-weight:600; }
+    .tl-cat-chip-icon { display:none; }
+    .tl-cat-chip .tl-cat-count { display:none; }
+    .tl-cat-chip.is-active { box-shadow:0 4px 12px -2px color-mix(in srgb, var(--nk-accent) 45%, transparent); }
+    /* Edge fades — visible only when more chips lie in that direction */
+    .tl-cat-slider::before, .tl-cat-slider::after {
+      content:''; position:absolute; top:0; bottom:0; width:34px; z-index:1;
+      pointer-events:none; opacity:0; transition:opacity .2s ease;
+    }
+    .tl-cat-slider::before { left:0; border-radius:14px 0 0 14px;
+      background:linear-gradient(to right, var(--nk-card-bg), transparent); }
+    .tl-cat-slider::after { right:0; border-radius:0 14px 14px 0;
+      background:linear-gradient(to left, var(--nk-card-bg), transparent); }
+    .tl-cat-slider:not(.at-start)::before { opacity:1; }
+    .tl-cat-slider:not(.at-end)::after { opacity:1; }
+    /* Arrow buttons — hidden at the ends via [hidden] */
+    .tl-cat-arrow {
+      display:flex; align-items:center; justify-content:center;
+      position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+      width:40px; height:40px; flex-shrink:0;
+      border-radius:50%;
+      background:var(--nk-card-bg); border:1px solid var(--nk-border);
+      color:var(--nk-text-secondary); cursor:pointer;
+      box-shadow:0 2px 8px rgba(0,0,0,.12);
+    }
+    .tl-cat-arrow:hover { color:var(--nk-accent); border-color:var(--nk-accent); }
+    .tl-cat-arrow:focus-visible { outline:2px solid var(--nk-accent); outline-offset:2px; }
+    .tl-cat-arrow:active { transform:translateY(-50%) scale(.94); }
+    .tl-cat-arrow[hidden] { display:none; }
+    .tl-cat-prev { left:4px; }
+    .tl-cat-next { right:4px; }
+    .tl-all-head { flex-direction:column; gap:6px; align-items:flex-start; }
+    .tl-group { padding:14px; }
+    .tl-group-desc { display:none; }
+    .tl-viewall { display:none; }
+    .tl-group-head { margin-bottom:10px; padding-bottom:10px; }
+    .tl-card {
+      border-radius:14px;
+      padding:14px;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .tl-card-icon { width:38px; height:38px; border-radius:10px; margin-top:1px; }
+    .tl-card-name {
+      white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+      overflow:hidden; font-size:15px; line-height:1.35;
+    }
+    .tl-card-desc {
+      display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical;
+      overflow:hidden; font-size:12.5px;
+    }
+    .tl-card:hover { transform:none; box-shadow:none; border-color:var(--nk-border); background:var(--nk-surface); }
+    .tl-card:hover .tl-card-arr { transform:none; color:var(--nk-text-tertiary); }
+    .tl-h2 { font-size: 17px; }
+    .tl-sec { margin-bottom: 24px; }
+    /* Popular becomes a swipe carousel with a peeking next card + end-card.
+       Edge fade + dots + a one-time nudge tell new users it slides. */
+    .tl-pop-grid {
+      display: flex; gap: 12px;
+      overflow-x: auto; scroll-snap-type: x mandatory;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      margin: 0 -20px; padding: 0 20px 4px;
+      -webkit-mask-image: linear-gradient(to right, #000 88%, transparent 99%);
+      mask-image: linear-gradient(to right, #000 88%, transparent 99%);
+    }
+    .tl-pop-grid::-webkit-scrollbar { display: none; }
+    .tl-pop-dots {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-top: 10px;
+    }
+    .tl-pop-dot {
+      width: 6px; height: 6px; border-radius: 9999px;
+      background: var(--nk-border-strong); opacity: 0.55;
+      transition: all 0.2s ease;
+    }
+    .tl-pop-dot.on { width: 18px; opacity: 1; background: var(--nk-accent); }
+    .tl-pop-card { flex: 0 0 78%; scroll-snap-align: start; gap: 10px; padding: 15px 15px 13px; }
+    /* Carousel cards: icon + title + arrow only — no repeated numbers,
+       no triple "go" affordance, no truncated descriptions */
+    .tl-pop-all-n { display: none; }
+    .tl-pop-cta { display: none; }
+    .tl-pop-desc { display: none; }
+    .tl-pop-more {
+      display: flex;
+      align-items: center; justify-content: center; text-align: center;
+      background: var(--nk-accent-subtle);
+      border-color: color-mix(in srgb, var(--nk-accent) 30%, var(--nk-border));
+    }
+    .tl-pop-more-count {
+      font-size: 30px; font-weight: 800; letter-spacing: -0.02em;
+      color: var(--nk-accent); line-height: 1;
+    }
+    .tl-pop-more-text { font-size: var(--fs-sm); font-weight: 600; color: var(--nk-accent); }
+    .tl-pop-more-text span { display: inline-block; transition: transform .15s ease; }
+    .tl-pop-card:hover .tl-pop-more-text span { transform: translateX(3px); }
+    .tl-grid { grid-template-columns: minmax(0, 1fr); }
+    .tl-group-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+  @media (max-width: 479px) {
+    .tl-page { padding: 16px 16px 56px; }
+    .tl-pop-grid { margin: 0 -16px; padding: 0 16px 4px; }
+    .tl-sheet { max-width: none; }
+    /* keep count + back + filter on one row at 320px */
+    .tl-toolbar { flex-wrap: nowrap; }
+    .tl-back-btn { padding: 8px 10px 8px 8px; }
+    .tl-back-btn span { font-size: var(--fs-xs); }
+    .tl-filter-btn { padding: 8px 13px; }
+  }
+
+  /* ═══ Reduced motion ═══ */
+  @media (prefers-reduced-motion: reduce) {
+    .tl-arr, .tl-card-arr { transition: none; }
+    .tl-pop-card, .tl-card, .tl-side-item, .tl-filter-btn, .tl-back-btn { transition: none; }
+  }
+</style>
+
+<script>
+  /* Tools page — instant search + action tabs. No dependencies. */
+  (function () {
+    const input = document.getElementById('tl-search');
+    const clearBtn = document.getElementById('tl-search-clear');
+    const empty = document.getElementById('tl-empty');
+    const cards = Array.from(document.querySelectorAll('.tl-card'));
+    const groups = Array.from(document.querySelectorAll('.tl-group'));
+    const popCards = Array.from(document.querySelectorAll('.tl-pop-card'));
+    const popSec = popCards[0] && popCards[0].closest('.tl-sec');
+
+    if (!input || !cards.length) return;
+
+    /* Category chips — quick filter + visual differentiation */
+    const catChips = Array.from(document.querySelectorAll('.tl-cat-chip'));
+    const syncCatChips = () => {
+      catChips.forEach(chip => {
+        const c = chip.dataset.cat || '';
+        chip.classList.toggle('is-active', c === activeCats);
+      });
+    };
+
+    /* Registry is embedded by the build via data attributes on cards */
+    const norm = s => (s || '').toLowerCase().trim();
+    const cardMeta = cards.map(c => ({
+      el: c,
+      group: c.closest('.tl-group'),
+      key: norm(c.dataset.tool + ' ' + (c.querySelector('.tl-card-name')?.textContent || '') + ' ' + (c.querySelector('.tl-card-desc')?.textContent || '') + ' ' + (c.closest('.tl-group')?.querySelector('.tl-group-name')?.textContent || '')),
+    }));
+
+    /* ── Category slider (mobile): arrows + edge fades show more chips ── */
+    const catSlider = document.getElementById('tl-cat-slider');
+    const catNav = document.getElementById('tl-cat-nav');
+    const catPrev = document.getElementById('tl-cat-prev');
+    const catNext = document.getElementById('tl-cat-next');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function syncCatSlider() {
+      if (!catSlider || !catNav || !catPrev || !catNext) return;
+      const max = catNav.scrollWidth - catNav.clientWidth;
+      const scrollable = max > 4;
+      const atStart = !scrollable || catNav.scrollLeft <= 4;
+      const atEnd = !scrollable || catNav.scrollLeft >= max - 4;
+      catSlider.classList.toggle('at-start', atStart);
+      catSlider.classList.toggle('at-end', atEnd);
+      catPrev.hidden = !scrollable || atStart;
+      catNext.hidden = !scrollable || atEnd;
+    }
+    function slideCats(dir) {
+      if (!catNav) return;
+      catNav.scrollBy({ left: dir * catNav.clientWidth * 0.7, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+    catPrev?.addEventListener('click', () => slideCats(-1));
+    catNext?.addEventListener('click', () => slideCats(1));
+    if (catNav) {
+      let slideTick = false;
+      catNav.addEventListener('scroll', () => {
+        if (slideTick) return;
+        slideTick = true;
+        requestAnimationFrame(() => { syncCatSlider(); slideTick = false; });
+      }, { passive: true });
+      window.addEventListener('resize', syncCatSlider);
+      syncCatSlider();
+    }
+
+    /* ── Category filter state (set by the bottom sheet) ── */
+    const sheet = document.getElementById('tl-sheet');
+    const filterBtn = document.getElementById('tl-filter-btn');
+    const filterLabel = document.getElementById('tl-filter-label');
+    const applyBtn = document.getElementById('tl-sheet-apply');
+    const countEl = document.getElementById('tl-count');
+    const radios = Array.from(document.querySelectorAll('input[name="tl-filter"]'));
+    let activeCats = ''; /* '' = All · otherwise space-separated category ids */
+    const catSet = () => (activeCats.trim() === '' ? null : new Set(activeCats.split(/\s+/)));
+    const countFor = (v) => {
+      const s = v.trim() === '' ? null : new Set(v.split(/\s+/));
+      return cards.filter(c => { const g = c.closest('.tl-group'); return g && (!s || s.has(g.dataset.cat)); }).length;
+    };
+
+    function apply() {
+      const q = norm(input.value);
+      const cs = catSet();
+      clearBtn.hidden = !q;
+      let hits = 0;
+      const groupHit = new Set();
+      cardMeta.forEach(m => {
+        const catOk = !cs || (m.group && cs.has(m.group.dataset.cat));
+        const hit = m.key.includes(q) && catOk;
+        m.el.hidden = !hit;
+        if (hit) { hits++; groupHit.add(m.group); }
+      });
+      groups.forEach(g => { g.hidden = !groupHit.has(g); });
+      /* Popular section is cross-category: hide when narrowed */
+      popSec && (popSec.hidden = !!q || !!cs);
+      empty.hidden = hits > 0;
+      countEl.textContent = hits + (hits === 1 ? ' tool' : ' tools');
+      syncCatChips();
+    }
+
+    // Category chips — click = instant filter (simple to understand)
+    catChips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        const cat = chip.dataset.cat || '';
+        // Toggle: clicking active chip clears filter
+        activeCats = (activeCats === cat) ? '' : cat;
+        // Keep bottom-sheet radios in sync
+        const radios = document.querySelectorAll('input[name="tl-filter"]');
+        radios.forEach(r => { r.checked = r.value === activeCats; });
+        // Update filter button label
+        const filterLabel = document.getElementById('tl-filter-label');
+        const filterBtn = document.getElementById('tl-filter-btn');
+        if (filterLabel && filterBtn) {
+          if (activeCats === '') {
+            filterLabel.textContent = 'Filter';
+            filterBtn.classList.remove('is-active');
+          } else {
+            const matched = Array.from(radios).find(r => r.value === activeCats);
+            filterLabel.textContent = matched ? matched.closest('.tl-opt').querySelector('.tl-opt-label').textContent.trim() : activeCats;
+            filterBtn.classList.add('is-active');
+          }
+        }
+        const backBtn = document.getElementById('tl-back-btn');
+        if (backBtn) backBtn.hidden = activeCats === '';
+        apply();
+        // Keep the tapped chip visible in the mobile slider
+        chip.scrollIntoView({ inline: 'center', block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
+        // Smooth scroll to All Tools when filtering
+        if (activeCats) document.getElementById('tl-all')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    syncCatChips();
+
+    input.addEventListener('input', apply);
+    clearBtn.addEventListener('click', () => { input.value = ''; input.focus(); apply(); });
+    /* '/' focuses search when not already typing */
+    document.addEventListener('keydown', e => {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+      const t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+      e.preventDefault();
+      input.focus();
+      input.select();
+    });
+
+    /* Popular carousel (mobile): dots + first-view nudge so new users see it slides */
+    const popGrid = document.getElementById('tl-pop-grid');
+    const popDots = Array.from(document.querySelectorAll('#tl-pop-dots .tl-pop-dot'));
+    if (popGrid && popDots.length) {
+      const popScrollable = () => popGrid.scrollWidth - popGrid.clientWidth > 4;
+      const syncPopDots = () => {
+        const max = popGrid.scrollWidth - popGrid.clientWidth;
+        const ratio = max > 0 ? popGrid.scrollLeft / max : 0;
+        const idx = Math.min(popDots.length - 1, Math.round(ratio * (popDots.length - 1)));
+        popDots.forEach((d, i) => d.classList.toggle('on', i === idx));
+      };
+      let popTick = false;
+      popGrid.addEventListener('scroll', () => {
+        if (popTick) return;
+        popTick = true;
+        requestAnimationFrame(() => { syncPopDots(); popTick = false; });
+      }, { passive: true });
+      window.addEventListener('resize', syncPopDots);
+      syncPopDots();
+      // One-time gentle nudge when the carousel first scrolls into view
+      let nudged = false;
+      const stopNudge = () => { nudged = true; };
+      popGrid.addEventListener('pointerdown', stopNudge, { once: true });
+      popGrid.addEventListener('wheel', stopNudge, { once: true });
+      if (!reduceMotion && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          if (nudged || !popScrollable()) return;
+          if (!entries.some(e => e.isIntersecting)) return;
+          nudged = true;
+          io.disconnect();
+          popGrid.scrollBy({ left: 44, behavior: 'smooth' });
+          setTimeout(() => { popGrid.scrollBy({ left: -44, behavior: 'smooth' }); }, 650);
+        }, { threshold: 0.6 });
+        io.observe(popGrid);
+      }
+    }
+
+    /* ── Filter bottom sheet ── */
+    const backBtn = document.getElementById('tl-back-btn');
+    if (sheet && filterBtn && applyBtn && radios.length) {
+      let lastFocus = null;
+      const checkedRadio = () => radios.find(r => r.checked) || radios[0];
+
+      const syncApplyLabel = () => {
+        const n = countFor(checkedRadio().value);
+        applyBtn.textContent = 'Show ' + n + (n === 1 ? ' tool' : ' tools');
+      };
+
+      const syncFilterButton = () => {
+        const labelFor = (v) => {
+          const r = radios.find(x => x.value === v);
+          return r ? r.closest('.tl-opt').querySelector('.tl-opt-label').textContent.trim() : 'Filter';
+        };
+        if (activeCats.trim() === '') {
+          filterLabel.textContent = 'Filter';
+          filterBtn.classList.remove('is-active');
+          filterBtn.removeAttribute('aria-label');
+        } else {
+          filterLabel.textContent = labelFor(activeCats);
+          filterBtn.classList.add('is-active');
+          filterBtn.setAttribute('aria-label', 'Filtered by ' + filterLabel.textContent);
+        }
+        /* Back-to-all affordance while a genre filter is on */
+        if (backBtn) {
+          backBtn.hidden = activeCats.trim() === '';
+          backBtn.setAttribute('aria-label',
+            activeCats.trim() === '' ? 'Show all tools'
+              : 'Clear ' + filterLabel.textContent + ' filter and show all tools');
+        }
+      };
+
+      const openSheet = () => {
+        lastFocus = document.activeElement;
+        radios.forEach(r => { r.checked = r.value === activeCats; });
+        syncApplyLabel();
+        sheet.hidden = false;
+        filterBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden'; /* page doesn't scroll behind the sheet */
+        applyBtn.focus();
+      };
+
+      const closeSheet = () => {
+        sheet.hidden = true;
+        filterBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        if (lastFocus) lastFocus.focus();
+      };
+
+      filterBtn.addEventListener('click', openSheet);
+      sheet.querySelectorAll('[data-sheet-close]').forEach(el => el.addEventListener('click', closeSheet));
+      radios.forEach(r => r.addEventListener('change', syncApplyLabel));
+      applyBtn.addEventListener('click', () => {
+        activeCats = checkedRadio().value;
+        syncFilterButton();
+        apply();
+        closeSheet();
+      });
+      /* Back button: clear the active genre and return to All tools */
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          activeCats = '';
+          radios.forEach(r => { r.checked = r.value === ''; });
+          syncFilterButton();
+          apply();
+          filterBtn.focus(); /* back button disappears — keep keyboard focus visible */
+        });
+      }
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !sheet.hidden) closeSheet();
+      });
+    }
+  })();
+</script>

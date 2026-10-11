@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import PercentageCalculator from '../../components/tools/PercentageCalculator.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Percentage Calculator – Calculate Percentages Easily | SolutionsNepal';
+const description = 'Calculate percentages, percentage increases, decreases, and percentage changes instantly with SolutionsNepal\'s free online percentage calculator.';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Percentage Calculator',
+      description: 'Calculate percentages, percentage increases, decreases, and percentage changes instantly.',
+      url: 'https://solutionsnepal.com/tools/percentage-calculator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+  ]}
+>
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <Breadcrumbs items={[
+      { label: 'Tools', href: '/nepal' },
+      { label: 'Percentage Calculator' },
+    ]} />
+    <!-- Hero -->
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">Percentage Calculator</h1>
+      <p class="mt-2 text-sm max-w-lg mx-auto" style="color:var(--nk-text-secondary);">Calculate percentages, percentage increases, decreases, and percentage changes instantly.</p>
+    </div>
+
+    <!-- Calculator -->
+    <PercentageCalculator />
+
+    <!-- SEO Content -->
+    <section class="mt-12 space-y-8 text-sm" style="color:var(--nk-text-secondary);">
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">Percentage Calculator</h2>
+        <p>A percentage calculator helps you quickly compute percentages without manual math. Whether you need to find what percentage one number is of another, calculate a discount, or determine how much a value has changed, SolutionsNepal's percentage calculator gives you instant, accurate results.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">How to Calculate a Percentage</h3>
+        <p>The basic formula for calculating a percentage is:</p>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">Percentage = (Part ÷ Whole) × 100</div>
+        <p>For example, if you scored 85 out of 100 on a test: (85 ÷ 100) × 100 = 85%</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Percentage Increase Formula</h3>
+        <p>To increase a number by a percentage:</p>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">New Value = Original Value × (1 + Percentage ÷ 100)</div>
+        <p>Example: 500 increased by 20% = 500 × 1.20 = 600</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Percentage Decrease Formula</h3>
+        <p>To decrease a number by a percentage:</p>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">New Value = Original Value × (1 − Percentage ÷ 100)</div>
+        <p>Example: 500 decreased by 20% = 500 × 0.80 = 400</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Percentage Change Formula</h3>
+        <p>To find the percentage change between two values:</p>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">Percentage Change = ((New Value − Original Value) ÷ Original Value) × 100</div>
+        <p>Example: Change from 500 to 600 = ((600 − 500) ÷ 500) × 100 = 20% increase</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">Common Percentage Questions</h3>
+        <ul class="space-y-1.5 list-disc list-inside">
+          <li>What is 10% of 500? → 50</li>
+          <li>What is 20% of 1,000? → 200</li>
+          <li>What is 15% of 800? → 120</li>
+          <li>How much is 500 increased by 20%? → 600</li>
+          <li>How much is 500 decreased by 20%? → 400</li>
+          <li>What is the percentage change from 500 to 600? → 20% increase</li>
+          <li>How do I calculate percentage increase? → (New − Original) ÷ Original × 100</li>
+          <li>How do I calculate percentage decrease? → (Original − New) ÷ Original × 100</li>
+        </ul>
+      </div>
+
+      <div class="pt-4" style="border-top:1px solid var(--nk-border);">
+        <p class="text-[11px]" style="color:var(--nk-text-tertiary);">SolutionsNepal's percentage calculator works entirely in your browser. No data is sent to any server. Free, fast, and accurate.</p>
+      </div>
+    </section>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'Discount Calculator', description: 'Sale price and savings', href: '/tools/discount-calculator' },
+      { title: 'VAT Calculator Nepal', description: 'Add or remove 13% VAT', href: '/nepal/finance/vat-calculator' },
+      { title: 'SIP Calculator Nepal', description: 'Project investment growth', href: '/nepal/finance/sip-calculator' },
+      { title: 'All Tools', description: 'Browse every tool', href: '/nepal' },
+    ]} />
+  </main>
+</BaseLayout>

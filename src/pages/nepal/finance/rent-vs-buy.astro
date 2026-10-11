@@ -1,0 +1,501 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+
+const title = 'Rent vs Buy Calculator Nepal — Should You Rent or Buy? | SolutionsNepal';
+const description = 'Compare renting vs buying a home in Nepal. Total rent, loan EMI, maintenance, appreciation and breakeven year side by side.';
+
+const faqItems = [
+  {
+    q: 'Should I rent or buy a house in Kathmandu?',
+    a: 'There is no universal answer — it depends on rent levels, property prices, loan rates and how long you will stay. As a rule of thumb, buying usually wins if you will stay put for 7–10+ years and the annual rent is a high fraction of the property price; renting wins for short stays or when prices are stretched. Enter your own numbers above instead of guessing.',
+  },
+  {
+    q: 'How does this calculator compare renting and buying?',
+    a: 'Both sides are reduced to "money you never get back" over the same horizon. Renting cost is total rent paid with yearly increases. Buying cost is down payment + one-time purchase costs + EMIs paid + maintenance, minus your equity at the end (home value minus remaining loan). The lower net cost wins.',
+  },
+  {
+    q: 'What is the breakeven year?',
+    a: 'The first year when buying becomes cheaper than renting cumulatively. Buying starts behind (down payment + purchase costs) and catches up as rent keeps rising while each EMI builds equity. If the line says "no breakeven in 30 years", renting stays cheaper under your assumptions.',
+  },
+  {
+    q: 'What buying costs should I include for Nepal?',
+    a: 'Beyond the down payment: land/property registration and transfer fees at the Land Revenue Office, broker commission if any, and early maintenance or renovation. Rates and slabs vary by location and change over time, so the calculator takes them as one adjustable percentage — check current fees for your municipality.',
+  },
+  {
+    q: 'How much down payment do Nepali banks require?',
+    a: 'Banks finance only part of a property\'s value (loan-to-value limits set by Nepal Rastra Bank, historically stricter inside Kathmandu Valley). Expect to arrange a substantial down payment yourself — commonly 20–40%+ depending on the property and current rules. Confirm the current LTV with your bank and enter it above.',
+  },
+  {
+    q: 'How sensitive is the result to price appreciation?',
+    a: 'Very. A 2–3 point change in assumed annual appreciation can flip the verdict on expensive properties, because appreciation compounds on the full home value. Treat appreciation as a guess, not a promise — try the calculation with 0% and with an optimistic rate to see the range.',
+  },
+  {
+    q: 'Is renting just throwing money away?',
+    a: 'No. Rent buys flexibility (move for jobs, no maintenance headaches) and keeps your down payment free for other uses. Buying builds equity but locks you in and concentrates risk in one property. The calculator compares the money; only you can weigh the lifestyle side.',
+  },
+  {
+    q: 'Can I share my comparison with family?',
+    a: 'Yes — every input is mirrored in the page address, so use the "Copy result link" button and send it on Viber, Messenger or Facebook. Whoever opens it sees the same inputs and verdict. Nothing is uploaded or stored anywhere.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Rent vs Buy Calculator Nepal',
+      description: 'Compare renting vs buying a home in Nepal: total rent, EMI, maintenance, appreciation and breakeven year.',
+      url: 'https://solutionsnepal.com/nepal/finance/rent-vs-buy',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1200px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'Rent vs Buy' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Rent vs Buy Calculator Nepal</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Renting or buying in Kathmandu, Pokhara or beyond? Compare true net costs over the same years — not just monthly rent vs EMI.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 items-start">
+
+      <!-- ═══ LEFT: INPUTS ═══ -->
+      <div class="nk-card p-5 space-y-4">
+        <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Renting</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="rb-rent" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Monthly rent</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input inputmode="decimal" id="rb-rent" type="number" min="0" step="1000" placeholder="25,000" class="nk-input" style="padding-left:3rem;" />
+            </div>
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="rb-rgrow" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Yearly rent increase</label>
+            <div class="relative">
+              <input inputmode="decimal" id="rb-rgrow" type="number" min="0" max="100" step="0.5" placeholder="5" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+        </div>
+
+        <p class="text-[11px] font-semibold uppercase tracking-wider pt-1" style="color:var(--nk-text-tertiary);">Buying</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="rb-price" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Home price</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+              <input inputmode="decimal" id="rb-price" type="number" min="0" step="100000" placeholder="1,50,00,000" class="nk-input" style="padding-left:3rem;" />
+            </div>
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="rb-down" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Down payment</label>
+            <div class="relative">
+              <input inputmode="decimal" id="rb-down" type="number" min="0" max="100" step="1" placeholder="20" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="rb-rate" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Home loan rate</label>
+            <div class="relative">
+              <input inputmode="decimal" id="rb-rate" type="number" min="0" max="100" step="0.1" placeholder="10" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="rb-tenure" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Loan tenure (years)</label>
+            <input inputmode="decimal" id="rb-tenure" type="number" min="0" max="40" step="1" placeholder="20" class="nk-input" />
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="rb-appr" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Yearly price growth</label>
+            <div class="relative">
+              <input inputmode="decimal" id="rb-appr" type="number" min="0" max="100" step="0.5" placeholder="4" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="rb-maint" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Yearly maintenance</label>
+            <div class="relative">
+              <input inputmode="decimal" id="rb-maint" type="number" min="0" max="100" step="0.25" placeholder="1" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">% of purchase price, per year</p>
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="rb-bcost" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">One-time buying costs</label>
+            <div class="relative">
+              <input inputmode="decimal" id="rb-bcost" type="number" min="0" max="100" step="0.5" placeholder="5" class="nk-input" style="padding-right:2.2rem;" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+            </div>
+            <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">Registration, broker, initial repairs</p>
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+          <div>
+            <label for="rb-horizon" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Compare over (years)</label>
+            <input inputmode="decimal" id="rb-horizon" type="number" min="0" max="30" step="1" placeholder="10" class="nk-input" />
+            <p class="field-error hidden text-[11px] mt-1" style="color:#dc2626;"></p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2.5">Calculate</button>
+          <button id="copy-link-btn" class="nk-btn nk-btn-secondary flex-1 py-2.5">Copy result link</button>
+        </div>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="md:sticky md:top-4 space-y-4">
+        <div class="nk-card p-5" id="result-card">
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-tertiary);">Verdict</p>
+          <div id="result-summary" class="flex flex-wrap gap-x-4 gap-y-1 text-[11.5px] mb-3" style="color:var(--nk-text-secondary);"></div>
+
+          <div class="rounded-xl py-5 px-4 text-center mb-4" style="background-color:var(--nk-accent-subtle);">
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-secondary);" id="fv-label">Cheaper option</p>
+            <p class="text-[26px] sm:text-[30px] font-bold tracking-tight leading-none" style="color:var(--nk-accent);" id="out-winner">—</p>
+            <p class="text-[12px] mt-2" style="color:var(--nk-text-secondary);" id="out-savings"></p>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-[13px]">
+              <span class="inline-flex items-center gap-2" style="color:var(--nk-text-secondary);"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background-color:var(--nk-text-tertiary);"></span>Total rent paid</span>
+              <strong class="font-semibold" style="color:var(--nk-text);" id="out-rent">—</strong>
+            </div>
+            <div class="flex items-center justify-between text-[13px]">
+              <span class="inline-flex items-center gap-2" style="color:var(--nk-text-secondary);"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background-color:var(--nk-accent);opacity:.55;"></span>Buying net cost</span>
+              <strong class="font-semibold" style="color:var(--nk-text);" id="out-buy">—</strong>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 space-y-2" style="border-top:1px solid var(--nk-border);">
+            <div class="flex items-center justify-between text-[12px]">
+              <span style="color:var(--nk-text-secondary);">Down + buying costs</span>
+              <strong style="color:var(--nk-text);" id="out-upfront">—</strong>
+            </div>
+            <div class="flex items-center justify-between text-[12px]">
+              <span style="color:var(--nk-text-secondary);" id="emi-label">EMIs paid</span>
+              <strong style="color:var(--nk-text);" id="out-emis">—</strong>
+            </div>
+            <div class="flex items-center justify-between text-[12px]">
+              <span style="color:var(--nk-text-secondary);">Home value at end</span>
+              <strong style="color:var(--nk-text);" id="out-value">—</strong>
+            </div>
+            <div class="flex items-center justify-between text-[12px]">
+              <span style="color:var(--nk-text-secondary);">Remaining loan</span>
+              <strong style="color:var(--nk-text);" id="out-balance">—</strong>
+            </div>
+            <div class="flex items-center justify-between text-[12px]">
+              <span style="color:var(--nk-text-secondary);">Breakeven year</span>
+              <strong style="color:var(--nk-accent);" id="out-breakeven">—</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Net-cost chart -->
+    <div id="chart-section" class="nk-card p-5 mt-5">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-[13px] font-semibold" style="color:var(--nk-text);">Cumulative Net Cost Over Time</p>
+        <div class="flex items-center gap-3 text-[10.5px]" style="color:var(--nk-text-secondary);">
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background-color:var(--nk-text-tertiary);"></span>Renting</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color:var(--nk-accent);"></span>Buying (net)</span>
+        </div>
+      </div>
+      <svg id="growth-chart" viewBox="0 0 640 240" class="w-full" role="img" aria-label="Chart comparing cumulative renting and buying costs"></svg>
+      <p class="mt-2 text-[10.5px]" style="color:var(--nk-text-tertiary);">Where the lines cross, buying starts winning. Lower line = cheaper.</p>
+    </div>
+
+    <!-- Year-by-year -->
+    <details class="nk-card mt-5 overflow-hidden">
+      <summary class="px-5 py-4 text-[13px] font-semibold cursor-pointer select-none" style="color:var(--nk-text);">Year-by-Year Comparison <span class="font-normal text-[11px]" style="color:var(--nk-text-tertiary);">— view yearly breakdown</span></summary>
+      <div class="px-5 pb-5" style="border-top:1px solid var(--nk-border);">
+        <div class="overflow-x-auto mt-4">
+          <table class="w-full text-[12px] whitespace-nowrap">
+            <thead>
+              <tr class="text-left" style="color:var(--nk-text-tertiary);">
+                <th class="py-2 pr-4 font-medium">Year-end</th>
+                <th class="py-2 pr-4 font-medium text-right">Rent Paid So Far</th>
+                <th class="py-2 font-medium text-right">Buying Net So Far</th>
+              </tr>
+            </thead>
+            <tbody id="yearly-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <!-- Disclaimer -->
+    <div class="mt-5 rounded-lg border px-4 py-3 text-[11.5px] leading-relaxed" style="border-color:var(--nk-border);background-color:var(--nk-bg);color:var(--nk-text-secondary);">
+      ⚠️ <strong style="color:var(--nk-text);">Disclaimer:</strong> This is a simplified comparison for planning only — not financial advice. Registration fees, LTV rules, loan rates and property appreciation in Nepal vary by bank, location and time. Confirm all figures with your bank and a local property expert before deciding.
+    </div>
+
+    <!-- SEO content -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Rent vs buy in Nepal</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">In Kathmandu Valley, rents for a decent flat often run Rs. 20,000–60,000 a month while similar properties sell for crores — so the monthly comparison (rent vs EMI) misleads. The EMI only looks slightly higher than rent, but buying also demands a large down payment, registration and transfer costs, maintenance, and years of interest — while building equity and escaping rent hikes. This calculator puts both sides on equal footing over the same horizon.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">How the comparison works</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Renting cost is simply all rent paid, growing each year at your assumed increase. Buying cost is everything you pay — down payment, one-time purchase costs, EMIs and maintenance — minus what you own at the end (the appreciated home value less the remaining loan). That subtraction is the key step: without it you would compare rent against a house you partly own, which is not a fair fight.</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">When does buying win?</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Buying usually pulls ahead when you stay long enough for equity to outweigh the heavy upfront costs — often around 7–12 years — especially if rents rise fast. It loses when the horizon is short, the price-to-rent ratio is extreme, loan rates are high, or appreciation disappoints. Check the breakeven year: if it falls beyond your realistic stay, keep renting.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related finance tools</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/home-loan-down-payment-calculator-nepal" style="color:var(--nk-accent);">Home Loan Down Payment Calculator</a> — work out your upfront cash and EMI first</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/loan-eligibility-calculator-nepal" style="color:var(--nk-accent);">Loan Eligibility Calculator</a> — check how much you can borrow</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/emi-calculator" style="color:var(--nk-accent);">EMI Calculator</a> — test different rates and tenures</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance" style="color:var(--nk-accent);">All finance tools</a> — tax, rent, salary and more</li>
+        </ul>
+      </section>
+    </div>
+
+    <RelatedTools tools={[
+      { title: 'Home Loan Down Payment', description: 'Upfront cash, EMI & LTV for a home', href: '/nepal/finance/home-loan-down-payment-calculator-nepal' },
+      { title: 'EMI Calculator', description: 'Calculate home & car loan EMIs', href: '/nepal/finance/emi-calculator' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<script>
+  import {
+    compareRentVsBuy,
+    breakevenYear,
+    rentVsBuySeries,
+    formatNPR,
+    validateField,
+  } from '../../../lib/calculators/rent-vs-buy.js';
+  import {
+    readSharedParams,
+    syncUrl,
+    copyLink,
+  } from '../../../lib/share-params.js';
+
+  const $ = (id) => document.getElementById(id);
+
+  const RB_PARAMS = {
+    rent: 'rb-rent',
+    rgrow: 'rb-rgrow',
+    price: 'rb-price',
+    down: 'rb-down',
+    rate: 'rb-rate',
+    tenure: 'rb-tenure',
+    appr: 'rb-appr',
+    maint: 'rb-maint',
+    bcost: 'rb-bcost',
+    horizon: 'rb-horizon',
+  };
+
+  function showError(input, msg) {
+    const err = input.closest('div')?.parentElement?.querySelector('.field-error')
+      ?? input.parentElement?.parentElement?.querySelector('.field-error');
+    if (err) {
+      err.textContent = msg || '';
+      err.classList.toggle('hidden', !msg);
+    }
+    input.style.borderColor = msg ? '#dc2626' : '';
+  }
+
+  function readNum(id, label, opts, { gtZero = false } = {}) {
+    const input = $(id);
+    // Empty = nothing entered yet: no error, result just waits for input.
+    if (input.value.trim() === '') return { ok: false, empty: true };
+    const res = validateField(input.value, { label, ...opts });
+    if (!res.ok) { showError(input, res.error); return res; }
+    if (gtZero && !(res.value > 0)) {
+      const msg = `Enter ${label} greater than 0.`;
+      showError(input, msg);
+      return { ok: false, error: msg };
+    }
+    showError(input, null);
+    return res;
+  }
+
+  function clearErrors() {
+    document.querySelectorAll('.field-error').forEach(e => e.classList.add('hidden'));
+  }
+
+  function invalidate() {
+    ['out-winner', 'out-savings', 'out-rent', 'out-buy', 'out-upfront', 'out-emis', 'out-value', 'out-balance', 'out-breakeven'].forEach(id => ($(id)).textContent = '—');
+    $('result-summary').innerHTML = '';
+    renderChart(null);
+    renderTable(null);
+  }
+
+  function recalc() {
+    clearErrors();
+    syncUrl(RB_PARAMS);
+    const rent = readNum('rb-rent', 'a monthly rent of Rs. 0 or more', { min: 0, max: 1e8 });
+    const rgrow = readNum('rb-rgrow', 'a yearly rent increase between 0–100%', { min: 0, max: 100 });
+    const price = readNum('rb-price', 'a home price', { min: 0, max: 1e11 }, { gtZero: true });
+    const down = readNum('rb-down', 'a down payment between 0–100%', { min: 0, max: 100 });
+    const rate = readNum('rb-rate', 'a loan rate between 0–100%', { min: 0, max: 100 });
+    const tenure = readNum('rb-tenure', 'a loan tenure', { min: 0, max: 40 }, { gtZero: true });
+    const appr = readNum('rb-appr', 'a price growth between 0–100%', { min: 0, max: 100 });
+    const maint = readNum('rb-maint', 'a maintenance rate between 0–100%', { min: 0, max: 100 });
+    const bcost = readNum('rb-bcost', 'a buying-cost rate between 0–100%', { min: 0, max: 100 });
+    const horizon = readNum('rb-horizon', 'a comparison period', { min: 0, max: 30 }, { gtZero: true });
+    if (!rent.ok || !rgrow.ok || !price.ok || !down.ok || !rate.ok || !tenure.ok || !appr.ok || !maint.ok || !bcost.ok || !horizon.ok) return invalidate();
+
+    const p = {
+      monthlyRent: rent.value, rentGrowthPct: rgrow.value, homePrice: price.value,
+      downPct: down.value, ratePct: rate.value, tenureYears: Math.round(tenure.value),
+      horizonYears: horizon.value, appreciationPct: appr.value,
+      maintenancePct: maint.value, buyingCostPct: bcost.value,
+    };
+    const r = compareRentVsBuy(p);
+    const by = breakevenYear(p);
+
+    $('fv-label').textContent = `Cheaper over ${horizon.value} year${horizon.value === 1 ? '' : 's'}`;
+    $('out-winner').textContent = r.winner === 'tie' ? 'Roughly equal' : r.winner === 'buy' ? 'Buying wins' : 'Renting wins';
+    $('out-savings').textContent = r.winner === 'tie'
+      ? 'The difference is negligible at these inputs.'
+      : `Saves about ${formatNPR(r.savings)} over ${horizon.value} year${horizon.value === 1 ? '' : 's'}.`;
+    $('out-rent').textContent = formatNPR(r.rentTotal);
+    $('out-buy').textContent = formatNPR(r.buyNet);
+    $('out-upfront').textContent = formatNPR(r.down + r.buyingCosts);
+    $('emi-label').textContent = `EMIs paid (${r.paidMonths} mo × ${formatNPR(r.emi)})`;
+    $('out-emis').textContent = formatNPR(r.emisPaid);
+    $('out-value').textContent = formatNPR(r.homeValue);
+    $('out-balance').textContent = formatNPR(r.balance);
+    $('out-breakeven').textContent = by === null ? 'None in 30 years' : `Year ${by}`;
+
+    $('result-summary').innerHTML =
+      `<span>Rent: <strong style="color:var(--nk-text)">${formatNPR(rent.value)}/mo</strong></span>` +
+      `<span>Price: <strong style="color:var(--nk-text)">${formatNPR(price.value)}</strong></span>` +
+      `<span>Down: <strong style="color:var(--nk-text)">${down.value}%</strong></span>` +
+      `<span>Loan: <strong style="color:var(--nk-text)">${rate.value}% × ${Math.round(tenure.value)}y</strong></span>`;
+
+    const series = rentVsBuySeries(p);
+    renderChart(series);
+    renderTable(series);
+  }
+
+  function renderChart(series) {
+    const svg = $('growth-chart');
+    if (!series || series.length === 0) { svg.innerHTML = ''; return; }
+    const W = 640, H = 240, padL = 70, padR = 16, padT = 14, padB = 30;
+    const maxY = Math.max(...series.map(s => s.rent), ...series.map(s => s.buy)) * 1.05 || 1;
+    const n = series.length;
+    const x = (i) => padL + (i / Math.max(1, n - 1)) * (W - padL - padR);
+    const y = (v) => padT + (1 - v / maxY) * (H - padT - padB);
+    const line = (key) => series.map((s, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(s[key]).toFixed(1)}`).join(' ');
+    const fmtShort = (v) => {
+      if (v >= 1e7) return (v / 1e7).toFixed(1).replace(/\.0$/, '') + ' Cr';
+      if (v >= 1e5) return (v / 1e5).toFixed(1).replace(/\.0$/, '') + ' L';
+      if (v >= 1e3) return Math.round(v / 1e3) + 'K';
+      return String(Math.round(v));
+    };
+    let g = '';
+    for (let k = 0; k <= 4; k++) {
+      const vy = padT + (k / 4) * (H - padT - padB);
+      const val = maxY * (1 - k / 4);
+      g += `<line x1="${padL}" y1="${vy}" x2="${W - padR}" y2="${vy}" stroke="var(--nk-border)" stroke-width="1"/>` +
+           `<text x="${padL - 8}" y="${vy + 3}" text-anchor="end" font-size="9" fill="var(--nk-text-tertiary)">${fmtShort(val)}</text>`;
+    }
+    let xt = '';
+    const step = n <= 12 ? 1 : Math.ceil(n / 12);
+    for (let i = 0; i < n; i += step) {
+      xt += `<text x="${x(i)}" y="${H - 10}" text-anchor="middle" font-size="9" fill="var(--nk-text-tertiary)">Y${series[i].year}</text>`;
+    }
+    svg.innerHTML = `
+      ${g}${xt}
+      <path d="${line('rent')}" fill="none" stroke="var(--nk-text-tertiary)" stroke-width="2" stroke-dasharray="5 4"/>
+      <path d="${line('buy')}" fill="none" stroke="var(--nk-accent)" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  }
+
+  function renderTable(series) {
+    const body = $('yearly-body');
+    if (!series || series.length === 0) { body.innerHTML = ''; return; }
+    body.innerHTML = series.map(s => {
+      const cheaper = s.rent < s.buy ? 'rent' : s.buy < s.rent ? 'buy' : 'tie';
+      const rentCell = cheaper === 'rent'
+        ? `<td class="py-2 pr-4 text-right font-semibold" style="color:var(--nk-accent)">${formatNPR(s.rent)} ◂</td>`
+        : `<td class="py-2 pr-4 text-right" style="color:var(--nk-text-secondary)">${formatNPR(s.rent)}</td>`;
+      const buyCell = cheaper === 'buy'
+        ? `<td class="py-2 text-right font-semibold" style="color:var(--nk-accent)">${formatNPR(s.buy)} ◂</td>`
+        : `<td class="py-2 text-right" style="color:var(--nk-text-secondary)">${formatNPR(s.buy)}</td>`;
+      return `<tr style="border-top:1px solid var(--nk-border)">
+        <td class="py-2 pr-4 font-semibold" style="color:var(--nk-text)">Year ${s.year}</td>
+        ${rentCell}${buyCell}
+      </tr>`;
+    }).join('');
+  }
+
+  Object.values(RB_PARAMS).forEach(id => {
+    $(id).addEventListener('input', () => recalc());
+    $(id).addEventListener('change', () => recalc());
+  });
+  $('calc-btn').addEventListener('click', () => {
+    recalc();
+    $('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+  $('copy-link-btn').addEventListener('click', async () => {
+    const btn = $('copy-link-btn');
+    const original = btn.textContent;
+    syncUrl(RB_PARAMS);
+    const ok = await copyLink();
+    btn.textContent = ok ? 'Link copied ✓' : 'Copy failed — copy the address bar URL';
+    setTimeout(() => { btn.textContent = original; }, 2200);
+  });
+
+  readSharedParams(RB_PARAMS, location.search);
+  recalc();
+</script>

@@ -1,0 +1,118 @@
+---
+/**
+ * Disclaimer — Reusable disclaimer block for calculators & price pages.
+ * Variants tailor the text to the tool category while keeping style consistent.
+ *
+ * Usage:
+ *   <Disclaimer variant="finance" />
+ *   <Disclaimer variant="tax" lastVerified="2026-08-19" sources={["IRD Nepal"]} />
+ *   <Disclaimer variant="general">Custom text overrides variant default.</Disclaimer>
+ */
+interface Props {
+  variant?: 'general' | 'finance' | 'tax' | 'investment' | 'health' | 'gold' | 'fuel' | 'property' | 'legal' | 'price' | 'education' | 'compact';
+  title?: string;
+  lastVerified?: string;
+  sources?: string[];
+  compact?: boolean;
+}
+
+const {
+  variant = 'general',
+  title = 'Disclaimer',
+  lastVerified,
+  sources,
+  compact = false,
+} = Astro.props;
+
+const defaults: Record<string, string> = {
+  general: 'This calculator provides an estimate for informational purposes only, based on the information you enter and the method described. Actual outcomes may differ. This is not professional advice — confirm important decisions with the relevant provider or authority.',
+  finance: 'This calculator provides an estimate for planning purposes only — not financial advice, a loan approval, or a guarantee. Actual amounts depend on the lender’s policies, verification, fees, interest, and current government rules. Confirm before committing.',
+  tax: 'This calculator provides an estimate based on the information provided and current Nepal tax rules understood at the time of calculation. Actual tax, withholding, and filing requirements may vary by your circumstances, municipality, and updates to government rules. Confirm the final amount with IRD Nepal or a tax professional.',
+  investment: 'This calculator provides an estimate based on the return rate and inputs you enter. Actual investment returns are not guaranteed and may be higher or lower. SIP and market-linked investments can fluctuate and past performance does not predict future results. This is not financial advice.',
+  health: 'This tool is for informational purposes only and does not provide medical advice, diagnosis, or treatment. Results are general estimates — individual health varies by age, body composition, activity level, and medical history. Consult a qualified healthcare professional for personal guidance.',
+  gold: 'Gold prices are sourced from the indicated provider and may be delayed. Market prices fluctuate constantly and jewellery/workmanship charges, making charges, and VAT (where applicable) are extra. Confirm the live buy/sell price with your local jeweller or dealer before transacting.',
+  silver: 'Silver prices are sourced from the indicated provider and may be delayed. Market prices fluctuate and retail charges may differ from the quoted rate. Confirm the live price with your local dealer before transacting.',
+  fuel: 'Fuel prices are updated from the cited source and may be delayed. Actual pump prices may vary by location, dealer, and timing. Confirm with Nepal Oil Corporation or your local fuel station.',
+  property: 'This property cost is an estimate based on standard rates and the information you enter. Actual registration, tax, and service charges may vary by province, municipality, property valuation, and current government rules. Confirm with the Land Revenue Office or your local authority.',
+  legal: 'This information is for general guidance only and does not constitute legal advice. Rules and fees may change and individual cases vary. Consult the relevant government office or a qualified professional for advice specific to your situation.',
+  price: 'Prices and values shown are estimates based on the latest available data at calculation time. Actual market prices may vary by location, provider, and timing. Confirm before making a purchase or financial decision.',
+  education: 'Grades and conversions shown are estimates based on the information you enter and the grading scale described. Actual results depend on your institution’s official calculation, rounding, and board rules. Confirm with your school, college, or education board.',
+  compact: 'Estimate only — actual results may differ. Verify with the relevant authority before acting.',
+};
+
+const text = Astro.slots.has('default') ? '' : (defaults[variant] ?? defaults.general);
+---
+
+<div class={`nk-disclaimer ${compact ? 'nk-disclaimer--compact' : ''}`} role="note" aria-label="Disclaimer">
+  <div class="nk-disclaimer-head">
+    <span class="nk-disclaimer-icon" aria-hidden="true">⚠️</span>
+    <strong class="nk-disclaimer-title">{title}</strong>
+  </div>
+  <div class="nk-disclaimer-body">
+    <slot>{text}</slot>
+    {(lastVerified || sources?.length) && (
+      <p class="nk-disclaimer-meta">
+        {lastVerified && <>Last verified: <strong>{lastVerified}</strong> · </>}
+        {sources?.length ? <>Sources: {sources.join(', ')}</> : null}
+      </p>
+    )}
+  </div>
+</div>
+
+<style>
+  .nk-disclaimer {
+    margin-top: 24px;
+    border: 1px solid var(--nk-border);
+    background: var(--nk-surface);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: var(--nk-text-secondary);
+  }
+  .nk-disclaimer--compact {
+    margin-top: 14px;
+    padding: 10px 12px;
+    font-size: 11px;
+    border-radius: 10px;
+    background: var(--nk-muted);
+  }
+  .nk-disclaimer-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .nk-disclaimer-icon {
+    font-size: 12px;
+    line-height: 1;
+  }
+  .nk-disclaimer-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--nk-text);
+    letter-spacing: -0.01em;
+  }
+  .nk-disclaimer-body p {
+    margin: 0;
+  }
+  .nk-disclaimer-meta {
+    margin-top: 8px !important;
+    font-size: 11px;
+    color: var(--nk-text-tertiary);
+  }
+  .nk-disclaimer :global(a) {
+    color: var(--nk-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .nk-disclaimer :global(a:hover) {
+    color: var(--nk-accent-hover);
+  }
+  @media (max-width: 640px) {
+    .nk-disclaimer {
+      margin-top: 20px;
+      padding: 12px 14px;
+    }
+  }
+</style>

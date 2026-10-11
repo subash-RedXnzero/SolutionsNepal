@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolSeoContent from '../../../components/seo/ToolSeoContent.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'Gram to Tola Converter', description: 'Convert grams back to tola', href: '/nepal/gold/gram-to-tola' },
+  { title: 'Gold Price in Nepal Today', description: 'Per tola & gram rates', href: '/nepal/gold-price-nepal' },
+  { title: 'Gold Loan Calculator', description: 'Loan against gold in Nepal', href: '/nepal/finance/gold-loan-calculator' },
+  { title: 'All Gold Tools', description: 'Browse gold converters', href: '/nepal/gold' },
+];
+---
+
+<BaseLayout
+>
+  <div class="mx-auto max-w-[1200px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Gold', href: '/nepal/gold' },
+      { label: 'Tola → Gram' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
+        Tola to Gram Converter
+      </h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+        Convert tola to grams for gold and silver in Nepal — 1 tola = 11.664 grams exactly. Compare local tola prices with international gram rates.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-5 items-start">
+
+      <!-- LEFT: Input -->
+      <div class="nk-card p-5 space-y-4">
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-tertiary);">Convert</p>
+          <div>
+            <label for="input-value" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Value in Tola</label>
+            <input inputmode="decimal" id="input-value" type="number" min="0" step="0.01" placeholder="1" class="nk-input" />
+          </div>
+        </div>
+
+        <button id="calculate-btn" class="nk-btn nk-btn-primary w-full py-2.5">Convert</button>
+
+        <!-- Mobile Result -->
+        <div id="mobile-result" class="md:hidden hidden">
+          <div class="text-center py-4" style="background: var(--nk-accent-subtle); border-radius: var(--radius-lg);">
+            <p class="text-[10px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Result in Grams</p>
+            <p id="mob-result" class="text-[28px] font-bold tracking-[-0.02em] mt-1" style="color: var(--nk-accent);"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Result -->
+      <div class="hidden md:block" style="position: sticky; top: 64px;">
+        <div class="nk-card overflow-hidden">
+          <div class="p-5 text-center" style="background: var(--nk-accent-subtle);">
+            <p class="text-[10px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Result in Grams</p>
+            <p id="result-value" class="text-[32px] font-bold tracking-[-0.02em] mt-1" style="color: var(--nk-accent);">—</p>
+          </div>
+
+          <div id="breakdown" class="hidden">
+            <div class="px-5 py-4" style="background: var(--nk-muted);">
+              <p class="text-[10px] font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-tertiary);">Quick reference</p>
+              <div class="grid grid-cols-2 gap-y-1.5 gap-x-4 text-[12px]">
+                <div><span style="color: var(--nk-text-tertiary);">1 Tola</span> = 11.664g</div>
+                <div><span style="color: var(--nk-text-tertiary);">1 Gram</span> = 0.0857 Tola</div>
+                <div><span style="color: var(--nk-text-tertiary);">1 Vori</span> = 10 Tola</div>
+                <div><span style="color: var(--nk-text-tertiary);">1 Vori</span> = 116.64g</div>
+              </div>
+            </div>
+            <div class="px-5 py-3 flex gap-2" style="border-top: 1px solid var(--nk-border);">
+              <button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy result</button>
+              <button id="reset-btn" class="nk-btn nk-btn-ghost nk-btn-sm">Reset</button>
+            </div>
+          </div>
+
+          <div id="result-placeholder" class="p-6 text-center" style="border-top: 1px solid var(--nk-border);">
+            <p class="text-[12px]" style="color: var(--nk-text-tertiary);">Enter a value and click Convert</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ToolSeoContent
+      howTo={[
+        { t: 'Enter tola', d: 'Type the weight in tola, decimals allowed (e.g. 2.5 tola for a typical necklace set).' },
+        { t: 'Convert', d: 'Multiply by 11.664 — the tool does it instantly and shows 4-decimal precision.' },
+        { t: 'Compare prices', d: 'Divide the per-tola market price by 11.664 to get the per-gram equivalent before comparing with Indian or Dubai rates.' },
+      ]}
+      formula="grams = tola × 11.664"
+      example={{ t: '2 tola gold:', d: '2 × 11.664 = 23.328 grams. At Rs. 1,52,000 per tola, that is about Rs. 13,034 per gram.' }}
+      faqs={[
+        { q: 'How many grams are in 1 tola?', a: 'Exactly 11.664 grams. This standard comes from the British-Indian tola and is used across Nepal, India and Pakistan for gold.' },
+        { q: 'What do I need to convert?', a: 'Only the tola figure. No login or price feed needed — the factor is fixed. For value, also enter today\'s per-tola rate from the Gold Price page.' },
+        { q: 'Is this accurate for jewellery billing?', a: 'Yes for weight. Jewellers add making charges (jyala), wastage and 13% VAT on making — weight conversion itself is exact.' },
+      ]}
+      related={relatedTools}
+    />
+
+    <Disclaimer variant="general" />
+  </div>
+
+  <script>
+    import { tolaToGram } from '../../../lib/converters/gold.js';
+    import { formatNumber } from '../../../lib/utils/format.js';
+
+    const inputEl = document.getElementById('input-value');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('breakdown');
+    const mobileResult = document.getElementById('mobile-result');
+    const resultEl = document.getElementById('result-value');
+    const mobResultEl = document.getElementById('mob-result');
+    const placeholder = document.getElementById('result-placeholder');
+    const copyBtn = document.getElementById('copy-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    function calculate() {
+      const value = parseFloat(inputEl?.value) || 0;
+      if (value <= 0) return;
+      const result = tolaToGram(value);
+      if (resultEl) resultEl.textContent = formatNumber(result, 4);
+      if (mobResultEl) mobResultEl.textContent = formatNumber(result, 4);
+      resultDiv?.classList.remove('hidden');
+      mobileResult?.classList.remove('hidden');
+      placeholder?.classList.add('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    inputEl?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    copyBtn?.addEventListener('click', async () => {
+      const value = parseFloat(inputEl?.value) || 0;
+      if (value > 0) {
+        const result = tolaToGram(value);
+        try { await navigator.clipboard.writeText(`${value} Tola = ${formatNumber(result, 4)} Grams`); if (copyBtn) copyBtn.textContent = 'Copied!'; setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy result'; }, 2000); } catch {}
+      }
+    });
+    resetBtn?.addEventListener('click', () => {
+      if (inputEl) inputEl.value = '';
+      resultDiv?.classList.add('hidden');
+      mobileResult?.classList.add('hidden');
+      placeholder?.classList.remove('hidden');
+      if (resultEl) resultEl.textContent = '—';
+    });
+  </script>
+</BaseLayout>

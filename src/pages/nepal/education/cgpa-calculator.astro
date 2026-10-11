@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import CgpaCalculator from '../../../components/tools/CgpaCalculator.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'CGPA Calculator – GPA, CGPA & Percentage | SolutionsNepal';
+const description = 'Calculate your semester GPA, cumulative CGPA, and estimated percentage. Supports multiple grading systems used in Nepal.';
+
+const faqItems = [
+  {
+    q: 'How do I calculate CGPA?',
+    a: 'Enter each semester\'s GPA and credit hours, then click Calculate CGPA. The formula is: CGPA = Σ(Semester GPA × Credits) ÷ Total Credits.',
+  },
+  {
+    q: 'How is semester GPA calculated?',
+    a: 'Enter each subject\'s grade and credit hours. GPA = Σ(Grade Point × Credit Hours) ÷ Total Credit Hours.',
+  },
+  {
+    q: 'How do credit hours affect CGPA?',
+    a: 'Higher-credit courses have more weight. A 4-credit A impacts CGPA more than a 2-credit A.',
+  },
+  {
+    q: 'How do I calculate CGPA from semester GPA?',
+    a: 'You cannot simply average semester GPAs if they have different credit hours. Use the weighted formula: CGPA = Σ(GPA × Credits) ÷ Σ(Credits).',
+  },
+  {
+    q: 'Can CGPA be converted to percentage?',
+    a: 'It depends on your grading system. The calculator shows an estimated percentage when the grading system supports it. Not all systems have a verified conversion formula.',
+  },
+  {
+    q: 'What is a good CGPA?',
+    a: 'This depends on your institution and program. Generally, 3.5+ is considered excellent, 3.0+ is very good, and 2.5+ is good on a 4.0 scale.',
+  },
+  {
+    q: 'Does every university use the same grading system?',
+    a: 'No. Grading systems vary between universities, colleges, and programs in Nepal. Always use the grading scale that applies to your institution.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'CGPA Calculator',
+      description: 'Calculate semester GPA, cumulative CGPA, and estimated percentage.',
+      url: 'https://solutionsnepal.com/nepal/education/cgpa-calculator',
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Education', href: '/nepal/education' },
+      { label: 'CGPA Calculator' },
+    ]} />
+    <!-- Hero -->
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">CGPA Calculator</h1>
+      <p class="mt-2 text-sm max-w-lg mx-auto" style="color:var(--nk-text-secondary);">Calculate your semester GPA, cumulative CGPA, and estimated percentage based on your grading system.</p>
+    </div>
+
+    <!-- Calculator -->
+    <div class="max-w-[1080px] mx-auto">
+      <CgpaCalculator />
+    </div>
+
+    <!-- SEO Content -->
+    <section class="mt-12 space-y-8 text-sm max-w-3xl" style="color:var(--nk-text-secondary);">
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">What is CGPA?</h2>
+        <p>CGPA (Cumulative Grade Point Average) is the average of grade points earned across all semesters, weighted by credit hours. It gives a comprehensive view of a student's academic performance throughout their program.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">How is CGPA calculated?</h3>
+        <div class="my-2 px-3 py-2 rounded-lg font-mono text-[13px]" style="background:var(--nk-bg);">CGPA = Total Grade Points ÷ Total Credit Hours</div>
+        <p>Credit hours determine the weight of each course. A 4-credit course with grade A (4.0) contributes 16 grade points, while a 2-credit course with the same grade contributes only 8.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">GPA vs CGPA</h3>
+        <p><strong>GPA</strong> (Grade Point Average) represents your performance in a single semester. <strong>CGPA</strong> represents your cumulative performance across all semesters. For example, if you scored 3.6 in semester 1 (18 credits) and 3.8 in semester 2 (20 credits), your CGPA would be 3.71, not simply the average of 3.6 and 3.8.</p>
+      </div>
+
+      <div>
+        <h3 class="text-base font-semibold mb-2" style="color:var(--nk-text);">How to Calculate CGPA</h3>
+        <ol class="mt-2 space-y-1.5 list-decimal list-inside">
+          <li>Select your grading system</li>
+          <li>Switch to CGPA mode</li>
+          <li>Enter each semester's GPA and credit hours</li>
+          <li>Click Calculate CGPA</li>
+          <li>View your CGPA and total credits</li>
+        </ol>
+      </div>
+
+      <div>
+        <h2 class="text-base font-semibold mb-3" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <div class="pt-4" style="border-top:1px solid var(--nk-border);">
+        <p class="text-[11px]" style="color:var(--nk-text-tertiary);">SolutionsNepal's CGPA calculator supports multiple grading systems used in Nepal. Grading systems can differ between universities, colleges, and programs. Always use the scale that applies to your institution.</p>
+      </div>
+    </section>
+
+    <Disclaimer variant="education" />
+    <RelatedTools tools={[
+      { title: 'NEB GPA Calculator', description: 'Class 11 & 12 +2 GPA', href: '/nepal/education/neb-gpa-calculator' },
+      { title: 'SEE GPA Calculator', description: 'SEE GPA from grades', href: '/nepal/education/see-gpa' },
+      { title: 'GPA to Percentage', description: 'GPA, percentage & division', href: '/nepal/education/gpa-percentage' },
+      { title: 'All Education Tools', description: 'Browse education calculators', href: '/nepal/education' },
+    ]} />
+  </main>
+</BaseLayout>

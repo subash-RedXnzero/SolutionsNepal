@@ -1,0 +1,29 @@
+---
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+const target = '/nepal/utilities/electricity-bill';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEA Electricity Bill Calculator | SolutionsNepal</title>
+    <meta name="description" content="This page has moved to the NEA Electricity Bill Calculator." />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={`https://solutionsnepal.com${target}`} />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <Disclaimer variant="general" />
+
+  <script is:inline>
+      window.location.replace("/nepal/utilities/electricity-bill");
+    </script>
+  </head>
+  <body>
+    <main style="padding: 48px 20px; text-align: center;">
+      <h1 style="font-size: 20px; font-weight: 700;">This page has moved</h1>
+      <p style="margin: 12px 0 20px;">The Electricity Bill Calculator is now at a new location.</p>
+      <a href={target} style="font-weight: 600; color: #1F5D5B;">Go to NEA Electricity Bill Calculator →</a>
+    </main>
+  </body>
+</html>

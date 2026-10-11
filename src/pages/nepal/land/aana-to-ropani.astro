@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CalculatorCard from '../../../components/calculator/CalculatorCard.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolSeoContent from '../../../components/seo/ToolSeoContent.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'Ropani to Aana Converter', description: 'Convert ropani to aana breakdown', href: '/nepal/land/ropani-to-aana' },
+  { title: 'Property Registration Cost', description: 'Full house+land transfer cost', href: '/nepal/property/property-registration-cost' },
+  { title: 'Land Affordability', description: 'How much land can you afford', href: '/nepal/land/land-affordability-calculator' },
+  { title: 'All Land Tools', description: 'Browse land converters', href: '/nepal/land' },
+];
+---
+
+<BaseLayout
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Land & Property', href: '/nepal/land' },
+      { label: 'Aana → Ropani' },
+    ]} />
+
+    <CalculatorCard
+      title="Aana to Ropani Converter"
+      description="Convert aana to ropani with paisa-daam precision — 16 aana = 1 ropani. For small plots quoted in aana."
+    >
+      <div class="space-y-4">
+        <div>
+          <label for="input-value" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+            Value in Aana
+          </label>
+          <input inputmode="decimal"
+            id="input-value"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="16"
+            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+            style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+          />
+        </div>
+
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Convert
+        </button>
+
+        <div id="result" class="hidden">
+          <hr class="my-4" style="border-color: var(--nk-border);" />
+          <div class="text-center py-4">
+            <p class="text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Result in Ropani</p>
+            <p id="result-value" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">Copy Result</button>
+            <button id="reset-btn" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">Reset</button>
+          </div>
+        </div>
+      </div>
+    </CalculatorCard>
+
+    <ToolSeoContent
+      howTo={[
+        { t: 'Enter aana', d: 'Type the plot size in aana as listed (e.g. 8 aana for a typical Kathmandu ghaderi).' },
+        { t: 'Convert', d: 'Divide by 16 to get ropani with remainder shown as aana-paisa-daam.' },
+        { t: 'Estimate cost', d: 'Multiply by local per-aana rate, then add pass costs via the Registration calculators.' },
+      ]}
+      formula="ropani = aana ÷ 16"
+      example={{ t: '12 aana:', d: '12 ÷ 16 = 0.75 ropani (0 ropani 12 aana), about 4,107 sq ft.' }}
+      faqs={[
+        { q: 'How many ropani is 1 aana?', a: '0.0625 ropani (1/16). So 4 aana is 0.25 ropani and 8 aana is half a ropani.' },
+        { q: 'Why do listings use aana instead of ropani?', a: 'Urban plots are usually under 1 ropani, so aana gives whole numbers. This tool converts them back for lalpurja and loan paperwork.' },
+        { q: 'Does aana size vary by district?', a: 'The hill-system aana (342.25 sq ft) is standard for ropani areas. Terai kattha/dhur is a different system — do not mix them.' },
+      ]}
+      related={relatedTools}
+    />
+
+    <Disclaimer variant="general" />
+  </div>
+
+  <script>
+    import { convertAanaToRopani } from '../../../lib/converters/land.js';
+    import { formatNumber } from '../../../lib/utils/format.js';
+
+    const inputEl = document.getElementById('input-value');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const resultEl = document.getElementById('result-value');
+    const copyBtn = document.getElementById('copy-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    function calculate() {
+      const value = parseFloat(inputEl?.value) || 0;
+      if (value <= 0) return;
+      const result = convertAanaToRopani(value);
+      if (resultEl) resultEl.textContent = formatNumber(result, 4);
+      resultDiv?.classList.remove('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    inputEl?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    copyBtn?.addEventListener('click', async () => {
+      const value = parseFloat(inputEl?.value) || 0;
+      if (value > 0) {
+        const result = convertAanaToRopani(value);
+        try { await navigator.clipboard.writeText(`${value} Aana = ${formatNumber(result, 4)} Ropani`); if (copyBtn) copyBtn.textContent = 'Copied!'; setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy Result'; }, 2000); } catch {}
+      }
+    });
+    resetBtn?.addEventListener('click', () => { if (inputEl) inputEl.value = ''; resultDiv?.classList.add('hidden'); });
+  </script>
+</BaseLayout>

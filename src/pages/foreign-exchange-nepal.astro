@@ -1,0 +1,628 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import { getAllCurrenciesAsync, getForexMetaAsync, formatRate } from '../lib/nepal/forex.js';
+import Disclaimer from '../components/ui/Disclaimer.astro';
+
+const allCurrencies = await getAllCurrenciesAsync();
+const meta = await getForexMetaAsync();
+
+// Compact popular strip (6 majors) + NPR pseudo-currency for the converter.
+// NPR flag built from codepoints to keep the source ASCII-safe.
+const POPULAR_ISOS = ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'AUD'];
+const popularCurrencies = POPULAR_ISOS.map(iso => allCurrencies.find(c => c.iso3 === iso)).filter(Boolean);
+const NPR_FLAG = String.fromCodePoint(0x1F1F3, 0x1F1F5);
+const convOptions = [...allCurrencies, { iso3: 'NPR', name: 'Nepali Rupee', flag: NPR_FLAG, unit: 1, buy: 1, sell: 1 }];
+
+---
+
+<BaseLayout>
+
+<div class="fx-wrap">
+  <Breadcrumbs items={[
+    { label: 'Nepal', href: '/nepal' },
+    { label: 'Foreign Exchange' },
+  ]} />
+
+  <!-- HEADER -->
+  <div class="fx-header">
+    <h1 class="fx-title">Foreign Exchange Nepal</h1>
+    <p class="fx-sub">Today's official exchange rates in Nepal</p>
+    <p class="fx-meta">
+      <span class="fx-live"><span class="fx-live-dot" aria-hidden="true"></span>Live</span>
+      <span>Updated {meta.publishedDate} · {meta.publishedTime}</span>
+      <span class="fx-meta-sep">·</span>
+      <span>Source: {meta.source}</span>
+    </p>
+  </div>
+
+  <!-- CONVERTER HERO -->
+  <section class="fx-conv-card" aria-label="Currency converter">
+    <p class="fx-conv-title">Currency Converter</p>
+    <div class="fx-conv-grid">
+      <div class="fx-conv-side">
+        <label class="fx-conv-cap" for="fx-from">From</label>
+        <select id="fx-from" class="fx-conv-cur">
+          {convOptions.map(c => (
+            <option value={c.iso3} selected={c.iso3 === 'USD'}>{c.flag} {c.iso3} — {c.name}</option>
+          ))}
+        </select>
+        <input inputmode="decimal" id="fx-amount" class="fx-conv-amt tabular-nums" type="number" placeholder="100" min="0" step="any" aria-label="Amount to convert" />
+      </div>
+      <button id="fx-swap" class="fx-conv-swap" type="button" aria-label="Swap currencies" title="Swap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
+      </button>
+      <div class="fx-conv-side">
+        <label class="fx-conv-cap" for="fx-to">To</label>
+        <select id="fx-to" class="fx-conv-cur">
+          {convOptions.map(c => (
+            <option value={c.iso3} selected={c.iso3 === 'NPR'}>{c.flag} {c.iso3} — {c.name}</option>
+          ))}
+        </select>
+        <input inputmode="decimal" id="fx-result-amt" class="fx-conv-amt fx-conv-amt--out tabular-nums" type="number" min="0" step="any" aria-label="Converted amount" />
+      </div>
+    </div>
+    <p class="fx-conv-rate" id="fx-rate-line" aria-live="polite"></p>
+    <p class="fx-conv-bs" id="fx-bs-line"></p>
+    <div class="fx-quick" role="group" aria-label="Quick amounts">
+      <button type="button" data-amt="10">10</button>
+      <button type="button" data-amt="100">100</button>
+      <button type="button" data-amt="500">500</button>
+      <button type="button" data-amt="1000">1,000</button>
+      <button type="button" data-amt="10000">10,000</button>
+    </div>
+    <div class="fx-conv-actions">
+      <button id="fx-convert" class="fx-convert-btn" type="button">Convert</button>
+    </div>
+  </section>
+
+  <!-- POPULAR -->
+  <section class="fx-section">
+    <div class="fx-sec-head">
+      <h2 class="fx-section-title">Popular currencies</h2>
+      <a class="fx-viewall" href="#all-currencies">View all →</a>
+    </div>
+    <div class="fx-pop">
+      {popularCurrencies.map(c => (
+        <button type="button" class="fx-pop-item" data-iso={c.iso3} aria-label={`Convert ${c.iso3} to Nepali Rupees`}>
+          <span class="fx-pop-flag" aria-hidden="true">{c.flag}</span>
+          <span class="fx-pop-code">{c.iso3}</span>
+          <span class="fx-pop-name">{c.name}</span>
+          <span class="fx-pop-rates tabular-nums">{c.buy.toFixed(2)} / {c.sell.toFixed(2)}</span>
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <div class="fx-section" id="all-currencies" style="scroll-margin-top:80px;">
+    <h2 class="fx-section-title">All currencies</h2>
+    <div class="fx-search-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="fx-search" class="fx-search-input" placeholder="Search currency..." autocomplete="off" />
+    </div>
+
+    <!-- TABLE (desktop) -->
+    <div class="fx-table-wrap">
+      <table class="fx-table" id="fx-table">
+        <thead>
+          <tr>
+            <th>Currency</th>
+            <th>Country</th>
+            <th>Unit</th>
+            <th>Buy</th>
+            <th>Sell</th>
+          </tr>
+        </thead>
+        <tbody id="fx-table-body">
+          {allCurrencies.map(c => (
+            <tr data-search={`${c.iso3} ${c.name} ${c.country}`}>
+              <td>
+                <div class="fx-t-currency">
+                  <span class="fx-t-flag">{c.flag}</span>
+                  <div>
+                    <span class="fx-t-iso">{c.iso3}</span>
+                    <span class="fx-t-name">{c.name}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="fx-t-country">{c.country}</td>
+              <td class="fx-t-unit">{c.unit} {c.iso3}</td>
+              <td class="fx-t-rate">Rs. {c.buy.toFixed(2)}</td>
+              <td class="fx-t-rate">Rs. {c.sell.toFixed(2)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CARDS (mobile) -->
+    <div class="fx-mobile-cards" id="fx-mobile-cards">
+      {allCurrencies.map(c => (
+        <div class="fx-m-card" data-search={`${c.iso3} ${c.name} ${c.country}`}>
+          <div class="fx-m-top">
+            <span class="fx-m-flag">{c.flag}</span>
+            <div class="fx-m-info">
+              <span class="fx-m-iso">{c.iso3}</span>
+              <span class="fx-m-name">{c.name}</span>
+            </div>
+          </div>
+          <div class="fx-m-unit">Unit: {c.unit} {c.iso3}</div>
+          <div class="fx-m-rates">
+            <div class="fx-m-rate">
+              <span class="fx-m-rate-label">Buy</span>
+              <span class="fx-m-rate-value">Rs. {c.buy.toFixed(2)}</span>
+            </div>
+            <div class="fx-m-rate">
+              <span class="fx-m-rate-label">Sell</span>
+              <span class="fx-m-rate-value">Rs. {c.sell.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="fx-search-empty" id="fx-search-empty" style="display:none;">
+      No currencies match your search.
+    </div>
+  </div>
+
+  <!-- BUY / SELL EXPLANATION -->
+  <div class="fx-section">
+    <h2 class="fx-section-title">Understanding Rates</h2>
+    <div class="fx-info-cards">
+      <div class="fx-info-card">
+        <div class="fx-info-icon">📥</div>
+        <h3 class="fx-info-title">Buying Rate</h3>
+        <p class="fx-info-text">The rate used when a bank or exchange service <strong>buys</strong> foreign currency from you. For example, when you sell US Dollars to a bank, they use the buying rate to calculate how many Nepali Rupees you receive.</p>
+      </div>
+      <div class="fx-info-card">
+        <div class="fx-info-icon">📤</div>
+        <h3 class="fx-info-title">Selling Rate</h3>
+        <p class="fx-info-text">The rate used when a bank or exchange service <strong>sells</strong> foreign currency to you. For example, when you buy US Dollars from a bank, you pay Nepali Rupees at the selling rate.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA SOURCE -->
+  <div class="fx-section fx-source">
+    <h3 class="fx-source-title">Data Source</h3>
+    <p class="fx-source-text">{meta.source}</p>
+    <p class="fx-source-detail">Rate type: {meta.rateType}</p>
+    <p class="fx-source-detail">Last updated: {meta.publishedDate} · {meta.publishedTime} (Nepal Time)</p>
+  </div>
+
+  <!-- RELATED TOOLS -->
+  <div class="fx-section">
+    <h2 class="fx-section-title">Related Tools</h2>
+    <div class="fx-related">
+      <a href="/nepal/finance/remittance-calculator" class="fx-related-link">Remittance Calculator</a>
+      <a href="/nepal/gold-price-nepal" class="fx-related-link">Gold Price Nepal</a>
+      <a href="/nepal/silver-price-nepal" class="fx-related-link">Silver Price Nepal</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fx-wrap {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 20px 16px 80px;
+    --fx-green: #16A34A;
+  }
+
+  /* HEADER */
+  .fx-header { margin-bottom: 20px; }
+  .fx-title { font-size: 26px; font-weight: 800; color: var(--nk-text); margin: 0 0 4px; letter-spacing: -0.02em; }
+  .fx-sub { font-size: 14px; color: var(--nk-text-secondary); margin: 0 0 8px; }
+  .fx-meta {
+    font-size: 12px; color: var(--nk-text-tertiary);
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  }
+  .fx-meta-sep { opacity: 0.4; }
+  .fx-live {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; color: var(--fx-green);
+  }
+  .fx-live-dot {
+    position: relative; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--fx-green); flex-shrink: 0;
+  }
+  .fx-live-dot::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid rgba(22, 163, 74, 0.45);
+    animation: fx-ping 2s ease-out infinite;
+  }
+  @keyframes fx-ping {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(1.15); opacity: 0; }
+  }
+
+  /* SECTIONS */
+  .fx-section { margin-bottom: 28px; }
+  .fx-section-title {
+    font-size: 16px; font-weight: 600; color: var(--nk-text);
+    margin: 0 0 12px; letter-spacing: -0.01em;
+  }
+
+  /* CONVERTER HERO */
+  .fx-conv-card {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  }
+  .fx-conv-title {
+    margin: 0 0 14px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--nk-text-secondary);
+  }
+  .fx-conv-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: end;
+  }
+  .fx-conv-side { min-width: 0; }
+  .fx-conv-cap {
+    display: block; font-size: 11px; font-weight: 600; color: var(--nk-text-tertiary);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+  }
+  .fx-conv-cur {
+    width: 100%; padding: 9px 12px; border-radius: 8px;
+    border: 1px solid var(--nk-border); background: var(--nk-bg);
+    color: var(--nk-text); font-size: 13px; font-weight: 600; font-family: var(--font-sans);
+    box-sizing: border-box; margin-bottom: 8px; cursor: pointer;
+  }
+  .fx-conv-amt {
+    width: 100%; padding: 12px 14px; border-radius: 8px;
+    border: 1px solid var(--nk-border); background: var(--nk-bg);
+    color: var(--nk-text); font-size: 22px; font-weight: 700;
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    box-sizing: border-box;
+  }
+  .fx-conv-amt--out { color: var(--nk-accent); border-color: var(--nk-accent); background: var(--nk-accent-subtle); }
+  .fx-conv-amt::placeholder { color: var(--nk-text-tertiary); opacity: 1; }
+  .fx-conv-cur:focus, .fx-conv-amt:focus { outline: none; border-color: var(--nk-accent); box-shadow: 0 0 0 3px var(--nk-accent-subtle); }
+  .fx-conv-swap {
+    display: flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--nk-border); background: var(--nk-surface);
+    color: var(--nk-text-secondary); cursor: pointer; flex-shrink: 0;
+    margin-bottom: 14px; transition: border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+  .fx-conv-swap:hover { border-color: var(--nk-accent); color: var(--nk-accent); transform: rotate(180deg); }
+  .fx-conv-swap:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .fx-conv-actions { margin-top: 14px; }
+  .fx-convert-btn {
+    width: 100%; padding: 11px 20px; border: none; border-radius: 8px;
+    background: var(--nk-accent); color: #fff;
+    font-size: 14px; font-weight: 700; font-family: var(--font-sans);
+    cursor: pointer; transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  .fx-convert-btn:hover { filter: brightness(0.94); }
+  .fx-convert-btn:active { transform: scale(0.99); }
+  .fx-convert-btn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .fx-conv-rate {
+    margin: 12px 0 2px; font-size: 14px; font-weight: 700; color: var(--nk-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .fx-conv-bs { margin: 0; font-size: 12px; color: var(--nk-text-tertiary); font-variant-numeric: tabular-nums; }
+  .fx-quick { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .fx-quick button {
+    font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 999px;
+    border: 1px solid var(--nk-border); background: var(--nk-surface);
+    color: var(--nk-text-secondary); cursor: pointer; font-family: var(--font-sans);
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .fx-quick button:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+  .fx-quick button:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+
+  /* POPULAR STRIP */
+  .fx-sec-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    margin-bottom: 10px;
+  }
+  .fx-sec-head .fx-section-title { margin: 0; }
+  .fx-viewall {
+    font-size: 12.5px; font-weight: 600; color: var(--nk-accent);
+    text-decoration: none; white-space: nowrap;
+  }
+  .fx-viewall:hover { text-decoration: underline; }
+  .fx-pop {
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px;
+  }
+  .fx-pop-item {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
+    background: var(--nk-surface); border: 1px solid var(--nk-border); border-radius: 10px;
+    padding: 10px 12px; cursor: pointer; text-align: left; min-width: 0;
+    font-family: var(--font-sans);
+    transition: border-color 0.15s ease, transform 0.12s ease;
+  }
+  .fx-pop-item:hover { border-color: var(--nk-accent); transform: translateY(-1px); }
+  .fx-pop-item:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .fx-pop-flag { font-size: 18px; line-height: 1; margin-bottom: 4px; }
+  .fx-pop-code { font-size: 13px; font-weight: 800; color: var(--nk-text); font-family: var(--font-mono); letter-spacing: 0.02em; }
+  .fx-pop-name {
+    font-size: 11px; color: var(--nk-text-tertiary); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+  }
+  .fx-pop-rates { font-size: 12px; font-weight: 600; color: var(--nk-text); margin-top: 3px; white-space: nowrap; }
+
+  /* SEARCH */
+  .fx-search-wrap {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 8px;
+    border: 1px solid var(--nk-border); background: var(--nk-surface);
+    margin-bottom: 12px; color: var(--nk-text-tertiary);
+  }
+  .fx-search-input {
+    flex: 1; border: none; background: transparent; outline: none;
+    font-size: 14px; font-family: var(--font-sans); color: var(--nk-text);
+  }
+  .fx-search-input::placeholder { color: var(--nk-text-tertiary); }
+  .fx-search-empty {
+    text-align: center; padding: 32px 16px;
+    font-size: 14px; color: var(--nk-text-tertiary);
+  }
+
+  /* TABLE */
+  .fx-table-wrap {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    overflow: hidden;
+    overflow-x: auto;
+  }
+  .fx-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .fx-table th {
+    text-align: left; padding: 10px 16px;
+    font-size: 11px; font-weight: 600; color: var(--nk-text-tertiary);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--nk-border);
+    background: var(--nk-muted); white-space: nowrap;
+  }
+  .fx-table td {
+    padding: 11px 16px; border-bottom: 1px solid var(--nk-hairline);
+    color: var(--nk-text); white-space: nowrap;
+  }
+  .fx-table tr:last-child td { border-bottom: none; }
+  .fx-table tr:hover td { background: var(--nk-hover); }
+  .fx-t-currency { display: flex; align-items: center; gap: 10px; }
+  .fx-t-flag { font-size: 18px; }
+  .fx-t-iso { font-weight: 700; font-family: var(--font-mono); display: block; }
+  .fx-t-name { font-size: 11px; color: var(--nk-text-tertiary); }
+  .fx-t-country { color: var(--nk-text-secondary); }
+  .fx-t-unit { font-family: var(--font-mono); color: var(--nk-text-secondary); }
+  .fx-t-rate { font-family: var(--font-mono); font-weight: 600; }
+
+  /* MOBILE CARDS */
+  .fx-mobile-cards { display: none; }
+  .fx-m-card {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+  }
+  .fx-m-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .fx-m-flag { font-size: 22px; }
+  .fx-m-info { display: flex; flex-direction: column; }
+  .fx-m-iso { font-size: 15px; font-weight: 700; font-family: var(--font-mono); color: var(--nk-text); }
+  .fx-m-name { font-size: 12px; color: var(--nk-text-tertiary); }
+  .fx-m-unit { font-size: 12px; color: var(--nk-text-secondary); margin-bottom: 10px; }
+  .fx-m-rates { display: flex; gap: 24px; }
+  .fx-m-rate { display: flex; flex-direction: column; }
+  .fx-m-rate-label {
+    font-size: 10px; font-weight: 600; color: var(--nk-text-tertiary);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1px;
+  }
+  .fx-m-rate-value {
+    font-size: 15px; font-weight: 600; color: var(--nk-text);
+    font-family: var(--font-mono);
+  }
+
+  /* INFO CARDS */
+  .fx-info-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fx-info-card {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .fx-info-icon { font-size: 24px; margin-bottom: 10px; }
+  .fx-info-title {
+    font-size: 14px; font-weight: 600; color: var(--nk-text); margin: 0 0 6px;
+  }
+  .fx-info-text {
+    font-size: 13px; color: var(--nk-text-secondary); line-height: 1.6; margin: 0;
+  }
+
+  /* SOURCE */
+  .fx-source {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .fx-source-title {
+    font-size: 13px; font-weight: 600; color: var(--nk-text); margin: 0 0 8px;
+  }
+  .fx-source-text { font-size: 13px; color: var(--nk-text-secondary); margin-bottom: 4px; }
+  .fx-source-detail { font-size: 12px; color: var(--nk-text-tertiary); margin-bottom: 2px; }
+
+  /* RELATED */
+  .fx-related { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fx-related-link {
+    display: inline-flex; align-items: center; padding: 8px 14px;
+    font-size: 12px; font-weight: 500; color: var(--nk-text-secondary);
+    border: 1px solid var(--nk-border); border-radius: 8px;
+    text-decoration: none; transition: all 0.1s ease;
+  }
+  .fx-related-link:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .fx-pop { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 768px) {
+    .fx-table-wrap { display: none; }
+    .fx-mobile-cards { display: block; }
+    .fx-info-cards { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .fx-conv-grid { grid-template-columns: minmax(0, 1fr); }
+    .fx-conv-swap { width: 100%; height: 40px; border-radius: 8px; margin: 0; }
+    .fx-conv-swap:hover { transform: rotate(90deg); }
+    .fx-pop { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .fx-wrap { padding: 16px 12px 60px; }
+    .fx-title { font-size: 20px; }
+    .fx-conv-card { padding: 16px; }
+    .fx-conv-amt { font-size: 19px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fx-conv-swap, .fx-pop-item { transition: none; }
+    .fx-conv-swap:hover, .fx-pop-item:hover { transform: none; }
+    .fx-live-dot::after { animation: none; }
+  }
+</style>
+
+<Disclaimer variant="price" />
+
+  <script is:inline define:vars={{ allCurrencies_json: JSON.stringify(allCurrencies) }}>
+(function() {
+  var currencies = JSON.parse(allCurrencies_json);
+
+  // ── SEARCH ──
+  var searchInput = document.getElementById('fx-search');
+  var tableBody = document.getElementById('fx-table-body');
+  var mobileCards = document.getElementById('fx-mobile-cards');
+  var emptyMsg = document.getElementById('fx-search-empty');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      var q = this.value.toLowerCase().trim();
+      var tableRows = tableBody ? tableBody.querySelectorAll('tr') : [];
+      var cards = mobileCards ? mobileCards.querySelectorAll('.fx-m-card') : [];
+      var anyVisible = false;
+
+      tableRows.forEach(function(row) {
+        var match = !q || row.getAttribute('data-search').toLowerCase().includes(q);
+        row.style.display = match ? '' : 'none';
+        if (match) anyVisible = true;
+      });
+
+      cards.forEach(function(card) {
+        var match = !q || card.getAttribute('data-search').toLowerCase().includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) anyVisible = true;
+      });
+
+      if (emptyMsg) emptyMsg.style.display = anyVisible ? 'none' : 'block';
+    });
+  }
+
+  // ── CONVERTER (dual selectors, NPR cross-rates at mid) ──
+  var NPR_RATE = { iso3: 'NPR', name: 'Nepali Rupee', unit: 1, buy: 1, sell: 1 };
+  var fromSel = document.getElementById('fx-from');
+  var toSel = document.getElementById('fx-to');
+  var amtEl = document.getElementById('fx-amount');
+  var resEl = document.getElementById('fx-result-amt');
+  var rateLine = document.getElementById('fx-rate-line');
+  var bsLine = document.getElementById('fx-bs-line');
+  var swapBtn = document.getElementById('fx-swap');
+
+  function getCurrency(iso) {
+    return currencies.find(function(c) { return c.iso3 === iso; });
+  }
+
+  function currOf(iso) {
+    return iso === 'NPR' ? NPR_RATE : getCurrency(iso);
+  }
+
+  function midPerUnit(c) {
+    return ((c.buy + c.sell) / 2) / c.unit;
+  }
+
+  function fmtRate(n) {
+    return n.toLocaleString('en-IN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: Math.abs(n) < 0.01 && n !== 0 ? 4 : 2,
+    });
+  }
+
+  function paintMeta(f, t) {
+    var r = midPerUnit(f) / midPerUnit(t);
+    rateLine.textContent = '1 ' + f.iso3 + ' = ' + t.iso3 + ' ' + fmtRate(r);
+    var leg = f.iso3 !== 'NPR' ? f : t;
+    bsLine.textContent = 'Buy ' + fmtRate(leg.buy / leg.unit) + ' · Sell ' + fmtRate(leg.sell / leg.unit) +
+      (leg.unit !== 1 ? ' (per ' + leg.unit + ' ' + leg.iso3 + ')' : ' (NRB reference rates)');
+  }
+
+  function convertFrom() {
+    var f = currOf(fromSel.value);
+    var t = currOf(toSel.value);
+    if (!f || !t) return;
+    if (amtEl.value.trim() === '') {
+      resEl.value = '';
+      paintMeta(f, t);
+      return;
+    }
+    var a = parseFloat(amtEl.value) || 0;
+    var out = (a * midPerUnit(f)) / midPerUnit(t);
+    resEl.value = Math.round(out * 100) / 100;
+    paintMeta(f, t);
+  }
+
+  function convertTo() {
+    var f = currOf(fromSel.value);
+    var t = currOf(toSel.value);
+    if (!f || !t) return;
+    if (resEl.value.trim() === '') {
+      amtEl.value = '';
+      paintMeta(f, t);
+      return;
+    }
+    var b = parseFloat(resEl.value) || 0;
+    var out = (b * midPerUnit(t)) / midPerUnit(f);
+    amtEl.value = Math.round(out * 100) / 100;
+    paintMeta(f, t);
+  }
+
+  if (fromSel) {
+    fromSel.addEventListener('change', convertFrom);
+    toSel.addEventListener('change', convertFrom);
+    amtEl.addEventListener('input', convertFrom);
+    resEl.addEventListener('input', convertTo);
+    document.getElementById('fx-convert').addEventListener('click', convertFrom);
+    document.querySelectorAll('.fx-quick button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        amtEl.value = btn.dataset.amt;
+        convertFrom();
+      });
+    });
+    swapBtn.addEventListener('click', function() {
+      var f = fromSel.value;
+      fromSel.value = toSel.value;
+      toSel.value = f;
+      convertFrom();
+    });
+    document.querySelectorAll('.fx-pop-item').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        fromSel.value = btn.dataset.iso;
+        convertFrom();
+        document.querySelector('.fx-conv-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  }
+
+  convertFrom();
+})();
+</script>
+</BaseLayout>

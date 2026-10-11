@@ -1,0 +1,849 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+
+const relatedTools = [
+  { title: 'Nepal Salary Calculator', description: 'Calculate take-home salary', href: '/nepal/finance/salary-checker' },
+  { title: 'EMI Calculator', description: 'Calculate loan EMI', href: '/nepal/finance/emi-calculator' },
+  { title: 'NEA Electricity Bill', description: 'Estimate your electricity bill', href: '/nepal/utilities/electricity-bill' },
+  { title: 'Vehicle Tax, Fine & Renewal', description: 'Calculate vehicle renewal cost', href: '/nepal/transport/vehicle-tax' },
+  { title: 'Property Registration Cost', description: 'Calculate land transfer costs', href: '/nepal/property/property-registration-cost' },
+  { title: 'Land Unit Converter', description: 'Convert Ropani, Aana, Kattha units', href: '/nepal/land/ropani-to-aana' },
+];
+
+const faqItems = [
+  {
+    question: 'What is house rent tax in Nepal?',
+    answer: "House rent tax in Nepal is a tax collected on rental income from property. Nepal has two separate systems: (1) Municipal House Rent Tax \u2014 a flat percentage (10% in Kathmandu) collected by your ward office when an individual rents to another individual, and (2) Federal TDS on Rent \u2014 a 10% withholding deducted by the company tenant under Section 88 of the Income Tax Act 2058. Which one applies depends on who is paying the rent.",
+  },
+  {
+    question: 'How do I calculate house rent tax?',
+    answer: "For individual landlords renting to individual tenants, multiply your annual rent by the municipal rate (10% in Kathmandu). For example, NPR 25,000/month \u00d7 12 = NPR 300,000 annual rent \u00d7 10% = NPR 30,000 tax. If a company pays your rent, they deduct 10% TDS before paying you. Use this calculator for an instant estimate.",
+  },
+  {
+    question: 'Is rental income taxable in Nepal?',
+    answer: "Yes. For individual landlords renting to individuals, municipal house rent tax applies (10% in Kathmandu). For individual landlords whose tenants are companies, 10% federal TDS is deducted. Both are final taxes \u2014 the rent does not enter your personal income tax slab. For corporate landlords, rental income is part of business income taxed at 25%.",
+  },
+  {
+    question: 'How much tax is charged on house rent?',
+    answer: "The standard municipal rate in Kathmandu is 10% of gross annual rent. Across Nepal, rates range from 10% to 17% depending on the municipality. For company tenants, the federal TDS rate is 10%. These rates have not changed in FY 2083/84.",
+  },
+  {
+    question: 'Is house rent tax different from income tax?',
+    answer: "Yes. House rent tax (municipal) is a separate local tax collected by the ward office. Income tax is a federal tax collected by IRD. For individual landlords, house rent tax is a final tax \u2014 the rental income does not enter your income tax slab. Income tax only applies if you are in the property-letting business or are a corporate landlord.",
+  },
+  {
+    question: 'Does municipality affect house rent tax?',
+    answer: "Yes. Different municipalities charge different rates, ranging from 10% to 17% of gross annual rent. Kathmandu charges 10%. If your municipality rate is not verified in this calculator, the default rate is used. Always confirm your actual municipality rate at your ward office.",
+  },
+  {
+    question: 'Does commercial rent have different treatment?',
+    answer: "For the municipal house rent tax, the rate is the same whether the property is residential or commercial. However, commercial rent may attract 13% VAT if the landlord's commercial-rent turnover exceeds NPR 30 lakh. The property type does not change the house rent tax calculation itself.",
+  },
+  {
+    question: 'How is rental income reported?',
+    answer: "For individual-to-individual rent, you declare and pay municipal house rent tax at your ward office via self-declaration (swagoshana). For company-paid rent, the company deducts TDS and provides you a TDS certificate (Form-TDS-S). No separate IRD filing is needed for the final tax.",
+  },
+  {
+    question: 'What is TDS on rent?',
+    answer: "TDS (Tax Deducted at Source) on rent is a 10% withholding that applies when a company, business, NGO, or government body pays rent to an individual landlord. Under Section 88 of the Income Tax Act 2058, the tenant deducts this before payment and deposits it with IRD. Under Section 92, this is the final tax \u2014 no further filing needed by the landlord.",
+  },
+  {
+    question: 'Why is my actual tax different from the calculator?',
+    answer: "This calculator provides estimates based on currently available information. Your actual tax may differ due to: different municipal rates not yet verified, special exemptions, additional local charges, or changes in government rules. Always confirm with your ward office or IRD Nepal.",
+  },
+];
+
+const educationalContent = [
+  {
+    title: 'What is house rent tax in Nepal?',
+    content: "Nepal has two separate tax systems for rental income. The Municipal House Rent Tax (Ghar Bhada Kar) is a flat percentage collected by your local ward office when an individual landlord rents to an individual tenant. The Federal TDS on Rent is a 10% withholding applied when a company or business pays rent to an individual. These are completely different from personal income tax.",
+  },
+  {
+    title: 'How is house rent tax calculated?',
+    content: "For individual landlords in Kathmandu, the municipal tax is simply 10% of your gross annual rent. Monthly rent NPR 25,000 \u00d7 12 = NPR 300,000 annual rent. 10% of NPR 300,000 = NPR 30,000 estimated tax. No deductions are allowed under the flat municipal rate. The tax is collected at your ward office.",
+  },
+  {
+    title: 'What is rental income withholding?',
+    content: "When a company, business, or government body pays rent to an individual, the tenant must deduct 10% TDS (Tax Deducted at Source) under Section 88 of the Income Tax Act 2058. This withholding is deposited with IRD. Under Section 92, this 10% is the final tax for individual landlords \u2014 no further income tax filing is needed on that rental income.",
+  },
+  {
+    title: 'Who has to pay house rent tax?',
+    content: "The property owner (landlord) is responsible for paying house rent tax. However, the rent agreement can assign the payment obligation to the tenant. In practice, for individual-to-individual rent, the landlord pays at the ward office. For company-paid rent, the tenant deducts TDS before payment.",
+  },
+  {
+    title: 'Can I deduct property expenses from rental income?',
+    content: "Under the municipal flat-rate house rent tax, NO deductions are allowed. The tax is calculated on the full gross rent. Allowable deductions like repair costs, insurance, and depreciation only apply when rental income is assessed as business income (for corporate landlords or if you are in the property-letting business).",
+  },
+  {
+    title: 'Does house rent tax depend on municipality?',
+    content: "Yes. Each municipality sets its own rate within the national range of 10% to 17%. Kathmandu Metropolitan City charges 10%. The actual rate varies by your ward and municipality. Always verify the current rate at your local ward office.",
+  },
+];
+
+const fiscalYears = [
+  { value: '2083/84', label: '2083/84 (2026/27)' },
+];
+---
+<BaseLayout
+  title="Nepal House Rent Tax Calculator 2083/84 | SolutionsNepal"
+  description="Calculate house rent tax, rental income, applicable withholding, and estimated net rental income in Nepal."
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Nepal House Rent & Rental Income Tax Calculator",
+    "description": "Calculate house rent tax, rental income, applicable withholding, and estimated net rental income in Nepal.",
+    "url": "https://solutionsnepal.com/nepal/finance/house-rent-tax",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+  }}
+>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Finance', href: '/nepal/finance' },
+      { label: 'House Rent Tax' },
+    ]} />
+
+    <div class="mb-8 max-w-2xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">Nepal House Rent & Rental Income Tax Calculator</h1>
+      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Calculate estimated house rent tax, rental income, and your net rental income in Nepal.</p>
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+      <div class="rounded-xl border overflow-hidden" style="background-color: var(--nk-surface); border-color: var(--nk-border);">
+        <div class="px-5 sm:px-6 pt-6 pb-6 space-y-6">
+
+          <div>
+            <p class="text-xs font-medium mb-2" style="color: var(--nk-text-secondary);">Calculator mode</p>
+            <div class="flex rounded-lg overflow-hidden border" style="border-color: var(--nk-border);">
+              <button id="mode-quick" class="flex-1 py-2.5 text-sm font-medium transition-all duration-200" style="background-color: var(--nk-accent); color: white;" role="tab" aria-selected="true">Quick Calculator</button>
+              <button id="mode-detailed" class="flex-1 py-2.5 text-sm font-medium transition-all duration-200" style="background-color: var(--nk-surface); color: var(--nk-text-secondary);" role="tab" aria-selected="false">Detailed Calculator</button>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs font-medium mb-2" style="color: var(--nk-text-secondary);">Rent input</p>
+            <div class="flex rounded-lg overflow-hidden border" style="border-color: var(--nk-border);">
+              <button id="rent-monthly" class="flex-1 py-2 text-xs font-medium transition-all duration-200" style="background-color: var(--nk-accent); color: white;" role="tab" aria-selected="true">Monthly Rent</button>
+              <button id="rent-annual" class="flex-1 py-2 text-xs font-medium transition-all duration-200" style="background-color: var(--nk-surface); color: var(--nk-text-secondary);" role="tab" aria-selected="false">Annual Rent</button>
+            </div>
+          </div>
+
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- QUICK MODE -->
+          <div id="quick-mode">
+            <div class="mb-4">
+              <label for="quick-rent" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);"><span id="rent-label">Monthly Rent</span></label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+                <input inputmode="decimal" id="quick-rent" type="number" min="0" step="1000" placeholder="25,000" class="w-full pl-12 pr-3 py-3 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);" />
+              </div>
+              <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">Enter the rent you receive each month.</p>
+            </div>
+
+            <div id="rent-equivalent" class="p-3 rounded-lg mb-4" style="background-color: var(--nk-muted);">
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Annual equivalent</span>
+                <span id="rent-equivalent-amount" class="font-medium" style="color: var(--nk-text);">NPR 0</span>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="quick-property-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Type</label>
+              <div class="relative">
+                <select id="quick-property-type" class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                  <option value="residential">House / Room</option>
+                  <option value="commercial">Shop / Commercial</option>
+                  <option value="other">Other Rental Property</option>
+                </select>
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="quick-fiscal-year" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fiscal Year</label>
+              <div class="relative">
+                <select id="quick-fiscal-year" class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                  {fiscalYears.map(fy => (
+                    <option value={fy.value}>{fy.label}</option>
+                  ))}
+                </select>
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- DETAILED MODE -->
+          <div id="detailed-mode" class="hidden space-y-4">
+            <div id="properties-container">
+              <div class="property-card p-4 rounded-lg" style="background-color: var(--nk-muted);" data-property-index="0">
+                <div class="flex items-center justify-between mb-3">
+                  <p class="text-sm font-semibold" style="color: var(--nk-text);">Property 1</p>
+                  <button class="remove-property text-xs font-medium px-2 py-1 rounded transition-colors" style="color: var(--nk-text-secondary); display: none;">Remove</button>
+                </div>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Monthly Rent</label>
+                    <div class="relative">
+                      <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+                      <input inputmode="decimal" type="number" min="0" step="1000" placeholder="25,000" class="property-rent w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);" />
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Type</label>
+                    <div class="relative">
+                      <select class="property-type w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                        <option value="residential">House / Room</option>
+                        <option value="commercial">Shop / Commercial</option>
+                        <option value="other">Other</option>
+                      </select>
+                      <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button id="add-property-btn" class="w-full py-2.5 px-4 text-sm font-medium rounded-lg border border-dashed transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">+ Add Another Property</button>
+
+            <div id="total-rent-preview" class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+              <div class="flex justify-between text-sm mb-1">
+                <span style="color: var(--nk-text-secondary);">Total Monthly Rent</span>
+                <span id="total-monthly-rent" class="font-semibold" style="color: var(--nk-text);">NPR 0</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Total Annual Rent</span>
+                <span id="total-annual-rent" class="font-semibold" style="color: var(--nk-text);">NPR 0</span>
+              </div>
+            </div>
+
+            <hr style="border-color: var(--nk-border);" />
+
+            <div>
+              <label for="detailed-taxpayer-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Taxpayer Type (Landlord)</label>
+              <div class="relative">
+                <select id="detailed-taxpayer-type" class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                  <option value="individual">Individual</option>
+                  <option value="business">Business / Company</option>
+                </select>
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">Currently supports individual and business rental income estimates.</p>
+            </div>
+
+            <div>
+              <label for="detailed-tenant-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Who Pays the Rent? (Tenant)</label>
+              <div class="relative">
+                <select id="detailed-tenant-type" class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                  <option value="individual">Individual Tenant</option>
+                  <option value="company">Company / Business / Government</option>
+                </select>
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <p id="tenant-type-note" class="text-xs mt-1" style="color: var(--nk-text-secondary);">If a company pays your rent, 10% TDS is deducted.</p>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium mb-3" style="color: var(--nk-text);">Location <span class="font-normal" style="color: var(--nk-text-secondary);">(optional)</span></p>
+              <div class="space-y-3">
+                <div>
+                  <label for="detailed-province" class="block text-xs font-medium mb-1" style="color: var(--nk-text-secondary);">Province</label>
+                  <div class="relative">
+                    <select id="detailed-province" class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                      <option value="">Select Province</option>
+                      <option value="bagmati">Bagmati Province</option>
+                      <option value="gandaki">Gandaki Province</option>
+                      <option value="lumbini">Lumbini Province</option>
+                      <option value="koshi">Koshi Province</option>
+                      <option value="madhesh">Madhesh Province</option>
+                      <option value="karnali">Karnali Province</option>
+                      <option value="sudurpashchim">Sudurpashchim Province</option>
+                    </select>
+                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <div>
+                  <label for="detailed-district" class="block text-xs font-medium mb-1" style="color: var(--nk-text-secondary);">District</label>
+                  <div class="relative">
+                    <select id="detailed-district" class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);" disabled>
+                      <option value="">Select District</option>
+                    </select>
+                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <div>
+                  <label for="detailed-municipality" class="block text-xs font-medium mb-1" style="color: var(--nk-text-secondary);">Municipality</label>
+                  <div class="relative">
+                    <select id="detailed-municipality" class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);" disabled>
+                      <option value="">Select Municipality</option>
+                    </select>
+                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="detailed-fiscal-year" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fiscal Year</label>
+              <div class="relative">
+                <select id="detailed-fiscal-year" class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                  {fiscalYears.map(fy => (
+                    <option value={fy.value}>{fy.label}</option>
+                  ))}
+                </select>
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- ERROR MESSAGE -->
+          <div id="error-message" class="hidden p-3 rounded-lg text-sm" style="background-color: var(--nk-accent-subtle); color: var(--nk-accent); border: 1px solid var(--nk-accent);">
+            <span id="error-text"></span>
+          </div>
+
+          <!-- CALCULATE BUTTON -->
+          <button id="calculate-btn" class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150" style="background-color: var(--nk-accent); color: white;">
+            Calculate Rent Tax
+          </button>
+          <!-- RESULTS -->
+          <div id="result" class="hidden">
+            <hr style="border-color: var(--nk-border);" />
+
+            <!-- NET INCOME HERO -->
+            <div class="text-center py-6">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Estimated Net Rental Income</p>
+              <p id="result-net" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+              <p id="result-net-period" class="text-sm mt-1" style="color: var(--nk-text-secondary);">per month</p>
+            </div>
+
+            <!-- RESULT CARD -->
+            <div class="p-4 rounded-lg mb-3" style="background-color: var(--nk-muted);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-secondary);">Estimated Rental Income</p>
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Gross Annual Rent</span>
+                  <span id="rc-gross" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span id="rc-tax-label" style="color: var(--nk-text-secondary);">Estimated House Rent Tax</span>
+                  <span id="rc-tax" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div id="rc-local-tax-row" class="flex justify-between text-sm" style="display: none;">
+                  <span style="color: var(--nk-text-secondary);">Other Applicable Charges</span>
+                  <span id="rc-local-tax" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <hr style="border-color: var(--nk-border);" />
+                <div class="flex justify-between text-base font-bold">
+                  <span style="color: var(--nk-text);">Estimated Net Annual Income</span>
+                  <span id="rc-net-annual" style="color: var(--nk-accent);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Estimated Net Monthly Income</span>
+                  <span id="rc-net-monthly" class="font-medium" style="color: var(--nk-accent);"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAX INFO -->
+            <div id="tax-info-card" class="p-4 rounded-lg mb-3" style="background-color: var(--nk-muted);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-secondary);">Tax Details</p>
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Tax Type</span>
+                  <span id="td-tax-label" class="font-medium text-right" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Applicable Rate</span>
+                  <span id="td-rate" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Taxable Rental Amount</span>
+                  <span id="td-taxable" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Estimated Tax</span>
+                  <span id="td-tax" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span style="color: var(--nk-text-secondary);">Effective Tax Rate</span>
+                  <span id="td-effective" class="font-medium" style="color: var(--nk-text);"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- HOW IS THIS CALCULATED? -->
+            <details class="mb-4 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+              <summary class="text-xs font-semibold uppercase tracking-wider cursor-pointer" style="color: var(--nk-text-secondary);">How is this calculated?</summary>
+              <div id="calc-details" class="mt-3 space-y-2"></div>
+            </details>
+
+            <!-- NOTES -->
+            <div id="notes-section" class="mb-4 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Important Notes</p>
+              <ul id="notes-list" class="text-xs space-y-1" style="color: var(--nk-text-secondary);"></ul>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="flex gap-2">
+              <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                Copy Result
+              </button>
+              <button id="print-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+                Print
+              </button>
+              <button id="recalculate-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                Recalculate
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="max-w-2xl mx-auto mt-6 px-5 py-4 rounded-lg text-xs" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color: var(--nk-text);">Disclaimer</p>
+      <p>This calculator provides an estimate based on the information provided and currently available Nepal tax rules. Actual tax, withholding, local charges, and filing requirements may vary depending on your circumstances and current government rules. Confirm the final amount with the relevant tax authority when necessary.</p>
+      <p class="mt-1.5">Tax rules last verified: <strong>2026-08-19</strong></p>
+      <p class="mt-1">Official Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Inland Revenue Department</a>, <a href="https://mof.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Ministry of Finance</a>, Income Tax Act 2058, Finance Act 2083, Local Government Operation Act 2074</p>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="max-w-2xl mx-auto mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">How House Rent Tax Works in Nepal</h2>
+      <div class="space-y-4 text-sm" style="color: var(--nk-text-secondary);">
+        {educationalContent.map(item => (
+          <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <p class="font-semibold mb-1" style="color: var(--nk-text);">{item.title}</p>
+            <p>{item.content}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="max-w-2xl mx-auto mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg overflow-hidden" style="background-color: var(--nk-muted);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color: var(--nk-text);">{item.question}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color: var(--nk-text-secondary);">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <!-- CALCULATION SOURCES -->
+    <div class="max-w-2xl mx-auto mt-10 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+      <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Calculation Sources</p>
+      <div class="text-xs space-y-1" style="color: var(--nk-text-secondary);">
+        <p>Fiscal Year: <strong>2083/84 (2026/27)</strong></p>
+        <p>Last Verified: <strong>2026-08-19</strong></p>
+        <p>Official Sources:</p>
+        <ul class="ml-4 space-y-0.5">
+          <li><a href="https://ird.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Inland Revenue Department (ird.gov.np)</a></li>
+          <li><a href="https://mof.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Ministry of Finance (mof.gov.np)</a></li>
+          <li>Income Tax Act 2058 (Sections 88, 92, 95A)</li>
+          <li>Local Government Operation Act 2074</li>
+          <li>Finance Act 2083</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+      <RelatedTools tools={relatedTools} />
+    </div>
+  </div>
+  <script>
+    import { calculateHouseRentTax, formatNPR, formatNumber } from '../../../lib/calculators/house-rent-tax.js';
+
+    const DISTRICTS_MAP = {
+      bagmati: ['kathmandu','lalitpur','bhaktapur','chitwan','makwanpur','dhading','nuwakot','rasuwa','dolakha','sindhupalchok','ramechhap','sindhuli'],
+      gandaki: ['kaski','tanahun','syangja','gorkha','lamjung','manang','mustang','myagdi','parbat','baglung'],
+      lumbini: ['rupandehi','kapilvastu','nawalparasi','dang','rolpa','pyuthan','bardiya','arghakhanchi','gulmi','palpa'],
+      koshi: ['morang','sunsari','jhapa','illam','taplejung','panchthar','terhathum','dhankuta','sankhuwasabha','solukhumbu','khotang','okhaldhunga'],
+      madhesh: ['parsa','bara','rautahat','sarlahi','mahottari','dhanusha','saptari','siraha'],
+      karnali: ['surkhet','dailekh','jajarkot','dolpa','humla','mugu','jumla','kalikot','salyan','rustum'],
+      sudurpashchim: ['kanchanpur','kailali','darchula','baitadi','dadeldhura','bajhang','bajura','achham','doti','dhangadhi'],
+    };
+
+    const DISTRICT_LABELS = {
+      kathmandu: 'Kathmandu', lalitpur: 'Lalitpur', bhaktapur: 'Bhaktapur',
+      chitwan: 'Chitwan', makwanpur: 'Makwanpur', dhading: 'Dhading',
+      nuwakot: 'Nuwakot', rasuwa: 'Rasuwa', dolakha: 'Dolakha',
+      sindhupalchok: 'Sindhupalchok', ramechhap: 'Ramechhap', sindhuli: 'Sindhuli',
+      kaski: 'Kaski', tanahun: 'Tanahun', syangja: 'Syangja', gorkha: 'Gorkha',
+      lamjung: 'Lamjung', manang: 'Manang', mustang: 'Mustang', myagdi: 'Myagdi',
+      parbat: 'Parbat', baglung: 'Baglung',
+      rupandehi: 'Rupandehi', kapilvastu: 'Kapilvastu', nawalparasi: 'Nawalparasi (East)',
+      dang: 'Dang', rolpa: 'Rolpa', pyuthan: 'Pyuthan', bardiya: 'Bardiya',
+      arghakhanchi: 'Arghakhanchi', gulmi: 'Gulmi', palpa: 'Palpa',
+      morang: 'Morang', sunsari: 'Sunsari', jhapa: 'Jhapa', illam: 'Illam',
+      taplejung: 'Taplejung', panchthar: 'Panchthar', terhathum: 'Terhathum',
+      dhankuta: 'Dhankuta', sankhuwasabha: 'Sankhuwasabha', solukhumbu: 'Solukhumbu',
+      khotang: 'Khotang', okhaldhunga: 'Okhaldhunga',
+      parsa: 'Parsa', bara: 'Bara', rautahat: 'Rautahat', sarlahi: 'Sarlahi',
+      mahottari: 'Mahottari', dhanusha: 'Dhanusha', saptari: 'Saptari', siraha: 'Siraha',
+      surkhet: 'Surkhet', dailekh: 'Dailekh', jajarkot: 'Jajarkot', dolpa: 'Dolpa',
+      humla: 'Humla', mugu: 'Mugu', jumla: 'Jumla', kalikot: 'Kalikot',
+      salyan: 'Salyan', rustum: 'Rustum',
+      kanchanpur: 'Kanchanpur', kailali: 'Kailali', darchula: 'Darchula',
+      baitadi: 'Baitadi', dadeldhura: 'Dadeldhura', bajhang: 'Bajhang',
+      bajura: 'Bajura', achham: 'Achham', doti: 'Doti', dhangadhi: 'Dhangadhi',
+    };
+
+    const MUNICIPALITY_MAP = {
+      kathmandu: [{ value: 'kmc', label: 'Kathmandu Metropolitan City' }],
+      lalitpur: [{ value: 'lmc', label: 'Lalitpur Metropolitan City' }],
+      bhaktapur: [{ value: 'bmc', label: 'Bhaktapur Metropolitan City' }],
+      chitwan: [{ value: 'bharatpur', label: 'Bharatpur Metropolitan City' }],
+      kaski: [{ value: 'pokhara', label: 'Pokhara Metropolitan City' }],
+    };
+
+    const modeQuick = document.getElementById('mode-quick');
+    const modeDetailed = document.getElementById('mode-detailed');
+    const rentMonthly = document.getElementById('rent-monthly');
+    const rentAnnual = document.getElementById('rent-annual');
+    const quickMode = document.getElementById('quick-mode');
+    const detailedMode = document.getElementById('detailed-mode');
+    const quickRent = document.getElementById('quick-rent');
+    const rentLabel = document.getElementById('rent-label');
+    const rentEquivalentAmount = document.getElementById('rent-equivalent-amount');
+    const quickPropertyType = document.getElementById('quick-property-type');
+    const quickFiscalYear = document.getElementById('quick-fiscal-year');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const copyBtn = document.getElementById('copy-btn');
+    const printBtn = document.getElementById('print-btn');
+    const recalcBtn = document.getElementById('recalculate-btn');
+    const addPropertyBtn = document.getElementById('add-property-btn');
+    const propertiesContainer = document.getElementById('properties-container');
+    const errorDiv = document.getElementById('error-message');
+    const errorText = document.getElementById('error-text');
+
+    let currentMode = 'quick';
+    let isAnnualRent = false;
+    let propertyCount = 1;
+    let lastResult = null;
+
+    function setMode(mode) {
+      currentMode = mode;
+      const isQuick = mode === 'quick';
+      modeQuick.style.backgroundColor = isQuick ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      modeQuick.style.color = isQuick ? 'white' : 'var(--nk-text-secondary)';
+      modeQuick.setAttribute('aria-selected', isQuick ? 'true' : 'false');
+      modeDetailed.style.backgroundColor = !isQuick ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      modeDetailed.style.color = !isQuick ? 'white' : 'var(--nk-text-secondary)';
+      modeDetailed.setAttribute('aria-selected', !isQuick ? 'true' : 'false');
+      quickMode.classList.toggle('hidden', !isQuick);
+      detailedMode.classList.toggle('hidden', isQuick);
+    }
+
+    modeQuick?.addEventListener('click', () => setMode('quick'));
+    modeDetailed?.addEventListener('click', () => setMode('detailed'));
+
+    function setRentMode(annual) {
+      isAnnualRent = annual;
+      rentMonthly.style.backgroundColor = !annual ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      rentMonthly.style.color = !annual ? 'white' : 'var(--nk-text-secondary)';
+      rentMonthly.setAttribute('aria-selected', !annual ? 'true' : 'false');
+      rentAnnual.style.backgroundColor = annual ? 'var(--nk-accent)' : 'var(--nk-surface)';
+      rentAnnual.style.color = annual ? 'white' : 'var(--nk-text-secondary)';
+      rentAnnual.setAttribute('aria-selected', annual ? 'true' : 'false');
+      if (rentLabel) rentLabel.textContent = annual ? 'Annual Rent' : 'Monthly Rent';
+      updateRentEquivalent();
+    }
+
+    rentMonthly?.addEventListener('click', () => setRentMode(false));
+    rentAnnual?.addEventListener('click', () => setRentMode(true));
+
+    function updateRentEquivalent() {
+      const rent = parseFloat(quickRent?.value) || 0;
+      if (isAnnualRent) {
+        rentEquivalentAmount.textContent = formatNPR(Math.round(rent / 12)) + ' / month';
+      } else {
+        rentEquivalentAmount.textContent = formatNPR(rent * 12) + ' / year';
+      }
+    }
+
+    quickRent?.addEventListener('input', updateRentEquivalent);
+
+    function showError(msg) {
+      if (errorText) errorText.textContent = msg;
+      errorDiv?.classList.remove('hidden');
+    }
+
+    function hideError() {
+      errorDiv?.classList.add('hidden');
+    }
+
+    // Location dropdowns
+    const provinceSelect = document.getElementById('detailed-province');
+    const districtSelect = document.getElementById('detailed-district');
+    const municipalitySelect = document.getElementById('detailed-municipality');
+
+    provinceSelect?.addEventListener('change', () => {
+      const province = provinceSelect.value;
+      districtSelect.innerHTML = '<option value="">Select District</option>';
+      municipalitySelect.innerHTML = '<option value="">Select Municipality</option>';
+      districtSelect.disabled = !province;
+      municipalitySelect.disabled = true;
+      if (province && DISTRICTS_MAP[province]) {
+        DISTRICTS_MAP[province].forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d;
+          opt.textContent = DISTRICT_LABELS[d] || d;
+          districtSelect.appendChild(opt);
+        });
+      }
+    });
+
+    districtSelect?.addEventListener('change', () => {
+      const district = districtSelect.value;
+      municipalitySelect.innerHTML = '<option value="">Select Municipality</option>';
+      municipalitySelect.disabled = !district;
+      if (district && MUNICIPALITY_MAP[district]) {
+        MUNICIPALITY_MAP[district].forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.value;
+          opt.textContent = m.label;
+          municipalitySelect.appendChild(opt);
+        });
+      }
+    });
+
+    const tenantTypeSelect = document.getElementById('detailed-tenant-type');
+    const tenantTypeNote = document.getElementById('tenant-type-note');
+    tenantTypeSelect?.addEventListener('change', () => {
+      if (tenantTypeSelect.value === 'company') {
+        tenantTypeNote.textContent = 'Company tenant deducts 10% TDS before paying rent. This is final tax for individuals.';
+      } else {
+        tenantTypeNote.textContent = 'If a company pays your rent, 10% TDS is deducted.';
+      }
+    });
+
+    // Add property
+    addPropertyBtn?.addEventListener('click', () => {
+      propertyCount++;
+      const card = document.createElement('div');
+      card.className = 'property-card p-4 rounded-lg mb-3';
+      card.style.backgroundColor = 'var(--nk-muted)';
+      card.dataset.propertyIndex = propertyCount - 1;
+      card.innerHTML = `
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-sm font-semibold" style="color: var(--nk-text);">Property ${propertyCount}</p>
+          <button class="remove-property text-xs font-medium px-2 py-1 rounded transition-colors" style="color: var(--nk-text-secondary);">Remove</button>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Monthly Rent</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">NPR</span>
+              <input inputmode="decimal" type="number" min="0" step="1000" placeholder="0" class="property-rent w-full pl-12 pr-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Property Type</label>
+            <div class="relative">
+              <select class="property-type w-full px-3 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0 appearance-none" style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);">
+                <option value="residential">House / Room</option>
+                <option value="commercial">Shop / Commercial</option>
+                <option value="other">Other</option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+      `;
+      propertiesContainer?.appendChild(card);
+      card.querySelector('.remove-property')?.addEventListener('click', () => {
+        card.remove();
+        propertyCount--;
+        updatePropertyNumbers();
+        updateTotalRent();
+      });
+      card.querySelector('.property-rent')?.addEventListener('input', updateTotalRent);
+      updateTotalRent();
+    });
+
+    function updatePropertyNumbers() {
+      const cards = propertiesContainer?.querySelectorAll('.property-card');
+      cards?.forEach((card, i) => {
+        const title = card.querySelector('p');
+        if (title) title.textContent = `Property ${i + 1}`;
+        card.dataset.propertyIndex = i;
+      });
+    }
+
+    function updateTotalRent() {
+      const rents = propertiesContainer?.querySelectorAll('.property-rent');
+      let totalMonthly = 0;
+      rents?.forEach(input => { totalMonthly += parseFloat(input.value) || 0; });
+      const totalAnnual = totalMonthly * 12;
+      const totalMonthlyEl = document.getElementById('total-monthly-rent');
+      const totalAnnualEl = document.getElementById('total-annual-rent');
+      if (totalMonthlyEl) totalMonthlyEl.textContent = formatNPR(totalMonthly);
+      if (totalAnnualEl) totalAnnualEl.textContent = formatNPR(totalAnnual);
+    }
+    // === CALCULATE ===
+    function calculate() {
+      hideError();
+      let rentAmount = 0;
+      let propertyType = 'residential';
+      let taxpayerType = 'individual';
+      let tenantType = 'individual';
+      let fiscalYear = '2083/84';
+      let province = '';
+      let district = '';
+      let municipality = '';
+
+      if (currentMode === 'quick') {
+        rentAmount = parseFloat(quickRent?.value) || 0;
+        propertyType = quickPropertyType?.value || 'residential';
+        fiscalYear = quickFiscalYear?.value || '2083/84';
+      } else {
+        const rents = propertiesContainer?.querySelectorAll('.property-rent');
+        rents?.forEach(input => { rentAmount += parseFloat(input.value) || 0; });
+        taxpayerType = document.getElementById('detailed-taxpayer-type')?.value || 'individual';
+        tenantType = document.getElementById('detailed-tenant-type')?.value || 'individual';
+        fiscalYear = document.getElementById('detailed-fiscal-year')?.value || '2083/84';
+        province = provinceSelect?.value || '';
+        district = districtSelect?.value || '';
+        municipality = municipalitySelect?.value || '';
+      }
+
+      if (rentAmount <= 0) {
+        showError('Please enter a rental amount greater than zero.');
+        return;
+      }
+
+      try {
+        const r = calculateHouseRentTax({
+          monthlyRent: isAnnualRent ? 0 : rentAmount,
+          annualRent: isAnnualRent ? rentAmount : 0,
+          isAnnual: isAnnualRent,
+          propertyType,
+          taxpayerType,
+          tenantType,
+          fiscalYear,
+          province,
+          district,
+          municipality,
+        });
+
+        lastResult = r;
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+        // Net income hero
+        set('result-net', formatNPR(r.netAnnualIncome));
+        document.getElementById('result-net-period').textContent = 'per year';
+
+        // Result card
+        set('rc-gross', formatNPR(r.annual.gross));
+        set('rc-tax-label', r.taxLabel || 'Estimated House Rent Tax');
+        set('rc-tax', formatNPR(r.annual.tax));
+
+        const localTaxRow = document.getElementById('rc-local-tax-row');
+        if (r.annual.localTax > 0) {
+          localTaxRow.style.display = '';
+          set('rc-local-tax', formatNPR(r.annual.localTax));
+        } else {
+          localTaxRow.style.display = 'none';
+        }
+
+        set('rc-net-annual', formatNPR(r.annual.net));
+        set('rc-net-monthly', formatNPR(r.netMonthlyIncome));
+
+        // Tax details
+        set('td-tax-label', r.taxLabel || 'House Rent Tax');
+        set('td-rate', r.taxRatePercent + '%');
+        set('td-taxable', formatNPR(r.taxableAmount));
+        set('td-tax', formatNPR(r.estimatedTax));
+        set('td-effective', r.effectiveTaxRate + '%');
+
+        // Calculation details
+        const calcDetails = document.getElementById('calc-details');
+        if (calcDetails && r.breakdown.length > 0) {
+          let html = r.breakdown.map(b => `
+            <div class="flex justify-between text-sm">
+              <span style="color: var(--nk-text-secondary);">${b.label}</span>
+              <span class="font-medium" style="color: var(--nk-text);">${formatNPR(b.amount)}</span>
+            </div>
+          `).join('');
+          html += `
+            <div class="flex justify-between text-sm font-semibold pt-2" style="border-top: 1px solid var(--nk-border);">
+              <span style="color: var(--nk-text);">Estimated Net Income</span>
+              <span style="color: var(--nk-accent);">${formatNPR(r.annual.net)}</span>
+            </div>
+          `;
+          calcDetails.innerHTML = html;
+        }
+
+        // Notes
+        const notesList = document.getElementById('notes-list');
+        if (notesList && r.notes.length > 0) {
+          notesList.innerHTML = r.notes.map(n => `<li>- ${n}</li>`).join('');
+        }
+
+        resultDiv?.classList.remove('hidden');
+        setTimeout(() => {
+          resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+
+      } catch (e) {
+        showError(e.message || 'An error occurred during calculation.');
+      }
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    quickRent?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+
+    // Copy
+    copyBtn?.addEventListener('click', async () => {
+      if (!lastResult) return;
+      const r = lastResult;
+      const lines = [
+        'Nepal House Rent & Rental Income Tax Estimate',
+        `Fiscal Year: ${r.input.fiscalYearLabel}`,
+        '',
+        `Monthly Rent: ${formatNPR(r.input.monthlyRent)}`,
+        `Annual Rental Income: ${formatNPR(r.annual.gross)}`,
+        `${r.taxLabel}: ${formatNPR(r.annual.tax)}`,
+        r.annual.localTax > 0 ? `Other Applicable Charges: ${formatNPR(r.annual.localTax)}` : null,
+        '---------------------------------',
+        `Estimated Net Annual Income: ${formatNPR(r.annual.net)}`,
+        `Estimated Net Monthly Income: ${formatNPR(r.netMonthlyIncome)}`,
+      ].filter(Boolean).join('\n');
+
+      try {
+        await navigator.clipboard.writeText(lines);
+        if (copyBtn) {
+          copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+          setTimeout(() => { copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy Result'; }, 2000);
+        }
+      } catch {}
+    });
+
+    // Print
+    printBtn?.addEventListener('click', () => { window.print(); });
+
+    // Recalculate
+    recalcBtn?.addEventListener('click', () => {
+      resultDiv?.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Init
+    updateRentEquivalent();
+  </script>
+</BaseLayout>

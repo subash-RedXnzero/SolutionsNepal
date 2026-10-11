@@ -1,0 +1,26 @@
+---
+// GUIDE DETAIL PAGE — layout only, no content here.
+// Content lives in Guideedit/*.md (one file = one guide).
+// Look lives in src/components/blog/BlogPostLayout.astro.
+// Journal posts live under /blog/:slug instead.
+import BlogPostLayout from '../../components/blog/BlogPostLayout.astro';
+import { getGuides } from '../../data/guides.js';
+import { getRelatedPosts } from '../../data/blog-posts.js';
+
+export function getStaticPaths() {
+  const guides = getGuides();
+  return guides.map((post, index) => ({
+    params: { slug: post.slug },
+    props: {
+      post,
+      prevPost: index > 0 ? guides[index - 1] : null,
+      nextPost: index < guides.length - 1 ? guides[index + 1] : null,
+    },
+  }));
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const relatedPosts = getRelatedPosts(post.slug, post.category);
+---
+
+<BlogPostLayout post={post} relatedPosts={relatedPosts} prevPost={prevPost} nextPost={nextPost} />

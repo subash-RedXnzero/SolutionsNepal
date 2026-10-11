@@ -1,0 +1,851 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import { getGoldPriceAsync, getGoldPriceHistory, calculateGoldValue, formatNPR, formatPrice, GRAMS_PER_TOLA } from '../../lib/nepal/gold-price.js';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const priceData = await getGoldPriceAsync();
+const history7d = getGoldPriceHistory('7d');
+const history30d = getGoldPriceHistory('30d');
+const history3m = getGoldPriceHistory('3m');
+const history1y = getGoldPriceHistory('1y');
+
+---
+
+<BaseLayout>
+
+<div class="gp-wrap">
+  <Breadcrumbs items={[
+    { label: 'Nepal', href: '/nepal' },
+    { label: 'Gold Price' },
+  ]} />
+
+  <!-- HEADER -->
+  <div class="gp-header">
+    <span class="gp-label">GOLD PRICE NEPAL</span>
+    <h1 class="gp-title">Today's Gold Price</h1>
+    <p class="gp-sub">Check the latest gold rate in Nepal.</p>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="gp-layout">
+  <div class="gp-main">
+  <!-- MAIN PRICE CARD -->
+  <div class="gp-price-card">
+    <div class="gp-price-top">
+      <span class="gp-price-type">Fine Gold</span>
+      <span class="gp-price-updated" id="gp-updated">Updated today · {priceData.lastUpdatedTime}</span>
+    </div>
+    <div class="gp-price-main" id="gp-main-price">
+      {formatNPR(priceData.fineGold.pricePerTola)}
+    </div>
+    <div class="gp-price-unit">per Tola</div>
+    <div class="gp-price-change" id="gp-change">
+      <span class={priceData.change.direction === 'up' ? 'gp-up' : 'gp-down'}>
+        {priceData.change.direction === 'up' ? '↑' : '↓'} {formatNPR(priceData.change.amount)} today
+      </span>
+    </div>
+  </div>
+
+  <!-- GOLD RATE TABLE -->
+  <div class="gp-section">
+    <h2 class="gp-section-title">Gold Rate</h2>
+    <div class="gp-rate-table">
+      <div class="gp-rate-row">
+        <span class="gp-rate-label">1 Tola</span>
+        <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePerTola)}</span>
+      </div>
+      <div class="gp-rate-row">
+        <span class="gp-rate-label">10 Gram</span>
+        <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePer10Gram)}</span>
+      </div>
+      <div class="gp-rate-row">
+        <span class="gp-rate-label">1 Gram</span>
+        <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePerGram)}</span>
+      </div>
+    </div>
+
+    <!-- More units (expandable) -->
+    <details class="gp-more">
+      <summary class="gp-more-toggle">More units</summary>
+      <div class="gp-rate-table" style="margin-top: 8px;">
+        <div class="gp-rate-row">
+          <span class="gp-rate-label">1 Aana</span>
+          <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePerAana)}</span>
+        </div>
+        <div class="gp-rate-row">
+          <span class="gp-rate-label">1 Lal</span>
+          <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePerLal)}</span>
+        </div>
+        <div class="gp-rate-row">
+          <span class="gp-rate-label">1 Gram (22K)</span>
+          <span class="gp-rate-value">{formatNPR(Math.round(priceData.fineGold.pricePerGram * 22 / 24))}</span>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- CALCULATOR -->
+  <div class="gp-section">
+    <h2 class="gp-section-title">Gold Calculator</h2>
+    <div class="gp-calc">
+      <div class="gp-calc-grid">
+        <div>
+          <label class="gp-calc-label">Weight</label>
+          <input inputmode="decimal" type="number" id="gp-calc-weight" class="gp-calc-input" placeholder="1" min="0" step="0.01" />
+        </div>
+        <div>
+          <label class="gp-calc-label">Unit</label>
+          <select id="gp-calc-unit" class="gp-calc-select">
+            <option value="tola">Tola</option>
+            <option value="gram">Gram</option>
+            <option value="10gram">10 Gram</option>
+            <option value="aana">Aana</option>
+            <option value="lal">Lal</option>
+          </select>
+        </div>
+      </div>
+      <div class="gp-calc-row">
+        <label class="gp-calc-label">Gold Purity</label>
+        <div class="gp-calc-pills">
+          <button class="gp-pill active" data-purity="fine">Fine Gold</button>
+          <button class="gp-pill" data-purity="24k">24K</button>
+          <button class="gp-pill" data-purity="22k">22K</button>
+        </div>
+      </div>
+      <div class="gp-calc-result">
+        <span class="gp-calc-result-label">Estimated Value</span>
+        <span class="gp-calc-result-value" id="gp-calc-value">{formatNPR(priceData.fineGold.pricePerTola)}</span>
+        <span class="gp-calc-result-note">Calculated estimate</span>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /gp-main -->
+  <aside class="gp-side" aria-label="Trend and comparison">
+  <!-- YESTERDAY VS TODAY -->
+  <div class="gp-section">
+    <h2 class="gp-section-title">Yesterday vs Today</h2>
+    <div class="gp-compare">
+      <div class="gp-compare-item">
+        <span class="gp-compare-label">Yesterday</span>
+        <span class="gp-compare-price">{formatNPR(priceData.yesterday.pricePerTola)}</span>
+      </div>
+      <div class="gp-compare-arrow">
+        <span class={priceData.change.direction === 'up' ? 'gp-up' : 'gp-down'}>
+          {priceData.change.direction === 'up' ? '→' : '→'}
+        </span>
+      </div>
+      <div class="gp-compare-item">
+        <span class="gp-compare-label">Today</span>
+        <span class="gp-compare-price gp-compare-today">{formatNPR(priceData.fineGold.pricePerTola)}</span>
+      </div>
+    </div>
+    <div class="gp-compare-change">
+      <span class={priceData.change.direction === 'up' ? 'gp-up' : 'gp-down'}>
+        {priceData.change.direction === 'up' ? '↑' : '↓'} {formatNPR(priceData.change.amount)} ({priceData.change.percent}%)
+      </span>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="gp-section">
+    <h2 class="gp-section-title">Gold Price Trend</h2>
+    <div class="gp-chart-tabs">
+      <button class="gp-chart-tab active" data-period="7d">7 Days</button>
+      <button class="gp-chart-tab" data-period="30d">30 Days</button>
+      <button class="gp-chart-tab" data-period="3m">3 Months</button>
+      <button class="gp-chart-tab" data-period="1y">1 Year</button>
+    </div>
+    <div class="gp-chart-wrap">
+      <canvas id="gp-chart" width="560" height="200"></canvas>
+      <div class="gp-chart-tooltip" id="gp-tooltip" style="display:none;"></div>
+    </div>
+    <div class="gp-chart-legend">
+      <span id="gp-chart-label">7 Days</span>
+      <span id="gp-chart-range"></span>
+    </div>
+  </div>
+
+  </aside><!-- /gp-side -->
+  </div><!-- /gp-layout -->
+
+  <!-- DATA SOURCE -->
+  <div class="gp-section gp-source">
+    <h2 class="gp-source-title">Where does this price come from?</h2>
+    <p class="gp-source-text">{priceData.source}</p>
+    <p class="gp-source-detail">Rate type: {priceData.rateType}</p>
+    <p class="gp-source-detail">Last updated: Today · {priceData.lastUpdatedTime}</p>
+  </div>
+
+  <!-- RELATED TOOLS -->
+  <div class="gp-section">
+    <h2 class="gp-section-title">Gold Tools</h2>
+    <div class="gp-related">
+      <a href="/nepal/gold/tola-to-gram" class="gp-related-link">Tola → Gram</a>
+      <a href="/nepal/gold/gram-to-tola" class="gp-related-link">Gram → Tola</a>
+      <a href="/nepal/gold" class="gp-related-link">All Gold Tools</a>
+    </div>
+  </div>
+
+  <!-- HIDDEN DATA FOR JS -->
+  <Disclaimer variant="gold" />
+
+  <script is:inline define:vars={{
+    history7d: JSON.stringify(history7d),
+    history30d: JSON.stringify(history30d),
+    history3m: JSON.stringify(history3m),
+    history1y: JSON.stringify(history1y),
+    pricePerTola: priceData.fineGold.pricePerTola,
+    pricePerGram: priceData.fineGold.pricePerGram,
+  }}>
+    window.__gp_data = {
+      history7d: JSON.parse(history7d),
+      history30d: JSON.parse(history30d),
+      history3m: JSON.parse(history3m),
+      history1y: JSON.parse(history1y),
+      pricePerTola: pricePerTola,
+      pricePerGram: pricePerGram,
+    };
+  </script>
+</div>
+
+<style>
+  /* ══════════════════════════════════════════════════════════════
+     Gold Price Nepal — Simple, Trustworthy, Nepal-focused
+     ══════════════════════════════════════════════════════════════ */
+
+  .gp-wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px 16px 80px;
+  }
+
+  /* ── Two-column layout: content left, sticky tools right ── */
+  .gp-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 16px;
+    align-items: start;
+  }
+  .gp-main { min-width: 0; }
+  .gp-side { position: sticky; top: 20px; min-width: 0; }
+  @media (max-width: 900px) {
+    .gp-layout { grid-template-columns: 1fr; }
+    .gp-side { position: static; }
+  }
+
+  /* ── HEADER ── */
+  .gp-header {
+    margin-bottom: 20px;
+  }
+  .gp-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #B8860B;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .gp-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--nk-text);
+    margin: 0 0 4px;
+  }
+  .gp-sub {
+    font-size: 13px;
+    color: var(--nk-text-secondary);
+  }
+
+  /* ── MAIN PRICE CARD ── */
+  .gp-price-card {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .gp-price-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .gp-price-type {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--nk-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .gp-price-updated {
+    font-size: 11px;
+    color: var(--nk-text-tertiary);
+  }
+  .gp-price-main {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--nk-text);
+    font-family: var(--font-mono);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .gp-price-unit {
+    font-size: 13px;
+    color: var(--nk-text-secondary);
+    margin-bottom: 12px;
+  }
+  .gp-price-change {
+    padding-top: 12px;
+    border-top: 1px solid var(--nk-border);
+  }
+  .gp-up {
+    color: #16A34A;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .gp-down {
+    color: #DC2626;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ── SECTIONS ── */
+  .gp-section {
+    margin-bottom: 16px;
+  }
+  .gp-section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--nk-text);
+    margin: 0 0 10px;
+  }
+
+  /* ── RATE TABLE ── */
+  .gp-rate-table {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .gp-rate-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--nk-border);
+  }
+  .gp-rate-row:last-child {
+    border-bottom: none;
+  }
+  .gp-rate-label {
+    font-size: 13px;
+    color: var(--nk-text-secondary);
+  }
+  .gp-rate-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--nk-text);
+    font-family: var(--font-mono);
+  }
+
+  /* More units */
+  .gp-more {
+    margin-top: 8px;
+  }
+  .gp-more-toggle {
+    font-size: 12px;
+    color: var(--nk-accent);
+    cursor: pointer;
+    padding: 8px 0;
+    font-weight: 500;
+  }
+  .gp-more-toggle:hover {
+    color: var(--nk-accent-hover);
+  }
+
+  /* ── COMPARE ── */
+  .gp-compare {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .gp-compare-item {
+    flex: 1;
+    text-align: center;
+  }
+  .gp-compare-label {
+    display: block;
+    font-size: 11px;
+    color: var(--nk-text-tertiary);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .gp-compare-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--nk-text);
+    font-family: var(--font-mono);
+  }
+  .gp-compare-today {
+    color: var(--nk-accent);
+  }
+  .gp-compare-arrow {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .gp-compare-change {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+
+  /* ── CHART ── */
+  .gp-chart-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+    border: 1px solid var(--nk-border);
+    border-radius: 8px;
+    padding: 3px;
+    background: var(--nk-muted);
+  }
+  .gp-chart-tab {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    border: none;
+    background: transparent;
+    color: var(--nk-text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+  }
+  .gp-chart-tab.active {
+    background: var(--nk-surface);
+    color: var(--nk-text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .gp-chart-wrap {
+    position: relative;
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    padding: 16px;
+    overflow: hidden;
+  }
+  .gp-chart-wrap canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .gp-chart-tooltip {
+    position: absolute;
+    background: var(--nk-text);
+    color: var(--nk-surface);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 10;
+    transform: translateX(-50%);
+  }
+  .gp-chart-legend {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0 0;
+    font-size: 11px;
+    color: var(--nk-text-tertiary);
+  }
+
+  /* ── CALCULATOR ── */
+  .gp-calc {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .gp-calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .gp-calc-row {
+    margin-bottom: 12px;
+  }
+  .gp-calc-row:last-of-type {
+    margin-bottom: 16px;
+  }
+  .gp-calc-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    margin-bottom: 6px;
+  }
+  .gp-calc-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--nk-border);
+    background: var(--nk-bg);
+    color: var(--nk-text);
+    font-size: 15px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    box-sizing: border-box;
+  }
+  .gp-calc-input:focus {
+    outline: none;
+    border-color: var(--nk-accent);
+  }
+  .gp-calc-select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--nk-border);
+    background: var(--nk-bg);
+    color: var(--nk-text);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    box-sizing: border-box;
+    appearance: auto;
+  }
+  .gp-calc-pills {
+    display: flex;
+    gap: 6px;
+  }
+  .gp-pill {
+    flex: 1;
+    padding: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    border: 1px solid var(--nk-border);
+    background: transparent;
+    color: var(--nk-text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+  }
+  .gp-pill.active {
+    background: var(--nk-accent);
+    color: #fff;
+    border-color: var(--nk-accent);
+  }
+  .gp-pill:hover:not(.active) {
+    border-color: var(--nk-border-strong);
+    color: var(--nk-text);
+  }
+  .gp-calc-result {
+    text-align: center;
+    padding: 16px;
+    background: var(--nk-accent-subtle);
+    border-radius: 8px;
+  }
+  .gp-calc-result-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--nk-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .gp-calc-result-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--nk-accent);
+    font-family: var(--font-mono);
+    line-height: 1.2;
+  }
+  .gp-calc-result-note {
+    display: block;
+    font-size: 10px;
+    color: var(--nk-text-tertiary);
+    margin-top: 4px;
+  }
+
+  /* ── SOURCE ── */
+  .gp-source {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .gp-source-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--nk-text);
+    margin: 0 0 8px;
+  }
+  .gp-source-text {
+    font-size: 13px;
+    color: var(--nk-text-secondary);
+    margin-bottom: 4px;
+  }
+  .gp-source-detail {
+    font-size: 12px;
+    color: var(--nk-text-tertiary);
+    margin-bottom: 2px;
+  }
+
+  /* ── RELATED ── */
+  .gp-related {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .gp-related-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+    border: 1px solid var(--nk-border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.1s ease;
+  }
+  .gp-related-link:hover {
+    border-color: var(--nk-accent);
+    color: var(--nk-accent);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .gp-wrap { padding: 16px 12px 60px; }
+    .gp-price-main { font-size: 28px; }
+    .gp-compare { flex-direction: column; gap: 8px; }
+    .gp-compare-arrow { transform: rotate(90deg); }
+    .gp-chart-tabs { flex-wrap: wrap; }
+  }
+</style>
+
+<script is:inline>
+(function() {
+  var data = window.__gp_data;
+  if (!data) return;
+
+  var GRAMS_PER_TOLA = 11.6638125;
+
+  function formatNPR(n) {
+    if (n == null || isNaN(n)) return '—';
+    return 'Rs. ' + n.toLocaleString('en-IN');
+  }
+
+  function calculateValue(weight, unit, purity) {
+    var ppt = data.pricePerTola;
+    if (purity === '22k') ppt = Math.round(ppt * 22 / 24);
+    var tola;
+    switch (unit) {
+      case 'gram': tola = weight / GRAMS_PER_TOLA; break;
+      case '10gram': tola = (weight * 10) / GRAMS_PER_TOLA; break;
+      case 'aana': tola = weight / 12; break;
+      case 'lal': tola = weight / 96; break;
+      default: tola = weight;
+    }
+    return Math.round(tola * ppt);
+  }
+
+  // ── CALCULATOR ──
+  var calcWeight = document.getElementById('gp-calc-weight');
+  var calcUnit = document.getElementById('gp-calc-unit');
+  var calcValue = document.getElementById('gp-calc-value');
+  var pills = document.querySelectorAll('.gp-pill');
+  var activePurity = 'fine';
+
+  function updateCalc() {
+    if (calcWeight.value.trim() === '') { calcValue.textContent = '—'; return; }
+    var w = parseFloat(calcWeight.value) || 0;
+    var u = calcUnit.value;
+    var val = calculateValue(w, u, activePurity);
+    calcValue.textContent = formatNPR(val);
+  }
+
+  calcWeight.addEventListener('input', updateCalc);
+  calcUnit.addEventListener('change', updateCalc);
+  updateCalc(); // Empty weight at start: show placeholder until the user types
+  pills.forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      pills.forEach(function(p) { p.classList.remove('active'); });
+      pill.classList.add('active');
+      activePurity = pill.dataset.purity;
+      updateCalc();
+    });
+  });
+
+  // ── CHART ──
+  var canvas = document.getElementById('gp-chart');
+  var ctx = canvas.getContext('2d');
+  var tooltip = document.getElementById('gp-tooltip');
+  var chartLabel = document.getElementById('gp-chart-label');
+  var chartRange = document.getElementById('gp-chart-range');
+  var tabs = document.querySelectorAll('.gp-chart-tab');
+  var currentPeriod = '7d';
+  var currentData = data.history7d;
+
+  var periodLabels = { '7d': '7 Days', '30d': '30 Days', '3m': '3 Months', '1y': '1 Year' };
+
+  function drawChart(chartData) {
+    if (!chartData || chartData.length === 0) return;
+
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.parentElement.getBoundingClientRect();
+    var w = rect.width - 32;
+    var h = 180;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.scale(dpr, dpr);
+
+    ctx.clearRect(0, 0, w, h);
+
+    var prices = chartData.map(function(d) { return d.price; });
+    var min = Math.min.apply(null, prices) * 0.999;
+    var max = Math.max.apply(null, prices) * 1.001;
+    var range = max - min || 1;
+
+    var padTop = 10;
+    var padBottom = 24;
+    var padLeft = 0;
+    var padRight = 0;
+    var chartH = h - padTop - padBottom;
+    var chartW = w - padLeft - padRight;
+
+    // Draw grid lines
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--nk-border').trim() || '#E5E7EB';
+    ctx.lineWidth = 0.5;
+    for (var i = 0; i < 4; i++) {
+      var y = padTop + (chartH / 3) * i;
+      ctx.beginPath();
+      ctx.moveTo(padLeft, y);
+      ctx.lineTo(w - padRight, y);
+      ctx.stroke();
+    }
+
+    // Draw line
+    var isUp = prices[prices.length - 1] >= prices[0];
+    var lineColor = isUp ? '#16A34A' : '#DC2626';
+    var fillColor = isUp ? 'rgba(22, 163, 74, 0.08)' : 'rgba(220, 38, 38, 0.08)';
+
+    ctx.beginPath();
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    var points = [];
+    for (var i = 0; i < chartData.length; i++) {
+      var x = padLeft + (i / (chartData.length - 1)) * chartW;
+      var y = padTop + (1 - (chartData[i].price - min) / range) * chartH;
+      points.push({ x: x, y: y, data: chartData[i] });
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Fill area
+    ctx.lineTo(points[points.length - 1].x, padTop + chartH);
+    ctx.lineTo(points[0].x, padTop + chartH);
+    ctx.closePath();
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+
+    // Draw dots at start and end
+    ctx.fillStyle = lineColor;
+    ctx.beginPath();
+    ctx.arc(points[0].x, points[0].y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(points[points.length - 1].x, points[points.length - 1].y, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Date labels
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--nk-text-tertiary').trim() || '#9CA3AF';
+    ctx.font = '10px ' + (getComputedStyle(document.body).fontFamily || 'Poppins, sans-serif');
+    ctx.textAlign = 'center';
+    var labelCount = Math.min(5, chartData.length);
+    for (var i = 0; i < labelCount; i++) {
+      var idx = Math.round((i / (labelCount - 1)) * (chartData.length - 1));
+      var d = new Date(chartData[idx].date);
+      var label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      ctx.fillText(label, points[idx].x, h - 4);
+    }
+
+    // Price labels (min/max)
+    ctx.textAlign = 'right';
+    ctx.fillText(formatNPR(Math.round(max)), w, padTop + 8);
+    ctx.fillText(formatNPR(Math.round(min)), w, padTop + chartH - 2);
+
+    // Update legend
+    chartLabel.textContent = periodLabels[currentPeriod];
+    var first = chartData[0];
+    var last = chartData[chartData.length - 1];
+    chartRange.textContent = first.date + ' — ' + last.date;
+
+    // Hover interaction
+    canvas.onmousemove = function(e) {
+      var rect = canvas.getBoundingClientRect();
+      var mx = e.clientX - rect.left;
+      var closest = null;
+      var minDist = Infinity;
+      for (var i = 0; i < points.length; i++) {
+        var dist = Math.abs(points[i].x - mx);
+        if (dist < minDist) { minDist = dist; closest = points[i]; }
+      }
+      if (closest && minDist < 30) {
+        tooltip.style.display = 'block';
+        tooltip.style.left = closest.x + 16 + 'px';
+        tooltip.style.top = (closest.y - 10) + 'px';
+        var d = new Date(closest.data.date);
+        tooltip.innerHTML = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '<br>' + formatNPR(closest.data.price);
+      } else {
+        tooltip.style.display = 'none';
+      }
+    };
+    canvas.onmouseleave = function() {
+      tooltip.style.display = 'none';
+    };
+  }
+
+  // Tab switching
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      currentPeriod = tab.dataset.period;
+      var map = { '7d': data.history7d, '30d': data.history30d, '3m': data.history3m, '1y': data.history1y };
+      currentData = map[currentPeriod] || data.history7d;
+      drawChart(currentData);
+    });
+  });
+
+  // Initial draw
+  drawChart(currentData);
+
+  // Redraw on resize
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() { drawChart(currentData); }, 150);
+  });
+})();
+</script>
+</BaseLayout>

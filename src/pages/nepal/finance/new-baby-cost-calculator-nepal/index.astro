@@ -1,0 +1,500 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Calculator } from '@lucide/astro';
+import { BABY_OPTIONS, FEEDING_PLANS, LOCATIONS, CONTINGENCY_OPTIONS, MONTH_FREQS, DEFAULTS } from '../../../../data/baby-cost.js';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+
+const title = 'New Baby Cost Calculator Nepal (2026) | SolutionsNepal';
+const description = "Estimate how much you may need for your baby's first year, from delivery and newborn essentials to diapers, feeding and healthcare.";
+const canonical = 'https://solutionsnepal.com/nepal/finance/new-baby-cost-calculator-nepal';
+
+const faq = [
+  { q:'How much does it cost to have a baby in Nepal?', a:'It varies widely by hospital, city and lifestyle — delivery plus first-year care commonly runs into several lakhs. Enter your expected delivery cost, essentials and monthly figures above for a personalised planning estimate.' },
+  { q:'How much should I budget for a newborn?', a:'Split it in two: one-time costs around birth (delivery, cot, stroller, initial supplies) and recurring monthly costs (diapers, feeding, healthcare). This calculator totals both plus an optional buffer.' },
+  { q:'How much does a baby cost per month in Nepal?', a:'It depends mostly on diapers, formula (if used), healthcare and childcare. Fill the monthly section to see your own figure — the result shows exactly which categories drive it.' },
+  { q:'How much should I budget for delivery?', a:'Delivery costs differ by hospital, city and delivery type. Enter the estimate you expect to pay — never treat a calculator default as a hospital price.' },
+  { q:'How much do diapers cost per month?', a:'Multiply diapers per day by cost per diaper, then by 30. At 6 diapers a day, even small per-piece differences change the monthly total noticeably.' },
+  { q:'What are the biggest baby expenses?', a:'Usually delivery/hospital charges first, then childcare (if needed), formula and diapers across the year. The breakdown panel ranks your own categories.' },
+  { q:'Should I include an emergency fund in my baby budget?', a:'Many families keep a 5–15% optional planning buffer for surprises. It is a personal choice, not a requirement — the calculator applies it only if you select it.' },
+  { q:'Does the calculator include hospital costs?', a:'Yes — enter prenatal, tests, hospital/delivery, doctor, medicine and other pregnancy costs in the Pregnancy & Delivery section.' },
+  { q:'Does the calculator include childcare?', a:'Yes, optionally. Enable childcare, enter the monthly cost and how many months per year you need it.' },
+  { q:'How accurate is the New Baby Cost Calculator?', a:'It is a budgeting estimate from your own inputs, not official medical or market data. Confirm delivery costs with your hospital and adjust monthly figures as real bills arrive.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'New Baby Cost Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1600px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Finance', href:'/nepal/finance'}, {label:'New Baby Cost Calculator'}]} />
+
+    <div class="mb-2.5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">🇳🇵 Baby budgeting calculator for families in Nepal</div>
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">New Baby Cost Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[660px]" style="color:var(--nk-text-secondary);">Estimate how much you may need for your baby's first year, from delivery and newborn essentials to diapers, feeding and healthcare.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[2fr_400px] xl:grid-cols-[2.2fr_420px] gap-4 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-2 min-w-0" id="input-col">
+        <section class="nk-card top-accent p-2.5 sm:p-3" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◈</span> Family Details</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div><p class="cm-label mb-1">Number of babies</p><div class="flex gap-1.5" id="baby-chips" role="radiogroup" aria-label="Number of babies">
+              {BABY_OPTIONS.map(b=> <button type="button" class={`chip baby-chip${b.id===1?' chip-active':''}`} data-babies={String(b.id)} role="radio" aria-checked={b.id===1?'true':'false'}>{b.label}</button>)}
+            </div></div>
+            <div class="sm:col-span-2"><p class="cm-label mb-1">Feeding plan</p><div class="flex flex-wrap gap-1.5" id="feed-chips" role="radiogroup" aria-label="Feeding plan">
+              {FEEDING_PLANS.map(f=> <button type="button" class={`chip feed-chip${f.id==='breastfeeding'?' chip-active':''}`} data-feed={f.id} role="radio" aria-checked={f.id==='breastfeeding'?'true':'false'}>{f.label}</button>)}
+            </div>
+            <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">Diaper, feeding, clothing &amp; toiletry costs adjust automatically for multiple babies. No feeding method is medically preferable — choose what suits your family.</p></div>
+            <div><p class="cm-label mb-1">Location</p><div class="flex flex-wrap gap-1.5" id="loc-chips" role="radiogroup" aria-label="Location">
+              {LOCATIONS.map((l,i)=> <button type="button" class={`chip loc-chip${i===0?' chip-active':''}`} data-loc={l.id} role="radio" aria-checked={i===0?'true':'false'}>{l.label}</button>)}
+            </div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-2.5 sm:p-3" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">✚</span> Pregnancy &amp; Delivery</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="delivery-grid">
+            <div class="cm-field"><label class="cm-label">Prenatal checkups</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-delivery="checkups" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label">Tests &amp; scans</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-delivery="tests" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label">Hospital / delivery cost</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-delivery="hospital" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label">Doctor / professional fees</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-delivery="doctor" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label">Medicines</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-delivery="medicines" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label">Other pregnancy costs</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-delivery="other" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+          <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Costs vary by hospital, provider, location and type of delivery. Enter the estimate you expect to pay.</p>
+        </section>
+
+        <section class="nk-card top-accent p-2.5 sm:p-3" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">▤</span> Newborn Essentials <span class="sub">— one-time, group totals</span></p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="ess-grid">
+            <div class="cm-field"><label class="cm-label">Clothing total</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-ess="clothing" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div><p class="text-[10px]" style="color:var(--nk-text-tertiary);">Newborn, warm, socks, caps</p></div>
+            <div class="cm-field"><label class="cm-label">Sleeping total</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-ess="sleeping" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div><p class="text-[10px]" style="color:var(--nk-text-tertiary);">Cot, mattress, bedding</p></div>
+            <div class="cm-field"><label class="cm-label">Bath &amp; care total</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-ess="bathcare" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div><p class="text-[10px]" style="color:var(--nk-text-tertiary);">Towels, bath, nail care</p></div>
+            <div class="cm-field"><label class="cm-label">Travel gear total</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-ess="travel" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div><p class="text-[10px]" style="color:var(--nk-text-tertiary);">Carrier, stroller, car seat</p></div>
+            <div class="cm-field"><label class="cm-label">Other essentials</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-ess="other" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-2.5 sm:p-3" style="border-radius:14px;">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <p class="sec-head"><span class="sec-icon">◔</span> Diapers</p>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="cm-field"><label class="cm-label" for="diapers-day">Diapers per day</label><div class="cm-box"><input id="diapers-day" type="text" inputmode="numeric" placeholder="6" class="cm-input" style="padding-left:10px;" /></div></div>
+                <div class="cm-field"><label class="cm-label" for="diaper-cost">Cost per diaper</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="diaper-cost" type="text" inputmode="decimal" placeholder="e.g. 25" class="cm-input" /></div></div>
+              </div>
+              <p class="text-[11px] mt-1.5 tabular-nums" style="color:var(--nk-text-secondary);" id="diaper-preview">—</p>
+              <p class="text-[10.5px]" style="color:var(--nk-text-tertiary);">Actual diaper use changes as the baby grows.</p>
+            </div>
+            <div id="feeding-wrap">
+              <p class="sec-head"><span class="sec-icon">♥</span> Feeding</p>
+              <div id="feed-bf" class="grid grid-cols-2 gap-2">
+                <div class="cm-field sm:col-span-2"><p class="text-[11px] font-semibold" style="color:var(--nk-text-secondary);">One-time nursing supplies</p></div>
+                <div class="cm-field"><label class="cm-label">Pump</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-bf="pump" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+                <div class="cm-field"><label class="cm-label">Bottles</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-bf="bottles" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+                <div class="cm-field"><label class="cm-label">Nursing accessories</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-bf="accessories" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+                <div class="cm-field"><label class="cm-label">Other supplies</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-bf="other" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+              </div>
+              <div id="feed-formula" class="hidden grid grid-cols-2 gap-2">
+                <div class="cm-field"><label class="cm-label" for="formula-m">Formula cost / month</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="formula-m" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+                <div class="cm-field"><label class="cm-label" for="formula-s">Feeding supplies / month</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="formula-s" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-2.5 sm:p-3" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">✚</span> Baby Healthcare <span class="sub">— budget estimates</span></p>
+          <div class="space-y-2" id="health-rows">
+            <div class="liv-row"><span class="cm-label liv-name">Routine checkups</span><div class="liv-amt"><span class="rs">Rs</span><input data-health="checkups" type="text" inputmode="decimal" placeholder="e.g. 0" aria-label="Routine checkups amount" /></div><select class="liv-freq" data-hfreq="checkups" aria-label="Routine checkups frequency"><option value="monthly" selected>Monthly</option><option value="annual">Annual</option></select></div>
+            <div class="liv-row"><span class="cm-label liv-name">Vaccination budget</span><div class="liv-amt"><span class="rs">Rs</span><input data-health="vaccination" type="text" inputmode="decimal" placeholder="e.g. 0" aria-label="Vaccination amount" /></div><select class="liv-freq" data-hfreq="vaccination" aria-label="Vaccination frequency"><option value="monthly">Monthly</option><option value="annual" selected>Annual</option></select></div>
+            <div class="liv-row"><span class="cm-label liv-name">Medicines</span><div class="liv-amt"><span class="rs">Rs</span><input data-health="medicines" type="text" inputmode="decimal" placeholder="e.g. 0" aria-label="Medicines amount" /></div><select class="liv-freq" data-hfreq="medicines" aria-label="Medicines frequency"><option value="monthly" selected>Monthly</option><option value="annual">Annual</option></select></div>
+            <div class="liv-row"><span class="cm-label liv-name">Doctor visits</span><div class="liv-amt"><span class="rs">Rs</span><input data-health="doctor" type="text" inputmode="decimal" placeholder="e.g. 0" aria-label="Doctor visits amount" /></div><select class="liv-freq" data-hfreq="doctor" aria-label="Doctor visits frequency"><option value="monthly" selected>Monthly</option><option value="annual">Annual</option></select></div>
+            <div class="liv-row"><span class="cm-label liv-name">Emergency health budget <span class="font-normal" style="color:var(--nk-text-tertiary);">(one-time)</span></span><div class="liv-amt"><span class="rs">Rs</span><input id="health-emergency" type="text" inputmode="decimal" placeholder="e.g. 0" aria-label="Emergency health budget" /></div><span class="text-[11px] font-semibold text-center" style="color:var(--nk-text-tertiary);">once</span></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-2.5 sm:p-3" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◫</span> Monthly Baby Expenses</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div class="cm-field"><label class="cm-label" for="mo-babyfood">Baby food <span class="font-normal" style="color:var(--nk-text-tertiary);">/ month</span></label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="mo-babyfood" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="mo-start">Starts month</label>
+              <select id="mo-start" class="nk-input text-[13px]" style="height:36px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                {[1,2,3,4,5,6,7,8,9,10,11,12].map(m=> <option value={String(m)} selected={m===6}>Month {m}</option>)}
+              </select>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="mo-toilet">Toiletries</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="mo-toilet" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="mo-cloth">Clothing</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="mo-cloth" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="mo-transport">Transportation</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="mo-transport" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="mo-other">Other monthly</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="mo-other" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+          <div class="mt-2.5 pt-2.5 grid grid-cols-1 sm:grid-cols-3 gap-2 items-end" style="border-top:1px solid var(--nk-border);">
+            <label class="flex items-center gap-2 cursor-pointer"><input id="cc-on" type="checkbox" style="width:15px; height:15px; accent-color:var(--nk-accent);" /> <span class="text-[12.5px] font-semibold" style="color:var(--nk-text);">Childcare required?</span></label>
+            <div class="cm-field"><label class="cm-label" for="cc-cost">Monthly childcare cost</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="cc-cost" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" disabled /></div></div>
+            <div class="cm-field"><label class="cm-label" for="cc-months">Months per year</label><div class="cm-box"><input id="cc-months" type="text" inputmode="numeric" placeholder="12" class="cm-input" style="padding-left:10px;" disabled /></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-2.5 sm:p-3" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◎</span> Emergency / Contingency Buffer <span class="sub">— optional planning buffer</span></p>
+          <div class="flex flex-wrap gap-1.5" id="cont-chips" role="radiogroup" aria-label="Contingency">
+            {CONTINGENCY_OPTIONS.map(p=> <button type="button" class={`chip cont-chip${p===DEFAULTS.contingencyPct?' chip-active':''}`} data-cont={String(p)} role="radio" aria-checked={p===DEFAULTS.contingencyPct?'true':'false'}>{p}%</button>)}
+          </div>
+          <div class="flex gap-2 mt-3">
+            <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> Calculate Baby Cost →</button>
+            <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2 text-[13px] font-semibold" style="border-radius:12px;">Reset Calculator</button>
+          </div>
+          <p id="calc-hint" class="hidden text-[11px] text-center font-medium mt-2" style="color:#DC2626;"></p>
+        </section>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your Estimated Baby Budget</p>
+            <p class="text-[26px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter delivery and monthly costs, then click <strong>Calculate Baby Cost</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+            <div id="stale-bar" class="hidden px-3.5 py-2 text-[11px] font-semibold text-center" style="background:#FFFBEB; border-bottom:1px solid #FDE68A; color:#92400E;">Inputs changed — recalculate to update your estimate</div>
+            <div class="px-4 pt-4 pb-3 text-center res-hero" style="border-bottom:1px solid var(--nk-border);">
+              <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your Estimated Baby Budget</p>
+              <p class="text-[13px] font-semibold mt-1" style="color:var(--nk-text-secondary);">First-Year Cost</p>
+              <p class="text-[30px] font-extrabold leading-tight tabular-nums nk-gradient-text" id="r-total">—</p>
+              <p class="text-[11.5px]" style="color:var(--nk-text-secondary);" id="r-sub">—</p>
+            </div>
+            <div class="p-3.5 space-y-2.5">
+              <div class="rounded-xl text-[12px]" style="border:1px solid var(--nk-border);">
+                <div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Before / around birth</span><strong style="color:var(--nk-text);" id="r-before">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Average monthly cost</span><strong style="color:var(--nk-text);" id="r-avg">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">First month cost</span><strong style="color:var(--nk-text);" id="r-first">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Recurring first-year cost</span><strong style="color:var(--nk-text);" id="r-rec">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Optional contingency</span><strong style="color:var(--nk-text);" id="r-cont">—</strong></div>
+              </div>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">Where your money goes</p>
+                <div id="r-breakdown" class="space-y-1.5 text-[12px]"></div>
+              </div>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider mb-1" style="color:var(--nk-text-tertiary);">Estimated monthly baby budget</p>
+                <p class="text-[18px] font-extrabold tabular-nums" style="color:var(--nk-text);" id="r-monthly">—</p>
+                <div id="r-monthly-lines" class="mt-1.5 space-y-1 text-[12px] tabular-nums"></div>
+              </div>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">Estimated first-year spending</p>
+                <div id="r-timeline" class="space-y-1 text-[12px] tabular-nums"></div>
+              </div>
+
+              <p id="r-insight" class="text-[11.5px] leading-relaxed px-1" style="color:var(--nk-text-secondary);"></p>
+
+              <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+                <strong style="color:var(--nk-text);">Important:</strong> Baby and healthcare costs vary significantly by hospital, location, provider, product choices and individual circumstances. This calculator provides a budgeting estimate only and does not represent official medical costs or medical advice. Confirm healthcare and delivery costs with your chosen hospital or healthcare provider.
+              </div>
+
+              <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Does a Baby Cost in Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">The cost varies with delivery and hospital charges, baby essentials, diapers, feeding choices, healthcare, childcare, location and family lifestyle. There is no single reliable national average — add your own delivery quote and monthly figures above for a budget that reflects your situation.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">What Should I Budget Before Having a Baby?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Plan one-time spending first: delivery and medical expenses, newborn clothing, sleeping arrangements, feeding supplies, diapers for the early weeks and an emergency buffer. The “Before / around birth” figure totals exactly this.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Does a Baby Cost Per Month in Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Ongoing costs are mostly diapers, feeding, healthcare, childcare and toiletries. Tracking the monthly budget separately from one-time purchases shows the true ongoing commitment after birth.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Can I Reduce Baby Costs?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Buy only necessary newborn items initially, compare prices, reuse suitable clothing and items where appropriate, track monthly diaper and feeding costs, plan recurring expenses separately from one-time purchases, and keep an emergency buffer.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+    </div>
+
+    <Disclaimer variant="finance" />
+    <RelatedTools tools={[{title:'Cost of Living Calculator', description:'Monthly household budget in Nepal', href:'/nepal/utilities/cost-of-living-calculator'}, {title:'SIP Calculator Nepal', description:'Plan long-term savings growth', href:'/nepal/finance/sip-calculator'}, {title:'EMI Calculator', description:'Plan loan repayments', href:'/nepal/finance/emi-calculator'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .sec-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--nk-text); margin-bottom:5px; letter-spacing:-0.01em; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11px; font-weight:500; cursor:pointer; transition:all 140ms ease; font-family:inherit; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .cm-field{ display:flex; flex-direction:column; gap:4px; }
+  .cm-label{ font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:36px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; outline:none; border-radius:10px; color:var(--nk-text); }
+  .liv-row{ display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 104px; gap:8px; align-items:center; padding:6px 8px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); }
+  .liv-row + .liv-row{ margin-top:6px; }
+  .liv-name{ font-size:12px; font-weight:600; color:var(--nk-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .liv-amt{ position:relative; display:flex; align-items:center; height:32px; border:1px solid var(--nk-border); border-radius:8px; background:var(--nk-hover); min-width:0; }
+  .liv-amt:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 2px var(--nk-accent-subtle); background:var(--nk-surface); }
+  .liv-amt .rs{ position:absolute; left:8px; font-size:10.5px; font-weight:700; color:var(--nk-text-secondary); pointer-events:none; }
+  .liv-amt input{ width:100%; min-width:0; border:none; background:transparent; outline:none; padding:6px 8px 6px 26px; font-size:12.5px; font-weight:600; color:var(--nk-text); border-radius:8px; }
+  .liv-freq{ height:32px; border:1px solid var(--nk-border); border-radius:8px; background:var(--nk-surface); font-size:11.5px; font-weight:600; color:var(--nk-text-secondary); padding:4px 6px; outline:none; cursor:pointer; }
+  .liv-freq:focus{ border-color:var(--nk-accent); }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); }
+  .hidden{ display:none !important; }
+  @media (max-width: 640px){
+    .liv-row{ grid-template-columns:1fr 1fr; }
+    .liv-name{ grid-column:1 / -1; }
+  }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input{ font-size:16px !important; }
+    .liv-amt{ height:40px !important; }
+    .liv-amt input, .liv-freq{ font-size:14px !important; }
+  }
+</style>
+
+<script>
+  import { calcBaby, formatNPR } from '../../../../lib/calculators/baby-cost.js';
+  import { clampInt } from '../../../../data/baby-cost.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let hasCalculated = false;
+  let babies = 1;
+  let feedingPlan = 'breastfeeding';
+  let contingencyPct = 10;
+
+  function setChip(selector, attr, val){
+    document.querySelectorAll(selector).forEach(c=>{
+      const on=c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+  function markDirty(){ if(hasCalculated) $('stale-bar')?.classList.remove('hidden'); }
+  function clearStale(){ $('stale-bar')?.classList.add('hidden'); }
+
+  document.querySelectorAll('.baby-chip').forEach(b=> b.addEventListener('click', ()=>{ babies=Number(b.dataset.babies); setChip('.baby-chip','babies',babies); updateDiaperPreview(); markDirty(); }));
+  document.querySelectorAll('.feed-chip').forEach(b=> b.addEventListener('click', ()=>{ feedingPlan=b.dataset.feed; setChip('.feed-chip','feed',feedingPlan); syncFeeding(); markDirty(); }));
+  document.querySelectorAll('.loc-chip').forEach(b=> b.addEventListener('click', ()=>{ setChip('.loc-chip','loc',b.dataset.loc); markDirty(); }));
+  document.querySelectorAll('.cont-chip').forEach(b=> b.addEventListener('click', ()=>{ contingencyPct=Number(b.dataset.cont); setChip('.cont-chip','cont',contingencyPct); markDirty(); }));
+
+  function syncFeeding(){
+    const bf = feedingPlan!=='formula';
+    const fm = feedingPlan!=='breastfeeding';
+    $('feed-bf')?.classList.toggle('hidden', !bf);
+    $('feed-formula')?.classList.toggle('hidden', !fm);
+  }
+
+  // childcare toggle
+  $('cc-on')?.addEventListener('change', (e)=>{
+    const on=e.target.checked;
+    $('cc-cost').disabled=!on; $('cc-months').disabled=!on;
+    if(!on){ $('cc-cost').value=''; }
+    markDirty();
+  });
+
+  // inputs: strip negatives, comma-format on blur, Enter calculates
+  document.querySelectorAll('.cm-input, .liv-amt input').forEach(el=>{
+    el.addEventListener('input', ()=>{ if(el.value.includes('-')) el.value=el.value.replace(/-/g,''); markDirty(); if(el.id==='diapers-day'||el.id==='diaper-cost') updateDiaperPreview(); });
+    el.addEventListener('blur', ()=>{
+      const raw=String(el.value).replace(/,/g,'').trim();
+      if(raw==='') return;
+      const n=Number(raw);
+      if(Number.isFinite(n) && n>=0) el.value=(Math.round(n*100)/100).toLocaleString('en-IN',{maximumFractionDigits:2});
+      markDirty();
+    });
+    el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  });
+  document.querySelectorAll('.liv-freq, #mo-start').forEach(el=> el.addEventListener('change', markDirty));
+  $('diapers-day')?.addEventListener('input', updateDiaperPreview);
+
+  function num(id){
+    const el=$(id);
+    const n=Number(String(el.value).replace(/,/g,'').trim());
+    return Number.isFinite(n) ? n : NaN;
+  }
+  function updateDiaperPreview(){
+    const d=Number(String($('diapers-day').value).replace(/,/g,''))||0;
+    const c=num('diaper-cost')||0;
+    const m=d*c*30*(babies===2?2:1);
+    $('diaper-preview').textContent = (d>0&&c>0)
+      ? `≈ ${formatNPR(m)} / month${babies>1?` (×${babies})`:''} · ${formatNPR(d*c*365*babies)} / year`
+      : 'Enter diapers per day and cost per diaper to preview.';
+  }
+
+  function collectHealth(){
+    const rows=[
+      { amount: document.querySelector('[data-health="checkups"]').value, freq: document.querySelector('[data-hfreq="checkups"]').value },
+      { amount: document.querySelector('[data-health="vaccination"]').value, freq: document.querySelector('[data-hfreq="vaccination"]').value },
+      { amount: document.querySelector('[data-health="medicines"]').value, freq: document.querySelector('[data-hfreq="medicines"]').value },
+      { amount: document.querySelector('[data-health="doctor"]').value, freq: document.querySelector('[data-hfreq="doctor"]').value },
+    ];
+    return rows;
+  }
+
+  function collect(){
+    const delivery={}, essentials={}, bf={};
+    document.querySelectorAll('[data-delivery]').forEach(el=>{ delivery[el.dataset.delivery]=el.value; });
+    document.querySelectorAll('[data-ess]').forEach(el=>{ essentials[el.dataset.ess]=el.value; });
+    if(feedingPlan!=='formula') document.querySelectorAll('[data-bf]').forEach(el=>{ bf[el.dataset.bf]=el.value; });
+    return {
+      babies,
+      delivery, essentials, bf,
+      diapersPerDay: $('diapers-day').value || '6', // empty = default 6 (placeholder)
+      diaperCost: $('diaper-cost').value,
+      formulaMonthly: feedingPlan==='breastfeeding' ? 0 : $('formula-m').value,
+      formulaSuppliesMonthly: feedingPlan==='breastfeeding' ? 0 : $('formula-s').value,
+      health: collectHealth(),
+      emergencyHealth: $('health-emergency').value,
+      childcareMonthly: $('cc-on').checked ? $('cc-cost').value : 0,
+      childcareMonths: $('cc-on').checked ? clampInt($('cc-months').value, 1, 12, 12) : 0,
+      babyFoodMonthly: $('mo-babyfood').value,
+      babyFoodStart: Number($('mo-start').value)||6,
+      monthly: {
+        toiletries: $('mo-toilet').value, clothing: $('mo-cloth').value,
+        transport: $('mo-transport').value, other: $('mo-other').value,
+      },
+      contingencyPct,
+    };
+  }
+
+  function validate(){
+    const ccRaw = $('cc-on').checked ? String($('cc-cost').value).replace(/,/g,'').trim() : '';
+    if($('cc-on').checked && ccRaw!=='' && !(Number(ccRaw)>=0)) return 'Childcare cost cannot be negative.';
+    const cm = clampInt($('cc-months').value, 1, 12, 12); // empty = default 12 (placeholder)
+    if($('cc-on').checked && !Number.isFinite(cm)) return 'Childcare months must be between 1 and 12.';
+    const dd = num('diapers-day');
+    if($('diapers-day').value.trim()!=='' && !(dd>=0)) return 'Diapers per day must be a valid number.';
+    return null;
+  }
+
+  function row(label, val, strong){
+    return `<div class="flex justify-between"><span style="color:var(--nk-text-secondary);">${label}</span><span class="tabular-nums" style="color:var(--nk-text);${strong?' font-weight:700;':''}">${val}</span></div>`;
+  }
+
+  function doCalc(){
+    const hint=$('calc-hint');
+    if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const err=validate();
+    if(err){
+      if(hint){ hint.textContent=err; hint.classList.remove('hidden'); }
+      return;
+    }
+    const r=calcBaby(collect());
+    hasCalculated=true;
+    clearStale();
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+
+    $('r-total').textContent=formatNPR(r.firstYearTotal);
+    $('r-sub').textContent=`${r.inputs.babies===2?'Twins · ':r.inputs.babies>2?`${r.inputs.babies} babies · `:''}One-time ${formatNPR(r.oneTime)} + recurring ${formatNPR(r.firstYearRecurring)}${r.inputs.contPct>0?` + ${r.inputs.contPct}% buffer`:''}`;
+    $('r-before').textContent=formatNPR(r.beforeBirth);
+    $('r-avg').textContent=formatNPR(r.avgMonthly)+' / mo';
+    $('r-first').textContent=formatNPR(r.firstMonth);
+    $('r-rec').textContent=formatNPR(r.firstYearRecurring);
+    $('r-cont').textContent=r.inputs.contPct>0?`${formatNPR(r.contingency)} (${r.inputs.contPct}%)`:'—';
+
+    // breakdown with shares
+    const cats=[
+      { label:'Delivery & medical', val:r.deliveryTotal },
+      { label:'Baby essentials', val:r.essentialsTotal + r.bfTotal },
+      { label:'Diapers', val:r.annual.diapers },
+      { label:'Feeding', val:r.annual.feeding },
+      { label:'Healthcare', val:r.annual.healthcare },
+      { label:'Childcare', val:r.annual.childcare },
+      { label:'Other monthly', val:(r.lines.toiletries+r.lines.clothingM+r.lines.transport+r.lines.otherM)*12 + r.babyFoodFirstYear },
+      { label:'Contingency', val:r.contingency },
+    ];
+    const max=Math.max(1,...cats.map(c=>c.val));
+    $('r-breakdown').innerHTML=cats.map(c=>{
+      const pct=r.firstYearTotal>0?(c.val/r.firstYearTotal)*100:0;
+      const w=Math.max(3,Math.round((c.val/max)*100));
+      return `<div class="${c.val===0?'opacity-50':''}"><div class="flex justify-between"><span style="color:var(--nk-text-secondary);">${c.label}</span><span class="tabular-nums" style="color:var(--nk-text); font-weight:600;">${formatNPR(c.val)} <span style="color:var(--nk-text-tertiary); font-weight:400; font-size:10.5px;">· ${pct.toFixed(1)}%</span></span></div><div class="h-1 rounded-full mt-1" style="background:var(--nk-hover); overflow:hidden;"><div class="h-full rounded-full" style="width:${c.val>0?w:0}%; background:var(--nk-accent); opacity:.85;"></div></div></div>`;
+    }).join('');
+
+    // monthly view
+    $('r-monthly').textContent=formatNPR(r.monthlyTotal)+' / mo';
+    const L=r.lines;
+    const bfNote = (L.babyfoodM>0 && r.inputs.bfStart>1) ? ` <span style="color:var(--nk-text-tertiary); font-size:10.5px;">(from month ${r.inputs.bfStart}, not in monthly total)</span>` : '';
+    $('r-monthly-lines').innerHTML =
+      row('Diapers', formatNPR(L.diapersM))+
+      row('Feeding', formatNPR(L.feedingM))+
+      row('Healthcare', formatNPR(L.healthM))+
+      row('Childcare', formatNPR(L.childcareM))+
+      row('Toiletries', formatNPR(L.toiletries))+
+      (L.babyfoodM>0?`<div class="flex justify-between opacity-70"><span style="color:var(--nk-text-secondary);">Baby food${bfNote}</span><span class="tabular-nums" style="color:var(--nk-text);">${formatNPR(L.babyfoodM)}</span></div>`:'')+
+      row('Other', formatNPR(L.transport+L.otherM));
+
+    // timeline (baby food joins from its start month; childcare spread over its months)
+    const mBase=r.monthlyTotal - L.childcareM;
+    const ccSpread=L.childcareM * (r.inputs.ccMonths/12);
+    const mFor=(m)=> mBase + ccSpread - ((L.babyfoodM>0 && m<r.inputs.bfStart) ? L.babyfoodM : 0);
+    const sumRange=(a,b)=>{ let s=0; for(let m=a;m<=b;m++) s+=mFor(m); return s; };
+    $('r-timeline').innerHTML =
+      row('Before / birth', formatNPR(r.beforeBirth), true)+
+      row('Month 1', formatNPR(mFor(1)))+
+      row('Months 2–3', formatNPR(sumRange(2,3)))+
+      row('Months 4–6', formatNPR(sumRange(4,6)))+
+      row('Months 7–12', formatNPR(sumRange(7,12)));
+
+    // insight
+    const ins=$('r-insight');
+    const msgs=[];
+    if(r.firstYearRecurring>r.oneTime) msgs.push('Your recurring expenses make up most of the first-year budget. Planning a monthly baby budget can help spread the cost.');
+    else msgs.push('A large portion of your first-year estimate comes from delivery and initial baby setup costs.');
+    if(r.inputs.contPct>0) msgs.push(`Your estimate includes a ${r.inputs.contPct}% optional planning buffer.`);
+    ins.textContent=msgs.join(' ');
+
+    window.__lastBaby={r, collect: collect()};
+    if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+  }
+
+  function doReset(){
+    babies=1; feedingPlan='breastfeeding'; contingencyPct=10;
+    setChip('.baby-chip','babies',1); setChip('.feed-chip','feed','breastfeeding');
+    setChip('.loc-chip','loc','ktm'); setChip('.cont-chip','cont',10);
+    syncFeeding();
+    document.querySelectorAll('[data-delivery],[data-ess],[data-bf]').forEach(el=>{ el.value=''; });
+    $('diapers-day').value=''; $('diaper-cost').value='';
+    $('formula-m').value=''; $('formula-s').value='';
+    document.querySelectorAll('[data-health]').forEach(el=>{ el.value=''; });
+    document.querySelectorAll('[data-hfreq]').forEach((el,i)=>{ el.value = el.dataset.hfreq==='vaccination' ? 'annual' : 'monthly'; });
+    $('health-emergency').value='';
+    ['mo-babyfood','mo-toilet','mo-cloth','mo-transport','mo-other'].forEach(id=>{ $(id).value=''; });
+    $('mo-start').value='6';
+    $('cc-on').checked=false; $('cc-cost').value=''; $('cc-cost').disabled=true;
+    $('cc-months').value=''; $('cc-months').disabled=true;
+    updateDiaperPreview();
+    hasCalculated=false; clearStale();
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalc);
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('copy-btn')?.addEventListener('click', async()=>{
+    if($('res-body')?.classList.contains('hidden')){
+      doCalc();
+      if($('res-body')?.classList.contains('hidden')) return;
+    }
+    const d=window.__lastBaby; if(!d) return;
+    const text=`Baby Budget — First year ${formatNPR(d.r.firstYearTotal)}\nBefore birth ${formatNPR(d.r.beforeBirth)} · Monthly ~${formatNPR(d.r.monthlyTotal)} · Contingency ${formatNPR(d.r.contingency)}\n— SolutionsNepal baby cost calculator`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const t=b.textContent; b.textContent='Copied!'; setTimeout(()=> b.textContent=t,1500);}catch{}
+  });
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+
+  syncFeeding();
+  updateDiaperPreview();
+</script>

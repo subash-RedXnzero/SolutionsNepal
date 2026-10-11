@@ -1,0 +1,625 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+
+const title = 'ड्राइभिङ लिखित मक टेस्ट नेपाल — अभ्यास प्रश्नहरू | SolutionsNepal';
+const description = 'नेपालका लागि निःशुल्क ड्राइभिङ लिखित मक टेस्ट: संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — तत्काल उत्तर, टाइमर र स्कोरसहित।';
+
+const faqItems = [
+  {
+    q: 'नेपालमा लिखित परीक्षा के हो?',
+    a: 'लिखित परीक्षा ड्राइभिङ लाइसेन्स लिन पास गर्नुपर्ने लिखित जाँच हो — ट्राफिक संकेत, सवारी नियम र बोक्नुपर्ने कागजातबारे यातायात व्यवस्था विभाग (DoTM) ले सोध्ने वस्तुगत (बहुविकल्पीय) प्रश्नहरू।',
+  },
+  {
+    q: 'यो मक टेस्ट कसरी काम गर्छ?',
+    a: 'हरेक प्रयासमा संकेत, नियम र कागजात समेट्ने २८ प्रश्नको बैंकबाट २० वटा अनियमित प्रश्न सोधिन्छ। २० मिनेट समय, तत्काल सही/गलत प्रतिक्रिया व्याख्यासहित, र अन्त्यमा स्कोर समीक्षा पाउनुहुन्छ। जति पटक चाहनुहुन्छ दोहोर्याउन सक्नुहुन्छ — हरेक पटक सेट फेरबदल हुन्छ।',
+  },
+  {
+    q: 'वास्तविक परीक्षाअघि कति स्कोर ल्याउने लक्ष्य राख्ने?',
+    a: 'यहाँ ८०%+ (२० मा १६) लाई हरियो बत्ती मान्नुहोस्, र धेरै प्रयासमा लगातार ल्याएपछि मात्र ढुक्क हुनुहोस्। आधिकारिक उत्तीर्णाङ्क र प्रश्नसंख्या विभागले तोक्छ र परिवर्तन हुन सक्छ — आफ्नो यातायात कार्यालयमा हालको नियम पुष्टि गर्नुहोस्।',
+  },
+  {
+    q: 'यसले बाइक र कार दुवै लाइसेन्स समेट्छ?',
+    a: 'अधिकांश प्रश्न (संकेत, नियम, कागजात) सबै लाइसेन्स वर्गका लागि साझा छन्। केहीले वर्गविशेष छुन्छन् जस्तै न्यूनतम उमेर (मोटरसाइकल/स्कुटरलाई १६, कारलाई १८)। जे चलाए पनि मूल सेट उही हो।',
+  },
+  {
+    q: 'के यो आधिकारिक DoTM परीक्षा हो?',
+    a: 'होइन — यो अध्ययनका लागि निःशुल्क अभ्यास उपकरण मात्र हो। वास्तविक परीक्षाका प्रश्न, संख्या र उत्तीर्णाङ्क यातायात व्यवस्था विभागबाट आउँछ। परीक्षामितिअघि हालको आधिकारिक नियम अवश्य पुष्टि गर्नुहोस्।',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'ड्राइभिङ लिखित मक टेस्ट नेपाल',
+      description: 'नेपालको ड्राइभिङ लिखित परीक्षाको अभ्यास — २० वटा अनियमित प्रश्न, टाइमर, तत्काल व्याख्या र स्कोरसहित।',
+      url: 'https://solutionsnepal.com/nepal/transport/likhit-mock-test',
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1200px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'नेपाल', href: '/nepal' },
+      { label: 'यातायात', href: '/nepal/transport' },
+      { label: 'लिखित मक टेस्ट' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">ड्राइभिङ लिखित मक टेस्ट</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — तत्काल उत्तर, २०-मिनेट टाइमर र पूर्ण स्कोर समीक्षासहित।</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 items-start">
+      <div class="nk-card p-5 sm:p-6" id="lq-card">
+
+        <!-- Shared sign artwork (referenced per question; nothing rendered until used) -->
+        <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <defs>
+            <symbol id="liq-sign-stop" viewBox="0 0 64 64">
+              <polygon points="23,3 41,3 61,23 61,41 41,61 23,61 3,41 3,23" fill="#DC2626" />
+              <text x="32" y="39" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="800" letter-spacing="1" fill="#fff">STOP</text>
+            </symbol>
+            <symbol id="liq-sign-warning" viewBox="0 0 64 64">
+              <path d="M32 7 L59 53 H5 Z" fill="#fff" stroke="#DC2626" stroke-width="6" stroke-linejoin="round" />
+              <line x1="32" y1="24" x2="32" y2="38" stroke="#111827" stroke-width="4.5" stroke-linecap="round" />
+              <circle cx="32" cy="45" r="2.8" fill="#111827" />
+            </symbol>
+            <symbol id="liq-sign-no-entry" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" fill="#DC2626" />
+              <rect x="13" y="27" width="38" height="10" rx="2" fill="#fff" />
+            </symbol>
+            <symbol id="liq-sign-no-parking" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" fill="#2563EB" />
+              <text x="32" y="41.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="26" font-weight="800" fill="#fff">P</text>
+              <circle cx="32" cy="32" r="26" fill="none" stroke="#DC2626" stroke-width="5" />
+              <line x1="15" y1="49" x2="49" y2="15" stroke="#DC2626" stroke-width="5" />
+            </symbol>
+            <symbol id="liq-sign-no-horn" viewBox="0 0 64 64">
+              <g fill="#111827">
+                <path d="M10 27 h10 l13 -8 v26 l-13 -8 h-10 z" />
+                <rect x="14" y="35" width="7" height="9" rx="1.5" />
+              </g>
+              <path d="M38 24 a9 9 0 0 1 0 16" fill="none" stroke="#111827" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M42.5 20 a14 14 0 0 1 0 24" fill="none" stroke="#111827" stroke-width="2.5" stroke-linecap="round" />
+              <circle cx="32" cy="32" r="26" fill="none" stroke="#DC2626" stroke-width="5" />
+              <line x1="15" y1="49" x2="49" y2="15" stroke="#DC2626" stroke-width="5" />
+            </symbol>
+            <symbol id="liq-sign-mandatory" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" fill="#2563EB" />
+              <path d="M32 46 V18 M22 28 L32 16 L42 28" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            </symbol>
+            <symbol id="liq-sign-chevron" viewBox="0 0 64 64">
+              <path d="M18 10 L34 32 L18 54" fill="none" stroke="#111827" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M34 10 L50 32 L34 54" fill="none" stroke="#111827" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+            </symbol>
+            <symbol id="liq-sign-no-uturn" viewBox="0 0 64 64">
+              <path d="M22 52 V33 a10 10 0 0 1 20 0 V33" fill="none" stroke="#111827" stroke-width="5" stroke-linecap="round" />
+              <path d="M35 27 L42 35 L49 27" fill="none" stroke="#111827" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="32" cy="32" r="27" fill="none" stroke="#DC2626" stroke-width="4.5" />
+              <line x1="14" y1="50" x2="50" y2="14" stroke="#DC2626" stroke-width="4.5" />
+            </symbol>
+            <symbol id="liq-sign-speed40" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" fill="#fff" stroke="#DC2626" stroke-width="7" />
+              <text x="32" y="40.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="800" fill="#111827">40</text>
+            </symbol>
+            <symbol id="liq-sign-oneway" viewBox="0 0 64 64">
+              <rect x="6" y="6" width="52" height="52" rx="6" fill="#fff" stroke="#9CA3AF" stroke-width="2.5" />
+              <path d="M32 48 V16 M21 27 L32 14 L43 27" fill="none" stroke="#111827" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            </symbol>
+          </defs>
+        </svg>
+
+        <!-- LANGUAGE TOGGLE -->
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">प्रश्नको भाषा / Language</p>
+          <div class="flex rounded-full border overflow-hidden" style="border-color:var(--nk-border);">
+            <button id="lq-lang-ne" type="button" class="lq-lang is-active">नेपाली</button>
+            <button id="lq-lang-en" type="button" class="lq-lang">English</button>
+          </div>
+        </div>
+
+        <!-- START SCREEN -->
+        <div id="lq-start-screen">
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">यो कसरी काम गर्छ</p>
+          <ul class="space-y-2.5 text-[13.5px] leading-relaxed mb-5" style="color:var(--nk-text-secondary);">
+            <li class="flex gap-2.5"><span aria-hidden="true">📝</span><span><strong style="color:var(--nk-text);">२० प्रश्न</strong> — २८ बाट अनियमित रूपमा छानिएका — संकेत, नियम, कागजात।</span></li>
+            <li class="flex gap-2.5"><span aria-hidden="true">⏱️</span><span><strong style="color:var(--nk-text);">२०-मिनेट टाइमर</strong>, परीक्षाजस्तै दबाब। शून्यमा स्वतः बुझाइन्छ।</span></li>
+            <li class="flex gap-2.5"><span aria-hidden="true">✅</span><span><strong style="color:var(--nk-text);">तत्काल प्रतिक्रिया</strong> — हरेक प्रश्नमा सही/गलत र एक-लाइन व्याख्या।</span></li>
+            <li class="flex gap-2.5"><span aria-hidden="true">🔁</span><span><strong style="color:var(--nk-text);">असीमित पुनःप्रयास</strong> — हरेक प्रयासमा सेट फेरबदल हुन्छ।</span></li>
+          </ul>
+          <button id="lq-start-btn" class="nk-btn nk-btn-primary w-full py-2.5">मक टेस्ट सुरु गर्नुहोस्</button>
+          <p class="text-[11px] mt-3 leading-relaxed" style="color:var(--nk-text-tertiary);">अभ्यास उपकरण मात्र — आधिकारिक ढाँचा र उत्तीर्णाङ्क यातायात व्यवस्था विभागसँग पुष्टि गर्नुहोस्।</p>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="lq-quiz-screen" style="display:none;">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="flex-1 h-2 rounded-full overflow-hidden" style="background-color:var(--nk-border);">
+              <div id="lq-progress-fill" class="h-full transition-all duration-300" style="width:0%;background-color:var(--nk-accent);"></div>
+            </div>
+            <span id="lq-timer" class="text-[12.5px] font-bold tabular-nums px-2.5 py-1 rounded-full" style="color:var(--nk-text);background-color:var(--nk-muted);">20:00</span>
+          </div>
+          <p class="text-[11.5px] mb-4" style="color:var(--nk-text-tertiary);" id="lq-qpos">प्रश्न १ / २०</p>
+
+          <p id="lq-cat" class="inline-block text-[10.5px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full mb-2.5" style="color:var(--nk-accent);background-color:var(--nk-accent-subtle);"></p>
+          <figure id="lq-sign" class="lq-sign" hidden>
+            <svg class="lq-sign-svg" id="lq-sign-svg" viewBox="0 0 64 64" role="img" aria-label="">
+              <use id="lq-sign-use" href="#liq-sign-stop"></use>
+            </svg>
+            <figcaption class="lq-sign-cap" id="lq-sign-cap">संकेत हेर्नुहोस्, अनि छान्नुहोस्</figcaption>
+          </figure>
+          <p id="lq-qtext" class="text-[16px] sm:text-[17px] font-semibold leading-snug mb-4" style="color:var(--nk-text);"></p>
+
+          <div id="lq-options" class="space-y-2"></div>
+
+          <div id="lq-explain" class="mt-3 rounded-lg border px-4 py-3 text-[13px] leading-relaxed" style="display:none;border-color:var(--nk-border);background-color:var(--nk-bg);color:var(--nk-text-secondary);"></div>
+
+          <button id="lq-next-btn" class="nk-btn nk-btn-primary w-full py-2.5 mt-4" style="display:none;">अर्को →</button>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="lq-result-screen" style="display:none;">
+          <div class="rounded-xl py-6 px-4 text-center mb-4" style="background-color:var(--nk-accent-subtle);">
+            <p class="text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">तपाईंको स्कोर</p>
+            <p class="text-[40px] font-bold tracking-tight leading-none" style="color:var(--nk-accent);"><span id="lq-score">0</span><span class="text-[20px]" style="color:var(--nk-text-tertiary);">/20</span></p>
+            <p class="text-[13px] mt-2 font-semibold" style="color:var(--nk-text);" id="lq-pct"></p>
+            <p class="text-[13px] mt-1" style="color:var(--nk-text-secondary);" id="lq-msg"></p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-tertiary);" id="lq-time"></p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2 mb-5">
+            <button id="lq-retry-btn" class="nk-btn nk-btn-primary flex-1 py-2.5">पुनः प्रयास ↻</button>
+            <a href="/nepal/transport" class="nk-btn nk-btn-secondary flex-1 py-2.5 text-center">सबै यातायात उपकरण</a>
+          </div>
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">आफ्ना उत्तर समीक्षा गर्नुहोस्</p>
+          <div id="lq-review" class="space-y-2"></div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: TIPS -->
+      <div class="md:sticky md:top-4 space-y-4">
+        <div class="nk-card p-5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color:var(--nk-text-tertiary);">परीक्षाका दिनका सुझाव</p>
+          <ul class="space-y-2.5 text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">
+            <li>• हरेक विकल्प पढ्नुहोस् — दुई विकल्प प्रायः उस्तै देखिन्छन्।</li>
+            <li>• संकेतका प्रश्न निःशुल्क अंक हुन्: पहिले आकार सिक्नुहोस् (<svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true" style="vertical-align:-2px"><circle cx="12" cy="12" r="9" fill="none" stroke="#dc2626" stroke-width="3"/><line x1="5.6" y1="18.4" x2="18.4" y2="5.6" stroke="#dc2626" stroke-width="3"/></svg> गोलो = निषेध, <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="vertical-align:-2px"><path d="M12 3.5 22 20 H2 Z" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13.5" stroke="#d97706" stroke-width="2.4"/><circle cx="12" cy="16.8" r="1.5" fill="#d97706"/></svg> त्रिकोण = चेतावनी, <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true" style="vertical-align:-2px"><circle cx="12" cy="12" r="10" fill="#2563eb"/><path d="M12 7.5v9M7.5 12h9" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg> नीलो = गर्नैपर्ने)।</li>
+            <li>• कुनै प्रश्न खाली नछोड्नुहोस् — छोड्नुको कुनै कारण छैन।</li>
+            <li>• परीक्षा केन्द्रमा नागरिकता र भौचर साथमा लैजानुहोस्।</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="mt-5 rounded-lg border px-4 py-3 text-[11.5px] leading-relaxed" style="border-color:var(--nk-border);background-color:var(--nk-bg);color:var(--nk-text-secondary);">
+      ⚠️ <strong style="color:var(--nk-text);">अस्वीकरण:</strong> यो निःशुल्क अभ्यास उपकरण हो, आधिकारिक DoTM परीक्षा होइन। प्रश्नसंख्या, उत्तीर्णाङ्क र नियम परिवर्तन हुन्छन् — परीक्षाअघि यातायात व्यवस्था विभागसँग हालको आवश्यकता पुष्टि गर्नुहोस्।
+    </div>
+
+    <!-- SEO content -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">नेपालमा लिखित परीक्षा तयारी</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">लिखित परीक्षा नेपाली ड्राइभिङ लाइसेन्सको पहिलो ढोका हो: ट्राफिक संकेत, सवारी नियम र साथमा बोक्नुपर्ने कागजातबारे वस्तुगत प्रश्नहरू। धेरैजसो उम्मेदवार कठिन प्रश्नले होइन, हतारले फेल हुन्छन् — संकेतपछाडिको आकार-रङ प्रणाली सिकेपछि आधा प्रश्न अनुमान गर्न सकिन्छ: रातो गोलोले रोक्छ, रातो त्रिकोणले चेतावनी दिन्छ, नीलो गोलोले आदेश दिन्छ।</p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">यो मक टेस्ट कसरी प्रयोग गर्ने</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">२०-मिनेट टाइमरमा नरोकिई प्रयास गर्नुहोस्, हरेक एक-लाइन व्याख्या पढ्नुहोस् (भाग्यले सही भएकालाई पनि), अनि पुनः प्रयास गर्नुहोस् — हरेक पटक २८ बाट २० प्रश्न फेरबदल हुन्छन्। धेरै प्रयासमा लगातार १६+ ल्याएपछि वास्तविक परीक्षा बुक गर्न तयार हुनुहुन्छ।</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">बारम्बार सोधिने प्रश्नहरू</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">सम्बन्धित यातायात उपकरणहरू</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/transport/vehicle-tax" style="color:var(--nk-accent);">सवारी कर क्यालकुलेटर</a> — लाइसेन्स पाएपछि कर, जरिवाना र नवीकरण खर्च</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/vehicle/fuel-cost" style="color:var(--nk-accent);">इन्धन खर्च क्यालकुलेटर</a> — तपाईंका यात्रामा प्रतिकिमि वास्तविक खर्च कति</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/transport" style="color:var(--nk-accent);">सबै यातायात उपकरणहरू</a> — कर, नवीकरण र थप</li>
+        </ul>
+      </section>
+    </div>
+
+    <RelatedTools tools={[
+      { title: 'सवारी कर, जरिवाना र नवीकरण', description: 'कर, ढिलो जरिवाना र नवीकरण खर्च', href: '/nepal/transport/vehicle-tax' },
+      { title: 'इन्धन खर्च', description: 'यात्राको इन्धन खर्च र प्रतिकिमि लागत', href: '/nepal/vehicle/fuel-cost' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style>
+  /* NOTE: .lq-opt* / .lq-rev* nodes are created by JS at runtime, so they
+     never receive Astro's scoped data attribute. They MUST stay :global(),
+     or the options render as unstyled jammed text. */
+  :global(.lq-opt) {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; text-align: left;
+    min-height: 48px;
+    padding: 12px 14px;
+    font-size: 15px; line-height: 1.45;
+    color: var(--nk-text);
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+  }
+  :global(.lq-opt:hover:not(:disabled)) { border-color: var(--nk-border-strong); background: var(--nk-hover); }
+  :global(.lq-opt:disabled) { cursor: default; }
+  :global(.lq-opt:focus-visible) { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  :global(.lq-opt-key) {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; flex-shrink: 0;
+    font-size: 12px; font-weight: 700;
+    border: 1px solid var(--nk-border); border-radius: 8px;
+    color: var(--nk-text-secondary);
+  }
+  :global(.lq-opt.is-correct) { border-color: #16a34a; background: color-mix(in srgb, #16a34a 8%, var(--nk-surface)); }
+  :global(.lq-opt.is-correct .lq-opt-key) { background: #16a34a; border-color: #16a34a; color: #fff; }
+  :global(.lq-opt.is-wrong) { border-color: #dc2626; background: color-mix(in srgb, #dc2626 7%, var(--nk-surface)); }
+  :global(.lq-opt.is-wrong .lq-opt-key) { background: #dc2626; border-color: #dc2626; color: #fff; }
+  :global(.lq-opt.is-dim) { opacity: 0.55; }
+  #lq-timer.is-warn { color: #fff; background: #dc2626; }
+  :global(.lq-rev) {
+    border: 1px solid var(--nk-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: var(--nk-surface);
+  }
+  :global(.lq-rev-q) { font-size: 13.5px; font-weight: 600; color: var(--nk-text); line-height: 1.45; }
+  :global(.lq-rev-a) { font-size: 12.5px; margin-top: 6px; line-height: 1.55; color: var(--nk-text-secondary); }
+  /* Sign artwork: light flashcard tile (readable in both themes) */
+  :global(.lq-sign) {
+    margin: 0 0 14px; padding: 16px 16px 12px;
+    border-radius: 14px; text-align: center;
+    background: #F4F2EC;
+    border: 1px solid var(--nk-border);
+  }
+  :global(.lq-sign-svg) { width: 96px; height: 96px; display: block; margin: 0 auto 8px; }
+  :global(.lq-sign-cap) { margin: 0; font-size: 11.5px; color: var(--nk-text-tertiary); }
+  :global(.lq-rev-sign) { width: 34px; height: 34px; flex-shrink: 0; vertical-align: -9px; margin-right: 6px; }
+  /* Language toggle */
+  :global(.lq-lang) {
+    padding: 6px 14px; font-size: 12.5px; font-weight: 600;
+    color: var(--nk-text-secondary); background: transparent;
+    cursor: pointer; border: none;
+  }
+  :global(.lq-lang.is-active) { color: #fff; background: var(--nk-accent); border-radius: 999px; }
+</style>
+
+<script>
+  import {
+    LIKHIT_QUESTIONS,
+    TEST_QUESTIONS,
+    TEST_SECONDS,
+  } from '../../../data/likhit-questions.js';
+
+  const $ = (id) => document.getElementById(id);
+  const KEYS = ['A', 'B', 'C', 'D'];
+  // Default to Nepali; English available via toggle.
+  let LANG = 'ne';
+
+  const STR = {
+    ne: {
+      qpos: (a, b) => `प्रश्न ${a} / ${b}`,
+      signCap: 'संकेत हेर्नुहोस्, अनि छान्नुहोस्',
+      next: 'अर्को →',
+      seeResult: 'नतिजा हेर्नुहोस् →',
+      correct: 'सही ✓  ',
+      wrong: 'गलत ✗  ',
+      pct: (p) => `${p}% सही`,
+      msgReady: 'परीक्षाका लागि तयार — आत्मविश्वाससाथ बुक गर्नुहोस्। 🎉',
+      msgAlmost: 'लगभग पुग्यो — ८०%+ सजिलो नलागेसम्म दोहोर्याउनुहोस्।',
+      msgKeep: 'अभ्यास जारी राख्नुहोस् — हरेक व्याख्या पढेर पुनः प्रयास गर्नुहोस्। 💪',
+      finishedIn: (t) => `${t} मा सकियो।`,
+      timeOut: (t) => `${t} पछि समय सकियो — छुटेका प्रश्न गलत मानिए।`,
+      yourAnswer: 'तपाईंको उत्तर',
+      correctIs: 'सही',
+      skipped: 'छुटेको',
+      signLabels: {
+        'stop': 'रातो अष्टकोणीय रोक्ने संकेत',
+        'warning': 'रातो त्रिकोणात्मक चेतावनी संकेत',
+        'no-entry': 'प्रवेश-निषेध संकेत: सेतो धर्का भएको रातो गोलो',
+        'no-parking': 'पार्किङ-निषेध संकेत: क्रस गरिएको नीलो P संकेत',
+        'no-horn': 'रातो काटे चिन्ह भएको हर्न-निषेध संकेत',
+        'mandatory': 'नीलो अनिवार्य दिशा संकेत',
+        'chevron': 'तीव्र मोड चेतावनी संकेत',
+        'no-uturn': 'रातो काटे चिन्ह भएको यू-टर्न-निषेध संकेत',
+        'speed40': 'गति सीमा ४० संकेत',
+        'oneway': 'एकतर्फी तीर संकेत',
+      },
+    },
+    en: {
+      qpos: (a, b) => `Question ${a} of ${b}`,
+      signCap: 'Study the sign, then choose',
+      next: 'Next →',
+      seeResult: 'See result →',
+      correct: 'Correct ✓  ',
+      wrong: 'Wrong ✗  ',
+      pct: (p) => `${p}% correct`,
+      msgReady: 'Exam-ready — book your test with confidence. 🎉',
+      msgAlmost: 'Almost there — retry until 80%+ feels easy.',
+      msgKeep: 'Keep practising — read every explanation and retry. 💪',
+      finishedIn: (t) => `Finished in ${t}.`,
+      timeOut: (t) => `Time ran out after ${t} — unanswered questions counted as wrong.`,
+      yourAnswer: 'Your answer',
+      correctIs: 'Correct',
+      skipped: 'Skipped',
+      signLabels: {
+        'stop': 'Red octagonal stop sign',
+        'warning': 'Red triangular warning sign',
+        'no-entry': 'No entry sign: red circle with white bar',
+        'no-parking': 'No parking sign: crossed blue P sign',
+        'no-horn': 'No horn sign with red slash',
+        'mandatory': 'Blue mandatory direction sign',
+        'chevron': 'Chevron sharp-turn warning sign',
+        'no-uturn': 'No U-turn sign with red slash',
+        'speed40': 'Speed limit 40 sign',
+        'oneway': 'One-way arrow sign',
+      },
+    },
+  };
+
+  const txt = (q, field) => (LANG === 'ne' ? q[field + '_ne'] : q[field]);
+  const optTxt = (o) => (LANG === 'ne' ? o.t_ne : o.t_en);
+
+  function signSVG(key, cls) {
+    const label = (STR[LANG].signLabels[key] || 'Traffic sign').replace(/"/g, '');
+    return '<svg class="' + cls + '" viewBox="0 0 64 64" role="img" aria-label="' +
+      label +
+      '" xmlns:xlink="http://www.w3.org/1999/xlink"><use href="#liq-sign-' + key +
+      '" xlink:href="#liq-sign-' + key + '"></use></svg>';
+  }
+
+  let paper = [];      // [{ id, cat, cat_ne, q, q_ne, why, why_ne, sign, opts: [{ t_en, t_ne, ok }] }]
+  let idx = 0;
+  let score = 0;
+  let picked = [];     // picked option index per question (-1 = skipped)
+  let timerId = null;
+  let remaining = TEST_SECONDS;
+  let finished = false;
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildPaper() {
+    paper = shuffle(LIKHIT_QUESTIONS).slice(0, TEST_QUESTIONS).map((q) => ({
+      id: q.id,
+      cat: q.cat,
+      cat_ne: q.cat_ne,
+      q: q.q,
+      q_ne: q.q_ne,
+      why: q.why,
+      why_ne: q.why_ne,
+      sign: q.sign || null,
+      opts: shuffle(q.options.map((t, i) => ({ t_en: t, t_ne: q.options_ne[i], ok: i === q.answer }))),
+    }));
+    idx = 0;
+    score = 0;
+    picked = new Array(paper.length).fill(-1);
+    remaining = TEST_SECONDS;
+    finished = false;
+  }
+
+  function fmtTime(s) {
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}:${String(r).padStart(2, '0')}`;
+  }
+
+  function tick() {
+    remaining -= 1;
+    if (remaining <= 0) {
+      remaining = 0;
+      paintTimer();
+      finish();
+      return;
+    }
+    paintTimer();
+  }
+
+  function paintTimer() {
+    const el = $('lq-timer');
+    el.textContent = fmtTime(remaining);
+    el.classList.toggle('is-warn', remaining < 120);
+  }
+
+  function show(id) {
+    ['lq-start-screen', 'lq-quiz-screen', 'lq-result-screen'].forEach((s) => {
+      $(s).style.display = s === id ? '' : 'none';
+    });
+  }
+
+  function start() {
+    buildPaper();
+    show('lq-quiz-screen');
+    renderQ();
+    paintTimer();
+    clearInterval(timerId);
+    timerId = setInterval(tick, 1000);
+    $('lq-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function renderQ() {
+    const q = paper[idx];
+    const S = STR[LANG];
+    $('lq-qpos').textContent = S.qpos(idx + 1, paper.length);
+    $('lq-progress-fill').style.width = `${(idx / paper.length) * 100}%`;
+    $('lq-cat').textContent = LANG === 'ne' ? q.cat_ne : q.cat;
+    $('lq-qtext').textContent = LANG === 'ne' ? q.q_ne : q.q;
+    $('lq-sign-cap').textContent = S.signCap;
+    const signFig = $('lq-sign');
+    if (q.sign) {
+      signFig.hidden = false;
+      const use = $('lq-sign-use');
+      use.setAttribute('href', '#liq-sign-' + q.sign);
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#liq-sign-' + q.sign);
+      $('lq-sign-svg').setAttribute('aria-label', S.signLabels[q.sign] || 'Traffic sign');
+    } else {
+      signFig.hidden = true;
+    }
+    $('lq-explain').style.display = 'none';
+    $('lq-next-btn').style.display = 'none';
+    $('lq-next-btn').textContent = idx === paper.length - 1 ? S.seeResult : S.next;
+    const box = $('lq-options');
+    box.innerHTML = '';
+    q.opts.forEach((o, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'lq-opt';
+      const k = document.createElement('span');
+      k.className = 'lq-opt-key';
+      k.textContent = KEYS[i];
+      const t = document.createElement('span');
+      t.textContent = optTxt(o);
+      b.append(k, t);
+      b.addEventListener('click', () => answer(i));
+      box.append(b);
+    });
+    // If language was toggled after answering, repaint the answered state.
+    if (picked[idx] !== -1) paintAnswered(picked[idx], false);
+  }
+
+  function paintAnswered(i, countScore) {
+    const q = paper[idx];
+    const S = STR[LANG];
+    const correct = q.opts[i].ok;
+    if (countScore && correct) score += 1;
+    const btns = $('lq-options').querySelectorAll('.lq-opt');
+    btns.forEach((b, j) => {
+      b.disabled = true;
+      if (q.opts[j].ok) b.classList.add('is-correct');
+      else if (j === i) b.classList.add('is-wrong');
+      else b.classList.add('is-dim');
+    });
+    const ex = $('lq-explain');
+    ex.innerHTML = '';
+    const verdict = document.createElement('strong');
+    verdict.style.color = correct ? '#16a34a' : '#dc2626';
+    verdict.textContent = correct ? S.correct : S.wrong;
+    const why = document.createElement('span');
+    why.textContent = LANG === 'ne' ? q.why_ne : q.why;
+    ex.append(verdict, why);
+    ex.style.display = '';
+    $('lq-progress-fill').style.width = `${((idx + 1) / paper.length) * 100}%`;
+    $('lq-next-btn').style.display = '';
+  }
+
+  function answer(i) {
+    if (picked[idx] !== -1) return;
+    picked[idx] = i;
+    paintAnswered(i, true);
+  }
+
+  function renderResult() {
+    const S = STR[LANG];
+    const pct = Math.round((score / paper.length) * 100);
+    $('lq-score').textContent = score;
+    $('lq-pct').textContent = S.pct(pct);
+    $('lq-msg').textContent =
+      pct >= 80 ? S.msgReady
+      : pct >= 60 ? S.msgAlmost
+      : S.msgKeep;
+    const used = TEST_SECONDS - remaining;
+    $('lq-time').textContent = remaining === 0 && picked.includes(-1)
+      ? S.timeOut(fmtTime(used))
+      : S.finishedIn(fmtTime(used));
+    const rev = $('lq-review');
+    rev.innerHTML = '';
+    paper.forEach((q, qi) => {
+      const pi = picked[qi];
+      const ok = pi !== -1 && q.opts[pi].ok;
+      const row = document.createElement('div');
+      row.className = 'lq-rev';
+      const mark = ok ? '✓' : '✗';
+      const markColor = ok ? '#16a34a' : '#dc2626';
+      const signThumb = q.sign ? signSVG(q.sign, 'lq-rev-sign') : '';
+      const qText = escapeHtml(LANG === 'ne' ? q.q_ne : q.q);
+      const yourAns = pi === -1 ? S.skipped : escapeHtml(optTxt(q.opts[pi]));
+      const rightAns = escapeHtml(q.opts.find((o) => o.ok) ? optTxt(q.opts.find((o) => o.ok)) : '');
+      const whyText = escapeHtml(LANG === 'ne' ? q.why_ne : q.why);
+      row.innerHTML =
+        `<p class="lq-rev-q">${signThumb}<span style="color:${markColor};font-weight:800;">${mark}</span> Q${qi + 1}. ${qText}</p>` +
+        `<p class="lq-rev-a">${S.yourAnswer}: <strong style="color:var(--nk-text);">${yourAns}</strong><br/>` +
+        `${S.correctIs}: <strong style="color:#16a34a;">${rightAns}</strong><br/>` +
+        `<span style="color:var(--nk-text-tertiary);">${whyText}</span></p>`;
+      rev.append(row);
+    });
+  }
+
+  function finish() {
+    clearInterval(timerId);
+    timerId = null;
+    finished = true;
+    renderResult();
+    show('lq-result-screen');
+    $('lq-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function setLang(next) {
+    if (LANG === next) return;
+    LANG = next;
+    $('lq-lang-ne').classList.toggle('is-active', LANG === 'ne');
+    $('lq-lang-en').classList.toggle('is-active', LANG === 'en');
+    if (!paper.length) return;
+    if (finished) {
+      renderResult();
+    } else if ($('lq-quiz-screen').style.display !== 'none') {
+      renderQ();
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  $('lq-start-btn').addEventListener('click', start);
+  $('lq-lang-ne').addEventListener('click', () => setLang('ne'));
+  $('lq-lang-en').addEventListener('click', () => setLang('en'));
+  $('lq-next-btn').addEventListener('click', () => {
+    if (idx < paper.length - 1) {
+      idx += 1;
+      renderQ();
+    } else {
+      finish();
+    }
+  });
+  $('lq-retry-btn').addEventListener('click', start);
+</script>

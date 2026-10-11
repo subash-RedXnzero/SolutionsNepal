@@ -1,0 +1,1116 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/navigation/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
+import SearchModal from '../components/search/SearchModal.astro';
+import ToolsLayout from '../components/layout/ToolsLayout.astro';
+import { getSeo, SITE_URL } from '../data/seo.js';
+import { getWeather, CITIES } from '../lib/nepal/weather.js';
+import {
+  currentPanel,
+  hourlyStrip,
+  detailsGrid,
+  dailyRows,
+  aqiCard,
+  cityGrid,
+} from '../components/weather/wx-ui.js';
+import {
+  MapPin,
+  ChevronDown,
+  Search,
+  RefreshCw,
+  ArrowRight,
+  CloudOff,
+  Check,
+} from '@lucide/astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+
+const seo = getSeo('/weather');
+
+// Server-rendered Kathmandu bundle (baked snapshot). On load the client
+// silently re-fetches Open-Meteo in the browser, so numbers on screen end
+// up minutes old even when the build is days old.
+const data = getWeather('kathmandu');
+const snaps = CITIES.map(c => {
+  const w = getWeather(c.id);
+  return { city: c, temp: w.today.temp, cond: w.today.cond };
+});
+const initialCities = cityGrid(snaps, 'kathmandu');
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts load via the @font-face rules in global.css; preloaded here since
+       this page has a standalone <head> outside BaseLayout. -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/notosansdevanagari/v30/TuG7UUFzXI5FBtUq5a8bjKYTZjtRU6Sgv3NaV_SNmI0b8QQCQmHN5TV_9qo.woff2" />
+
+  <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
+
+  <title>{seo.title}</title>
+  <meta name="description" content={seo.description} />
+  <link rel="canonical" href={`${SITE_URL}/weather`} />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={seo.title} />
+  <meta property="og:description" content={seo.description} />
+  <meta property="og:image" content={seo.ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={seo.title} />
+  <meta property="og:url" content={`${SITE_URL}/weather`} />
+  <meta property="og:site_name" content="SolutionsNepal" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={seo.title} />
+  <meta name="twitter:description" content={seo.description} />
+  <meta name="twitter:image" content={seo.ogImage} />
+  <meta name="twitter:image:alt" content={seo.title} />
+
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  {seo.jsonLd && <script type="application/ld+json" set:html={JSON.stringify(seo.jsonLd)} />}
+  <script type="application/ld+json" set:html={JSON.stringify([
+    { '@context': 'https://schema.org', '@type': 'WebSite', name: 'SolutionsNepal', url: SITE_URL },
+    { '@context': 'https://schema.org', '@type': 'Organization', name: 'SolutionsNepal', url: SITE_URL, logo: `${SITE_URL}/favicon.svg` },
+  ])} />
+
+  <script is:inline>
+    (function() {
+      if (localStorage.getItem('nk-theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+
+<body class="wx-body min-h-screen flex flex-col">
+
+  <!-- ── Navbar (shared site-wide) ─────────────────────────── -->
+  <Navbar />
+
+  <SearchModal />
+
+  <main class="flex-1">
+    <ToolsLayout currentPath="/weather" showSidebar={false}>
+
+    <!-- ── Hero ─────────────────────────────────────────────── -->
+    <div class="wx-wrap">
+      <Breadcrumbs items={[
+        { label: 'Nepal', href: '/nepal' },
+        { label: 'Weather' },
+      ]} />
+      <section class="wx-hero" id="wx-hero">
+        <h1 class="wx-title">Today&rsquo;s Weather in Nepal</h1>
+        <p class="wx-sub">Live weather conditions and today&rsquo;s forecast for cities across Nepal.</p>
+
+        <div class="wx-controls">
+          <div class="wx-loc-wrap">
+            <button type="button" id="wx-loc" class="wx-loc" aria-haspopup="listbox" aria-expanded="false" aria-controls="wx-loc-panel">
+              <MapPin size={16} strokeWidth={2} class="wx-loc-pin" />
+              <span id="wx-loc-name">{data.city.name}, Nepal</span>
+              <ChevronDown size={15} strokeWidth={2.2} class="wx-loc-chev" />
+            </button>
+
+            <div id="wx-loc-panel" class="wx-loc-panel" role="listbox" aria-label="Choose a city">
+              <div class="wx-loc-search">
+                <Search size={15} strokeWidth={2} />
+                <input id="wx-city-search" type="text" placeholder="Search city" autocomplete="off" spellcheck="false" aria-label="Search city" />
+              </div>
+              <div id="wx-city-list" class="wx-loc-list">
+                {CITIES.map(c => (
+                  <a href={`/weather?city=${c.id}`} class={`wx-loc-item${c.id === 'kathmandu' ? ' active' : ''}`} role="option" data-city={c.id} aria-selected={c.id === 'kathmandu' ? 'true' : 'false'}>
+                    <span class="wx-loc-item-name">{c.name}</span>
+                    <span class="wx-loc-item-np" lang="ne">{c.np}</span>
+                    <Check size={15} strokeWidth={2.4} class="wx-loc-check" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div class="wx-meta">
+            <span class="wx-updated">Last updated: <b id="wx-updated-val">{data.updated.time}</b></span>
+            <button type="button" id="wx-refresh" class="wx-refresh" aria-label="Refresh weather">
+              <RefreshCw size={15} strokeWidth={2} />
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ── Live weather region ──────────────────────────────── -->
+    <div id="wx-live">
+
+      <!-- Current weather -->
+      <section class="wx-sec" aria-label="Current weather">
+        <div class="wx-wrap">
+          <div class="wx-skel" aria-hidden="true">
+            <div class="sk sk-card">
+              <div class="sk-row"><div class="sk sk-circle lg"></div><div class="sk sk-bar w40"></div></div>
+              <div class="sk sk-bar w28"></div>
+              <div class="sk sk-bar w36"></div>
+            </div>
+          </div>
+          <div class="wx-real">
+            <div class="wx-card" id="wx-current-card" aria-live="polite">
+              <div id="wx-current" set:html={currentPanel(data)} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hourly -->
+      <section class="wx-band" aria-label="Hourly forecast">
+        <div class="wx-band-inner">
+          <h2 class="wx-h2">Today&rsquo;s Forecast</h2>
+          <div class="wx-skel" aria-hidden="true"><div class="sk" style="height:150px"></div></div>
+          <div class="wx-real" id="wx-hourly" set:html={hourlyStrip(data.hourly)} />
+        </div>
+      </section>
+
+      <!-- Details -->
+      <section class="wx-sec" aria-label="Weather details">
+        <div class="wx-wrap">
+          <h2 class="wx-h2">Weather Details</h2>
+          <div class="wx-skel" aria-hidden="true"><div class="sk" style="height:190px"></div></div>
+          <div class="wx-real" id="wx-details" set:html={detailsGrid(data)} />
+        </div>
+      </section>
+
+      <!-- 7-day -->
+      <section class="wx-band" aria-label="7-day forecast">
+        <div class="wx-band-inner">
+          <h2 class="wx-h2">7-Day Forecast</h2>
+          <div class="wx-skel" aria-hidden="true"><div class="sk" style="height:300px"></div></div>
+          <div class="wx-real" id="wx-daily" set:html={dailyRows(data.daily)} />
+        </div>
+      </section>
+
+      <!-- Air quality -->
+      <section class="wx-sec" aria-label="Air quality">
+        <div class="wx-wrap">
+          <h2 class="wx-h2">Air Quality</h2>
+          <div class="wx-skel" aria-hidden="true"><div class="sk" style="height:170px;max-width:640px"></div></div>
+          <div class="wx-real" id="wx-aqi" set:html={aqiCard(data.aqi)} />
+        </div>
+      </section>
+
+      <!-- Cities -->
+      <section class="wx-sec" aria-label="Weather across Nepal">
+        <div class="wx-wrap">
+          <h2 class="wx-h2">Weather Across Nepal</h2>
+          <div class="wx-skel" aria-hidden="true"><div class="sk" style="height:150px"></div></div>
+          <div class="wx-real">
+            <div id="wx-cities" class="wxct-grid" set:html={initialCities} />
+            <button type="button" id="wx-search-city" class="wx-morelink">
+              Search another city
+              <ArrowRight size={15} strokeWidth={2} />
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Error state -->
+    <div class="wx-wrap">
+      <section id="wx-error" class="wx-error" hidden>
+        <CloudOff size={36} strokeWidth={1.6} class="wx-error-ico" />
+        <h2>Weather data unavailable</h2>
+        <p>Please try again in a moment.</p>
+        <button type="button" id="wx-retry" class="wx-btn">Try again</button>
+      </section>
+
+      <!-- SEO context -->
+      <section class="wx-info" aria-label="About weather in Nepal">
+        <h2 class="wx-h2">Weather in Nepal</h2>
+        <p>
+          Check current conditions anywhere in Nepal with hourly forecasts, a 7-day outlook,
+          precipitation, humidity, wind, visibility, UV index and air quality for each city.
+          SolutionsNepal keeps weather information calm and quick to read, whether you are planning a
+          commute in Kathmandu, a trek around Pokhara or a trip to the Terai.
+        </p>
+        <p>
+          Weather is available for ten major cities: Kathmandu, Pokhara, Lalitpur, Bhaktapur,
+          Biratnagar, Bharatpur, Butwal, Dharan, Nepalgunj and Dhangadhi. Pick a city to see its
+          live conditions, today&rsquo;s hourly timeline and the week ahead. Live numbers refresh
+          automatically in your browser from free providers (Open-Meteo, with wttr.in as backup) —
+          no signup or API key needed.
+        </p>
+      </section>
+    </div>
+    </ToolsLayout>
+  </main>
+
+  <!-- ── Footer (shared site-wide) ───────────────────────── -->
+  <Footer />
+
+  <!-- ── Mobile quick switcher ──────────────────────────────── -->
+  <button type="button" id="wx-quick" class="wx-quick" aria-label="Back to weather summary">
+    <span id="wx-quick-ico" aria-hidden="true"></span>
+    <span id="wx-quick-city"></span>
+    <b id="wx-quick-temp"></b>
+    <ChevronDown size={14} strokeWidth={2.2} class="wx-quick-chev" />
+  </button>
+
+<style is:global>
+/* ═══════════════════════════════════════════════════════════
+   SolutionsNepal Weather — page styles (namespaced wx*)
+   Radius grammar: cards 18-20px · compact tiles 12px · pills 9999px
+   Accents: red = interactive (site-wide) · teal = weather data
+   gold = sun · band colors = AQI semantics only
+   ═══════════════════════════════════════════════════════════ */
+
+.wx-body {
+  --wx-teal: #2B8A9D;
+  --wx-teal-ink: #1E6B7C;
+  --wx-teal-soft: rgba(43, 138, 157, 0.09);
+  --wx-gold: #C9962E;
+  --wx-cloud: #64707D;
+  --wx-good: #16A34A;
+  --wx-mod: #D97706;
+  --wx-usg: #EA580C;
+  --wx-bad: #DC2626;
+}
+[data-theme="dark"] .wx-body {
+  --wx-teal: #58B7C9;
+  --wx-teal-ink: #8CCDDA;
+  --wx-teal-soft: rgba(88, 183, 201, 0.12);
+  --wx-gold: #E2B45C;
+  --wx-cloud: #9AA9B6;
+  --wx-good: #4ADE80;
+  --wx-mod: #FBBF24;
+  --wx-usg: #FB923C;
+  --wx-bad: #F87171;
+}
+
+.wx-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Condition icon theme ── */
+.wx-icon .wx-sun { stroke: var(--wx-gold); }
+.wx-icon .wx-cloud { stroke: var(--wx-cloud); }
+.wx-icon .wx-cloud.dim { opacity: 0.55; }
+.wx-icon .wx-drop { stroke: var(--wx-teal); }
+
+/* ── Hero ── */
+.wx-hero { padding: 46px 0 0; }
+.wx-title {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.12;
+}
+.wx-sub {
+  margin-top: 10px;
+  font-size: 16.5px;
+  color: var(--nk-text-secondary);
+  max-width: 58ch;
+}
+
+.wx-controls {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.wx-loc-wrap { position: relative; }
+.wx-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 46px;
+  padding: 0 16px 0 18px;
+  border-radius: 9999px;
+  border: 1px solid var(--nk-border);
+  background: var(--nk-surface);
+  color: var(--nk-text);
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.wx-loc:hover { border-color: var(--nk-border-strong); background: var(--nk-hover); }
+.wx-loc[aria-expanded="true"] { border-color: var(--nk-border-strong); }
+.wx-loc-pin { color: var(--nk-accent); }
+.wx-loc-chev { color: var(--nk-text-tertiary); transition: transform 0.18s ease; }
+.wx-loc[aria-expanded="true"] .wx-loc-chev { transform: rotate(180deg); }
+
+.wx-loc-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 320px;
+  max-width: calc(100vw - 48px);
+  padding: 8px;
+  background: var(--nk-surface);
+  border: 1px solid var(--nk-border);
+  border-radius: 16px;
+  box-shadow: 0 18px 44px -16px rgba(27, 27, 27, 0.28);
+  display: none;
+  z-index: 90;
+}
+.wx-loc-panel.open { display: block; animation: wx-pop 0.16s var(--ease-out); }
+@keyframes wx-pop {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.wx-loc-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--nk-muted);
+  color: var(--nk-text-tertiary);
+  margin-bottom: 6px;
+}
+.wx-loc-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--nk-text);
+}
+.wx-loc-search input::placeholder { color: var(--nk-text-tertiary); }
+.wx-loc-list { max-height: 308px; overflow-y: auto; }
+.wx-loc-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 11px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--nk-text);
+  transition: background 0.12s ease;
+}
+.wx-loc-item:hover, .wx-loc-item.kb { background: var(--nk-hover); }
+.wx-loc-item-name { font-size: 14.5px; font-weight: 550; }
+.wx-loc-item-np {
+  margin-left: auto;
+  font-family: var(--font-nepali);
+  font-size: 13px;
+  color: var(--nk-text-tertiary);
+}
+.wx-loc-check {
+  color: var(--nk-accent);
+  flex-shrink: 0;
+  visibility: hidden;
+}
+.wx-loc-item.active .wx-loc-check { visibility: visible; }
+.wx-loc-item.active .wx-loc-item-name { color: var(--nk-accent); }
+
+.wx-meta { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.wx-updated { font-size: 13px; color: var(--nk-text-tertiary); }
+.wx-updated b { font-weight: 600; color: var(--nk-text-secondary); }
+.wx-refresh {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--nk-border);
+  border-radius: 9999px;
+  background: var(--nk-surface);
+  color: var(--nk-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.wx-refresh:hover { border-color: var(--nk-border-strong); color: var(--nk-text); background: var(--nk-hover); }
+#wx-live.is-loading .wx-refresh svg { animation: wx-spin 0.9s linear infinite; }
+@keyframes wx-spin { to { transform: rotate(360deg); } }
+
+/* ── Current weather card ── */
+.wx-sec { margin-top: 52px; }
+.wx-card {
+  margin-top: 26px;
+  background: var(--nk-card-bg);
+  border: 1px solid var(--nk-border);
+  border-radius: 20px;
+  padding: 30px 34px 10px;
+  scroll-margin-top: 84px;
+}
+
+.wxc {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 36px;
+  align-items: center;
+}
+.wxc-today { font-size: 14px; font-weight: 600; color: var(--nk-text-secondary); }
+.wxc-left { display: flex; flex-direction: column; gap: 0; padding-bottom: 20px; }
+.wxc-hero-row { display: flex; align-items: center; gap: 18px; margin-top: 10px; }
+.wxc-icon { flex-shrink: 0; }
+.wxc-temp {
+  font-size: clamp(68px, 9vw, 92px);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  color: var(--nk-text);
+}
+.wxc-deg {
+  font-size: 0.42em;
+  font-weight: 600;
+  color: var(--nk-text-tertiary);
+  letter-spacing: 0;
+}
+.wxc-cond { margin-top: 12px; font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+.wxc-feels { margin-top: 4px; font-size: 14px; color: var(--nk-text-tertiary); }
+
+.wxc-right {
+  border-left: 1px solid var(--nk-hairline);
+  padding-left: 36px;
+  padding-bottom: 20px;
+}
+.wxc-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.wxc-stat { display: flex; flex-direction: column; gap: 3px; padding: 16px 18px; }
+.wxc-stat:nth-child(-n+2) { border-bottom: 1px solid var(--nk-hairline); }
+.wxc-stat:nth-child(odd) { border-left: none; }
+.wxc-stat:nth-child(even) { border-left: 1px solid var(--nk-hairline); }
+.wxc-stat:first-child, .wxc-stat:nth-child(2) { padding-top: 4px; }
+.wxc-stat-head, .wxc-stat-label { display: flex; align-items: center; gap: 7px; }
+.wxc-stat-ico { display: flex; color: var(--nk-text-tertiary); }
+.wxc-stat-label { font-size: 13px; font-weight: 500; color: var(--nk-text-secondary); }
+.wxc-stat-value { font-size: 22px; font-weight: 650; letter-spacing: -0.02em; color: var(--nk-text); }
+
+/* Sun arc strip */
+.wxsun {
+  border-top: 1px solid var(--nk-hairline);
+  padding: 14px 6px 18px;
+}
+.wxsun > svg { display: block; width: 230px; height: 92px; margin: 0 auto; }
+.wxsun-ico svg { width: 15px; height: 15px; flex-shrink: 0; }
+.wxsun-arc { fill: none; stroke: var(--nk-border-strong); stroke-width: 1.5; stroke-dasharray: 3 5; }
+.wxsun-dot { fill: var(--wx-gold); }
+.wxsun-halo { fill: none; stroke: var(--wx-gold); opacity: 0.35; stroke-width: 1.5; }
+.wxsun-times {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: -34px;
+  padding: 0 6px;
+  position: relative;
+}
+.wxsun-t { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; color: var(--nk-text-secondary); }
+.wxsun-t b { font-weight: 650; color: var(--nk-text); }
+.wxsun-t.right { text-align: right; }
+.wxsun-ico { display: flex; color: var(--nk-text-tertiary); }
+.wxsun-cap { font-size: 12px; color: var(--nk-text-tertiary); }
+
+/* ── Section headings ── */
+.wx-h2 {
+  font-size: 23px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* ── Bands (full-bleed alternating white sections) ── */
+.wx-band {
+  margin-top: 52px;
+  background: var(--nk-surface);
+  border-top: 1px solid var(--nk-border);
+  border-bottom: 1px solid var(--nk-border);
+  padding: 40px 0 44px;
+}
+.wx-band-inner { max-width: 1148px; margin: 0 auto; padding: 0 24px; }
+
+/* ── Hourly strip ── */
+.wxh {
+  position: relative;
+  margin-top: 18px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.wxh-curve { position: absolute; top: 0; left: 0; pointer-events: none; }
+.wxh-line {
+  fill: none;
+  stroke: var(--wx-teal);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.wxh-area { fill: var(--wx-teal); opacity: 0.07; }
+.wxh-dot { fill: var(--wx-teal); }
+.wxh-cols { display: flex; position: relative; }
+.wxh-col {
+  flex: 0 0 92px;
+  width: 92px;
+  height: 128px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 13px;
+  border-radius: 14px;
+}
+.wxh-hour { font-size: 12.5px; font-weight: 600; color: var(--nk-text-tertiary); }
+.wxh-icon { margin-top: 7px; }
+.wxh-temp { margin-top: 6px; font-size: 16px; font-weight: 650; letter-spacing: -0.01em; }
+.wxh-rain { margin-top: 4px; font-size: 11.5px; color: var(--wx-teal); min-height: 15px; }
+.wxh-rain.high { font-weight: 650; }
+.wxh-col.now { background: var(--wx-teal-soft); }
+.wxh-col.now .wxh-hour { color: var(--wx-teal-ink); }
+
+/* ── Details grid ── */
+.wxd-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.wxd-cell {
+  background: var(--nk-card-bg);
+  border: 1px solid var(--nk-border);
+  border-radius: 12px;
+  padding: 14px 16px 15px;
+}
+.wxd-head { display: flex; align-items: center; gap: 7px; }
+.wxd-ico { display: flex; color: var(--nk-text-tertiary); }
+.wxd-label { font-size: 12.5px; font-weight: 500; color: var(--nk-text-secondary); }
+.wxd-value { margin-top: 9px; font-size: 21px; font-weight: 650; letter-spacing: -0.02em; }
+.wxd-sub { margin-top: 3px; font-size: 12.5px; color: var(--nk-text-tertiary); }
+
+/* ── 7-day rows ── */
+.wxd7 { margin-top: 14px; display: flex; flex-direction: column; gap: 2px; }
+.wxd7-row {
+  display: grid;
+  grid-template-columns: 92px 30px 42px 38px 1fr 38px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+}
+.wxd7-row.today {
+  background: var(--nk-card-bg);
+  border-color: var(--nk-border);
+}
+.wxd7-day { font-size: 14px; font-weight: 550; color: var(--nk-text-secondary); }
+.wxd7-row.today .wxd7-day { color: var(--nk-text); font-weight: 650; }
+.wxd7-icon { display: flex; }
+.wxd7-rain { font-size: 11.5px; font-weight: 550; color: var(--wx-teal); }
+.wxd7-lo { font-size: 14px; color: var(--nk-text-tertiary); text-align: right; }
+.wxd7-hi { font-size: 14px; font-weight: 650; color: var(--nk-text); text-align: right; }
+.wxd7-track {
+  position: relative;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--nk-hairline);
+}
+.wxd7-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: var(--wx-teal);
+  opacity: 0.85;
+}
+.wxd7-bar.warm { background: var(--wx-gold); }
+
+/* ── Air quality ── */
+.wxq {
+  margin-top: 20px;
+  max-width: 640px;
+  background: var(--nk-card-bg);
+  border: 1px solid var(--nk-border);
+  border-radius: 18px;
+  padding: 22px 26px 20px;
+}
+.wxq-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.wxq-main { display: flex; align-items: center; gap: 14px; }
+.wxq-value { font-size: 34px; font-weight: 650; letter-spacing: -0.03em; line-height: 1; }
+.wxq-bandwrap { display: flex; flex-direction: column; gap: 5px; }
+.wxq-band {
+  align-self: flex-start;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.wxq-band.b-good { background: color-mix(in srgb, var(--wx-good) 13%, transparent); color: var(--wx-good); }
+.wxq-band.b-moderate { background: color-mix(in srgb, var(--wx-mod) 14%, transparent); color: var(--wx-mod); }
+.wxq-band.b-usg { background: color-mix(in srgb, var(--wx-usg) 14%, transparent); color: var(--wx-usg); }
+.wxq-band.b-bad { background: color-mix(in srgb, var(--wx-bad) 13%, transparent); color: var(--wx-bad); }
+.wxq-scale-label { font-size: 12px; color: var(--nk-text-tertiary); }
+.wxq-pm { display: flex; gap: 22px; }
+.wxq-pm-item { display: flex; flex-direction: column; gap: 2px; font-size: 15px; font-weight: 600; }
+.wxq-pm-item b {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--nk-text-tertiary);
+}
+.wxq-track {
+  position: relative;
+  margin-top: 20px;
+  display: flex;
+  gap: 3px;
+  height: 6px;
+}
+.wxq-seg { flex: 1; border-radius: 999px; opacity: 0.32; }
+.wxq-seg.s0 { background: var(--wx-good); }
+.wxq-seg.s1 { background: var(--wx-mod); }
+.wxq-seg.s2 { background: var(--wx-usg); }
+.wxq-seg.s3 { background: var(--wx-bad); }
+.wxq-pin {
+  position: absolute;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--nk-text);
+  border: 2.5px solid var(--nk-card-bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transform: translate(-50%, -50%);
+}
+.wxq-marks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--nk-text-tertiary);
+}
+.wxq-advice { margin-top: 14px; font-size: 13.5px; color: var(--nk-text-secondary); }
+
+/* ── Cities grid ── */
+.wxct-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.wxct {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  text-decoration: none;
+  background: var(--nk-card-bg);
+  border: 1px solid var(--nk-border);
+  border-radius: 12px;
+  padding: 13px 15px 14px;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+.wxct:hover { border-color: var(--nk-border-strong); background: var(--nk-hover); }
+.wxct:active { transform: scale(0.98); }
+.wxct.active { border-color: var(--nk-accent); background: var(--nk-accent-subtle); }
+.wxct-top { display: flex; align-items: center; justify-content: space-between; }
+.wxct-temp { font-size: 20px; font-weight: 650; letter-spacing: -0.02em; color: var(--nk-text); }
+.wxct-name { margin-top: 8px; font-size: 14.5px; font-weight: 600; color: var(--nk-text); }
+.wxct-cond { margin-top: 2px; font-size: 12.5px; color: var(--nk-text-tertiary); }
+.wxct.active .wxct-name { color: var(--nk-accent); }
+
+.wx-morelink {
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  padding: 6px 2px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--nk-accent);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.wx-morelink:hover { color: var(--nk-accent-hover); }
+.wx-morelink:hover svg { transform: translateX(2px); }
+.wx-morelink svg { transition: transform 0.15s ease; }
+
+/* ── SEO copy ── */
+.wx-info { margin-top: 56px; padding-bottom: 24px; max-width: 74ch; }
+.wx-info p { margin-top: 14px; font-size: 15px; line-height: 1.68; color: var(--nk-text-secondary); }
+
+/* ── Error state ── */
+.wx-error {
+  margin-top: 64px;
+  text-align: center;
+  padding: 48px 24px 24px;
+}
+.wx-error-ico { color: var(--nk-text-tertiary); }
+.wx-error h2 { margin-top: 16px; font-size: 19px; }
+.wx-error p { margin-top: 6px; font-size: 14.5px; color: var(--nk-text-secondary); }
+.wx-btn {
+  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: var(--nk-accent);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.wx-btn:hover { background: var(--nk-accent-hover); color: #fff; }
+.wx-btn:active { transform: scale(0.98); }
+
+/* ── Skeletons ── */
+.wx-skel { display: none; }
+#wx-live.is-loading .wx-real { display: none; }
+#wx-live.is-loading .wx-skel { display: block; }
+.sk {
+  border-radius: 12px;
+  background: linear-gradient(100deg, var(--nk-muted) 40%, var(--nk-hover) 50%, var(--nk-muted) 60%);
+  background-size: 200% 100%;
+  animation: wx-shimmer 1.4s linear infinite;
+}
+.sk-card {
+  border-radius: 20px;
+  border: 1px solid var(--nk-border);
+  padding: 30px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.sk-row { display: flex; align-items: center; gap: 18px; }
+.sk-bar { height: 16px; }
+.sk-circle { border-radius: 999px; }
+.sk-circle.lg { width: 64px; height: 64px; }
+.sk-bar.w28 { width: 28%; }
+.sk-bar.w36 { width: 36%; }
+.sk-bar.w40 { width: 40%; height: 52px; }
+@keyframes wx-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ── Mobile quick switcher ── */
+.wx-quick {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translate(-50%, 12px);
+  z-index: 90;
+  display: none;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px 9px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--nk-border);
+  background: var(--nk-surface);
+  box-shadow: 0 12px 32px -8px rgba(27, 27, 27, 0.3);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--nk-text);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.wx-quick.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.wx-quick b { font-weight: 650; color: var(--nk-text-secondary); }
+.wx-quick-chev { transform: rotate(180deg); color: var(--nk-text-tertiary); }
+
+/* ═══ Responsive ═══ */
+@media (max-width: 900px) {
+  .wxct-grid { grid-template-columns: repeat(3, 1fr); }
+  .wxd-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .wx-wrap { padding: 0 16px; }
+  .wx-hero { padding-top: 30px; }
+  .wx-controls { margin-top: 20px; }
+  .wx-meta { margin-left: 0; width: 100%; justify-content: space-between; }
+
+  .wx-sec, .wx-band { margin-top: 40px; }
+  .wx-band { padding: 30px 0 34px; }
+  .wx-band-inner { padding: 0 16px; }
+
+  .wx-card { margin-top: 20px; padding: 22px 18px 6px; }
+  .wxc { grid-template-columns: 1fr; gap: 8px; }
+  .wxc-right { border-left: none; padding-left: 0; padding-bottom: 12px; }
+  .wxc-stat { padding: 13px 10px; }
+  .wxc-stat-value { font-size: 19px; }
+  .wxc-temp { font-size: 64px; }
+  .wxc-icon svg { width: 64px; height: 64px; }
+  .wxsun-times { margin-top: -30px; }
+  .wxsun > svg { width: 200px; height: 80px; }
+
+  .wxct-grid { grid-template-columns: repeat(2, 1fr); }
+  .wx-info { margin-top: 44px; }
+  .wx-quick { display: flex; }
+}
+@media (max-width: 400px) {
+  .wxd7-row { grid-template-columns: 68px 26px 1fr 34px 1fr 34px; gap: 7px; padding: 9px 10px; }
+  .wxd7-rain { display: none; }
+}
+</style>
+
+<script>
+  import { getWeather, weatherFromLive, wttrToRow, CITIES } from '../lib/nepal/weather.js';
+  import {
+    currentPanel,
+    hourlyStrip,
+    detailsGrid,
+    dailyRows,
+    aqiCard,
+    cityGrid,
+    wxIcon,
+  } from '../components/weather/wx-ui.js';
+
+  const $ = s => document.querySelector(s);
+  const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // City snapshots for the grid (same deterministic source as the server).
+  const snaps = CITIES.map(c => {
+    const w = getWeather(c.id);
+    return { city: c, temp: w.today.temp, cond: w.today.cond };
+  });
+
+  // ── State ──
+  let city = 'kathmandu';
+  const fromUrl = new URLSearchParams(location.search).get('city');
+  let saved = null;
+  try { saved = localStorage.getItem('nk-wx-city'); } catch {}
+  if (fromUrl && CITIES.some(c => c.id === fromUrl)) city = fromUrl;
+  else if (saved && CITIES.some(c => c.id === saved)) city = saved;
+
+  const live = $('#wx-live');
+  const errorBox = $('#wx-error');
+
+  // ── Rendering (baked snapshot first, live browser fetch overrides) ──
+  const liveBundles = {};
+  const bundleFor = (id) => liveBundles[id] || getWeather(id);
+  function renderAll(id) {
+    const d = bundleFor(id);
+    $('#wx-current').innerHTML = currentPanel(d);
+    $('#wx-hourly').innerHTML = hourlyStrip(d.hourly);
+    $('#wx-details').innerHTML = detailsGrid(d);
+    $('#wx-daily').innerHTML = dailyRows(d.daily);
+    $('#wx-aqi').innerHTML = aqiCard(d.aqi);
+    $('#wx-cities').innerHTML = cityGrid(snaps, id);
+    $('#wx-loc-name').textContent = `${d.city.name}, Nepal`;
+    $('#wx-updated-val').textContent =
+      d.source === 'climate model' ? 'Estimated — live data unavailable'
+      : d.updated.live ? 'Just now · Live'
+      : d.updated.time;
+    $('#wx-quick-ico').innerHTML = wxIcon(d.today.isDay ? d.today.cond.k : 'night', 18);
+    $('#wx-quick-city').textContent = d.city.name;
+    $('#wx-quick-temp').textContent = `${d.today.temp}°`;
+    document.querySelectorAll('.wx-loc-item').forEach(el => {
+      const active = el.dataset.city === id;
+      el.classList.toggle('active', active);
+      el.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  function showError(on) {
+    errorBox.hidden = !on;
+    live.hidden = on;
+  }
+
+  // ── Location dropdown ──
+  const locBtn = $('#wx-loc');
+  const locPanel = $('#wx-loc-panel');
+  const locInput = $('#wx-city-search');
+  const locList = $('#wx-city-list');
+
+  let switchToken = 0;
+  async function switchCity(id, { silent = false } = {}) {
+    if (!CITIES.some(c => c.id === id)) { showError(true); return; }
+    city = id;
+    const token = ++switchToken;
+    // Data is local (baked snapshot) — render immediately with no
+    // artificial delay. The skeleton shimmer only ever added wait time.
+    if (!silent) closeLoc();
+    if (token !== switchToken) return;
+    try {
+      renderAll(id);
+      showError(false);
+    } catch {
+      showError(true);
+    }
+    history.replaceState(null, '', id === 'kathmandu' ? '/weather' : `/weather?city=${id}`);
+    try { localStorage.setItem('nk-wx-city', id); } catch {}
+  }
+
+  // ── Live refresh: re-fetch live data in the browser so the numbers
+  // on screen are minutes old, not build old. Primary provider is
+  // Open-Meteo (free, keyless); if it is unreachable, wttr.in is tried as
+  // a backup and adapted to the same row shape. Falls back to the baked
+  // snapshot silently (its stamp stays honest about the fetch time).
+  let liveToken = 0;
+  async function fetchLive(id) {
+    const c = CITIES.find(x => x.id === id);
+    if (!c) return null;
+    const signal = typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(8000) : undefined;
+    try {
+      const q = `latitude=${c.lat}&longitude=${c.lon}`;
+      const wxUrl = `https://api.open-meteo.com/v1/forecast?${q}` +
+        '&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m,precipitation' +
+        '&hourly=temperature_2m,weather_code,precipitation_probability,visibility,uv_index' +
+        '&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,sunrise,sunset,uv_index_max' +
+        '&forecast_days=8&timezone=Asia%2FKathmandu';
+      const aqiUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?${q}` +
+        '&current=us_aqi,pm2_5,pm10&timezone=Asia%2FKathmandu';
+      const [wx, aqi] = await Promise.all([
+        fetch(wxUrl, { cache: 'no-store', signal }).then(r => { if (!r.ok) throw new Error('wx ' + r.status); return r.json(); }),
+        fetch(aqiUrl, { cache: 'no-store', signal }).then(r => (r.ok ? r.json() : null)).catch(() => null),
+      ]);
+      const aqiCur = Array.isArray(aqi) ? aqi[0]?.current : aqi?.current;
+      return weatherFromLive(id, wx, aqiCur || null);
+    } catch {
+      /* primary unreachable — try the backup provider below */
+    }
+    try {
+      const r = await fetch(`https://wttr.in/${c.lat},${c.lon}?format=j1`, { signal });
+      if (!r.ok) return null;
+      const adapted = wttrToRow(await r.json());
+      if (!adapted) return null;
+      return weatherFromLive(id, adapted, undefined);
+    } catch {
+      return null;
+    }
+  }
+  async function refreshLive(id, { skeleton = false } = {}) {
+    const token = ++liveToken;
+    if (skeleton) live.classList.add('is-loading');
+    try {
+      const b = await fetchLive(id);
+      if (token !== liveToken || !b) return;
+      liveBundles[id] = b;
+      const s = snaps.find(x => x.city.id === id);
+      if (s) { s.temp = b.today.temp; s.cond = b.today.cond; }
+      if (id === city) renderAll(id);
+    } catch {
+      /* keep baked snapshot — its stamp stays honest */
+    } finally {
+      if (token === liveToken) live.classList.remove('is-loading');
+    }
+  }
+
+  // ── Initial render: the server already painted every section, so on
+  // load we only hydrate the small chrome (quick bar, location label,
+  // active states). A full innerHTML re-render here just burns main-thread
+  // time parsing megabytes of identical HTML on slower machines.
+  function hydrateChrome(id) {
+    const d = bundleFor(id);
+    $('#wx-quick-ico').innerHTML = wxIcon(d.today.isDay ? d.today.cond.k : 'night', 18);
+    $('#wx-quick-city').textContent = d.city.name;
+    $('#wx-quick-temp').textContent = `${d.today.temp}°`;
+    $('#wx-loc-name').textContent = `${d.city.name}, Nepal`;
+    document.querySelectorAll('.wx-loc-item').forEach(el => {
+      const active = el.dataset.city === id;
+      el.classList.toggle('active', active);
+      el.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  if (city !== 'kathmandu') {
+    switchCity(city, { silent: false });
+  } else {
+    hydrateChrome(city);
+  }
+  // Live numbers must never contend with first paint: wait for idle.
+  const runIdle = window.requestIdleCallback
+    ? (cb) => window.requestIdleCallback(cb, { timeout: 2500 })
+    : (cb) => setTimeout(cb, 1500);
+  runIdle(() => refreshLive(city));
+
+  // ── City selection (dropdown + cities grid) ──
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-city]');
+    if (!el) return;
+    if (el.tagName === 'A') e.preventDefault();
+    const sameCity = el.dataset.city === city;
+    switchCity(el.dataset.city, { silent: sameCity });
+    if (el.closest('#wx-cities') && !sameCity) {
+      $('#wx-current-card').scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    }
+  });
+
+  function openLoc() {
+    locPanel.classList.add('open');
+    locBtn.setAttribute('aria-expanded', 'true');
+    locInput.value = '';
+    filterCities('');
+    setTimeout(() => locInput.focus(), 30);
+  }
+  function closeLoc() {
+    if (!locPanel.classList.contains('open')) return;
+    locPanel.classList.remove('open');
+    locBtn.setAttribute('aria-expanded', 'false');
+  }
+  locBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    locPanel.classList.contains('open') ? closeLoc() : openLoc();
+  });
+  document.addEventListener('click', e => {
+    if (locPanel.classList.contains('open') && !e.target.closest('.wx-loc-wrap')) closeLoc();
+  });
+
+  function filterCities(q) {
+    const query = q.trim().toLowerCase();
+    locList.querySelectorAll('.wx-loc-item').forEach(el => {
+      const name = el.querySelector('.wx-loc-item-name').textContent.toLowerCase();
+      const np = el.querySelector('.wx-loc-item-np').textContent;
+      const hit = !query || name.includes(query) || np.includes(q.trim());
+      el.hidden = !hit;
+    });
+  }
+  locInput.addEventListener('input', () => filterCities(locInput.value));
+  locInput.addEventListener('keydown', e => {
+    const visible = [...locList.querySelectorAll('.wx-loc-item:not([hidden])')];
+    if (e.key === 'Escape') { closeLoc(); locBtn.focus(); return; }
+    if (!visible.length) return;
+    let idx = visible.findIndex(el => el.classList.contains('kb'));
+    if (e.key === 'ArrowDown') { e.preventDefault(); idx = (idx + 1) % visible.length; }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); idx = (idx - 1 + visible.length) % visible.length; }
+    else if (e.key === 'Enter') { e.preventDefault(); visible[Math.max(idx, 0)].click(); return; }
+    else return;
+    visible.forEach(el => el.classList.remove('kb'));
+    visible[idx].classList.add('kb');
+    visible[idx].scrollIntoView({ block: 'nearest' });
+  });
+
+  $('#wx-search-city').addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reduceMotion() ? 'auto' : 'smooth' });
+    openLoc();
+  });
+
+  // ── Refresh (live re-fetch with skeleton; baked snapshot stays on failure) ──
+  $('#wx-refresh').addEventListener('click', () => refreshLive(city, { skeleton: true }));
+
+  // ── Retry ──
+  $('#wx-retry').addEventListener('click', () => switchCity(city, { silent: false }));
+
+  // ── Mobile quick switcher visibility ──
+  const quick = $('#wx-quick');
+  const hero = $('#wx-hero');
+  const quickIO = new IntersectionObserver(([en]) => {
+    quick.classList.toggle('show', !en.isIntersecting && en.boundingClientRect.top < 0);
+  }, { rootMargin: '-64px 0px 0px 0px' });
+  quickIO.observe(hero);
+  quick.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reduceMotion() ? 'auto' : 'smooth' });
+    setTimeout(openLoc, reduceMotion() ? 0 : 350);
+  });
+
+  </script>
+</body>
+</html>

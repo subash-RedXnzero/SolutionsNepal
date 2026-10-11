@@ -1,0 +1,182 @@
+---
+title: "NEB GPA Calculator Nepal 2026: Class 11-12 Grading, CGPA & Percentage (4.0 Scale)"
+description: "Complete NEB GPA guide for Class 11 & 12 (2083). Letter grades A+ to NG on 4.0 scale, GPA formula with credit hours, theory/practical weighting, GPA ×25 percentage estimate, and NEB vs TU differences."
+category: Education
+author: SolutionsNepal Team
+authorCredential: Nepal education researchers
+date: September 26, 2026
+readTime: 12 min read
+image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=630&fit=crop"
+tags: [NEB GPA Calculator, NEB Grading System, Class 12 GPA, SEE GPA, NEB Percentage, Education Nepal]
+relatedTools: [neb-gpa, see-gpa, gpa-percentage, cgpa-calculator]
+headings:
+  - id: tldr
+    text: "Quick Answer (TL;DR)"
+    level: 2
+  - id: scale
+    text: "NEB Grading Scale 2026 (4.0) — All Levels"
+    level: 2
+  - id: history-note
+    text: D/NG Cut-off Change (2079)
+    level: 3
+  - id: how-gpa
+    text: How GPA Is Calculated
+    level: 2
+  - id: credit-hours
+    text: "Credit Hours — Why They Matter"
+    level: 3
+  - id: theory-practical
+    text: Theory vs Practical Weighting
+    level: 3
+  - id: example-gpa
+    text: Worked GPA Example (Management)
+    level: 2
+  - id: passing
+    text: Passing Rule & NG
+    level: 2
+  - id: percentage
+    text: "GPA to Percentage — GPA ×25"
+    level: 2
+  - id: when-to-convert
+    text: When to Submit GPA vs Converted Percentage
+    level: 3
+  - id: neb-vs-tu
+    text: NEB vs TU vs CTEVT
+    level: 2
+  - id: checklist
+    text: Calculator Checklist
+    level: 2
+  - id: sources
+    text: Official Sources & Final Note
+    level: 2
+faqs:
+  - q: What is the NEB grading scale in 2026?
+    a: "8 bands on 4.0 scale: A+ 90–100 (4.0), A 80–89 (3.6), B+ 70–79 (3.2), B 60–69 (2.8), C+ 50–59 (2.4), C 40–49 (2.0), D 35–39 (1.6), NG below 35 (0.0). Same for SEE Class 10 and Class 11/12. Before 2079, D started at 30; from 2079 onwards D is 35–39 and NG is <35."
+  - q: How is NEB GPA calculated?
+    a: "GPA = Σ(Grade Point × Credit Hours) ÷ Σ(Credit Hours). Class 12 subjects are commonly described as 4 credit hours each, but streams and curricula differ — confirm the credit-hour table in the current NEB curriculum on neb.gov.np; the weighted transcript figure is definitive."
+  - q: How does theory vs practical affect GPA?
+    a: "Final marks combine weighted theory + practical/internal. Most subjects are commonly described as ~75% theory + ~25% practical/internal, with Computer Science often cited as a 50/50 exception — but ratios vary by subject and curriculum year, so confirm the current NEB subject schedule on neb.gov.np. The combined mark decides the letter grade."
+  - q: What is the passing rule?
+    a: "You must get at least D (1.6) in every subject — theory + practical combined. Any NG (below 35 in theory or below 40% in internal where applied) means that subject is not cleared; GPA is pulled down and you may sit a grade-increment/supplementary exam."
+  - q: How do I convert NEB GPA to percentage?
+    a: "Widely used estimate only: Percentage ≈ GPA × 25 (e.g., 3.2→~80%). NEB publishes GPA, not an official universal percentage formula — submit original grades and confirm with the receiving institution which conversion (if any) it accepts."
+  - q: What is CGPA?
+    a: "Cumulative GPA across multiple years/levels (e.g., Class 11 + 12). CGPA = weighted average of GPAs by credit hours across those years. Same 4.0 scale."
+  - q: Does NEB use percentage?
+    a: "No. NEB issues letter grades + GPA. Percentage is only an estimate for jobs/scholarships that ask for it. TU annual programs still use percentage divisions (Distinction/First Division etc.), but newer TU semester programs also use 4.0 GPA — check the specific programme."
+  - q: Class 12 result 2083 when?
+    a: "Result dates move yearly — check the current notice on neb.gov.np; this guide updates when published. (Prior-year exam/result windows are illustrative only, as of October 2026.)"
+---
+
+<h2 id="tldr">Quick Answer (TL;DR)</h2>
+
+NEB uses <strong>8 letter grades on a 4.0 scale</strong>: <strong>A+ 90–100 (4.0) → D 35–39 (1.6) → NG &lt;35 (0.0)</strong>. <strong>GPA = Σ(Grade Point × Credit Hours) ÷ Σ(Credit Hours)</strong> — Class 12 subjects are commonly described as ~4 credit hours each (confirm the current NEB curriculum table on neb.gov.np). <strong>Pass = D (1.6) in every subject</strong>; any NG pulls GPA down. <strong>Percentage estimate = GPA ×25</strong> (e.g., 3.2→~80%) — estimate only; confirm with the receiving institution and submit the original marksheet.
+
+> **Same table for every level:** Class 8 BLE, SEE Class 10, Class 11 and Class 12 all use this identical 8-band table (Letter Grading Directive 2078, 4th Amendment 2081/03/16). No stream gets a different scale.
+
+<h2 id="scale">NEB Grading Scale 2026 (4.0) — All Levels</h2>
+
+- **A+ — Outstanding** — 90–100% → 4.0
+- **A — Excellent** — 80–89% → 3.6
+- **B+ — Very Good** — 70–79% → 3.2
+- **B — Good** — 60–69% → 2.8
+- **C+ — Satisfactory** — 50–59% → 2.4
+- **C — Acceptable** — 40–49% → 2.0
+- **D — Basic** — 35–39% → 1.6
+- **NG — Not Graded** — Below 35% → 0.0
+
+Marks ranges are inclusive at the bottom. 89.5 is still A (80–89 band); only 90+ enters A+.
+
+<h3 id="history-note">D/NG Cut-off Change (2079)</h3>
+
+Before 2079 BS, D started at 30 and NG was &lt;30. From 2079 onwards (including all 2082/2083 results) <strong>D is 35–39 and NG is &lt;35</strong>. If comparing an older sibling’s result with a 2083 result, this one-line change explains the difference.
+
+<h2 id="how-gpa">How GPA Is Calculated</h2>
+
+```text
+GPA = Σ(Grade Point × Credit Hours) ÷ Σ(Credit Hours)
+```
+
+Class 12 across Science, Management, Humanities and Education uses the same formula; only the subject list differs. Without credit weighting a simple average (sum grade points ÷ subjects) gives a close estimate, but the transcript GPA is weighted.
+
+<h3 id="credit-hours">Credit Hours — Why They Matter</h3>
+
+- **Class 12 (+2) — NEB** — Commonly described as ~4 credit hours per subject (typical load 5–6 subjects), but the credit-hour table varies by stream and curriculum year — confirm the current NEB curriculum on neb.gov.np; the transcript weighting is definitive
+- **SEE Class 10** — Same 4.0 GPA bands; credit weighting applied per NEB schedule
+- **If hours differ** — Weighted divisor changes — simple average ≠ official GPA; always check the transcript
+
+<h3 id="theory-practical">Theory vs Practical Weighting</h3>
+
+- **Most subjects** — Commonly described as ~75% theory + ~25% internal/practical → combined mark decides letter grade (confirm the current subject schedule on neb.gov.np)
+- **Computer Science** — Often cited as a 50/50 exception — confirm the current syllabus; do not assume it without checking
+- **Theory floor** — Commonly cited as below ~35% in external theory → NG (0.0) regardless of practical marks — confirm the current directive
+
+A B+ in theory but D in practical can drag the combined mark down a full letter — practical marks are not “extra credit”.
+
+<h2 id="example-gpa">Worked GPA Example (Management)</h2>
+
+Suppose a Management student scores:
+
+- **English (A) — 82%** — 3.6 ×4 = 14.4
+- **Accountancy (B+) — 76%** — 3.2 ×4 = 12.8
+- **Economics (A+) — 92%** — 4.0 ×4 = 16.0
+- **Business Studies (B) — 64%** — 2.8 ×4 = 11.2
+- **Computer Sci (C+) — 55% (50/50 subject)** — 2.4 ×4 = 9.6
+
+Total weighted = 64.0 ÷ 20 credit hours = <strong>GPA 3.20 → ~80%</strong> (B+ average). On the transcript most colleges treat this as First Division range.
+
+> **Try it:** Use SolutionsNepal’s <a href="/nepal/education/neb-gpa-calculator">NEB GPA Calculator</a> (pick stream, enter theory+potential marks) or <a href="/nepal/education/gpa-percentage">GPA → Percentage</a> for a quick ×25 estimate.
+
+<h2 id="passing">Passing Rule &amp; NG</h2>
+
+- <strong>Overall:</strong> need <strong>D (1.6) in every subject</strong> theory+practical combined — no aggregate pass alternative
+- <strong>NG = 0.0</strong> in any subject means that subject is not cleared; GPA collapses for that paper
+- <strong>Remedy:</strong> sit the grade-increment/supplementary exam for NG subjects; GPA is recalculated with the new grade
+- <strong>Promotion Class 11→12:</strong> commonly described as needing qualifying grades in most subjects (often cited as 5 of 6) — confirm the current NEB promotion rule on neb.gov.np
+
+<h2 id="percentage">GPA to Percentage — GPA ×25</h2>
+
+NEB marksheet publishes GPA only. For forms that demand a percentage, a widely used <strong>estimate</strong> is GPA×25 — but it is <strong>not an official NEB conversion</strong>: always confirm with the receiving institution which conversion (if any) it accepts, and attach the original grade sheet.
+
+```text
+Approximate Percentage = GPA × 25
+```
+
+- **4.0 (A+)** — ~100% (90–100 band)
+- **3.6 (A)** — ~90% (80–89)
+- **3.2 (B+)** — ~80% (70–79)
+- **2.8 (B)** — ~70% (60–69)
+- **2.4 (C+)** — ~60% (50–59)
+- **2.0 (C)** — ~50% (40–49)
+- **1.6 (D)** — ~40% (35–39)
+
+Example: GPA 3.44 ×25 ≈ 86%. Note the band width: a 3.2 GPA covers a 70–79 combined range, so two students with 3.2 may have 71% vs 78% actual marks — the ×25 is an approximation, not an exact reverse of your internal marks.
+
+<h3 id="when-to-convert">When to Submit GPA vs Converted Percentage</h3>
+
+- <strong>Form asks for GPA:</strong> submit transcript GPA exactly (e.g., “NEB Class 12 GPA 3.20”)
+- <strong>Form asks for percentage:</strong> use the institution’s stated conversion rule first; if none, use GPA×25 and label it “approx. (GPA×25)”
+- <strong>Abroad / credential evaluation:</strong> specify “NEB Class 12 GPA (4.0 scale)” and attach marksheet; some evaluators contact NEB directly
+- <strong>Never hide the original:</strong> always attach the official grade sheet alongside any converted value
+
+<h2 id="neb-vs-tu">NEB vs TU vs CTEVT</h2>
+
+- **NEB (Class 8–12)** — 4.0 letter GPA (A+→NG) — described here
+- **TU — older annual programs** — Percentage divisions: Distinction / First / Second / Third
+- **TU / KU / PU — semester (new) programs** — 4.0 GPA semester system (similar bands, but institutional rules differ)
+- **CTEVT** — Percentage-based divisions — different from NEB
+
+<h2 id="checklist">Calculator Checklist</h2>
+
+- Pick correct level/stream (Class 12 Science/Management/Humanities/Education, SEE, BLE)
+- Enter theory + practical marks with correct 75/25 (or 50/50 for Computer Science)
+- Confirm D cut-off 35 (post-2079) — not 30
+- Use weighted GPA from transcript, not a plain average, for admissions
+- For percentage: use GPA×25 only where accepted, and label as approximate
+- Keep original marksheet for any submission
+
+<h2 id="sources">Official Sources &amp; Final Note</h2>
+
+Sources: National Examination Board <a href="https://neb.gov.np" target="_blank" rel="noopener noreferrer">neb.gov.np</a>, Letter Grading Directive 2078 (4th Amendment 2081/03/16), Curriculum Development Centre (CDC), and college-verified 2082/2083 schedules. Nuffic Nepal education-system reference for upper-secondary NEB XI/XII table.
+
+<strong>Last updated: September 26, 2026.</strong> Grade bands, credit-hour weighting and theory/practical ratios are set by NEB and can be amended by directive. Verify the 2083 guidance on neb.gov.np before admissions. SolutionsNepal is an educational guide, not the exam board.

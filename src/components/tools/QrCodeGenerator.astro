@@ -1,0 +1,599 @@
+---
+/**
+ * QrCodeGenerator — reusable, fully client-side QR generator (Phase 1).
+ * Payload building: src/lib/qr/payloads.js · Rendering: `qrcode` npm package.
+ *
+ * Flow: Choose → Enter → Generate QR Code → Scan → Download. Generation is
+ * manual (button click); editing afterwards marks the form stale until the
+ * user generates again. Downloads produce solutionsnepal-qr.png / solutionsnepal-qr.svg.
+ *
+ * Props:
+ *   initialType  QR type to preselect ('text', 'url', 'wifi', 'phone',
+ *                'email', 'whatsapp', 'vcard')
+ */
+import { buildPayload } from '../../lib/qr/payloads.js';
+
+/** Phase 1 type set — order = display order in the selector. */
+const TYPES = [
+  { id: 'text', label: 'Text' },
+  { id: 'url', label: 'URL' },
+  { id: 'wifi', label: 'Wi-Fi' },
+  { id: 'phone', label: 'Phone' },
+  { id: 'email', label: 'Email' },
+  { id: 'whatsapp', label: 'WhatsApp' },
+  { id: 'vcard', label: 'vCard' },
+] as const;
+
+const VALID_IDS = TYPES.map((t) => t.id);
+
+interface Props {
+  initialType?: string;
+}
+const { initialType = 'text' } = Astro.props;
+const activeType = VALID_IDS.includes(initialType as any) ? initialType : 'text';
+---
+
+<div id="qr-root" data-initial-type={activeType} class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
+
+  <!-- ═══ LEFT: TYPE SELECTOR + INPUT FORM ═══ -->
+  <div class="space-y-4 min-w-0">
+
+    <!-- Type selector -->
+    <section aria-label="QR code type">
+      <div
+        id="qr-types"
+        role="radiogroup"
+        aria-label="Choose a QR code type"
+        class="flex gap-1.5 overflow-x-auto pb-1 -mb-1"
+      >
+        {TYPES.map((t) => (
+          <button
+            type="button"
+            role="radio"
+            aria-checked={t.id === activeType ? 'true' : 'false'}
+            data-type={t.id}
+            tabindex={t.id === activeType ? 0 : -1}
+            class:list={['qr-type-chip', { 'is-active': t.id === activeType }]}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <!-- Input form -->
+    <section class="nk-card p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <h2 class="text-[15px] font-semibold tracking-[-0.01em]" style="color:var(--nk-text);">Enter your information</h2>
+        <button type="button" id="qr-clear" class="nk-btn-ghost-sm !py-1 !px-2.5 !text-[12px]">Clear</button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Text -->
+        <div class="qr-panel hidden" data-type="text">
+          <label class="lbl" for="qr-text">Your text</label>
+          <textarea id="qr-text" rows="5" placeholder={'नमस्ते नेपाल 🇳🇵\nHello, world!'} class="nk-input resize-y min-h-[110px]"></textarea>
+          <p class="field-error hidden" data-error-for="qr-text" aria-live="polite"></p>
+          <p class="field-help mt-1.5">Nepali, English, symbols and multi-line text all work.</p>
+        </div>
+
+        <!-- URL -->
+        <div class="qr-panel hidden" data-type="url">
+          <label class="lbl" for="qr-url">Website URL</label>
+          <input id="qr-url" type="text" inputmode="url" placeholder="https://solutionsnepal.com" autocomplete="off" spellcheck="false" class="nk-input" />
+          <p class="field-error hidden" data-error-for="qr-url" aria-live="polite"></p>
+          <p class="field-help mt-1.5">Bare domains like solutionsnepal.com are completed to https:// automatically.</p>
+        </div>
+
+        <!-- Wi-Fi -->
+        <div class="qr-panel hidden space-y-4" data-type="wifi">
+          <div>
+            <label class="lbl" for="qr-wifi-ssid">Network name (SSID)</label>
+            <input id="qr-wifi-ssid" type="text" autocomplete="off" spellcheck="false" class="nk-input" placeholder="MyHomeWiFi" />
+            <p class="field-error hidden" data-error-for="qr-wifi-ssid" aria-live="polite"></p>
+          </div>
+          <div>
+            <label class="lbl" for="qr-wifi-pass">Password</label>
+            <input id="qr-wifi-pass" type="text" autocomplete="off" spellcheck="false" class="nk-input" placeholder="••••••••" />
+            <p class="field-error hidden" data-error-for="qr-wifi-pass" aria-live="polite"></p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="lbl" for="qr-wifi-sec">Security</label>
+              <select id="qr-wifi-sec" class="nk-input">
+                <option value="WPA" selected>WPA / WPA2 / WPA3</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">None (open network)</option>
+              </select>
+            </div>
+            <label class="flex items-center justify-between gap-3 sm:mt-7 cursor-pointer select-none" for="qr-wifi-hidden">
+              <span class="text-[13px] font-medium" style="color:var(--nk-text-secondary);">Hidden network</span>
+              <span class="nk-switch">
+                <input type="checkbox" id="qr-wifi-hidden" role="switch" />
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="qr-panel hidden" data-type="phone">
+          <label class="lbl" for="qr-phone">Phone number</label>
+          <input id="qr-phone" type="tel" inputmode="tel" placeholder="+977 98XXXXXXXX" autocomplete="off" class="nk-input" />
+          <p class="field-error hidden" data-error-for="qr-phone" aria-live="polite"></p>
+          <p class="field-help mt-1.5">Nepali numbers include +977. International numbers work too.</p>
+        </div>
+
+        <!-- Email -->
+        <div class="qr-panel hidden space-y-4" data-type="email">
+          <div>
+            <label class="lbl" for="qr-email-to">Email address</label>
+            <input id="qr-email-to" type="email" inputmode="email" placeholder="hello@example.com" autocomplete="off" spellcheck="false" class="nk-input" />
+            <p class="field-error hidden" data-error-for="qr-email-to" aria-live="polite"></p>
+          </div>
+          <div>
+            <label class="lbl" for="qr-email-subject">Subject <span class="opt">(optional)</span></label>
+            <input id="qr-email-subject" type="text" autocomplete="off" class="nk-input" />
+          </div>
+          <div>
+            <label class="lbl" for="qr-email-body">Message <span class="opt">(optional)</span></label>
+            <textarea id="qr-email-body" rows="3" class="nk-input resize-none"></textarea>
+          </div>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="qr-panel hidden space-y-4" data-type="whatsapp">
+          <div>
+            <label class="lbl" for="qr-wa-phone">WhatsApp number</label>
+            <input id="qr-wa-phone" type="tel" inputmode="tel" placeholder="+977 98XXXXXXXX" autocomplete="off" class="nk-input" />
+            <p class="field-error hidden" data-error-for="qr-wa-phone" aria-live="polite"></p>
+            <p class="field-help mt-1.5">Include the country code — e.g. +977 for Nepal.</p>
+          </div>
+          <div>
+            <label class="lbl" for="qr-wa-msg">Pre-filled message <span class="opt">(optional)</span></label>
+            <input id="qr-wa-msg" type="text" autocomplete="off" class="nk-input" />
+          </div>
+          <p class="dest-preview hidden" id="qr-wa-preview"></p>
+        </div>
+
+        <!-- vCard -->
+        <div class="qr-panel hidden grid grid-cols-1 sm:grid-cols-2 gap-4" data-type="vcard">
+          <div class="sm:col-span-2">
+            <label class="lbl" for="qr-v-name">Full name</label>
+            <input id="qr-v-name" type="text" autocomplete="off" class="nk-input" placeholder="Ram Shrestha" />
+            <p class="field-error hidden" data-error-for="qr-v-name" aria-live="polite"></p>
+          </div>
+          <div>
+            <label class="lbl" for="qr-v-phone">Phone <span class="opt">(optional)</span></label>
+            <input id="qr-v-phone" type="tel" inputmode="tel" placeholder="+977 98XXXXXXXX" autocomplete="off" class="nk-input" />
+          </div>
+          <div>
+            <label class="lbl" for="qr-v-email">Email <span class="opt">(optional)</span></label>
+            <input id="qr-v-email" type="email" inputmode="email" autocomplete="off" spellcheck="false" class="nk-input" />
+            <p class="field-error hidden" data-error-for="qr-v-email" aria-live="polite"></p>
+          </div>
+          <div>
+            <label class="lbl" for="qr-v-org">Organization <span class="opt">(optional)</span></label>
+            <input id="qr-v-org" type="text" autocomplete="off" class="nk-input" />
+          </div>
+          <div>
+            <label class="lbl" for="qr-v-web">Website <span class="opt">(optional)</span></label>
+            <input id="qr-v-web" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false" class="nk-input" />
+            <p class="field-error hidden" data-error-for="qr-v-web" aria-live="polite"></p>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="lbl" for="qr-v-addr">Address <span class="opt">(optional)</span></label>
+            <input id="qr-v-addr" type="text" autocomplete="off" class="nk-input" />
+          </div>
+        </div>
+      </div>
+
+      <button type="button" id="qr-generate" class="nk-btn nk-btn-primary w-full mt-5">Generate QR Code</button>
+      <p id="qr-stale" class="hidden mt-2.5 text-center text-[11px] font-medium" style="color:var(--color-warning);">Changes not generated — click “Generate QR Code” to update.</p>
+      <p id="qr-gen-error" class="hidden mt-2.5 text-center text-[11.5px]" style="color:#B3261E;" aria-live="polite"></p>
+    </section>
+  </div>
+
+  <!-- ═══ RIGHT: PREVIEW + DOWNLOADS ═══ -->
+  <div class="lg:sticky lg:top-20 min-w-0">
+    <div class="nk-card p-5 sm:p-6">
+      <h2 class="text-[11px] font-semibold uppercase tracking-wider mb-4" style="color:var(--nk-text-tertiary);">QR Preview</h2>
+
+      <!-- Preview stage. The wrapper is strictly square (aspect-ratio 1/1,
+           sized in scoped CSS); the canvas fills it with object-fit:contain
+           so the QR can never be stretched, cropped or clipped. -->
+      <div id="qr-stage" class="relative mx-auto flex items-center justify-center">
+        <div id="qr-wrapper" class="qr-code-wrapper">
+          <canvas id="qr-canvas" style="display:none;" aria-label="Generated QR code"></canvas>
+          <div id="qr-placeholder" class="qr-placeholder">
+            <p id="qr-status" role="status" aria-live="polite" style="color:var(--nk-text-secondary);">Enter your information and click Generate QR Code.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 mt-3">
+        <button type="button" id="dl-png" class="nk-btn nk-btn-primary nk-btn-sm w-full" disabled>Download PNG</button>
+        <button type="button" id="dl-svg" class="nk-btn nk-btn-secondary nk-btn-sm w-full" disabled>Download SVG</button>
+      </div>
+
+      <p class="mt-4 pt-3 text-center text-[10.5px] leading-relaxed flex items-center justify-center gap-1" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Private by design — everything is generated in your browser. Nothing you enter is uploaded to SolutionsNepal.
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Type selector chips */
+  .qr-type-chip {
+    flex-shrink: 0;
+    padding: 0.45rem 0.95rem;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--nk-border);
+    background-color: transparent;
+    color: var(--nk-text-secondary);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease,
+      background-color var(--duration-fast) ease;
+  }
+  .qr-type-chip:hover { color: var(--nk-text); border-color: var(--nk-border-strong); }
+  .qr-type-chip.is-active {
+    background-color: var(--nk-accent);
+    border-color: var(--nk-accent);
+    color: #fff;
+  }
+
+  .lbl {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+    color: var(--nk-text-secondary);
+  }
+  .lbl .opt { font-weight: 400; color: var(--nk-text-tertiary); }
+  .field-help { font-size: 11px; line-height: 1.5; color: var(--nk-text-tertiary); }
+  .field-error { font-size: 11px; line-height: 1.5; margin-top: 0.3rem; color: #B3261E; }
+  .qr-panel :is(input, textarea, select).is-invalid {
+    border-color: #B3261E !important;
+    box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.12) !important;
+  }
+
+  .dest-preview {
+    font-size: 11px;
+    word-break: break-all;
+    padding: 0.4rem 0.65rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--nk-muted);
+    color: var(--nk-text-secondary);
+  }
+
+  /* ── QR preview: guaranteed-square wrapper ─────────────────
+     The qrcode lib injects inline width/height px styles on the canvas;
+     these rules override them (!important) and, combined with the square
+     wrapper + object-fit, make stretching/clipping impossible. */
+  #qr-stage { width: 100%; max-width: 320px; }
+  .qr-code-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 240px;        /* mobile: min(240px, available) */
+    aspect-ratio: 1 / 1;     /* the wrapper is always perfectly square */
+    flex-shrink: 0;
+    padding: 12px;           /* symmetric → inner area stays square */
+    background-color: #ffffff;
+    border-radius: var(--radius-xl);
+    box-shadow: inset 0 0 0 1px var(--nk-border);
+  }
+  @media (min-width: 640px) {
+    .qr-code-wrapper { max-width: 288px; }  /* desktop/tablet: up to 288px */
+  }
+  .qr-code-wrapper canvas {
+    display: block;
+    width: 100% !important;   /* !important beats the library's inline styles */
+    height: 100% !important;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;      /* full QR + quiet zone, zero distortion */
+  }
+  .qr-placeholder { position: absolute; inset: 0; }
+  .qr-placeholder:not(.hidden) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+    text-align: center;
+    font-size: 12.5px;
+    line-height: 1.625;
+  }
+
+  /* Hidden-network switch */
+  .nk-switch { position: relative; display: inline-block; width: 38px; height: 22px; flex-shrink: 0; }
+  .nk-switch input {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+    width: 38px;
+    height: 22px;
+    border-radius: var(--radius-full);
+    background-color: var(--nk-border-strong);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) ease;
+    position: relative;
+  }
+  .nk-switch input::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: var(--shadow-xs);
+    transition: transform var(--duration-fast) ease;
+  }
+  .nk-switch input:checked { background-color: var(--nk-accent); }
+  .nk-switch input:checked::before { transform: translateX(16px); }
+
+  button:disabled { cursor: not-allowed; }
+</style>
+
+<script>
+  import QRCode from 'qrcode';
+  import { buildPayload } from '../../lib/qr/payloads.js';
+  import { saveFileAs } from '../../lib/utils/save-file.js';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  const root = $('qr-root');
+  const canvas = $<HTMLCanvasElement>('qr-canvas');
+  const placeholder = $('qr-placeholder');
+  const statusEl = $('qr-status');
+  const staleEl = $('qr-stale');
+  const genErrorEl = $('qr-gen-error');
+  const dlPng = $<HTMLButtonElement>('dl-png');
+  const dlSvg = $<HTMLButtonElement>('dl-svg');
+
+  // Phase 1 types — order matches the selector UI.
+  const TYPES = ['text', 'url', 'wifi', 'phone', 'email', 'whatsapp', 'vcard'];
+  const EMPTY_HINT = 'Enter your information and click Generate QR Code.';
+
+  let activeType: string = root.dataset.initialType || 'text';
+  if (!TYPES.includes(activeType)) activeType = 'text';
+  let currentPayload = '';
+  let currentSvg = '';
+  /** Signature of the form state the currently displayed QR was generated from. */
+  let generatedSnapshot: string | null = null;
+
+  const RENDER_OPTS = {
+    margin: 4,
+    errorCorrectionLevel: 'M' as const,
+    color: { dark: '#000000FF', light: '#FFFFFFFF' },
+  };
+
+  // ── Input collection ──────────────────────────────────────
+  function splitName(full: string): { firstName: string; lastName: string } {
+    const parts = full.trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return { firstName: '', lastName: '' };
+    if (parts.length === 1) return { firstName: parts[0], lastName: '' };
+    return { firstName: parts.slice(0, -1).join(' '), lastName: parts[parts.length - 1] };
+  }
+
+  function collectInput(): Record<string, string | boolean> {
+    const val = (id: string) => ($(id) as HTMLInputElement).value;
+    switch (activeType) {
+      case 'text': return { text: ($('qr-text') as HTMLTextAreaElement).value };
+      case 'url': return { url: val('qr-url') };
+      case 'wifi': return {
+        ssid: val('qr-wifi-ssid'),
+        password: val('qr-wifi-pass'),
+        security: ($('qr-wifi-sec') as HTMLSelectElement).value,
+        hidden: ($('qr-wifi-hidden') as HTMLInputElement).checked,
+      };
+      case 'phone': return { phone: val('qr-phone') };
+      case 'email': return { email: val('qr-email-to'), subject: val('qr-email-subject'), body: ($('qr-email-body') as HTMLTextAreaElement).value };
+      case 'whatsapp': return { phone: val('qr-wa-phone'), message: val('qr-wa-msg') };
+      case 'vcard': {
+        const { firstName, lastName } = splitName(val('qr-v-name'));
+        return {
+          firstName, lastName,
+          org: val('qr-v-org'),
+          phone: val('qr-v-phone'),
+          email: val('qr-v-email'),
+          website: val('qr-v-web'),
+          address: val('qr-v-addr'),
+        };
+      }
+      default: return {};
+    }
+  }
+
+  /** Serializes type + current inputs so edits after generation can be detected. */
+  function formSignature(): string {
+    return JSON.stringify({ t: activeType, i: collectInput() });
+  }
+
+  // ── Render pipeline (manual — triggered by Generate QR Code) ──
+  async function encode(payload: string) {
+    await QRCode.toCanvas(canvas, payload, { ...RENDER_OPTS, width: 720 });
+    // qrcode's renderer injects inline width/height px styles on the canvas;
+    // remove them so the scoped stylesheet controls responsive preview sizing.
+    canvas.style.width = '';
+    canvas.style.height = '';
+    currentSvg = await QRCode.toString(payload, { ...RENDER_OPTS, type: 'svg', width: 1024 });
+    currentPayload = payload;
+  }
+
+  function clearFieldErrors() {
+    root.querySelectorAll<HTMLElement>('.field-error').forEach((el) => {
+      el.textContent = '';
+      el.classList.add('hidden');
+    });
+    root.querySelectorAll('.qr-panel .is-invalid').forEach((el) => el.classList.remove('is-invalid'));
+    genErrorEl.textContent = '';
+    genErrorEl.classList.add('hidden');
+  }
+
+  function showFieldError(fieldId: string | null, msg: string) {
+    if (!fieldId) {
+      genErrorEl.textContent = msg;
+      genErrorEl.classList.remove('hidden');
+      return;
+    }
+    const slot = root.querySelector<HTMLElement>(`.field-error[data-error-for="${fieldId}"]`);
+    if (slot) {
+      slot.textContent = msg;
+      slot.classList.remove('hidden');
+    }
+    const field = $(fieldId);
+    if (field) field.classList.add('is-invalid');
+  }
+
+  /** Maps a payload-builder error message to the input that caused it. */
+  function fieldForError(msg: string): string | null {
+    if (/network name|SSID/i.test(msg)) return 'qr-wifi-ssid';
+    if (/password/i.test(msg)) return 'qr-wifi-pass';
+    if (/whatsapp number/i.test(msg)) return 'qr-wa-phone';
+    if (/valid phone number/i.test(msg)) return 'qr-phone';
+    if (/first or last name/i.test(msg)) return 'qr-v-name';
+    if (/valid email/i.test(msg)) return activeType === 'vcard' ? 'qr-v-email' : 'qr-email-to';
+    if (/valid url|website url/i.test(msg)) return activeType === 'vcard' ? 'qr-v-web' : 'qr-url';
+    if (/some text|too long/i.test(msg)) return 'qr-text';
+    return null;
+  }
+
+  /** Resets the preview to the clean empty state (no QR, downloads off). */
+  function resetPreview() {
+    currentPayload = '';
+    currentSvg = '';
+    generatedSnapshot = null;
+    canvas.style.display = 'none';
+    placeholder.classList.remove('hidden');
+    statusEl.textContent = EMPTY_HINT;
+    dlPng.disabled = true;
+    dlSvg.disabled = true;
+    staleEl.classList.add('hidden');
+    updateWaPreview();
+  }
+
+  function isStale(): boolean {
+    return generatedSnapshot !== null && formSignature() !== generatedSnapshot;
+  }
+
+  $('qr-generate').addEventListener('click', async () => {
+    clearFieldErrors();
+    const result = buildPayload(activeType, collectInput());
+    if (!result.ok) {
+      // Invalid input — keep the existing preview and downloads untouched.
+      showFieldError(fieldForError(result.error!), result.error!);
+      return;
+    }
+    try {
+      await encode(result.payload);
+    } catch {
+      showFieldError(null, 'This content is too large for a single QR code.');
+      return;
+    }
+    canvas.style.display = '';
+    placeholder.classList.add('hidden');
+    dlPng.disabled = false;
+    dlSvg.disabled = false;
+    generatedSnapshot = formSignature();
+    staleEl.classList.add('hidden');
+    updateWaPreview();
+  });
+
+  function updateWaPreview() {
+    const preview = $('qr-wa-preview');
+    preview.classList.toggle('hidden', !(activeType === 'whatsapp' && currentPayload));
+    if (activeType === 'whatsapp' && currentPayload) preview.textContent = 'Opens: ' + currentPayload;
+  }
+
+  // ── Type selector (radio group with arrow-key support) ────
+  const typeButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('#qr-types [role="radio"]'));
+
+  function setType(t: string) {
+    activeType = t;
+    for (const b of typeButtons) {
+      const isActive = b.dataset.type === t;
+      b.classList.toggle('is-active', isActive);
+      b.setAttribute('aria-checked', String(isActive));
+      b.tabIndex = isActive ? 0 : -1;
+    }
+    document.querySelectorAll<HTMLElement>('.qr-panel').forEach((p) =>
+      p.classList.toggle('hidden', p.dataset.type !== t));
+    // Switching types abandons the previously generated QR — fresh empty state.
+    clearFieldErrors();
+    resetPreview();
+  }
+
+  for (const b of typeButtons) {
+    b.addEventListener('click', () => setType(b.dataset.type!));
+    b.addEventListener('keydown', (e) => {
+      const idx = typeButtons.indexOf(b);
+      let next = -1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (idx + 1) % typeButtons.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (idx - 1 + typeButtons.length) % typeButtons.length;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = typeButtons.length - 1;
+      if (next >= 0) {
+        e.preventDefault();
+        setType(typeButtons[next].dataset.type!);
+        typeButtons[next].focus();
+      }
+    });
+  }
+
+  // ── Edits after generation: never auto-regenerate; flag staleness ──
+  function onFormMutation(e: Event) {
+    const t = e.target as HTMLElement;
+    const panel = t.closest('.qr-panel');
+    if (!panel) return;
+    if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement) {
+      t.classList.remove('is-invalid');
+      const slot = panel.querySelector<HTMLElement>(`.field-error[data-error-for="${t.id}"]`);
+      if (slot) {
+        slot.textContent = '';
+        slot.classList.add('hidden');
+      }
+    }
+    staleEl.classList.toggle('hidden', !isStale());
+  }
+  root.addEventListener('input', onFormMutation);
+  root.addEventListener('change', onFormMutation);
+
+  // ── Downloads ─────────────────────────────────────────────
+  // Delegates to the shared helper: native "Save As" picker where supported,
+  // classic anchor download otherwise (same UX as before).
+  async function downloadBlob(blob: Blob, filename: string) {
+    await saveFileAs(blob, filename);
+  }
+
+  dlPng.addEventListener('click', () => {
+    if (!currentPayload) return;
+    const c = document.createElement('canvas');
+    QRCode.toCanvas(c, currentPayload, { ...RENDER_OPTS, width: 1024 })
+      .then(() => new Promise<Blob | null>((res) => c.toBlob(res, 'image/png')))
+      .then((b) => b && downloadBlob(b, 'solutionsnepal-qr.png'))
+      .catch(() => {});
+  });
+
+  dlSvg.addEventListener('click', () => {
+    if (!currentSvg) return;
+    downloadBlob(new Blob([currentSvg], { type: 'image/svg+xml' }), 'solutionsnepal-qr.svg');
+  });
+
+  // ── Clear ─────────────────────────────────────────────────
+  $('qr-clear').addEventListener('click', () => {
+    root.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('.qr-panel input:not([type="checkbox"]), .qr-panel textarea')
+      .forEach((i) => (i.value = ''));
+    ($('qr-wifi-hidden') as HTMLInputElement).checked = false;
+    ($('qr-wifi-sec') as HTMLSelectElement).value = 'WPA';
+    clearFieldErrors();
+    resetPreview(); // removes the QR, keeps the selected type
+  });
+
+  // ── Init ──────────────────────────────────────────────────
+  setType(activeType);
+</script>

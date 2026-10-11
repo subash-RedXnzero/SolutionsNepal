@@ -1,0 +1,465 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Web3Forms key comes from `.env` (gitignored, never committed).
+// Get a free key at https://web3forms.com and set WEB3FORMS_ACCESS_KEY.
+const web3formsKey = import.meta.env.WEB3FORMS_ACCESS_KEY ?? 'YOUR_WEB3FORMS_ACCESS_KEY';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch with the SolutionsNepal team. We'd love to hear your feedback, suggestions, or bug reports."
+>
+  <div class="contact-page">
+    <!-- Hero -->
+    <section class="contact-hero">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Get in touch
+      </div>
+      <h1>We'd love to<br/>hear from you.</h1>
+      <p>Have a question, suggestion, or found a bug? Reach out and we'll get back to you as soon as possible.</p>
+    </section>
+
+    <!-- Main Content -->
+    <section class="contact-content">
+      <!-- Contact Form -->
+      <div class="contact-form-card">
+        <h2>Send us a message</h2>
+        <p class="form-desc">Fill out the form below and we'll respond within 24 hours.</p>
+        
+        <form id="contact-form" class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+          <!-- ═══ Web3Forms key is read from `.env` (see .env.example) ═══ -->
+          <input type="hidden" name="access_key" value={web3formsKey} />
+          <input type="hidden" name="subject" value="New message from SolutionsNepal contact form" />
+          <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" name="topic" required>
+              <option value="" disabled selected>Select a topic</option>
+              <option value="general">General inquiry</option>
+              <option value="bug">Bug report</option>
+              <option value="feature">Feature request</option>
+              <option value="feedback">Feedback</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Tell us what's on your mind..." required></textarea>
+          </div>
+          
+          <button type="submit" id="contact-submit" class="submit-btn">
+            <span id="contact-submit-text">Send message</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+          <p id="form-error" class="form-error hidden" role="alert"></p>
+        </form>
+
+        <div id="form-success" class="form-success hidden">
+          <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+          </div>
+          <h3>Message sent!</h3>
+          <p>Thank you for reaching out. We'll get back to you shortly.</p>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="contact-info">
+        <div class="info-card">
+          <div class="info-icon green">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </div>
+          <h3>Email us</h3>
+          <p>For general questions and support</p>
+          <a href="mailto:hello@solutionsnepal.com">hello@solutionsnepal.com</a>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon rose">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Feedback</h3>
+          <p>Suggest a tool or improvement</p>
+          <a href="mailto:feedback@solutionsnepal.com">feedback@solutionsnepal.com</a>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon orange">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </div>
+          <h3>Social media</h3>
+          <p>Follow us for updates</p>
+          <div class="social-links">
+            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://x.com" target="_blank" rel="noopener" aria-label="X (Twitter)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form');
+  const success = document.getElementById('form-success');
+  const errorBox = document.getElementById('form-error');
+  const submitBtn = document.getElementById('contact-submit');
+  const submitText = document.getElementById('contact-submit-text');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!(form instanceof HTMLFormElement)) return;
+    errorBox?.classList.add('hidden');
+    if (submitBtn instanceof HTMLButtonElement) submitBtn.disabled = true;
+    if (submitText) submitText.textContent = 'Sending…';
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: new FormData(form),
+      });
+      const json = await res.json();
+      if (json.success) {
+        form.classList.add('hidden');
+        success?.classList.remove('hidden');
+      } else {
+        throw new Error(json.message || 'Submission failed. Please try again.');
+      }
+    } catch (err) {
+      if (errorBox) {
+        errorBox.textContent = err instanceof Error ? err.message : 'Network error. Please try again.';
+        errorBox.classList.remove('hidden');
+      }
+    } finally {
+      if (submitBtn instanceof HTMLButtonElement) submitBtn.disabled = false;
+      if (submitText) submitText.textContent = 'Send message';
+    }
+  });
+</script>
+
+<style>
+  .contact-page {
+    width: min(1200px, calc(100% - 48px));
+    margin-inline: auto;
+    padding: 80px 0 120px;
+  }
+
+  /* Hero */
+  .contact-hero {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px 7px 10px;
+    border-radius: 999px;
+    background: var(--nk-accent-subtle);
+    color: var(--nk-accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--nk-accent);
+  }
+  .contact-hero h1 {
+    max-width: 600px;
+    margin: 28px auto 20px;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-weight: 650;
+    color: var(--nk-text);
+  }
+  .contact-hero p {
+    max-width: 480px;
+    margin: 0 auto;
+    color: var(--nk-text-secondary);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  /* Main Content Grid */
+  .contact-content {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* Form Card */
+  .contact-form-card {
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-hairline);
+    border-radius: 20px;
+    padding: 36px;
+  }
+  .contact-form-card h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: var(--nk-text);
+  }
+  .form-desc {
+    margin: 0 0 28px;
+    color: var(--nk-text-secondary);
+    font-size: 14px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .form-group {
+    margin-bottom: 18px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--nk-text);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--nk-hairline);
+    border-radius: 10px;
+    background: var(--nk-bg);
+    color: var(--nk-text);
+    font: 14px var(--font-sans);
+    transition: border-color .2s ease, box-shadow .2s ease;
+    outline: none;
+  }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--nk-text-secondary);
+    opacity: 0.6;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--nk-accent);
+    box-shadow: 0 0 0 3px rgba(13, 93, 78, 0.08);
+  }
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border: none;
+    border-radius: 10px;
+    background: var(--nk-accent);
+    color: white;
+    font: 600 14px var(--font-sans);
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 93, 78, 0.25);
+  }
+  .submit-btn:active {
+    transform: scale(0.98);
+  }
+  .submit-btn svg {
+    transition: transform .2s ease;
+  }
+  .submit-btn:hover svg {
+    transform: translateX(3px);
+  }
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .form-error {
+    margin: 14px 0 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #fdecec;
+    color: #b42318;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .form-error.hidden { display: none; }
+
+  /* Success State */
+  .form-success {
+    text-align: center;
+    padding: 48px 24px;
+  }
+  .form-success.hidden { display: none; }
+  .contact-form-card.hidden { display: none; }
+  .success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #e8f5ee;
+    color: #16734a;
+    margin-bottom: 16px;
+  }
+  .form-success h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 650;
+    color: var(--nk-text);
+  }
+  .form-success p {
+    margin: 0;
+    color: var(--nk-text-secondary);
+    font-size: 14px;
+  }
+
+  /* Info Cards */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .info-card {
+    padding: 24px;
+    border: 1px solid var(--nk-hairline);
+    border-radius: 16px;
+    background: var(--nk-surface);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  }
+  .info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+  }
+  .info-icon.green { background: var(--nk-success-subtle); color: var(--nk-success, #16734a); }
+  .info-icon.blue { background: var(--nk-info-subtle, #EFF6FF); color: var(--nk-info, #2563EB); }
+  .info-icon.rose { background: var(--color-info-subtle); color: var(--nk-text); }
+  .info-icon.orange { background: var(--nk-hover); color: var(--nk-text); }
+  .info-card h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--nk-text);
+  }
+  .info-card p {
+    margin: 0 0 10px;
+    color: var(--nk-text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .info-card a {
+    display: inline-block;
+    color: var(--nk-accent);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity .2s ease;
+  }
+  .info-card a:hover {
+    opacity: 0.7;
+  }
+  .social-links {
+    display: flex;
+    gap: 10px;
+  }
+  .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--nk-hairline);
+    color: var(--nk-text-secondary);
+    transition: border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .social-links a:hover {
+    border-color: var(--nk-accent);
+    color: var(--nk-accent);
+    background: var(--nk-accent-subtle);
+    opacity: 1;
+  }
+
+  /* Responsive */
+  @media (max-width: 850px) {
+    .contact-content {
+      grid-template-columns: 1fr;
+    }
+    .contact-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+  }
+  @media (max-width: 560px) {
+    .contact-page {
+      padding: 48px 0 80px;
+    }
+    .contact-hero h1 {
+      font-size: 36px;
+    }
+    .contact-hero p {
+      font-size: 15px;
+    }
+    .contact-form-card {
+      padding: 24px;
+    }
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    .contact-info {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

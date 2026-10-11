@@ -1,0 +1,406 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'KUKL Water Bill', description: 'Estimate your KUKL water bill', href: '/nepal/utilities/kukl-water-bill' },
+  { title: 'Fuel Cost', description: 'Calculate trip fuel cost', href: '/nepal/vehicle/fuel-cost' },
+  { title: 'Nepal Salary Calculator', description: 'Calculate take-home salary', href: '/nepal/finance/salary-checker' },
+];
+
+const faqItems = [
+  {
+    question: 'What is one electricity unit in Nepal?',
+    answer: 'In Nepal, one electricity unit equals 1 kilowatt-hour (kWh). This is the amount of energy consumed by a 1,000-watt appliance running for one hour. Your NEA bill shows consumption in kWh.',
+  },
+  {
+    question: 'How is an NEA electricity bill calculated?',
+    answer: 'NEA uses a progressive slab-based tariff. Your total consumption is divided into slabs, and each slab is charged at a different rate. The more you use, the higher the rate per unit. A minimum charge is applied each month, and a 5% VAT is added on the energy used above 50 units.',
+  },
+  {
+    question: 'What does the ampere (A) of my connection mean?',
+    answer: 'The ampere rating of your NEA connection (5A, 15A, 30A, or 60A) determines which tariff table applies to your bill. Most households use a 5A connection. You can find your ampere rating on your NEA bill or meter.',
+  },
+  {
+    question: 'Why is my actual NEA bill different from the calculator?',
+    answer: 'This calculator provides estimates based on the NEA domestic tariff for FY 2083/84. Your actual bill may differ due to tariff changes, additional surcharges, late payment penalties, or other factors. Always refer to your official NEA bill for the exact amount.',
+  },
+  {
+    question: 'Is the 5% VAT applied to my whole bill?',
+    answer: 'No. For domestic connections, the concessional 5% VAT applies only to the energy used above 50 units. The first 50 units are exempt from VAT.',
+  },
+];
+---
+
+<BaseLayout
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Utilities', href: '/nepal/utilities' },
+      { label: 'NEA Electricity Bill' },
+    ]} />
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">NEA Electricity Bill Calculator</h1>
+      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Enter your units and ampere. Get an instant estimate.</p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CALCULATOR                                  -->
+    <!-- ============================================ -->
+    <div class="rounded-xl border overflow-hidden" style="background-color: var(--nk-surface); border-color: var(--nk-border);">
+      <div class="px-5 sm:px-6 pt-6 pb-6 space-y-6">
+
+        <!-- STEP 1: CONNECTION TYPE -->
+        <div>
+          <p class="text-sm font-medium mb-3" style="color: var(--nk-text);">1. Connection Type (Ampere)</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Connection ampere">
+            <button
+              class="ampere-card flex flex-col items-center gap-1 p-3 rounded-lg border transition-all duration-150"
+              data-ampere="5A"
+              role="radio"
+              aria-checked="true"
+              tabindex="0"
+              style="background-color: var(--nk-accent-subtle); border-color: var(--nk-accent); color: var(--nk-text);"
+            >
+              <span class="text-base font-bold">5A</span>
+              <span class="text-xs" style="color: var(--nk-text-secondary);">Most homes</span>
+            </button>
+            <button
+              class="ampere-card flex flex-col items-center gap-1 p-3 rounded-lg border transition-all duration-150"
+              data-ampere="15A"
+              role="radio"
+              aria-checked="false"
+              tabindex="-1"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text);"
+            >
+              <span class="text-base font-bold">15A</span>
+              <span class="text-xs" style="color: var(--nk-text-secondary);">Medium homes</span>
+            </button>
+            <button
+              class="ampere-card flex flex-col items-center gap-1 p-3 rounded-lg border transition-all duration-150"
+              data-ampere="30A"
+              role="radio"
+              aria-checked="false"
+              tabindex="-1"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text);"
+            >
+              <span class="text-base font-bold">30A</span>
+              <span class="text-xs" style="color: var(--nk-text-secondary);">Large homes</span>
+            </button>
+            <button
+              class="ampere-card flex flex-col items-center gap-1 p-3 rounded-lg border transition-all duration-150"
+              data-ampere="60A"
+              role="radio"
+              aria-checked="false"
+              tabindex="-1"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text);"
+            >
+              <span class="text-base font-bold">60A</span>
+              <span class="text-xs" style="color: var(--nk-text-secondary);">Bigger loads</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: UNITS -->
+        <div>
+          <label for="units-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">2. Units Consumed</label>
+          <div class="relative">
+            <input
+              id="units-input"
+              type="number"
+              min="0"
+              step="1"
+              inputmode="numeric"
+              placeholder="150"
+              class="w-full pl-3 pr-14 py-2.5 rounded-lg border text-base transition-colors duration-150 focus:ring-2 focus:ring-offset-0"
+              style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+            />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">kWh</span>
+          </div>
+          <p class="text-xs mt-1.5" style="color: var(--nk-text-secondary);">Enter the units shown on your NEA bill this month</p>
+        </div>
+
+        <!-- STEP 3: CALCULATE -->
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Calculate Bill
+        </button>
+
+        <!-- ============================================ -->
+        <!-- RESULTS                                      -->
+        <!-- ============================================ -->
+        <div id="result" class="hidden">
+          <hr style="border-color: var(--nk-border);" />
+
+          <!-- TOTAL BILL HERO -->
+          <div class="text-center py-6">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Total Bill (FY 2083/84)</p>
+            <p id="total-bill" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+            <p id="total-units" class="mt-2 text-sm" style="color: var(--nk-text-secondary);"></p>
+          </div>
+
+          <!-- BREAKDOWN -->
+          <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Minimum Charge</span>
+                <span id="bd-min" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">Energy Charge</span>
+                <span id="bd-energy" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span style="color: var(--nk-text-secondary);">VAT (5%)</span>
+                <span id="bd-vat" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <hr style="border-color: var(--nk-border);" />
+              <div class="flex justify-between text-base font-bold">
+                <span style="color: var(--nk-text);">Total Payable Amount</span>
+                <span id="bd-total" style="color: var(--nk-accent);"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="flex gap-2 mt-4">
+            <button id="copy-btn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copy Result
+            </button>
+            <button id="recalculate-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors duration-150" style="border-color: var(--nk-border); color: var(--nk-text-secondary);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+              Recalculate
+            </button>
+          </div>
+
+          <!-- SLAB MATH BREAKDOWN -->
+          <details class="mt-4 p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <summary class="text-xs font-semibold uppercase tracking-wider cursor-pointer" style="color: var(--nk-text-secondary);">View Slab Math Breakdown</summary>
+            <div class="mt-3 space-y-3">
+              <p class="text-xs" style="color: var(--nk-text-secondary);">
+                <span id="slab-tariff-label" class="font-medium" style="color: var(--nk-text);"></span> · Progressive energy charge
+              </p>
+              <div id="slab-rows" class="space-y-1"></div>
+              <div class="flex justify-between text-xs">
+                <span style="color: var(--nk-text-secondary);">Total energy charge</span>
+                <span id="slab-energy-total" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span style="color: var(--nk-text-secondary);">Minimum charge</span>
+                <span id="slab-min" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span style="color: var(--nk-text-secondary);">VAT (5% above 50 units)</span>
+                <span id="slab-vat" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="pt-2" style="border-top: 1px solid var(--nk-border);">
+                <div class="flex justify-between text-sm font-bold">
+                  <span style="color: var(--nk-text);">Estimated total</span>
+                  <span id="slab-total" style="color: var(--nk-accent);"></span>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="mt-6 px-5 py-4 rounded-lg text-xs" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p>This is an estimated electricity bill based on the NEA domestic tariff for FY 2083/84 and the information you entered. Your actual bill may differ. Please verify the current tariff with the Nepal Electricity Authority.</p>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">How NEA Electricity Bills Work</h2>
+      <div class="space-y-4 text-sm" style="color: var(--nk-text-secondary);">
+        <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+          <p class="font-semibold mb-1" style="color: var(--nk-text);">Enter Your Units</p>
+          <p>Your NEA bill shows your monthly consumption in kWh (kilowatt-hours). In Nepal, 1 kWh is commonly called one "unit". Enter that number to get your estimate.</p>
+        </div>
+        <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+          <p class="font-semibold mb-1" style="color: var(--nk-text);">Your Connection Ampere</p>
+          <p>The ampere rating of your NEA connection (5A, 15A, 30A, or 60A) picks the tariff table applied to your bill. It is listed on your NEA bill and meter.</p>
+        </div>
+        <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+          <p class="font-semibold mb-1" style="color: var(--nk-text);">What Your Bill Includes</p>
+          <p>Your NEA bill is built from:</p>
+          <ul class="list-disc list-inside mt-2 space-y-0.5">
+            <li>Energy charge (progressive slab rates)</li>
+            <li>Minimum charge (one fixed amount each month)</li>
+            <li>VAT (5% on energy above 50 units)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-10">
+      <h2 class="text-xl font-bold mb-4" style="color: var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg overflow-hidden" style="background-color: var(--nk-muted);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color: var(--nk-text);">{item.question}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color: var(--nk-text-secondary);">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <script>
+    import {
+      calculateNeaBill,
+      formatNPR,
+      formatNumber,
+    } from '../../../lib/calculators/nea-bill.js';
+
+    const ampereCards = document.querySelectorAll('.ampere-card');
+    const unitsInput = document.getElementById('units-input');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const copyBtn = document.getElementById('copy-btn');
+    const recalcBtn = document.getElementById('recalculate-btn');
+
+    let selectedAmpere = '5A';
+    let lastResult = null;
+
+    // === AMPERE SELECTOR ===
+    function setAmpere(ampere) {
+      selectedAmpere = ampere;
+      ampereCards.forEach(card => {
+        const isActive = card.dataset.ampere === ampere;
+        card.setAttribute('aria-checked', isActive ? 'true' : 'false');
+        card.tabIndex = isActive ? 0 : -1;
+        card.style.backgroundColor = isActive ? 'var(--nk-accent-subtle)' : 'var(--nk-bg)';
+        card.style.borderColor = isActive ? 'var(--nk-accent)' : 'var(--nk-border)';
+      });
+    }
+
+    ampereCards.forEach(card => {
+      card.addEventListener('click', () => setAmpere(card.dataset.ampere));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setAmpere(card.dataset.ampere);
+        }
+        const cards = Array.from(ampereCards);
+        const idx = cards.indexOf(card);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const next = cards[(idx + 1) % cards.length];
+          next.focus();
+          setAmpere(next.dataset.ampere);
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prev = cards[(idx - 1 + cards.length) % cards.length];
+          prev.focus();
+          setAmpere(prev.dataset.ampere);
+        }
+      });
+    });
+
+    unitsInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+
+    // === CALCULATE ===
+    function calculate() {
+      const units = parseFloat(unitsInput?.value);
+      if (isNaN(units) || units < 0) {
+        unitsInput?.focus();
+        return;
+      }
+
+      const r = calculateNeaBill({ ampere: selectedAmpere, units });
+      lastResult = r;
+
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+      // Total bill hero
+      set('total-bill', formatNPR(r.totalBill));
+      set('total-units', `Total Units: ${formatNumber(r.input.units)} kWh`);
+
+      // Breakdown
+      set('bd-min', formatNPR(r.minCharge));
+      set('bd-energy', formatNPR(r.energyCharge));
+      set('bd-vat', formatNPR(r.vatAmount));
+      set('bd-total', formatNPR(r.totalBill));
+
+      // Slab math breakdown
+      set('slab-tariff-label', `${r.tariffLabel} · FY ${r.fiscalYear}`);
+      const slabRows = document.getElementById('slab-rows');
+      if (slabRows) {
+        slabRows.innerHTML = r.slabs.map(s => `
+          <div class="flex justify-between text-xs">
+            <span style="color: var(--nk-text-secondary);">${s.label} × Rs. ${s.rate}</span>
+            <span class="font-medium" style="color: var(--nk-text);">${formatNPR(s.charge)} (${formatNumber(s.unitsInSlab)} kWh)</span>
+          </div>
+        `).join('');
+      }
+      set('slab-energy-total', formatNPR(r.energyCharge));
+      set('slab-min', formatNPR(r.minCharge));
+      set('slab-vat', formatNPR(r.vatAmount));
+      set('slab-total', formatNPR(r.totalBill));
+
+      resultDiv?.classList.remove('hidden');
+
+      // Smooth scroll to result on mobile
+      if (window.innerWidth < 640) {
+        setTimeout(() => {
+          resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+
+    // === COPY ===
+    copyBtn?.addEventListener('click', async () => {
+      if (!lastResult) return;
+      const r = lastResult;
+      const lines = [
+        `NEA Electricity Bill Estimate`,
+        ``,
+        `Connection: ${r.input.ampere} · ${r.tariffLabel}`,
+        `Total units: ${formatNumber(r.input.units)} kWh`,
+        ``,
+        `Minimum charge: ${formatNPR(r.minCharge)}`,
+        `Energy charge:  ${formatNPR(r.energyCharge)}`,
+        `VAT (5%):       ${formatNPR(r.vatAmount)}`,
+        ``,
+        `Total payable:  ${formatNPR(r.totalBill)}`,
+      ].join('\n');
+      try {
+        await navigator.clipboard.writeText(lines);
+        if (copyBtn) {
+          copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+          setTimeout(() => {
+            copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy Result`;
+          }, 2000);
+        }
+      } catch {}
+    });
+
+    // === RECALCULATE ===
+    recalcBtn?.addEventListener('click', () => {
+      resultDiv?.classList.add('hidden');
+      lastResult = null;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,489 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'BS → AD', description: 'Convert Bikram Sambat to Gregorian date', href: '/nepal/date/bs-to-ad' },
+  { title: 'AD → BS', description: 'Convert Gregorian to Bikram Sambat date', href: '/nepal/date/ad-to-bs' },
+  { title: 'Nepali Unicode', description: 'Type Nepali using English letters', href: '/nepal/tools/nepali-unicode' },
+];
+---
+
+<BaseLayout
+  title="Nepali Age Calculator | Calculate Age in BS & AD | SolutionsNepal"
+  description="Calculate your exact age in years, months and days using Nepali Bikram Sambat or Gregorian dates. Free Nepali age calculator with BS and AD support."
+  jsonLd={[{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Nepali Age Calculator",
+    "url": "https://solutionsnepal.com/nepal/age-calculator",
+    "description": "Calculate your exact age in years, months and days using Nepali Bikram Sambat or Gregorian dates.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "NPR" }
+  }, {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How is age calculated in Nepal?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Age in Nepal is typically calculated using the Bikram Sambat (BS) calendar. This calculator uses proper BS calendar arithmetic, accounting for varying month lengths in the Nepali calendar. You can enter your birth date in either BS or AD format."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I calculate my age using a Nepali BS date?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Enter your date of birth in Bikram Sambat format and the calculator will determine your exact age using the current BS date in Nepal. It also shows the equivalent Gregorian (AD) dates."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I convert my date of birth between BS and AD?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The calculator shows your date of birth in both BS and AD formats. For full date conversion, use the BS to AD or AD to BS converter tools."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the Nepali Age Calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The calculator uses verified BS month-length data from 2000 to 2090, cross-validated against Government of Nepal sources. All calculations use UTC day arithmetic so results are consistent regardless of timezone."
+        }
+      }
+    ]
+  }]}
+>
+  <div class="mx-auto max-w-[1200px] px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Age Calculator' },
+    ]} />
+
+    <div class="mb-5">
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
+        Nepali Age Calculator
+      </h1>
+      <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+        Calculate your exact age using Nepali Bikram Sambat (BS) or Gregorian (AD) dates. <span class="hidden sm:inline">तपाईंको उमेर हेर्नुहोस्।</span>
+      </p>
+    </div>
+
+    <!-- Two-Column: Inputs | Result -->
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 items-start">
+
+      <!-- LEFT: Calculator -->
+      <div class="nk-card p-5 space-y-4">
+        <!-- Date Type Toggle -->
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-tertiary);">Date of Birth · जन्म मिति</p>
+          <div class="flex" style="gap: 2px;">
+            <button id="type-bs" class="unit-btn unit-active" data-type="bs">BS (बिक्रम संवत्)</button>
+            <button id="type-ad" class="unit-btn" data-type="ad">AD (Gregorian)</button>
+          </div>
+        </div>
+
+        <!-- BS Date Inputs -->
+        <div id="inputs-bs">
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label for="bs-year" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Year</label>
+              <input inputmode="decimal"
+                id="bs-year"
+                type="number"
+                min="2000"
+                max="2090"
+                placeholder="2080"
+                class="nk-input"
+              />
+            </div>
+            <div>
+              <label for="bs-month" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Month</label>
+              <select
+                id="bs-month"
+                class="nk-input"
+              >
+                <option value="">Month</option>
+                <option value="1">Baisakh (1)</option>
+                <option value="2">Jestha (2)</option>
+                <option value="3">Ashadh (3)</option>
+                <option value="4">Shrawan (4)</option>
+                <option value="5">Bhadra (5)</option>
+                <option value="6">Ashwin (6)</option>
+                <option value="7">Kartik (7)</option>
+                <option value="8">Mangsir (8)</option>
+                <option value="9">Poush (9)</option>
+                <option value="10">Magh (10)</option>
+                <option value="11">Falgun (11)</option>
+                <option value="12">Chaitra (12)</option>
+              </select>
+            </div>
+            <div>
+              <label for="bs-day" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Day</label>
+              <input inputmode="decimal"
+                id="bs-day"
+                type="number"
+                min="1"
+                max="32"
+                placeholder="15"
+                class="nk-input"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- AD Date Inputs (hidden by default) -->
+        <div id="inputs-ad" class="hidden">
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label for="ad-year" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Year</label>
+              <input inputmode="decimal"
+                id="ad-year"
+                type="number"
+                min="1944"
+                max="2030"
+                placeholder="2023"
+                class="nk-input"
+              />
+            </div>
+            <div>
+              <label for="ad-month" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Month</label>
+              <select
+                id="ad-month"
+                class="nk-input"
+              >
+                <option value="">Month</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+            <div>
+              <label for="ad-day" class="block text-[12px] font-medium mb-1" style="color: var(--nk-text-secondary);">Day</label>
+              <input inputmode="decimal"
+                id="ad-day"
+                type="number"
+                min="1"
+                max="31"
+                placeholder="31"
+                class="nk-input"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Error message -->
+        <div id="error-message" class="hidden text-[12px] px-3 py-2 rounded-lg" style="background-color: var(--nk-accent-subtle); color: var(--nk-accent);"></div>
+
+        <!-- Calculate Button -->
+        <button
+          id="calculate-btn"
+          class="w-full py-2.5 px-4 text-[13px] font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Calculate Age
+        </button>
+
+        <!-- Mobile Result (hidden on desktop) -->
+        <div id="mobile-result" class="md:hidden hidden">
+          <div class="text-center py-4" style="background: var(--nk-accent-subtle); border-radius: var(--radius-lg);">
+            <p class="text-[10px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Your Age · तपाईंको उमेर</p>
+            <p id="mob-age" class="text-[24px] font-bold tracking-[-0.02em] mt-1" style="color: var(--nk-accent);"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Result (sticky on desktop) -->
+      <div class="hidden md:block" style="position: sticky; top: 64px;">
+        <div class="nk-card overflow-hidden">
+          <!-- Primary result -->
+          <div class="p-5 text-center" style="background: var(--nk-accent-subtle);">
+            <p class="text-[10px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-tertiary);">Your Age · तपाईंको उमेर</p>
+            <p id="result-age" class="text-[28px] font-bold tracking-[-0.02em] mt-1" style="color: var(--nk-accent);">—</p>
+          </div>
+
+          <!-- Breakdown -->
+          <div id="breakdown" class="hidden">
+            <div class="px-5 py-4 space-y-3" style="border-top: 1px solid var(--nk-border);">
+              <!-- Date of Birth -->
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style="color: var(--nk-text-tertiary);">Date of Birth</p>
+                <div class="space-y-1">
+                  <div class="flex justify-between text-[12px]">
+                    <span style="color: var(--nk-text-secondary);">BS</span>
+                    <span id="result-birth-bs" class="font-medium tabular-nums" style="color: var(--nk-text);"></span>
+                  </div>
+                  <div class="flex justify-between text-[12px]">
+                    <span style="color: var(--nk-text-secondary);">AD</span>
+                    <span id="result-birth-ad" class="font-medium tabular-nums" style="color: var(--nk-text);"></span>
+                  </div>
+                </div>
+              </div>
+
+              <hr style="border-color: var(--nk-border);" />
+
+              <!-- Day of Birth -->
+              <div class="flex justify-between text-[12px]">
+                <span style="color: var(--nk-text-tertiary);">Day of Birth</span>
+                <span id="result-weekday" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+
+              <!-- Total Age -->
+              <div class="flex justify-between text-[12px]">
+                <span style="color: var(--nk-text-tertiary);">Total Age</span>
+                <span id="result-total-days" class="font-medium tabular-nums" style="color: var(--nk-text);"></span>
+              </div>
+
+              <hr style="border-color: var(--nk-border);" />
+
+              <!-- Next Birthday -->
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style="color: var(--nk-text-tertiary);">Next Birthday · अर्को जन्मदिन</p>
+                <div class="space-y-1">
+                  <div class="flex justify-between text-[12px]">
+                    <span style="color: var(--nk-text-secondary);">Days until</span>
+                    <span id="result-days-until" class="font-medium tabular-nums" style="color: var(--nk-text);"></span>
+                  </div>
+                  <div class="flex justify-between text-[12px]">
+                    <span style="color: var(--nk-text-secondary);">Date</span>
+                    <span id="result-next-bd" class="font-medium tabular-nums" style="color: var(--nk-text);"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Placeholder -->
+          <div id="result-placeholder" class="p-6 text-center" style="border-top: 1px solid var(--nk-border);">
+            <p class="text-[12px]" style="color: var(--nk-text-tertiary);">Enter your date of birth and click Calculate</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="mt-10">
+      <h2 class="text-[18px] sm:text-[20px] font-bold tracking-[-0.02em] mb-4" style="color: var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-3">
+        <div class="nk-card p-4">
+          <h3 class="text-[14px] font-semibold mb-1.5" style="color: var(--nk-text);">How is age calculated in Nepal?</h3>
+          <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+            Age in Nepal is typically calculated using the Bikram Sambat (BS) calendar. This calculator uses proper BS calendar arithmetic, accounting for varying month lengths in the Nepali calendar. You can enter your birth date in either BS or AD format.
+          </p>
+        </div>
+        <div class="nk-card p-4">
+          <h3 class="text-[14px] font-semibold mb-1.5" style="color: var(--nk-text);">Can I calculate my age using a Nepali BS date?</h3>
+          <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+            Yes. Enter your date of birth in Bikram Sambat format and the calculator will determine your exact age using the current BS date in Nepal. It also shows the equivalent Gregorian (AD) dates.
+          </p>
+        </div>
+        <div class="nk-card p-4">
+          <h3 class="text-[14px] font-semibold mb-1.5" style="color: var(--nk-text);">Can I convert my date of birth between BS and AD?</h3>
+          <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+            Yes. The calculator shows your date of birth in both BS and AD formats. For full date conversion, use the <a href="/nepal/date/bs-to-ad" style="color: var(--nk-accent);">BS to AD</a> or <a href="/nepal/date/ad-to-bs" style="color: var(--nk-accent);">AD to BS</a> converter tools.
+          </p>
+        </div>
+        <div class="nk-card p-4">
+          <h3 class="text-[14px] font-semibold mb-1.5" style="color: var(--nk-text);">How accurate is the Nepali Age Calculator?</h3>
+          <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
+            The calculator uses verified BS month-length data from 2000 to 2090, cross-validated against Government of Nepal sources. All calculations use UTC day arithmetic so results are consistent regardless of timezone.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <script>
+    import { calculateAge, calculateAgeFromAdDate, isValidBsDate, isValidAdDate } from '../../lib/calculators/age.js';
+
+    // Elements
+    const typeBsBtn = document.getElementById('type-bs');
+    const typeAdBtn = document.getElementById('type-ad');
+    const inputsBs = document.getElementById('inputs-bs');
+    const inputsAd = document.getElementById('inputs-ad');
+    const bsYearInput = document.getElementById('bs-year');
+    const bsMonthSelect = document.getElementById('bs-month');
+    const bsDayInput = document.getElementById('bs-day');
+    const adYearInput = document.getElementById('ad-year');
+    const adMonthSelect = document.getElementById('ad-month');
+    const adDayInput = document.getElementById('ad-day');
+    const calcBtn = document.getElementById('calculate-btn');
+    const errorDiv = document.getElementById('error-message');
+    const resultDiv = document.getElementById('breakdown');
+    const mobileResult = document.getElementById('mobile-result');
+    const resultAge = document.getElementById('result-age');
+    const mobAge = document.getElementById('mob-age');
+    const resultBirthBs = document.getElementById('result-birth-bs');
+    const resultBirthAd = document.getElementById('result-birth-ad');
+    const resultWeekday = document.getElementById('result-weekday');
+    const resultTotalDays = document.getElementById('result-total-days');
+    const resultDaysUntil = document.getElementById('result-days-until');
+    const resultNextBd = document.getElementById('result-next-bd');
+    const placeholder = document.getElementById('result-placeholder');
+
+    let currentType = 'bs';
+
+    // Switch between BS and AD
+    function switchType(type) {
+      if (type === currentType) return;
+      currentType = type;
+      typeBsBtn?.classList.toggle('unit-active', type === 'bs');
+      typeAdBtn?.classList.toggle('unit-active', type === 'ad');
+      inputsBs?.classList.toggle('hidden', type !== 'bs');
+      inputsAd?.classList.toggle('hidden', type !== 'ad');
+      hideError();
+    }
+
+    typeBsBtn?.addEventListener('click', () => switchType('bs'));
+    typeAdBtn?.addEventListener('click', () => switchType('ad'));
+
+    function showError(msg) {
+      if (errorDiv) {
+        errorDiv.textContent = msg;
+        errorDiv.classList.remove('hidden');
+      }
+    }
+
+    function hideError() {
+      errorDiv?.classList.add('hidden');
+    }
+
+    function formatBsDate(d) {
+      return `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')} BS`;
+    }
+
+    function formatAdDate(d) {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${months[d.month - 1]} ${d.day}, ${d.year}`;
+    }
+
+    function showResult(result) {
+      if (result.error) {
+        showError(result.error);
+        return;
+      }
+
+      hideError();
+
+      // Age display
+      const ageText = `${result.years} Years · ${result.months} Months · ${result.days} Days`;
+      if (resultAge) resultAge.textContent = ageText;
+      if (mobAge) mobAge.textContent = ageText;
+
+      // Birth dates
+      if (resultBirthBs) resultBirthBs.textContent = formatBsDate(result.birthBs);
+      if (resultBirthAd) resultBirthAd.textContent = formatAdDate(result.birthAd);
+
+      // Day of birth
+      if (resultWeekday) resultWeekday.textContent = result.dayOfWeekBirth;
+
+      // Total days
+      if (resultTotalDays) resultTotalDays.textContent = `${result.totalDays.toLocaleString()} days`;
+
+      // Next birthday
+      if (resultDaysUntil) resultDaysUntil.textContent = `${result.nextBirthdayDaysUntil} days`;
+      if (resultNextBd) resultNextBd.textContent = formatAdDate(result.nextBirthdayAd);
+
+      // Show results
+      resultDiv?.classList.remove('hidden');
+      mobileResult?.classList.remove('hidden');
+      placeholder?.classList.add('hidden');
+    }
+
+    function calculate() {
+      hideError();
+
+      if (currentType === 'bs') {
+        const year = parseInt(bsYearInput?.value);
+        const month = parseInt(bsMonthSelect?.value);
+        const day = parseInt(bsDayInput?.value);
+
+        if (!year || !month || !day) {
+          showError('Please fill in all fields.');
+          return;
+        }
+
+        if (!isValidBsDate(year, month, day)) {
+          showError('Please enter a valid BS date.');
+          return;
+        }
+
+        const result = calculateAge({ year, month, day });
+        showResult(result);
+      } else {
+        const year = parseInt(adYearInput?.value);
+        const month = parseInt(adMonthSelect?.value);
+        const day = parseInt(adDayInput?.value);
+
+        if (!year || !month || !day) {
+          showError('Please fill in all fields.');
+          return;
+        }
+
+        if (!isValidAdDate(year, month, day)) {
+          showError('Please enter a valid AD date.');
+          return;
+        }
+
+        const result = calculateAgeFromAdDate({ year, month, day });
+        showResult(result);
+      }
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+
+    // Enter key
+    [bsYearInput, bsMonthSelect, bsDayInput, adYearInput, adMonthSelect, adDayInput].forEach(el => {
+      el?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    });
+  </script>
+
+  <style>
+    .unit-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--nk-border);
+      cursor: pointer;
+      transition: all 0.1s ease;
+      color: var(--nk-text-secondary);
+      background: var(--nk-surface);
+      font-family: var(--font-sans);
+    }
+    .unit-btn:hover {
+      border-color: var(--nk-border-strong);
+      color: var(--nk-text);
+    }
+    .unit-btn.unit-active {
+      background: var(--nk-accent);
+      border-color: var(--nk-accent);
+      color: white;
+      font-weight: 600;
+    }
+  </style>
+</BaseLayout>

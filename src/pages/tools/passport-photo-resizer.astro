@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import PassportPhotoResizer from '../../components/tools/PassportPhotoResizer.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Passport Size Photo Resizer – Resize Photo Online | SolutionsNepal';
+const description = 'Passport Size Photo Resizer: make a standard 2 × 2 inch (51 × 51 mm) passport photo online. Resize photo to passport size, crop and compress to your target file size — free, private, in your browser.';
+
+const faqItems = [
+  {
+    q: 'How do I resize a passport photo?',
+    a: 'Upload your photo, drag and zoom until your head sits inside the guide, pick a target file size if you need one, then download. Cropping keeps the required 2 × 2 inch aspect ratio automatically.',
+  },
+  {
+    q: 'How do I compress a passport photo to 200 KB?',
+    a: 'Select the 200 KB target after uploading. The tool repeatedly re-encodes the photo and measures the real resulting file size, stopping at the quality that lands closest to 200 KB — not far below it and never above your original file size.',
+  },
+  {
+    q: 'What format should I use for a passport photo?',
+    a: 'JPG is recommended for almost all passport, visa and citizenship applications, including the DV Lottery which requires JPEG. Use PNG only when you specifically need transparency.',
+  },
+  {
+    q: 'Can I resize a photo without losing the aspect ratio?',
+    a: 'Yes. Aspect ratio is locked by default. When you change the width, the height updates automatically so your photo is never stretched or squashed.',
+  },
+  {
+    q: 'Is my photo uploaded to a server?',
+    a: 'No. Everything — cropping, resizing, compression and background fill — happens entirely in your browser. Your photo never leaves your device.',
+  },
+  {
+    q: 'Is the 2 × 2 inch size an official requirement?',
+    a: 'Yes. 2 × 2 inch (51 × 51 mm) is the official U.S. passport photo size per the U.S. Department of State, and many other countries accept the same size. Always confirm with the office or embassy you are applying to before submitting.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Passport Size Photo Resizer',
+      description: 'Passport photo maker: crop, resize photo to passport size and compress standard 2 × 2 inch (51 × 51 mm) photos to exact size and target file sizes directly in your browser.',
+      url: 'https://solutionsnepal.com/tools/passport-photo-resizer',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'Tools', href: '/tools' }, { label: 'Passport Size Photo Resizer' }]} />
+
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color:var(--nk-text);">Passport Size Photo Resizer</h1>
+      <p class="mt-1 text-xs sm:text-sm" style="color:var(--nk-text-secondary);">Crop, resize and compress standard 2 × 2 inch (51 × 51 mm) passport photos — free and fully in your browser.</p>
+    </div>
+
+    <PassportPhotoResizer initialPreset="passport" initialTargetKB={240} />
+
+    <!-- SEO content -->
+    <div class="mt-10 space-y-8 max-w-3xl">
+      <section>
+        <h2 class="text-base font-bold" style="color:var(--nk-text);">Made for 2 × 2 inch passport photos</h2>
+        <p class="text-sm leading-relaxed mt-2" style="color:var(--nk-text-secondary);">
+          Most application portals reject photos for two reasons: the wrong dimensions or a file that is too large.
+          This tool solves both together. Crop your photo to the exact 2 × 2 inch (51 × 51 mm) requirement — the
+          official U.S. passport photo size, accepted by many other countries — then set a
+          target file size such as 50 KB, 100 KB, 200 KB or 240 KB and let the compressor find the highest quality
+          that fits.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold" style="color:var(--nk-text);">How smart target-size compression works</h3>
+        <p class="text-sm leading-relaxed mt-2" style="color:var(--nk-text-secondary);">
+          Instead of applying one fixed quality setting, the compressor tries a series of quality levels and measures
+          each result's actual file size. If quality reduction alone cannot reach your target — for example squeezing
+          a 1.8 MB photo down to 50 KB — it gradually reduces the image dimensions while keeping the required aspect
+          ratio, recompressing at every step. The result you get is the one closest to your requested size, and it is
+          never larger than your original upload.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold" style="color:var(--nk-text);">Popular uses</h3>
+        <ul class="text-sm leading-relaxed mt-2 space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• Make a standard 2 × 2 inch (51 × 51 mm) passport photo from any phone picture</li>
+          <li>• Compress a passport photo to 200 KB or 240 KB for online application forms</li>
+          <li>• Shrink a photo under 50 KB or 100 KB for strict government portals</li>
+          <li>• Print-ready output at 300 DPI (600 × 600 px) in JPG format</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="mt-3 space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold" style="color:var(--nk-text);">Related photo tools</h3>
+        <ul class="text-sm leading-relaxed mt-2 space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/tools/compress-passport-photo-to-200kb" style="color:var(--nk-accent);">Compress Passport Photo to 200 KB</a></li>
+          <li>• <a class="underline hover:opacity-80" href="/tools/image-compressor" style="color:var(--nk-accent);">Image Compressor</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'Image Compressor', description: 'Compress JPG, PNG and WebP images', href: '/tools/image-compressor' },
+      { title: 'Nepali Unicode', description: 'Type Nepali using English letters', href: '/nepal/tools/nepali-unicode' },
+    ]} />
+  </div>
+</BaseLayout>

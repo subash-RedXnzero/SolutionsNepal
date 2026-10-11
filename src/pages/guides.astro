@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import GuideCard from '../components/blog/GuideCard.astro';
+import { getGuides, getGuideCategories } from '../data/guides.js';
+
+// CONTENT: guides come from Guideedit/*.md (one file = one guide).
+// DESIGN: card look lives in src/components/blog/GuideCard.astro.
+// To add/edit a guide, edit the .md file only — never this page.
+
+const guides = getGuides();
+const categories = getGuideCategories();
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "SolutionsNepal Guides — Step-by-Step How-Tos for Nepal",
+    "description": "Practical step-by-step guides for documents, money, vehicles, dates and daily life in Nepal.",
+    "url": "https://solutionsnepal.com/guides",
+    "numberOfItems": guides.length,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://solutionsnepal.com" },
+      { "@type": "ListItem", "position": 2, "name": "Guides" }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title="Guides — Step-by-Step How-Tos for Nepal | SolutionsNepal"
+  description="Practical step-by-step guides for documents, money, vehicles, dates and daily life in Nepal. Citizenship, passport, EMI, land registration and more."
+  ogImage="/og-default.png"
+  jsonLd={jsonLd}
+>
+  <div class="guides-layout">
+    <Breadcrumbs items={[{ label: 'Guides' }]} />
+
+    <header class="guides-header">
+      <h1 class="guides-h1">Guides</h1>
+      <p class="guides-sub">Step-by-step how-tos for documents, money, vehicles, dates and daily life in Nepal — written to be finished in one read.</p>
+    </header>
+
+    <div class="guides-filters" role="group" aria-label="Filter guides by topic">
+      <button type="button" class="gd-chip gd-active" data-filter="all">All ({guides.length})</button>
+      {categories.map(cat => (
+        <button type="button" class="gd-chip" data-filter={cat.name}>{cat.name} ({cat.count})</button>
+      ))}
+    </div>
+
+    <p class="guides-count" id="guides-count" aria-live="polite">Showing all {guides.length} guides</p>
+
+    <div class="guides-grid" id="guides-grid">
+      {guides.map(post => <GuideCard post={post} />)}
+    </div>
+
+    <p class="guides-cross">Looking for stories, rates and explainers? <a href="/blog">Visit the Blog →</a></p>
+  </div>
+</BaseLayout>
+
+<script>
+  (function () {
+    const chips = Array.from(document.querySelectorAll('.gd-chip'));
+    const cards = Array.from(document.querySelectorAll('.gd-card'));
+    const count = document.getElementById('guides-count');
+    if (!chips.length || !cards.length || !count) return;
+    const total = cards.length;
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        chips.forEach((c) => c.classList.toggle('gd-active', c === chip));
+        const f = chip.getAttribute('data-filter');
+        let shown = 0;
+        cards.forEach((card) => {
+          const show = f === 'all' || card.getAttribute('data-category') === f;
+          card.classList.toggle('hidden', !show);
+          if (show) shown += 1;
+        });
+        count.textContent = f === 'all'
+          ? `Showing all ${total} guides`
+          : `Showing ${shown} of ${total} guides`;
+      });
+    });
+  })();
+</script>
+
+<style>
+  .guides-layout {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px clamp(20px, 3.5vw, 44px) 88px;
+  }
+  .guides-header { margin: 8px 0 24px; }
+  .guides-h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--nk-text);
+    margin: 0 0 10px;
+  }
+  .guides-sub {
+    font-size: 16px;
+    color: var(--nk-text-secondary);
+    max-width: 640px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .guides-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .gd-chip {
+    padding: 8px 18px;
+    border-radius: 9999px;
+    border: 1px solid var(--nk-border);
+    background: var(--nk-surface);
+    color: var(--nk-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+  .gd-chip:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+  .gd-chip.gd-active { background: var(--nk-accent); border-color: var(--nk-accent); color: #fff; font-weight: 600; }
+  .guides-count { font-size: 13px; color: var(--nk-text-tertiary); margin: 0 0 20px; }
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  /* Card look lives in src/components/blog/GuideCard.astro */
+  .guides-cross { margin-top: 40px; font-size: 14px; color: var(--nk-text-secondary); }
+  .guides-cross a { color: var(--nk-accent); font-weight: 600; text-decoration: none; }
+  .guides-cross a:hover { text-decoration: underline; }
+
+  @media (max-width: 1024px) {
+    .guides-layout { padding: 24px 24px 72px; }
+    .guides-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  }
+  @media (max-width: 640px) {
+    .guides-layout { padding: 16px 16px 56px; }
+    .guides-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+</style>

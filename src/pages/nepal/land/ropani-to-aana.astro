@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CalculatorCard from '../../../components/calculator/CalculatorCard.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolSeoContent from '../../../components/seo/ToolSeoContent.astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'Aana to Ropani Converter', description: 'Convert aana back to ropani', href: '/nepal/land/aana-to-ropani' },
+  { title: 'Land Registration Fee', description: 'Jagga pass cost in Nepal', href: '/nepal/property/land-registration' },
+  { title: 'Land Affordability', description: 'How much land can you afford', href: '/nepal/land/land-affordability-calculator' },
+  { title: 'All Land Tools', description: 'Browse land converters', href: '/nepal/land' },
+];
+---
+
+<BaseLayout
+
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Land & Property', href: '/nepal/land' },
+      { label: 'Ropani → Aana' },
+    ]} />
+
+    <CalculatorCard
+      title="Ropani to Aana Converter"
+      description="Convert ropani to aana, paisa and daam for hill-system land in Nepal — 1 ropani = 16 aana = 5,476 sq ft."
+    >
+      <div class="space-y-4">
+        <div>
+          <label for="input-value" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+            Value in Ropani
+          </label>
+          <input inputmode="decimal"
+            id="input-value"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="1"
+            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+            style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
+          />
+        </div>
+
+        <button
+          id="calculate-btn"
+          class="w-full py-3 px-4 text-sm font-semibold rounded-lg transition-all duration-150"
+          style="background-color: var(--nk-accent); color: white;"
+        >
+          Convert
+        </button>
+
+        <div id="result" class="hidden">
+          <hr class="my-4" style="border-color: var(--nk-border);" />
+          
+          <div class="text-center py-4">
+            <p class="text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Result in Aana</p>
+            <p id="result-value" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+          </div>
+
+          <!-- Quick Reference -->
+          <div class="p-4 rounded-lg mt-4" style="background-color: var(--nk-muted);">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Quick Reference</p>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <div><span style="color: var(--nk-text-secondary);">1 Ropani</span> = 16 Aana</div>
+              <div><span style="color: var(--nk-text-secondary);">1 Aana</span> = 4 Paisa</div>
+              <div><span style="color: var(--nk-text-secondary);">1 Paisa</span> = 4 Daam</div>
+              <div><span style="color: var(--nk-text-secondary);">1 Ropani</span> = 508.74 m²</div>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button
+              id="copy-btn"
+              class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors"
+              style="border-color: var(--nk-border); color: var(--nk-text-secondary);"
+            >
+              Copy Result
+            </button>
+            <button
+              id="reset-btn"
+              class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-lg border transition-colors"
+              style="border-color: var(--nk-border); color: var(--nk-text-secondary);"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </CalculatorCard>
+
+    <ToolSeoContent
+      howTo={[
+        { t: 'Enter ropani', d: 'Type the area in ropani, decimals allowed (e.g. 0.5 ropani = 8 aana).' },
+        { t: 'Get breakdown', d: 'See aana plus paisa/daam remainders used in lalpurja and listings.' },
+        { t: 'Cross-check sq ft', d: '1 ropani = 5,476 sq ft — multiply for construction planning.' },
+      ]}
+      formula="aana = ropani × 16; 1 ropani = 16 aana = 64 paisa = 256 daam = 5,476 sq ft"
+      example={{ t: '3.5 ropani:', d: '3.5 × 16 = 56 aana (3 ropani 8 aana), about 19,166 sq ft.' }}
+      note="Hill districts (Kathmandu, Pokhara) use Ropani-Aana; Terai uses Bigha-Kattha-Dhur. Confirm which system your lalpurja uses before transacting."
+      faqs={[
+        { q: 'How many aana in 1 ropani?', a: '16 aana. Further: 1 aana = 4 paisa = 16 daam, so 1 ropani = 64 paisa = 256 daam.' },
+        { q: 'What inputs do I need?', a: 'Only ropani. The factor is fixed; for value estimates also use the Land Registration and Affordability calculators.' },
+        { q: 'Is this the same as bigha-kattha?', a: 'No. Ropani-Aana is the hill system; Bigha-Kattha-Dhur is the Terai system. They are not interchangeable — check your district.' },
+      ]}
+      related={relatedTools}
+    />
+
+    <Disclaimer variant="general" />
+  </div>
+
+  <script>
+    import { convertRopaniToAana } from '../../../lib/converters/land.js';
+    import { formatNumber } from '../../../lib/utils/format.js';
+
+    const inputEl = document.getElementById('input-value');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('result');
+    const resultEl = document.getElementById('result-value');
+    const copyBtn = document.getElementById('copy-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    function calculate() {
+      const value = parseFloat(inputEl?.value) || 0;
+      if (value <= 0) return;
+
+      const result = convertRopaniToAana(value);
+      if (resultEl) resultEl.textContent = formatNumber(result, 4);
+      resultDiv?.classList.remove('hidden');
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    inputEl?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+
+    copyBtn?.addEventListener('click', async () => {
+      const value = parseFloat(inputEl?.value) || 0;
+      if (value > 0) {
+        const result = convertRopaniToAana(value);
+        try {
+          await navigator.clipboard.writeText(`${value} Ropani = ${formatNumber(result, 4)} Aana`);
+          if (copyBtn) copyBtn.textContent = 'Copied!';
+          setTimeout(() => { if (copyBtn) copyBtn.textContent = 'Copy Result'; }, 2000);
+        } catch {}
+      }
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (inputEl) inputEl.value = '';
+      resultDiv?.classList.add('hidden');
+    });
+
+    // Deep-link support: ?value=2 (e.g. from smart search "2 ropani कति आना?")
+    (function () {
+      const value = Number(new URLSearchParams(window.location.search).get('value'));
+      if (value > 0 && inputEl) {
+        inputEl.value = String(value);
+        calculate();
+      }
+    })();
+  </script>
+</BaseLayout>

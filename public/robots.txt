@@ -1,0 +1,49 @@
+# SolutionsNepal — robots.txt
+# https://solutionsnepal.com
+
+# ── Default: allow all crawlers ──
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_astro/
+
+# ── AI Search Bots — ALLOW (these cite content in AI answers) ──
+
+# OpenAI — ChatGPT search citations
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Perplexity — AI search citations
+User-agent: PerplexityBot
+Allow: /
+
+# Anthropic — Claude citations
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google — AI Overviews, Gemini, AI Mode
+User-agent: Google-Extended
+Allow: /
+
+# Bing — Microsoft Copilot
+User-agent: Bingbot
+Allow: /
+
+# ── Training-Only Crawlers — BLOCK (no search citation benefit) ──
+
+# Common Crawl — training data only
+User-agent: CCBot
+Disallow: /
+
+# Facebook/Meta — training only
+User-agent: facebookexternalhit
+Disallow: /
+
+# ── Sitemap ──
+Sitemap: https://solutionsnepal.com/sitemap.xml

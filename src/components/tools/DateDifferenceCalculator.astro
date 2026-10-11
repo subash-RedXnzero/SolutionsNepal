@@ -1,0 +1,490 @@
+---
+/**
+ * DateDifferenceCalculator — BS & AD date difference.
+ *
+ * Computes accurate calendar difference (years, months, days) and total days
+ * using SolutionsNepal's existing calendar.js engine.
+ */
+---
+
+<div id="dd-root" class="nk-card overflow-hidden">
+  <div class="p-5 sm:p-6">
+
+    <!-- Calendar system toggle -->
+    <div class="mb-5 text-center">
+      <p class="text-[11px] font-medium mb-1.5" style="color:var(--nk-text-tertiary);">Calendar System</p>
+      <div class="inline-flex rounded-lg overflow-hidden" style="border:1px solid var(--nk-border);">
+        <button id="dd-sys-bs" class="dd-sys px-5 py-1.5 text-[13px] font-semibold transition-all" style="background:var(--nk-accent);color:#fff;">BS</button>
+        <button id="dd-sys-ad" class="dd-sys px-5 py-1.5 text-[13px] font-medium transition-all" style="background:var(--nk-surface);color:var(--nk-text-secondary);">AD</button>
+      </div>
+    </div>
+
+    <!-- Start Date — BS -->
+    <div id="dd-start-bs" class="mb-4">
+      <label class="block text-[12px] font-medium mb-1.5" style="color:var(--nk-text-secondary);">Start Date</label>
+      <div class="grid grid-cols-3 gap-2">
+        <input id="dd-sy" type="number" min="2000" max="2090" placeholder="2082" class="nk-input text-center text-[16px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+        <input id="dd-sm" type="number" min="1" max="12" placeholder="01" class="nk-input text-center text-[16px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+        <input id="dd-sd" type="number" min="1" max="32" placeholder="01" class="nk-input text-center text-[16px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+      </div>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="text-[11px] font-medium px-1.5 py-0.5 rounded" style="background:var(--nk-bg);color:var(--nk-text-tertiary);">BS</span>
+        <span id="dd-start-bs-label" class="text-[11px]" style="color:var(--nk-text-secondary);">2082-01-01</span>
+      </div>
+      <div id="dd-start-ad-row" class="flex items-center gap-2 mt-0.5">
+        <span class="text-[11px] font-medium px-1.5 py-0.5 rounded" style="background:var(--nk-bg);color:var(--nk-text-tertiary);">AD</span>
+        <span id="dd-start-ad" class="text-[11px]" style="color:var(--nk-text-secondary);">—</span>
+      </div>
+    </div>
+
+    <!-- Start Date — AD -->
+    <div id="dd-start-ad-input" class="mb-4 hidden">
+      <label class="block text-[12px] font-medium mb-1.5" style="color:var(--nk-text-secondary);">Start Date</label>
+      <input id="dd-ad-start" type="date" class="w-full nk-input text-[15px]" style="color:var(--nk-text);" />
+      <div id="dd-start-bs-ad-row" class="flex items-center gap-2 mt-1">
+        <span class="text-[11px] font-medium px-1.5 py-0.5 rounded" style="background:var(--nk-bg);color:var(--nk-text-tertiary);">BS</span>
+        <span id="dd-start-bs-from-ad" class="text-[11px]" style="color:var(--nk-text-secondary);">—</span>
+      </div>
+    </div>
+
+    <!-- End Date — BS -->
+    <div id="dd-end-bs" class="mb-4">
+      <label class="block text-[12px] font-medium mb-1.5" style="color:var(--nk-text-secondary);">End Date</label>
+      <div class="grid grid-cols-3 gap-2">
+        <input id="dd-ey" type="number" min="2000" max="2090" placeholder="2083" class="nk-input text-center text-[16px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+        <input id="dd-em" type="number" min="1" max="12" placeholder="01" class="nk-input text-center text-[16px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+        <input id="dd-ed" type="number" min="1" max="32" placeholder="01" class="nk-input text-center text-[16px] font-semibold tabular-nums" style="color:var(--nk-text);" />
+      </div>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="text-[11px] font-medium px-1.5 py-0.5 rounded" style="background:var(--nk-bg);color:var(--nk-text-tertiary);">BS</span>
+        <span id="dd-end-bs-label" class="text-[11px]" style="color:var(--nk-text-secondary);">2083-01-01</span>
+      </div>
+      <div id="dd-end-ad-row" class="flex items-center gap-2 mt-0.5">
+        <span class="text-[11px] font-medium px-1.5 py-0.5 rounded" style="background:var(--nk-bg);color:var(--nk-text-tertiary);">AD</span>
+        <span id="dd-end-ad" class="text-[11px]" style="color:var(--nk-text-secondary);">—</span>
+      </div>
+    </div>
+
+    <!-- End Date — AD -->
+    <div id="dd-end-ad-input" class="mb-4 hidden">
+      <label class="block text-[12px] font-medium mb-1.5" style="color:var(--nk-text-secondary);">End Date</label>
+      <input id="dd-ad-end" type="date" class="w-full nk-input text-[15px]" style="color:var(--nk-text);" />
+      <div id="dd-end-bs-ad-row" class="flex items-center gap-2 mt-1">
+        <span class="text-[11px] font-medium px-1.5 py-0.5 rounded" style="background:var(--nk-bg);color:var(--nk-text-tertiary);">BS</span>
+        <span id="dd-end-bs-from-ad" class="text-[11px]" style="color:var(--nk-text-secondary);">—</span>
+      </div>
+    </div>
+
+    <!-- Inclusive toggle -->
+    <div class="mb-4 flex items-center gap-2">
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input id="dd-inclusive" type="checkbox" class="sr-only peer" />
+        <div class="w-9 h-5 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--nk-accent)]" style="background:var(--nk-border);"></div>
+      </label>
+      <span class="text-[12px]" style="color:var(--nk-text-secondary);">Count both dates (inclusive)</span>
+    </div>
+
+    <!-- Calculate -->
+    <button id="dd-calc" class="w-full py-2.5 rounded-lg text-[14px] font-semibold transition-all hover:opacity-90 active:scale-[0.99]" style="background-color:var(--nk-accent);color:#fff;">
+      Calculate Difference
+    </button>
+
+    <!-- Error -->
+    <p id="dd-error" class="hidden mt-3 text-[12px] text-center" style="color:var(--nk-danger, #dc2626);"></p>
+
+    <!-- Result -->
+    <div id="dd-result" class="hidden mt-5 rounded-lg p-5" style="background:var(--nk-bg);">
+      <p class="text-[11px] font-medium mb-3 text-center" style="color:var(--nk-text-tertiary);">Difference</p>
+
+      <div class="text-center mb-4">
+        <p id="dd-diff-text" class="text-[28px] font-bold tracking-[-0.02em] leading-tight" style="color:var(--nk-accent);">—</p>
+        <p id="dd-total-days" class="text-[14px] font-semibold mt-1" style="color:var(--nk-text);">—</p>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="space-y-2 text-[12px]" style="border-top:1px dashed var(--nk-border);padding-top:12px;">
+        <div class="flex justify-between">
+          <span style="color:var(--nk-text-secondary);">Start</span>
+          <span id="dd-res-start" class="font-medium" style="color:var(--nk-text);">—</span>
+        </div>
+        <div class="flex justify-between">
+          <span style="color:var(--nk-text-secondary);">End</span>
+          <span id="dd-res-end" class="font-medium" style="color:var(--nk-text);">—</span>
+        </div>
+        <div class="flex justify-between">
+          <span style="color:var(--nk-text-secondary);">Months</span>
+          <span id="dd-res-months" class="font-medium" style="color:var(--nk-text);">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reverse warning -->
+    <div id="dd-reverse" class="hidden mt-3 text-center">
+      <p class="text-[12px] mb-2" style="color:var(--nk-text-secondary);">End date is before the start date.</p>
+      <button id="dd-swap" class="text-[12px] font-medium px-3 py-1.5 rounded-md border transition-colors" style="border-color:var(--nk-border);color:var(--nk-accent);">Swap Dates</button>
+    </div>
+
+    <!-- Quick presets -->
+    <div class="mt-4">
+      <p class="text-[11px] font-medium mb-1.5" style="color:var(--nk-text-tertiary);">Quick examples</p>
+      <div class="flex flex-wrap gap-1.5">
+        <button class="dd-preset" data-sy="2082" data-sm="1" data-sd="1" data-ey="2083" data-em="1" data-ed="1">1 BS Year</button>
+        <button class="dd-preset" data-sy="2082" data-sm="1" data-sd="1" data-ey="2082" data-em="2" data-ed="1">1 Month</button>
+        <button class="dd-preset" data-sy="2082" data-sm="1" data-sd="1" data-ey="2082" data-sm2="1" data-sd2="8" data-ey2="2082" data-em="1" data-ed="8">1 Week</button>
+        <button class="dd-preset" data-sy="2082" data-sm="1" data-sd="1" data-ey="2082" data-em="4" data-ed="10">100 Days</button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-4 flex gap-2">
+      <button id="dd-copy" class="nk-btn nk-btn-secondary nk-btn-sm flex-1 text-[12px]">Copy Result</button>
+      <button id="dd-reset" class="nk-btn nk-btn-ghost nk-btn-sm text-[12px]">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { bsToAd, adToBs, getDaysInBsMonth, getDaysInBsYear } from '../../lib/nepal/calendar.js';
+
+  function isValidBsDate(year: number, month: number, day: number): boolean {
+    const days = getDaysInBsMonth(year, month);
+    return days !== null && day >= 1 && day <= days;
+  }
+
+  const $ = (sel: string) => document.getElementById(sel);
+
+  // Elements
+  const sysBsBtn = $('dd-sys-bs')!;
+  const sysAdBtn = $('dd-sys-ad')!;
+  const startBsWrap = $('dd-start-bs')!;
+  const startAdInput = $('dd-start-ad-input')!;
+  const endBsWrap = $('dd-end-bs')!;
+  const endAdInput = $('dd-end-ad-input')!;
+  const syEl = $('dd-sy') as HTMLInputElement;
+  const smEl = $('dd-sm') as HTMLInputElement;
+  const sdEl = $('dd-sd') as HTMLInputElement;
+  const eyEl = $('dd-ey') as HTMLInputElement;
+  const emEl = $('dd-em') as HTMLInputElement;
+  const edEl = $('dd-ed') as HTMLInputElement;
+  const adStartEl = $('dd-ad-start') as HTMLInputElement;
+  const adEndEl = $('dd-ad-end') as HTMLInputElement;
+  const startBsLabel = $('dd-start-bs-label')!;
+  const startAdLabel = $('dd-start-ad')!;
+  const endBsLabel = $('dd-end-bs-label')!;
+  const endAdLabel = $('dd-end-ad')!;
+  const startBsFromAd = $('dd-start-bs-from-ad')!;
+  const endBsFromAd = $('dd-end-bs-from-ad')!;
+  const inclusiveEl = $('dd-inclusive') as HTMLInputElement;
+  const resultBox = $('dd-result')!;
+  const diffText = $('dd-diff-text')!;
+  const totalDays = $('dd-total-days')!;
+  const resStart = $('dd-res-start')!;
+  const resEnd = $('dd-res-end')!;
+  const resMonths = $('dd-res-months')!;
+  const errorEl = $('dd-error')!;
+  const reverseBox = $('dd-reverse')!;
+
+  let calendarSystem = 'bs'; // 'bs' | 'ad'
+  let lastResultText = '';
+
+  // ── Helpers ──────────────────────────────────────────────
+  const AD_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function formatAdLong(ad: {year:number;month:number;day:number}) {
+    return `${AD_MONTHS[ad.month - 1]} ${ad.day}, ${ad.year}`;
+  }
+
+  function bsToTotalDays(y: number, m: number, d: number): number {
+    // Convert BS date to total days from BS_MIN_YEAR-01-01
+    let total = 0;
+    for (let yr = 2000; yr < y; yr++) total += getDaysInBsYear(yr);
+    for (let mo = 1; mo < m; mo++) total += getDaysInBsMonth(y, mo) || 0;
+    total += d - 1;
+    return total;
+  }
+
+  function bsCalendarDiff(sy: number, sm: number, sd: number, ey: number, em: number, ed: number) {
+    let years = ey - sy;
+    let months = em - sm;
+    let days = ed - sd;
+
+    if (days < 0) {
+      months--;
+      // Borrow from the month before the end month (em - 1)
+      const borrowMonth = em - 1;
+      const borrowYear = borrowMonth < 1 ? ey - 1 : ey;
+      const actualBorrowMonth = borrowMonth < 1 ? 12 : borrowMonth;
+      days += getDaysInBsMonth(borrowYear, actualBorrowMonth) || 30;
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    return { years, months, days };
+  }
+
+  function adDiffToTotalDays(startAd: {year:number;month:number;day:number}, endAd: {year:number;month:number;day:number}): number {
+    const msPerDay = 86400000;
+    const startUtc = Date.UTC(startAd.year, startAd.month - 1, startAd.day);
+    const endUtc = Date.UTC(endAd.year, endAd.month - 1, endAd.day);
+    return Math.round((endUtc - startUtc) / msPerDay);
+  }
+
+  // ── Update labels ────────────────────────────────────────
+  function updateBsLabels() {
+    const sy = parseInt(syEl.value), sm = parseInt(smEl.value), sd = parseInt(sdEl.value);
+    const ey = parseInt(eyEl.value), em = parseInt(emEl.value), ed = parseInt(edEl.value);
+
+    if (isValidBsDate(sy, sm, sd)) {
+      startBsLabel.textContent = `${sy}-${String(sm).padStart(2,'0')}-${String(sd).padStart(2,'0')}`;
+      const ad = bsToAd(sy, sm, sd);
+      startAdLabel.textContent = ad ? formatAdLong(ad) : '—';
+    } else {
+      startBsLabel.textContent = '—';
+      startAdLabel.textContent = '';
+    }
+
+    if (isValidBsDate(ey, em, ed)) {
+      endBsLabel.textContent = `${ey}-${String(em).padStart(2,'0')}-${String(ed).padStart(2,'0')}`;
+      const ad = bsToAd(ey, em, ed);
+      endAdLabel.textContent = ad ? formatAdLong(ad) : '—';
+    } else {
+      endBsLabel.textContent = '—';
+      endAdLabel.textContent = '';
+    }
+  }
+
+  function updateAdLabels() {
+    const sv = adStartEl.value;
+    const ev = adEndEl.value;
+    if (sv) {
+      const [y, m, d] = sv.split('-').map(Number);
+      const bs = adToBs(y, m, d);
+      startBsFromAd.textContent = bs ? `${bs.year}-${String(bs.month).padStart(2,'0')}-${String(bs.day).padStart(2,'0')} BS` : '—';
+    } else {
+      startBsFromAd.textContent = '—';
+    }
+    if (ev) {
+      const [y, m, d] = ev.split('-').map(Number);
+      const bs = adToBs(y, m, d);
+      endBsFromAd.textContent = bs ? `${bs.year}-${String(bs.month).padStart(2,'0')}-${String(bs.day).padStart(2,'0')} BS` : '—';
+    } else {
+      endBsFromAd.textContent = '—';
+    }
+  }
+
+  // ── System toggle ────────────────────────────────────────
+  function setSystem(sys: string) {
+    calendarSystem = sys;
+    if (sys === 'bs') {
+      sysBsBtn.style.background = 'var(--nk-accent)'; sysBsBtn.style.color = '#fff'; sysBsBtn.style.fontWeight = '600';
+      sysAdBtn.style.background = 'var(--nk-surface)'; sysAdBtn.style.color = 'var(--nk-text-secondary)'; sysAdBtn.style.fontWeight = '500';
+      startBsWrap.classList.remove('hidden'); startAdInput.classList.add('hidden');
+      endBsWrap.classList.remove('hidden'); endAdInput.classList.add('hidden');
+      updateBsLabels();
+    } else {
+      sysAdBtn.style.background = 'var(--nk-accent)'; sysAdBtn.style.color = '#fff'; sysAdBtn.style.fontWeight = '600';
+      sysBsBtn.style.background = 'var(--nk-surface)'; sysBsBtn.style.color = 'var(--nk-text-secondary)'; sysBsBtn.style.fontWeight = '500';
+      startBsWrap.classList.add('hidden'); startAdInput.classList.remove('hidden');
+      endBsWrap.classList.add('hidden'); endAdInput.classList.remove('hidden');
+      updateAdLabels();
+    }
+    resultBox.classList.add('hidden');
+    errorEl.classList.add('hidden');
+    reverseBox.classList.add('hidden');
+  }
+
+  // ── Calculate ────────────────────────────────────────────
+  function calculate() {
+    errorEl.classList.add('hidden');
+    resultBox.classList.add('hidden');
+    reverseBox.classList.add('hidden');
+
+    let daysCount = 0;
+    let calDiff = { years: 0, months: 0, days: 0 };
+    let startStr = '';
+    let endStr = '';
+    let startAdStr = '';
+    let endAdStr = '';
+    let startAdDate: { year: number; month: number; day: number } | null = null;
+    let endAdDate: { year: number; month: number; day: number } | null = null;
+
+    if (calendarSystem === 'bs') {
+      const sy = parseInt(syEl.value), sm = parseInt(smEl.value), sd = parseInt(sdEl.value);
+      const ey = parseInt(eyEl.value), em = parseInt(emEl.value), ed = parseInt(edEl.value);
+
+      if (!sy || !sm || !sd) { errorEl.textContent = 'Please enter the start date.'; errorEl.classList.remove('hidden'); return; }
+      if (!ey || !em || !ed) { errorEl.textContent = 'Please enter the end date.'; errorEl.classList.remove('hidden'); return; }
+      if (!isValidBsDate(sy, sm, sd)) { errorEl.textContent = 'Please enter a valid BS start date.'; errorEl.classList.remove('hidden'); return; }
+      if (!isValidBsDate(ey, em, ed)) { errorEl.textContent = 'Please enter a valid BS end date.'; errorEl.classList.remove('hidden'); return; }
+
+      startAdDate = bsToAd(sy, sm, sd)!;
+      endAdDate = bsToAd(ey, em, ed)!;
+
+      daysCount = adDiffToTotalDays(startAdDate, endAdDate);
+      calDiff = bsCalendarDiff(sy, sm, sd, ey, em, ed);
+      startStr = `${sy}-${String(sm).padStart(2,'0')}-${String(sd).padStart(2,'0')} BS`;
+      endStr = `${ey}-${String(em).padStart(2,'0')}-${String(ed).padStart(2,'0')} BS`;
+      startAdStr = formatAdLong(startAdDate);
+      endAdStr = formatAdLong(endAdDate);
+    } else {
+      const sv = adStartEl.value;
+      const ev = adEndEl.value;
+      if (!sv) { errorEl.textContent = 'Please enter the start date.'; errorEl.classList.remove('hidden'); return; }
+      if (!ev) { errorEl.textContent = 'Please enter the end date.'; errorEl.classList.remove('hidden'); return; }
+
+      const [sy, sm, sd] = sv.split('-').map(Number);
+      const [ey, em, ed] = ev.split('-').map(Number);
+      startAdDate = { year: sy, month: sm, day: sd };
+      endAdDate = { year: ey, month: em, day: ed };
+
+      daysCount = adDiffToTotalDays(startAdDate, endAdDate);
+
+      const startBs = adToBs(sy, sm, sd);
+      const endBs = adToBs(ey, em, ed);
+      startStr = formatAdLong(startAdDate);
+      endStr = formatAdLong(endAdDate);
+      if (startBs) startAdStr = `${startBs.year}-${String(startBs.month).padStart(2,'0')}-${String(startBs.day).padStart(2,'0')} BS`;
+      if (endBs) endAdStr = `${endBs.year}-${String(endBs.month).padStart(2,'0')}-${String(endBs.day).padStart(2,'0')} BS`;
+    }
+
+    // Check reversed
+    if (daysCount < 0) {
+      reverseBox.classList.remove('hidden');
+      return;
+    }
+
+    // Inclusive
+    if (inclusiveEl.checked && daysCount >= 0) daysCount += 1;
+
+    // Display
+    const parts: string[] = [];
+    if (calendarSystem === 'bs') {
+      if (calDiff.years > 0) parts.push(`${calDiff.years} year${calDiff.years !== 1 ? 's' : ''}`);
+      if (calDiff.months > 0) parts.push(`${calDiff.months} month${calDiff.months !== 1 ? 's' : ''}`);
+      if (calDiff.days > 0) parts.push(`${calDiff.days} day${calDiff.days !== 1 ? 's' : ''}`);
+      diffText.textContent = parts.length > 0 ? parts.join(', ') : 'Same date';
+      resMonths.textContent = `${calDiff.years * 12 + calDiff.months} months`;
+    } else if (startAdDate && endAdDate) {
+      // For AD, compute years/months/days
+      let y = endAdDate.year - startAdDate.year;
+      let m = endAdDate.month - startAdDate.month;
+      let d = endAdDate.day - startAdDate.day;
+      if (d < 0) { m--; d += 30; }
+      if (m < 0) { y--; m += 12; }
+      if (y > 0) parts.push(`${y} year${y !== 1 ? 's' : ''}`);
+      if (m > 0) parts.push(`${m} month${m !== 1 ? 's' : ''}`);
+      if (d > 0) parts.push(`${d} day${d !== 1 ? 's' : ''}`);
+      diffText.textContent = parts.length > 0 ? parts.join(', ') : 'Same date';
+      resMonths.textContent = '—';
+    }
+
+    totalDays.textContent = `${daysCount.toLocaleString('en-US')} day${daysCount !== 1 ? 's' : ''}`;
+    resStart.textContent = startAdStr ? `${startStr} (≈ ${startAdStr})` : startStr;
+    resEnd.textContent = endAdStr ? `${endStr} (≈ ${endAdStr})` : endStr;
+
+    resultBox.classList.remove('hidden');
+
+    lastResultText = `Start: ${startStr}\nEnd: ${endStr}\nDifference: ${diffText.textContent}\nTotal: ${totalDays.textContent}`;
+  }
+
+  // ── Swap ─────────────────────────────────────────────────
+  function swapDates() {
+    if (calendarSystem === 'bs') {
+      const tmpY = syEl.value, tmpM = smEl.value, tmpD = sdEl.value;
+      syEl.value = eyEl.value; smEl.value = emEl.value; sdEl.value = edEl.value;
+      eyEl.value = tmpY; emEl.value = tmpM; edEl.value = tmpD;
+    } else {
+      const tmp = adStartEl.value;
+      adStartEl.value = adEndEl.value;
+      adEndEl.value = tmp;
+    }
+    reverseBox.classList.add('hidden');
+    resultBox.classList.add('hidden');
+    updateBsLabels();
+    updateAdLabels();
+  }
+
+  // ── Events ───────────────────────────────────────────────
+  sysBsBtn.addEventListener('click', () => setSystem('bs'));
+  sysAdBtn.addEventListener('click', () => setSystem('ad'));
+  $('dd-calc')?.addEventListener('click', calculate);
+  $('dd-swap')?.addEventListener('click', swapDates);
+
+  // BS inputs update labels
+  [syEl, smEl, sdEl, eyEl, emEl, edEl].forEach(el => el?.addEventListener('input', () => {
+    updateBsLabels();
+    resultBox.classList.add('hidden');
+    errorEl.classList.add('hidden');
+  }));
+
+  // AD inputs update labels
+  [adStartEl, adEndEl].forEach(el => el?.addEventListener('input', () => {
+    updateAdLabels();
+    resultBox.classList.add('hidden');
+    errorEl.classList.add('hidden');
+  }));
+
+  // Quick presets
+  document.querySelectorAll('.dd-preset').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const b = btn as HTMLElement;
+      setSystem('bs');
+      syEl.value = b.dataset.sy || '';
+      smEl.value = b.dataset.sm || '';
+      sdEl.value = b.dataset.sd || '';
+      eyEl.value = b.dataset.ey || '';
+      emEl.value = b.dataset.em || '';
+      edEl.value = b.dataset.ed || '';
+      updateBsLabels();
+      calculate();
+    });
+  });
+
+  // Copy
+  $('dd-copy')?.addEventListener('click', async () => {
+    if (!lastResultText) return;
+    try { await navigator.clipboard.writeText(lastResultText); } catch {}
+    const btn = $('dd-copy');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Result'; }, 2000); }
+  });
+
+  // Reset
+  $('dd-reset')?.addEventListener('click', () => {
+    syEl.value = '2082'; smEl.value = '1'; sdEl.value = '1';
+    eyEl.value = '2083'; emEl.value = '1'; edEl.value = '1';
+    adStartEl.value = ''; adEndEl.value = '';
+    setSystem('bs');
+    resultBox.classList.add('hidden');
+    errorEl.classList.add('hidden');
+    reverseBox.classList.add('hidden');
+    lastResultText = '';
+  });
+
+  // Init
+  syEl.value = '2082'; smEl.value = '1'; sdEl.value = '1';
+  eyEl.value = '2083'; emEl.value = '1'; edEl.value = '1';
+  updateBsLabels();
+</script>
+
+<style>
+  .dd-sys {
+    cursor: pointer;
+    font-family: var(--font-sans);
+    border: none;
+    outline: none;
+  }
+  .dd-preset {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--nk-border);
+    cursor: pointer;
+    color: var(--nk-text-secondary);
+    background: var(--nk-bg);
+    font-family: var(--font-sans);
+    transition: all 0.1s ease;
+  }
+  .dd-preset:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
+</style>

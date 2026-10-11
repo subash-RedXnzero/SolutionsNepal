@@ -1,0 +1,1225 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { PROVINCES } from '../../../data/nepal/vehicle/provinces.js';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import { CURRENT_FY } from '../../../data/nepal/vehicle/vehicle-tax-data.js';
+import { LATE_STATUS_OPTIONS } from '../../../lib/calculators/vehicle-tax.js';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const relatedTools = [
+  { title: 'Fuel Cost', description: 'Calculate trip fuel cost', href: '/nepal/vehicle/fuel-cost' },
+  { title: 'Electricity Bill', description: 'Calculate NEA electricity bill', href: '/nepal/utilities/electricity-bill' },
+  { title: 'KUKL Water Bill', description: 'Estimate your KUKL water bill', href: '/nepal/utilities/kukl-water-bill' },
+];
+
+const vehicleTypes = [
+  { id: 'motorcycle', label: 'Motorcycle', icon: '🏍' },
+  { id: 'car', label: 'Car / Jeep', icon: '🚗' },
+  { id: 'ev-bike', label: 'EV Bike', icon: '⚡' },
+  { id: 'ev-car', label: 'EV Car', icon: '🔌' },
+];
+
+const lateStatusOptions = Object.entries(LATE_STATUS_OPTIONS);
+const currentFY = CURRENT_FY;
+
+const fiscalYears = [];
+for (let fy = currentFY; fy >= 2003; fy--) {
+  fiscalYears.push({ value: fy, label: `${fy}/${fy + 1}` });
+}
+
+const faqItems = [
+  {
+    question: 'How is vehicle tax calculated in Nepal?',
+    answer: 'Vehicle tax is a provincial tax set by each province\u2019s annual Finance Act. It depends on your vehicle type, fuel type, engine capacity (CC) for petrol/diesel vehicles, and motor power (watts for EV two-wheelers, kW for EV cars). This calculator uses verified Bagmati Province FY 2083/84 rates and computes multi-year arrears one fiscal year at a time.',
+  },
+  {
+    question: 'How much is bike tax in Nepal?',
+    answer: 'Bagmati Province FY 2083/84 motorcycle tax is Rs 3,000 up to 125cc, Rs 5,000 for 126\u2013150cc, Rs 6,500 for 151\u2013225cc, Rs 12,000 for 226\u2013400cc, Rs 25,000 for 401\u2013650cc, and Rs 35,000 above 650cc, plus a Rs 300 renewal fee.',
+  },
+  {
+    question: 'How much is car tax in Nepal?',
+    answer: 'Bagmati Province FY 2083/84 private car tax is Rs 22,000 up to 1000cc, Rs 25,000 for 1001\u20131500cc, Rs 27,000 for 1501\u20132000cc, Rs 37,000 for 2001\u20132500cc, Rs 50,000 for 2501\u20133000cc, Rs 65,000 for 3001\u20133500cc, and Rs 70,000 above 3500cc, plus a Rs 500 renewal fee.',
+  },
+  {
+    question: 'Does vehicle tax differ by province?',
+    answer: 'Yes. Vehicle tax is set by each of the seven provinces\u2019 annual Finance Acts. Only Bagmati Province FY 2083/84 rates are verified in this calculator; other provinces currently show Bagmati tables as an estimate and are flagged in the interface. Always confirm with your local Transport Management Office.',
+  },
+  {
+    question: 'How do I calculate several years of unpaid vehicle tax?',
+    answer: 'Choose the fiscal year you last paid, and the calculator itemizes every outstanding fiscal year separately \u2014 each year\u2019s tax plus its own late fine. It never simply multiplies the current rate by the number of years.',
+  },
+  {
+    question: 'What happens if I don\u2019t renew my vehicle registration?',
+    answer: 'Late fines accrue under the Bagmati Vehicle & Transport Management Act 2075 \u00a7176: 5% within the first 30 days after the deadline, 10% for days 31\u201375, 20% after that within the same fiscal year, and 32% for each fully elapsed overdue fiscal year (up to 5 years).',
+  },
+  {
+    question: 'How is late payment calculated?',
+    answer: 'The fine applies to the tax amount only. Current fiscal year: 5% (first 30 days), 10% (days 31\u201375), 20% (76+ days). Each prior overdue fiscal year: 32% per year, for up to 5 years. Insurance and renewal fees are separate and are never fined.',
+  },
+  {
+    question: 'Is third-party insurance required for renewal?',
+    answer: 'Yes, third-party liability insurance is mandatory for vehicle renewal in Nepal. This calculator provides an approximate premium estimate \u2014 it is a separate charge and is never fined. Actual rates vary by insurer.',
+  },
+  {
+    question: 'Does EV tax use CC?',
+    answer: 'No. Electric two-wheelers are taxed by motor power in watts (W) and electric cars/jeeps by motor power in kilowatts (kW). In Bagmati, e-scooters start at Rs 1,000 and EV cars at Rs 5,000 (up to 50 kW) for FY 2083/84.',
+  },
+  {
+    question: 'What information do I need to calculate my vehicle tax?',
+    answer: 'Your province, vehicle type, fuel type, engine cc (or motor power), the fiscal year your vehicle was last renewed, and how late the current year\u2019s renewal is. The calculator handles everything else.',
+  },
+];
+---
+
+<BaseLayout>
+  <div class="vt-wrapper mx-auto max-w-[1280px] px-4 sm:px-6 py-6 sm:py-8">
+
+    <!-- BREADCRUMBS -->
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Transport', href: '/nepal/transport' },
+      { label: 'Vehicle Tax' },
+    ]} />
+
+    <!-- HEADER -->
+    <header class="vt-header mt-4 mb-6">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color: var(--nk-text);">Vehicle Tax, Fine & Renewal</h1>
+      <p class="text-sm mt-1" style="color: var(--nk-text-secondary);">Calculate your complete vehicle renewal cost</p>
+    </header>
+
+    <!-- ================= 2-COLUMN LAYOUT ================= -->
+    <div class="vt-grid grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 lg:gap-6 items-start">
+
+      <!-- ========== LEFT: INPUT FORM ========== -->
+      <div class="space-y-4 animate-fade-in">
+
+        <!-- ---- Renewal Type ---- -->
+        <section>
+          <label class="vt-label">Renewal Type</label>
+          <div class="segmented-group" role="tablist" aria-label="Renewal type">
+            <button id="mode-renewal" class="seg-btn seg-active" role="tab" aria-selected="true">Full Renewal</button>
+            <button id="mode-single" class="seg-btn" role="tab" aria-selected="false">This Year Only</button>
+          </div>
+        </section>
+
+        <!-- ---- Vehicle Details ---- -->
+        <section>
+          <label class="vt-label">Vehicle Details</label>
+
+          <!-- Province -->
+          <div class="vt-field-row">
+            <div class="relative flex-1">
+              <label for="province-select" class="vt-field-label">Province</label>
+              <select
+                id="province-select"
+                class="vt-select"
+              >
+                {PROVINCES.map(p => (
+                  <option value={p.id} selected={p.id === 'bagmati'}>{p.label}</option>
+                ))}
+              </select>
+              <svg class="vt-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            <div class="relative flex-1">
+              <label for="vehicle-type-label" class="vt-field-label">Vehicle Type</label>
+              <div id="vehicle-type-label" class="vt-select vt-vehicle-type-display flex items-center gap-1.5" style="cursor:default;">
+                <span id="vt-icon">🏍</span>
+                <span id="vt-label">Motorcycle</span>
+              </div>
+            </div>
+          </div>
+          <p id="province-warning" class="text-[10px] mt-1 hidden" style="color: var(--nk-text-secondary);">⚠ Estimated rates (Bagmati tables). Verify locally.</p>
+
+          <!-- Vehicle Type Cards (2x2 grid) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-3" role="radiogroup" aria-label="Vehicle type">
+            {vehicleTypes.map((vt, i) => (
+              <button
+                class={`vehicle-card flex items-center gap-1.5 px-3 py-2 rounded-lg border text-left transition-all duration-150 ${i === 0 ? 'vehicle-card--active' : ''}`}
+                data-vehicle={vt.id}
+                role="radio"
+                aria-checked={i === 0 ? 'true' : 'false'}
+                tabindex={i === 0 ? '0' : '-1'}
+                style={i === 0
+                  ? 'background-color: var(--nk-accent-subtle); border-color: var(--nk-accent); color: var(--nk-text);'
+                  : 'background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text);'}
+              >
+                <span class="text-sm" aria-hidden="true">{vt.icon}</span>
+                <span class="text-[11px] font-semibold leading-tight">{vt.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <!-- Engine Capacity -->
+          <div id="engine-section" class="mt-3">
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="cc-input" class="vt-field-label" id="engine-label">Engine Capacity</label>
+              <span class="vt-unit-badge" id="engine-unit-badge">CC</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <input id="cc-slider" type="range" min="50" max="1000" step="10" value="150"
+                class="vt-slider flex-1" />
+              <input inputmode="decimal"
+                id="cc-input"
+                type="number"
+                min="1"
+                max="10000"
+                step="1"
+                placeholder="150"
+                class="vt-input w-24"
+              />
+              <span class="text-[10px] font-semibold" style="color: var(--nk-text-secondary);" id="engine-unit">CC</span>
+            </div>
+            <p class="text-[10px] mt-1" style="color: var(--nk-text-secondary);" id="engine-hint">Engine capacity in cubic centimeters</p>
+          </div>
+        </section>
+
+        <!-- ---- Renewal Status ---- -->
+        <section id="renewal-section">
+          <label class="vt-label">Renewal Status</label>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Last Paid Fiscal Year -->
+            <div>
+              <label for="last-renewed" class="vt-field-label">Last Paid Fiscal Year</label>
+              <div class="relative">
+                <select id="last-renewed" class="vt-select">
+                  <option value="never">Never Renewed</option>
+                  {fiscalYears.map(fy => (
+                    <option value={fy.value} selected={fy.value === 2082}>{fy.label}</option>
+                  ))}
+                </select>
+                <svg class="vt-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+
+            <!-- Payment Status -->
+            <div>
+              <label for="late-status" class="vt-field-label">Payment Status</label>
+              <div class="relative">
+                <select id="late-status" class="vt-select">
+                  {lateStatusOptions.map(([key, opt]) => (
+                    <option value={key} selected={key === 'ontime'}>{opt.label}</option>
+                  ))}
+                </select>
+                <svg class="vt-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current FY indicator -->
+          <div class="flex items-center gap-2 mt-2.5">
+            <span class="text-[10px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-secondary);">Current FY</span>
+            <span class="text-xs font-bold mono" style="color: var(--nk-accent);">{currentFY}/{currentFY + 1}</span>
+          </div>
+        </section>
+
+        <!-- ---- Fees & Services ---- -->
+        <section>
+          <label class="vt-label">Fees & Services</label>
+
+          <div class="space-y-2.5">
+            <!-- Bluebook Renewal Fee -->
+            <div class="flex items-center justify-between px-3 py-2.5 rounded-lg" style="background-color: var(--nk-bg); border: 1px solid var(--nk-border);">
+              <div>
+                <p class="text-xs font-semibold" style="color: var(--nk-text);">Bluebook Renewal Fee</p>
+                <p class="text-[10px] mt-0.5" style="color: var(--nk-text-secondary);">Two-wheeler Rs 300 · Four-wheeler Rs 500</p>
+              </div>
+              <div class="segmented-group segmented-sm" role="tablist" aria-label="Bluebook renewal">
+                <button id="bb-yes" class="seg-btn seg-active" role="tab" aria-selected="true" data-bb="yes">Include</button>
+                <button id="bb-no" class="seg-btn" role="tab" aria-selected="false" data-bb="no">Exclude</button>
+              </div>
+            </div>
+
+            <!-- Third-Party Insurance -->
+            <div class="flex items-center justify-between px-3 py-2.5 rounded-lg" style="background-color: var(--nk-bg); border: 1px solid var(--nk-border);">
+              <div>
+                <p class="text-xs font-semibold" style="color: var(--nk-text);">Third-Party Insurance</p>
+                <p class="text-[10px] mt-0.5" style="color: var(--nk-text-secondary);">Mandatory — separate from tax, never fined</p>
+              </div>
+              <div class="segmented-group segmented-sm" role="tablist" aria-label="Insurance">
+                <button id="ins-yes-label" class="seg-btn seg-active" role="tab" aria-selected="true">Include</button>
+                <button id="ins-no-label" class="seg-btn" role="tab" aria-selected="false">Exclude</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ---- Warning ---- -->
+        <div class="vt-warning">
+          <svg class="w-3.5 h-3.5 shrink-0" style="color: #991B1B;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <p class="text-[11px] leading-relaxed" style="color: #991B1B;">Clear your tax by the end of Ashadh to avoid additional penalties.</p>
+        </div>
+
+        <!-- ---- Action Buttons ---- -->
+        <div class="vt-btn-row">
+          <button id="reset-btn" class="vt-reset-btn">Reset</button>
+          <button id="calculate-btn" class="vt-calc-btn">Calculate Renewal Cost</button>
+        </div>
+      </div>
+
+      <!-- ========== RIGHT: ESTIMATED RENEWAL COST (STICKY) ========== -->
+      <div class="md:sticky md:top-20">
+        <div class="vt-result-card">
+
+          <!-- Total Cost Hero -->
+          <div class="vt-result-hero">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color: var(--nk-text-secondary);">Estimated Renewal Cost</p>
+            <p id="total-cost" class="vt-total-amount">—</p>
+            <p id="total-subtitle" class="text-[11px] mt-1" style="color: var(--nk-text-secondary);"></p>
+          </div>
+
+          <!-- Breakdown (hidden before calculation) -->
+          <div id="calc-result" class="hidden">
+            <div class="px-4 py-0">
+              <!-- Vehicle Tax -->
+              <div class="vt-row">
+                <span class="vt-row-label">Vehicle Tax</span>
+                <span id="bd-tax" class="vt-row-value mono"></span>
+              </div>
+              <!-- Late Fine -->
+              <div class="vt-row">
+                <span class="vt-row-label">Late Fine</span>
+                <span id="bd-penalty" class="vt-row-value mono"></span>
+              </div>
+              <!-- Bluebook Renewal Fee -->
+              <div class="vt-row">
+                <span class="vt-row-label">Bluebook Renewal Fee</span>
+                <span id="bd-renewal-fee" class="vt-row-value mono"></span>
+              </div>
+              <!-- Third-Party Insurance -->
+              <div class="vt-row">
+                <span class="vt-row-label">Third-Party Insurance</span>
+                <span id="bd-insurance" class="vt-row-value mono"></span>
+              </div>
+            </div>
+
+            <!-- Divider + Total -->
+            <div class="vt-total-row">
+              <span class="text-sm font-bold" style="color: var(--nk-text);">TOTAL</span>
+              <span id="bd-total" class="vt-total-value mono"></span>
+            </div>
+
+            <!-- Data status meta -->
+            <div id="bd-meta" class="vt-meta">
+              <div class="flex justify-between mb-0.5">
+                <span>Province</span>
+                <span id="bd-province" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div class="flex justify-between">
+                <span>Status</span>
+                <span id="bd-status" class="font-medium" style="color: var(--nk-text);"></span>
+              </div>
+              <div id="bd-notes" class="mt-1.5 space-y-0.5"></div>
+            </div>
+
+            <!-- Year-by-year (collapsible) -->
+            <details id="year-breakdown-section" class="vt-details">
+              <summary class="vt-details-summary">Year-by-Year Breakdown</summary>
+              <div id="year-breakdown-content" class="px-4 pb-3 pt-1 space-y-2"></div>
+            </details>
+
+            <!-- How calculated (collapsible) -->
+            <details class="vt-details">
+              <summary class="vt-details-summary">How Is This Calculated?</summary>
+              <div id="calc-explanation" class="px-4 pb-3 pt-1 space-y-1.5 text-[11px]" style="color: var(--nk-text-secondary);"></div>
+            </details>
+
+            <!-- Actions -->
+            <div class="flex gap-2 px-4 py-3" style="border-top: 1px solid var(--nk-border);">
+              <button id="copy-btn" class="vt-action-btn flex-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                Copy
+              </button>
+              <button id="recalculate-btn" class="vt-action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Placeholder (before calculation) -->
+          <div id="summary-placeholder" class="vt-placeholder">
+            <div class="vt-placeholder-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            </div>
+            <p class="text-xs font-semibold" style="color: var(--nk-text-secondary);">Enter vehicle details & click Calculate</p>
+            <p class="text-[11px] mt-1" style="color: var(--nk-text-secondary);">Breakdown appears here</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /vt-grid -->
+
+    <!-- ================= DISCLAIMER ================= -->
+    <div class="mt-6 rounded-lg px-4 py-3 text-[11px] leading-relaxed" style="background-color: var(--nk-surface); border: 1px solid var(--nk-border); color: var(--nk-text-secondary);">
+      <p>Vehicle tax and renewal rules vary by province. Verified Bagmati Province FY 2083/84 slabs from the Finance Act 2083. Non-Bagmati rates are estimates using Bagmati tables. Confirm with your Transport Management Office.</p>
+      <p class="mt-1">Insurance estimates are approximate premiums — actual rates vary by insurer. Data last verified: <strong>2026-08-19</strong>.</p>
+    </div>
+
+    <!-- ================= FAQ ================= -->
+    <div class="mt-8">
+      <h2 class="text-lg font-bold mb-4" style="color: var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg border" style="border-color: var(--nk-border); background-color: var(--nk-surface);">
+            <summary class="px-4 py-3 text-sm font-medium cursor-pointer" style="color: var(--nk-text);">{item.question}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color: var(--nk-text-secondary); border-top: 1px solid var(--nk-border);">
+              <p class="pt-3">{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={relatedTools} />
+  </div>
+
+  <!-- ================= STYLES ================= -->
+  <style>
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    /* ---- Labels ---- */
+    .vt-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--nk-text-secondary);
+      margin-bottom: 8px;
+    }
+    .vt-field-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--nk-text);
+      margin-bottom: 4px;
+    }
+
+    /* ---- Inputs ---- */
+    .vt-select {
+      width: 100%;
+      padding: 8px 32px 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--nk-border);
+      background-color: var(--nk-bg);
+      color: var(--nk-text);
+      font-size: 12px;
+      font-family: var(--font-sans);
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+    .vt-select:focus {
+      outline: none;
+      border-color: var(--nk-accent);
+      box-shadow: 0 0 0 2px var(--nk-accent-subtle);
+    }
+    .vt-chevron {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--nk-text-secondary);
+    }
+
+    .vt-input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--nk-border);
+      background-color: var(--nk-bg);
+      color: var(--nk-text);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      line-height: 1.4;
+    }
+    .vt-input:focus {
+      outline: none;
+      border-color: var(--nk-accent);
+      box-shadow: 0 0 0 2px var(--nk-accent-subtle);
+    }
+
+    .vt-unit-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background-color: var(--nk-bg);
+      border: 1px solid var(--nk-border);
+      color: var(--nk-accent);
+      font-family: var(--font-mono);
+    }
+
+    .vt-slider {
+      height: 6px;
+      border-radius: 4px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--nk-border);
+      outline: none;
+      cursor: pointer;
+    }
+    .vt-slider::-webkit-slider-thumb {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--nk-accent);
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .vt-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--nk-accent);
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .vt-field-row {
+      display: flex;
+      gap: 12px;
+    }
+    @media (max-width: 640px) {
+      .vt-field-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    .vt-vehicle-type-display {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--nk-text);
+    }
+
+    /* ---- Segmented Toggle ---- */
+    .segmented-group {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--nk-border);
+      background-color: var(--nk-bg);
+    }
+    .seg-btn {
+      flex: 1;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      background-color: transparent;
+      color: var(--nk-text-secondary);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+      line-height: 1.4;
+      font-family: var(--font-sans);
+    }
+    .seg-btn + .seg-btn {
+      border-left: 1px solid var(--nk-border);
+    }
+    .seg-btn.seg-active {
+      background-color: var(--nk-accent);
+      color: white;
+    }
+    .seg-btn:not(.seg-active):hover {
+      background-color: var(--nk-muted);
+    }
+    .segmented-sm .seg-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+    }
+
+    /* ---- Vehicle Cards ---- */
+    .vehicle-card {
+      min-height: 40px;
+    }
+    .vehicle-card:focus-visible {
+      outline: 2px solid var(--nk-accent);
+      outline-offset: 2px;
+    }
+
+    /* ---- Warning ---- */
+    .vt-warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background-color: #FEF2F2;
+      border: 1px solid #FECACA;
+    }
+
+    /* ---- Action Buttons ---- */
+    .vt-btn-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .vt-reset-btn {
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      border: 1px solid var(--nk-border);
+      background-color: var(--nk-surface);
+      color: var(--nk-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--font-sans);
+      white-space: nowrap;
+    }
+    .vt-reset-btn:hover {
+      background-color: var(--nk-hover);
+      color: var(--nk-text);
+      border-color: var(--nk-border-strong);
+    }
+    .vt-reset-btn:active {
+      transform: scale(0.98);
+    }
+    .vt-reset-btn:focus-visible {
+      outline: 2px solid var(--nk-accent);
+      outline-offset: 2px;
+    }
+    .vt-calc-btn {
+      flex: 1;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 10px;
+      border: none;
+      background-color: var(--nk-accent);
+      color: white;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--font-sans);
+      letter-spacing: -0.01em;
+    }
+    .vt-calc-btn:hover {
+      background-color: var(--nk-accent-hover);
+    }
+    .vt-calc-btn:active {
+      transform: scale(0.98);
+    }
+    .vt-calc-btn:focus-visible {
+      outline: 2px solid var(--nk-accent);
+      outline-offset: 2px;
+    }
+    @media (max-width: 480px) {
+      .vt-btn-row {
+        flex-direction: column;
+      }
+      .vt-reset-btn {
+        order: 2;
+      }
+      .vt-calc-btn {
+        order: 1;
+      }
+    }
+
+    /* ---- Result Card ---- */
+    .vt-result-card {
+      border-radius: 12px;
+      border: 1px solid var(--nk-border);
+      background-color: var(--nk-surface);
+      overflow: hidden;
+    }
+    .vt-result-hero {
+      padding: 24px 20px;
+      text-align: center;
+      background: linear-gradient(160deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 100%);
+    }
+    .vt-total-amount {
+      margin-top: 8px;
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--nk-accent);
+    }
+    @media (max-width: 640px) {
+      .vt-total-amount {
+        font-size: 30px;
+      }
+    }
+    .vt-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--nk-border);
+    }
+    .vt-row:last-child {
+      border-bottom: none;
+    }
+    .vt-row-label {
+      font-size: 12px;
+      color: var(--nk-text-secondary);
+    }
+    .vt-row-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--nk-text);
+    }
+    .vt-total-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-top: 2px solid var(--nk-border);
+      border-bottom: 1px solid var(--nk-border);
+    }
+    .vt-total-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--nk-accent);
+    }
+    .vt-meta {
+      padding: 10px 16px;
+      font-size: 11px;
+      color: var(--nk-text-secondary);
+      background-color: var(--nk-bg);
+      border-top: 1px solid var(--nk-border);
+    }
+    .vt-placeholder {
+      padding: 32px 20px;
+      text-align: center;
+      border-top: 1px solid var(--nk-border);
+    }
+    .vt-placeholder-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--nk-bg);
+    }
+
+    /* ---- Details / Accordion ---- */
+    .vt-details {
+      border-top: 1px solid var(--nk-border);
+    }
+    .vt-details-summary {
+      padding: 10px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      color: var(--nk-accent);
+      list-style: none;
+    }
+    .vt-details-summary::-webkit-details-marker { display: none; }
+
+    /* ---- Action Buttons ---- */
+    .vt-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      border-radius: 8px;
+      border: 1px solid var(--nk-border);
+      background-color: transparent;
+      color: var(--nk-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .vt-action-btn:hover {
+      background-color: var(--nk-hover);
+      color: var(--nk-text);
+    }
+  </style>
+
+  <!-- ================= CLIENT SCRIPT ================= -->
+  <script>
+    import { calculateVehicleRenewal, formatNPR } from '../../../lib/calculators/vehicle-tax.js';
+    import { CURRENT_FY } from '../../../data/nepal/vehicle/vehicle-tax-data.js';
+
+    const CURRENT_FY_VALUE = CURRENT_FY;
+
+    // DOM refs
+    const modeRenewal = document.getElementById('mode-renewal');
+    const modeSingle = document.getElementById('mode-single');
+    const renewalSection = document.getElementById('renewal-section');
+    const provinceSelect = document.getElementById('province-select');
+    const provinceWarning = document.getElementById('province-warning');
+    const ccInput = document.getElementById('cc-input');
+    const engineLabel = document.getElementById('engine-label');
+    const engineUnit = document.getElementById('engine-unit');
+    const engineHint = document.getElementById('engine-hint');
+    const engineUnitBadge = document.getElementById('engine-unit-badge');
+    const lastRenewed = document.getElementById('last-renewed');
+    const lateStatusSelect = document.getElementById('late-status');
+    const calcBtn = document.getElementById('calculate-btn');
+    const resultDiv = document.getElementById('calc-result');
+    const summaryPlaceholder = document.getElementById('summary-placeholder');
+    const copyBtn = document.getElementById('copy-btn');
+    const recalcBtn = document.getElementById('recalculate-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const vehicleCards = document.querySelectorAll('.vehicle-card');
+    const insYesLabel = document.getElementById('ins-yes-label');
+    const insNoLabel = document.getElementById('ins-no-label');
+    const bbYesBtn = document.getElementById('bb-yes');
+    const bbNoBtn = document.getElementById('bb-no');
+    const vtIcon = document.getElementById('vt-icon');
+    const vtLabel = document.getElementById('vt-label');
+
+    let currentMode = 'renewal';
+    let selectedVehicle = 'motorcycle';
+    let lastResult = null;
+    let includeBluebook = true;
+
+    // Sync slider and input
+    const ccSlider = document.getElementById('cc-slider');
+    if (ccSlider) {
+      ccSlider.addEventListener('input', () => { ccInput.value = ccSlider.value; });
+      ccInput.addEventListener('input', () => { ccSlider.value = ccInput.value; });
+    }
+
+    // ========== MODE TOGGLE ==========
+    function setMode(mode) {
+      currentMode = mode;
+      const isRenewal = mode === 'renewal';
+      modeRenewal.classList.toggle('seg-active', isRenewal);
+      modeRenewal.setAttribute('aria-selected', isRenewal ? 'true' : 'false');
+      modeSingle.classList.toggle('seg-active', !isRenewal);
+      modeSingle.setAttribute('aria-selected', !isRenewal ? 'true' : 'false');
+      renewalSection.style.display = isRenewal ? '' : 'none';
+    }
+    modeRenewal?.addEventListener('click', () => setMode('renewal'));
+    modeSingle?.addEventListener('click', () => setMode('single'));
+
+    // ========== INSURANCE SEGMENTED ==========
+    function updateInsuranceUI() {
+      const checked = document.querySelector('input[name="insurance"]:checked')?.value;
+      if (insYesLabel) insYesLabel.classList.toggle('seg-active', checked === 'yes');
+      if (insNoLabel) insNoLabel.classList.toggle('seg-active', checked === 'no');
+    }
+
+    // Use hidden radio approach for insurance (same as original)
+    // Add hidden radios if not present
+    function setupInsuranceRadios() {
+      if (!document.querySelector('input[name="insurance"]')) {
+        const yesRadio = document.createElement('input');
+        yesRadio.type = 'radio';
+        yesRadio.name = 'insurance';
+        yesRadio.value = 'yes';
+        yesRadio.checked = true;
+        yesRadio.className = 'sr-only';
+        insYesLabel?.parentElement?.appendChild(yesRadio) || document.body.appendChild(yesRadio);
+
+        const noRadio = document.createElement('input');
+        noRadio.type = 'radio';
+        noRadio.name = 'insurance';
+        noRadio.value = 'no';
+        noRadio.className = 'sr-only';
+        insNoLabel?.parentElement?.appendChild(noRadio) || document.body.appendChild(noRadio);
+      }
+
+      insYesLabel?.addEventListener('click', () => {
+        const r = document.querySelector('input[name="insurance"][value="yes"]');
+        if (r) { r.checked = true; r.dispatchEvent(new Event('change')); }
+        updateInsuranceUI();
+      });
+      insNoLabel?.addEventListener('click', () => {
+        const r = document.querySelector('input[name="insurance"][value="no"]');
+        if (r) { r.checked = true; r.dispatchEvent(new Event('change')); }
+        updateInsuranceUI();
+      });
+      document.querySelectorAll('input[name="insurance"]').forEach(r => {
+        r.addEventListener('change', updateInsuranceUI);
+      });
+    }
+    setupInsuranceRadios();
+
+    // ========== BLUEBOOK TOGGLE ==========
+    function setupBluebookToggle() {
+      bbYesBtn?.addEventListener('click', () => {
+        includeBluebook = true;
+        bbYesBtn.classList.add('seg-active');
+        bbYesBtn.setAttribute('aria-selected', 'true');
+        bbNoBtn?.classList.remove('seg-active');
+        bbNoBtn?.setAttribute('aria-selected', 'false');
+      });
+      bbNoBtn?.addEventListener('click', () => {
+        includeBluebook = false;
+        bbNoBtn.classList.add('seg-active');
+        bbNoBtn.setAttribute('aria-selected', 'true');
+        bbYesBtn?.classList.remove('seg-active');
+        bbYesBtn?.setAttribute('aria-selected', 'false');
+      });
+    }
+    setupBluebookToggle();
+
+    // ========== VEHICLE TYPE CARDS ==========
+    const vehicleIcons = {
+      'motorcycle': '🏍',
+      'car': '🚗',
+      'ev-bike': '⚡',
+      'ev-car': '🔌',
+    };
+    const vehicleLabels = {
+      'motorcycle': 'Motorcycle',
+      'car': 'Car / Jeep',
+      'ev-bike': 'EV Bike',
+      'ev-car': 'EV Car',
+    };
+
+    function setVehicleType(vehicleId) {
+      selectedVehicle = vehicleId;
+      vehicleCards.forEach(card => {
+        const isActive = card.dataset.vehicle === vehicleId;
+        card.setAttribute('aria-checked', isActive ? 'true' : 'false');
+        card.tabIndex = isActive ? 0 : -1;
+        card.style.backgroundColor = isActive ? 'var(--nk-accent-subtle)' : 'var(--nk-bg)';
+        card.style.borderColor = isActive ? 'var(--nk-accent)' : 'var(--nk-border)';
+      });
+      if (vtIcon) vtIcon.textContent = vehicleIcons[vehicleId] || '🏍';
+      if (vtLabel) vtLabel.textContent = vehicleLabels[vehicleId] || 'Motorcycle';
+      updateEngineSection();
+    }
+
+    vehicleCards.forEach(card => {
+      card.addEventListener('click', () => setVehicleType(card.dataset.vehicle));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setVehicleType(card.dataset.vehicle); }
+        const cards = Array.from(vehicleCards);
+        const idx = cards.indexOf(card);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault(); const next = cards[(idx + 1) % cards.length]; next.focus(); setVehicleType(next.dataset.vehicle);
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault(); const prev = cards[(idx - 1 + cards.length) % cards.length]; prev.focus(); setVehicleType(prev.dataset.vehicle);
+        }
+      });
+    });
+
+    function updateEngineSection() {
+      if (selectedVehicle === 'motorcycle') {
+        engineLabel.textContent = 'Engine Capacity';
+        engineUnit.textContent = 'CC';
+        if (engineUnitBadge) engineUnitBadge.textContent = 'CC';
+        engineHint.textContent = 'Engine capacity in cubic centimeters';
+        ccInput.placeholder = '150';
+        ccInput.max = 1000;
+        if (ccSlider) { ccSlider.min = 50; ccSlider.max = 1000; ccSlider.step = 10; }
+      } else if (selectedVehicle === 'car') {
+        engineLabel.textContent = 'Engine Capacity';
+        engineUnit.textContent = 'CC';
+        if (engineUnitBadge) engineUnitBadge.textContent = 'CC';
+        engineHint.textContent = 'Engine capacity in cubic centimeters';
+        ccInput.placeholder = '1500';
+        ccInput.max = 4000;
+        if (ccSlider) { ccSlider.min = 800; ccSlider.max = 4000; ccSlider.step = 50; }
+      } else if (selectedVehicle === 'ev-bike') {
+        engineLabel.textContent = 'Motor Power';
+        engineUnit.textContent = 'W';
+        if (engineUnitBadge) engineUnitBadge.textContent = 'W';
+        engineHint.textContent = 'Motor power in watts';
+        ccInput.placeholder = '1000';
+        ccInput.max = 3000;
+        if (ccSlider) { ccSlider.min = 250; ccSlider.max = 3000; ccSlider.step = 50; }
+      } else if (selectedVehicle === 'ev-car') {
+        engineLabel.textContent = 'Motor Power';
+        engineUnit.textContent = 'kW';
+        if (engineUnitBadge) engineUnitBadge.textContent = 'kW';
+        engineHint.textContent = 'Motor power in kilowatts';
+        ccInput.placeholder = '10';
+        ccInput.max = 300;
+        if (ccSlider) { ccSlider.min = 10; ccSlider.max = 300; ccSlider.step = 5; }
+      }
+    }
+
+    // ========== PROVINCE WARNING ==========
+    function updateProvinceWarning() {
+      if (!provinceWarning) return;
+      provinceWarning.classList.toggle('hidden', provinceSelect?.value === 'bagmati');
+    }
+    provinceSelect?.addEventListener('change', updateProvinceWarning);
+
+    // ========== CALCULATE ==========
+    function resolveCategory() {
+      switch (selectedVehicle) {
+        case 'motorcycle': return { category: 'motorcycle', fuelType: 'petrol' };
+        case 'car': return { category: 'car', fuelType: 'petrol' };
+        case 'ev-bike': return { category: 'motorcycle', fuelType: 'electric' };
+        case 'ev-car': return { category: 'car', fuelType: 'electric' };
+        default: return { category: 'motorcycle', fuelType: 'petrol' };
+      }
+    }
+
+    function getLastPaidFY() {
+      if (currentMode === 'single') return CURRENT_FY_VALUE - 1;
+      const v = lastRenewed?.value || '2082';
+      if (v === 'never') return CURRENT_FY_VALUE - 13;
+      return parseInt(v) || (CURRENT_FY_VALUE - 1);
+    }
+
+    function calculate() {
+      const value = parseFloat(ccInput?.value) || 100;
+      if (value <= 0) return;
+
+      const { category, fuelType } = resolveCategory();
+      const lastPaidFY = getLastPaidFY();
+      const lateStatus = lateStatusSelect?.value || 'ontime';
+      const includeInsurance = document.querySelector('input[name="insurance"]:checked')?.value === 'yes';
+
+      try {
+        const r = calculateVehicleRenewal({
+          provinceId: provinceSelect?.value || 'bagmati',
+          category, fuelType, value, lastPaidFY, lateStatus, includeInsurance,
+        });
+        lastResult = r;
+
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        const grandTotal = includeInsurance ? r.totalWithInsurance : r.subtotal;
+
+        // Hero
+        set('total-cost', formatNPR(grandTotal));
+        set('total-subtitle', `Approximately ${formatNPR(grandTotal)} to bring your vehicle up to date`);
+
+        // Vehicle tax total
+        const bdTax = document.getElementById('bd-tax');
+        if (bdTax) {
+          const totalTax = r.yearBreakdown.reduce((s, y) => s + y.annualTax, 0);
+          bdTax.textContent = formatNPR(totalTax);
+        }
+
+        // Penalty — highlight if > 0
+        const penaltyEl = document.getElementById('bd-penalty');
+        if (penaltyEl) {
+          penaltyEl.textContent = formatNPR(r.totalPenalty);
+          penaltyEl.style.color = r.totalPenalty > 0 ? '#D97706' : 'var(--nk-text)';
+        }
+
+        // Renewal fee — respect bluebook toggle
+        const renewalFeeDisplay = includeBluebook ? r.fees.renewalFee : 0;
+        document.getElementById('bd-renewal-fee').textContent = formatNPR(renewalFeeDisplay);
+
+        // Insurance
+        document.getElementById('bd-insurance').textContent = includeInsurance ? formatNPR(r.insurance.thirdPartyEstimate) : '—';
+
+        // Total with bluebook consideration
+        const grandTotalAdjusted = includeInsurance ? r.totalWithInsurance - (includeBluebook ? 0 : r.fees.renewalFee) : r.subtotal - (includeBluebook ? 0 : r.fees.renewalFee);
+        set('bd-total', formatNPR(grandTotalAdjusted));
+
+        // Meta
+        document.getElementById('bd-province').textContent = r.input.provinceLabel;
+        document.getElementById('bd-status').textContent = 'FY ' + r.input.fiscalYear + ' · ' + (r.meta.dataStatus === 'verified' ? 'Verified' : 'Estimate');
+        const notesEl = document.getElementById('bd-notes');
+        if (notesEl) {
+          const notes = [...(r.meta.notes || [])];
+          if (r.meta.capApplied) notes.push('Fine capped at max overdue years.');
+          notesEl.innerHTML = notes.map(n => `<p>· ${n}</p>`).join('');
+        }
+
+        // Year-by-year
+        const ybContent = document.getElementById('year-breakdown-content');
+        const ybSection = document.getElementById('year-breakdown-section');
+        if (ybContent && r.yearBreakdown.length > 1) {
+          ybSection.style.display = '';
+          ybContent.innerHTML = r.yearBreakdown.map(y => `
+            <div class="p-2.5 rounded-lg text-xs" style="background-color: var(--nk-bg); border: 1px solid var(--nk-border);">
+              <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-semibold" style="color: var(--nk-text);">${y.fiscalYearLabel}</span>
+                  ${y.isCurrentYear
+                    ? '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded" style="background-color: var(--nk-accent); color: white;">Current</span>'
+                    : `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded" style="background-color: var(--nk-border); color: var(--nk-text-secondary);">+${y.yearsLate}yr</span>`
+                  }
+                </div>
+                <span class="font-bold mono" style="color: var(--nk-text);">${formatNPR(y.yearTotal)}</span>
+              </div>
+              <div class="flex justify-between" style="color: var(--nk-text-secondary);">
+                <span>Tax</span><span class="mono">${formatNPR(y.annualTax)}</span>
+              </div>
+              ${y.penaltyAmount > 0 ? `<div class="flex justify-between mt-0.5" style="color: #D97706;"><span>Fine (${y.penaltyPercent}%)</span><span class="mono font-medium">${formatNPR(y.penaltyAmount)}</span></div>` : ''}
+            </div>
+          `).join('');
+        } else if (ybSection) {
+          ybSection.style.display = 'none';
+        }
+
+        // How calculated
+        const calcExplanation = document.getElementById('calc-explanation');
+        if (calcExplanation) {
+          let html = `<p><strong>Vehicle:</strong> ${r.input.categoryLabel} · ${r.input.fuelLabel} · ${r.input.value}${r.input.unit} (${r.input.slabLabel})</p>`;
+          html += `<p><strong>Province:</strong> ${r.input.provinceLabel} — annual tax Rs ${r.annualTax.toLocaleString('en-IN')}</p>`;
+          if (r.yearBreakdown.length > 0) {
+            html += `<p><strong>Outstanding:</strong> ${r.input.yearsDue} fiscal year(s) from FY ${r.input.lastPaidFY + 1}/${r.input.lastPaidFY + 2}</p>`;
+          } else {
+            html += `<p><strong>Outstanding:</strong> none — up to date.</p>`;
+          }
+          html += `<p><strong>Fees:</strong> Renewal ${formatNPR(r.fees.renewalFee)} + Other ${formatNPR(r.fees.otherChargesTotal)}</p>`;
+          if (includeInsurance) html += `<p><strong>Insurance:</strong> ${formatNPR(r.insurance.thirdPartyEstimate)} (estimate)</p>`;
+          calcExplanation.innerHTML = html;
+        }
+
+        // Show results, hide placeholder
+        resultDiv?.classList.remove('hidden');
+        summaryPlaceholder?.classList.add('hidden');
+      } catch (err) {
+        console.error('Calculation error:', err);
+      }
+    }
+
+    calcBtn?.addEventListener('click', calculate);
+    [ccInput, provinceSelect].forEach(el => {
+      el?.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+    });
+
+    // ========== COPY ==========
+    copyBtn?.addEventListener('click', async () => {
+      if (!lastResult) return;
+      const r = lastResult;
+      const includeInsurance = document.querySelector('input[name="insurance"]:checked')?.value === 'yes';
+      const grandTotal = includeInsurance ? r.totalWithInsurance : r.subtotal;
+
+      const lines = [
+        `Nepal Vehicle Tax Estimate`,
+        ``,
+        `Province: ${r.input.provinceLabel} (${r.meta.dataStatus})`,
+        `Vehicle: ${r.input.categoryLabel} · ${r.input.fuelLabel} · ${r.input.value}${r.input.unit}`,
+        ``,
+        ...(r.yearBreakdown.length
+          ? r.yearBreakdown.map(y => `${y.fiscalYearLabel}: Tax ${formatNPR(y.annualTax)}${y.penaltyAmount > 0 ? ` + Fine ${formatNPR(y.penaltyAmount)}` : ''} = ${formatNPR(y.yearTotal)}`)
+          : ['Up to date.']),
+        ``,
+        `Fees: Renewal ${formatNPR(r.fees.renewalFee)} + Other ${formatNPR(r.fees.otherChargesTotal)}`,
+        includeInsurance ? `Insurance: ${formatNPR(r.insurance.thirdPartyEstimate)}` : null,
+        `---------------------------------`,
+        `TOTAL: ${formatNPR(grandTotal)}`,
+      ].filter(Boolean).join('\n');
+
+      try {
+        await navigator.clipboard.writeText(lines);
+        if (copyBtn) {
+          copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+          setTimeout(() => {
+            copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy`;
+          }, 2000);
+        }
+      } catch {}
+    });
+
+    // ========== RECALCULATE (in-result Reset button) ==========
+    recalcBtn?.addEventListener('click', () => {
+      resultDiv?.classList.add('hidden');
+      summaryPlaceholder?.classList.remove('hidden');
+      lastResult = null;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ========== FULL RESET ==========
+    const DEFAULTS = {
+      mode: 'renewal',
+      province: 'bagmati',
+      vehicle: 'motorcycle',
+      engineValue: 150,
+      lastPaidFY: 2082,
+      lateStatus: 'ontime',
+      bluebook: true,
+      insurance: 'yes',
+    };
+
+    function resetCalculator() {
+      // 1. Reset Renewal Type
+      setMode(DEFAULTS.mode);
+
+      // 2. Reset Province
+      provinceSelect.value = DEFAULTS.province;
+      updateProvinceWarning();
+
+      // 3. Reset Vehicle Type
+      setVehicleType(DEFAULTS.vehicle);
+
+      // 4. Reset Engine Capacity
+      ccInput.value = DEFAULTS.engineValue;
+      if (ccSlider) ccSlider.value = DEFAULTS.engineValue;
+
+      // 5. Reset Last Paid Fiscal Year
+      lastRenewed.value = DEFAULTS.lastPaidFY;
+
+      // 6. Reset Payment Status
+      lateStatusSelect.value = DEFAULTS.lateStatus;
+
+      // 7. Reset Bluebook Renewal Fee
+      includeBluebook = DEFAULTS.bluebook;
+      bbYesBtn?.classList.add('seg-active');
+      bbYesBtn?.setAttribute('aria-selected', 'true');
+      bbNoBtn?.classList.remove('seg-active');
+      bbNoBtn?.setAttribute('aria-selected', 'false');
+
+      // 8. Reset Third-Party Insurance
+      const insYesRadio = document.querySelector('input[name="insurance"][value="yes"]');
+      if (insYesRadio) insYesRadio.checked = true;
+      updateInsuranceUI();
+
+      // 9–14. Clear all results
+      resultDiv?.classList.add('hidden');
+      summaryPlaceholder?.classList.remove('hidden');
+      lastResult = null;
+
+      // Clear hero totals
+      const totalCostEl = document.getElementById('total-cost');
+      if (totalCostEl) totalCostEl.textContent = '—';
+      const totalSubtitleEl = document.getElementById('total-subtitle');
+      if (totalSubtitleEl) totalSubtitleEl.textContent = '';
+
+      // Clear breakdown rows
+      ['bd-tax', 'bd-penalty', 'bd-renewal-fee', 'bd-insurance', 'bd-total'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.textContent = '';
+          el.style.color = '';
+        }
+      });
+
+      // Clear meta
+      ['bd-province', 'bd-status'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '';
+      });
+      const notesEl = document.getElementById('bd-notes');
+      if (notesEl) notesEl.innerHTML = '';
+
+      // Clear year-by-year breakdown
+      const ybContent = document.getElementById('year-breakdown-content');
+      if (ybContent) ybContent.innerHTML = '';
+      const ybSection = document.getElementById('year-breakdown-section');
+      if (ybSection) ybSection.style.display = 'none';
+
+      // Clear explanation
+      const calcExplanation = document.getElementById('calc-explanation');
+      if (calcExplanation) calcExplanation.innerHTML = '';
+
+      // 15–18. Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    resetBtn?.addEventListener('click', resetCalculator);
+
+    // ========== INIT ==========
+    updateProvinceWarning();
+    updateInsuranceUI();
+    setVehicleType('motorcycle');
+  </script>
+</BaseLayout>

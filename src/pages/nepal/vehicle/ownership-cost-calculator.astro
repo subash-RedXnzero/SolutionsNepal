@@ -1,0 +1,1141 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import {
+  Bike, Car, Fuel, Landmark, Wrench, ShieldCheck, Receipt, SquareParking,
+  Wallet, Calculator, Copy, RotateCcw, Save, Gauge, Zap, Scale,
+  PiggyBank, TrendingDown, CalendarDays,
+} from '@lucide/astro';
+import {
+  VEHICLE_TYPES,
+  FUEL_TYPES,
+  PERIOD_OPTIONS,
+  DEFAULT_PERIOD_YEARS,
+  ANNUAL_COST_FIELDS,
+  MONTHLY_COST_FIELDS,
+  MAINTENANCE_FIELDS,
+  EV_EFFICIENCY_EXAMPLE,
+  OWNERSHIP_DATA_META,
+  STORAGE_KEY,
+} from '../../../data/vehicle/ownership-cost.js';
+import { getFuelPriceAsync } from '../../../lib/nepal/fuel-price.js';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'Bike & Car Ownership Cost Calculator Nepal | SolutionsNepal';
+const description = 'Calculate the real cost of owning a bike, scooter, or car in Nepal including fuel, EMI, tax, insurance, maintenance, parking and depreciation.';
+
+// NOC reference prices at build time (button-filled only, never silent).
+let fuelRef = { petrol: '', diesel: '', effectiveDate: '', isLive: false };
+try {
+  const d = await getFuelPriceAsync('kathmandu');
+  fuelRef = {
+    petrol: d?.petrol?.price ?? '',
+    diesel: d?.diesel?.price ?? '',
+    effectiveDate: d?.effectiveDate || '',
+    isLive: !!d?.isLive,
+  };
+} catch { /* manual entry remains available */ }
+
+const faqItems = [
+  {
+    q: 'How much does it cost to own a bike in Nepal?',
+    a: 'It depends on your mileage, fuel price, loan, insurance, servicing and tax. Enter your own numbers above — most bikes cost a few thousand rupees per month in fuel plus periodic servicing, insurance and tax on top.',
+  },
+  {
+    q: 'How much does it cost to own a car in Nepal?',
+    a: 'Cars cost far more than bikes to run: lower mileage, higher insurance, servicing and tax. Fill in your monthly distance, mileage, EMI and annual costs to see your true monthly, yearly and 5-year figures.',
+  },
+  {
+    q: 'What is included in vehicle ownership cost?',
+    a: 'Fuel or charging, loan EMI, maintenance and repairs, insurance, vehicle tax, registration renewal, parking, tolls, washing, accessories and — separately — depreciation (loss in resale value).',
+  },
+  {
+    q: 'How is cost per kilometre calculated?',
+    a: 'Total ownership cost per km is your annual ownership cost divided by the kilometres you drive in a year (monthly distance × 12). Running cost per km counts fuel or charging alone.',
+  },
+  {
+    q: 'Does vehicle tax count as an ownership cost?',
+    a: 'Yes. Annual vehicle tax and registration renewal are real ownership costs — the calculator spreads them across 12 months so you see their monthly equivalent.',
+  },
+  {
+    q: 'Should depreciation be included?',
+    a: 'Depreciation is an estimated loss in value, not monthly cash spending, so it stays out of the headline monthly figure. Turn it on to see your 5-year cost including depreciation separately.',
+  },
+  {
+    q: 'Does the calculator include EMI?',
+    a: 'Yes, when you enable the loan section. It uses the standard reducing-balance EMI formula and only counts instalments inside your selected period — the loan never continues past its real duration.',
+  },
+  {
+    q: 'Can I compare two vehicles?',
+    a: 'Yes. Open “Compare two vehicles” below the calculator to see monthly, annual, per-km and 5-year costs for Vehicle A vs Vehicle B side by side — for example a bike vs a car.',
+  },
+];
+
+const VTYPE_ICONS = { Bike, Car };
+const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Bike & Car Ownership Cost Calculator Nepal',
+      description: 'Calculate the real cost of owning a bike, scooter, or car in Nepal including fuel, EMI, tax, insurance, maintenance, parking and depreciation.',
+      url: 'https://solutionsnepal.com/nepal/vehicle/ownership-cost-calculator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-4 sm:py-5 oc-wrap">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Vehicle', href: '/nepal/vehicle' },
+      { label: 'Ownership Cost' },
+    ]} />
+
+    <div class="mb-4">
+      <span class="oc-kicker"><Gauge size={12} /> Vehicle costs · Nepal</span>
+      <h1 class="text-[22px] sm:text-[26px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Bike &amp; Car Ownership Cost Calculator</h1>
+      <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">Fuel, EMI, tax, insurance and upkeep — your real monthly, yearly and 5-year cost.</p>
+    </div>
+
+    <!-- ═══ VEHICLE SELECT ═══ -->
+    <div class="seg-wrap mb-3" role="radiogroup" aria-label="Vehicle type">
+      {VEHICLE_TYPES.map((v, i) => {
+        const Icon = VTYPE_ICONS[v.icon] || Car;
+        return (
+          <button type="button" class={`seg-btn${i === 0 ? ' seg-active' : ''}`} data-vtype={v.id} role="radio" aria-checked={i === 0 ? 'true' : 'false'}>
+            <Icon size={16} /><span><strong>{v.label}</strong><small>{v.id === 'bike' ? '2-wheelers, scooters' : 'Cars, jeeps, SUVs'}</small></span>
+          </button>
+        );
+      })}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-5 items-start">
+
+      <!-- ═══ LEFT: INPUTS ═══ -->
+      <div class="nk-card p-4 space-y-3" id="input-card">
+        <div id="form-errors" class="hidden warn-line" role="alert"></div>
+
+        <!-- Purchase + usage -->
+        <section>
+          <div class="duo">
+            <div>
+          <p class="sec-head"><span class="sec-icon"><Landmark size={14} /></span> Purchase</p>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label for="purchase" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Purchase price</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+                <input id="purchase" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 3,00,000" class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+              </div>
+            </div>
+            <div>
+              <label for="down" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Down payment</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+                <input id="down" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 1,00,000" class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+              </div>
+            </div>
+          </div>
+          <label class="flex items-center gap-2 cursor-pointer mt-2">
+            <input id="noloan" type="checkbox" checked style="width:15px;height:15px;accent-color:var(--nk-accent);" />
+            <span class="text-[12.5px]" style="color:var(--nk-text);">I bought this vehicle without a loan</span>
+          </label>
+          <div id="loan-grid" class="hidden mt-2 rounded-lg border p-3" style="border-color:var(--nk-border);background-color:var(--nk-hover);">
+            <div class="grid grid-cols-1 gap-2">
+              <div>
+                <label for="loanAmount" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Loan amount</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+                  <input id="loanAmount" type="text" inputmode="numeric" autocomplete="off" placeholder="Auto from price − down" class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+                </div>
+                <p class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert" data-err="loanAmount"></p>
+              </div>
+              <div>
+                <label for="loanRate" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Interest % / year</label>
+                <div class="relative">
+                  <input id="loanRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 12" class="nk-input text-[14px] tabular-nums" style="padding-right:2rem;" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">%</span>
+                </div>
+                <p class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert" data-err="loanRate"></p>
+              </div>
+              <div>
+                <label for="loanDur" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Duration</label>
+                <div class="flex gap-1.5">
+                  <input id="loanDur" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 5" class="nk-input text-[14px] tabular-nums" style="max-width:90px;" />
+                  <button type="button" class="unit-btn unit-active" data-dunit="years">Yrs</button>
+                  <button type="button" class="unit-btn" data-dunit="months">Mo</button>
+                </div>
+                <p class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert" data-err="loanMonths"></p>
+              </div>
+            </div>
+            <p class="text-[12px] tabular-nums mt-2" style="color:var(--nk-text-secondary);">EMI: <strong id="emi-preview" style="color:var(--nk-text);">—</strong></p>
+          </div>
+            </div>
+            <div>
+          <p class="sec-head"><span class="sec-icon"><Fuel size={14} /></span> Driving</p>
+          <div class="duo">
+            <div>
+              <label for="monthlyKm" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Distance per month (km)</label>
+              <input id="monthlyKm" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 600" class="nk-input text-[14px] tabular-nums" />
+              <p class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert" data-err="monthlyKm"></p>
+            </div>
+            <div>
+              <p class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Fuel type</p>
+              <div class="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Fuel type">
+                {FUEL_TYPES.map((f, i) => {
+                  const Icon = FUEL_ICONS[f.id] || Fuel;
+                  return (
+                    <button type="button" class={`fuel-chip${i === 0 ? ' chip-active' : ''}`} data-fuel={f.id} role="radio" aria-checked={i === 0 ? 'true' : 'false'}>
+                      <Icon size={13} /> {f.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div class="duo mt-2">
+            <div>
+              <label for="efficiency" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);"><span id="eff-label">Mileage (km/l)</span></label>
+              <input id="efficiency" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 45" class="nk-input text-[14px] tabular-nums" />
+              <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);" id="eff-hint">Your own average.</p>
+              <p class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert" data-err="efficiency"></p>
+            </div>
+            <div>
+              <label for="energyPrice" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);"><span id="price-label">Price per litre (Rs.)</span></label>
+              <div class="flex flex-wrap gap-1.5">
+                <input id="energyPrice" type="text" inputmode="decimal" autocomplete="off" placeholder="Your price" class="nk-input text-[14px] tabular-nums flex-1" />
+                <button type="button" id="use-price" class="nk-btn nk-btn-secondary nk-btn-sm whitespace-nowrap">Use current Nepal price</button>
+              </div>
+              <p class="text-[10.5px] mt-1 leading-relaxed" style="color:var(--nk-text-tertiary);" id="price-note">Your price, or NOC reference:</p>
+              <p class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert" data-err="energyPrice"></p>
+            </div>
+          </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Annual + maintenance -->
+        <section>
+          <div class="duo">
+            <div>
+          <p class="sec-head"><span class="sec-icon"><Receipt size={14} /></span> Yearly costs</p>
+          <div class="grid grid-cols-1 min-[500px]:grid-cols-2 gap-2">
+            {ANNUAL_COST_FIELDS.map((f) => (
+              <div>
+                <label for={`exp-${f.key}`} class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">{f.label} (Rs.)</label>
+                <input id={`exp-${f.key}`} type="text" inputmode="numeric" autocomplete="off" placeholder="Optional" class="nk-input text-[14px] tabular-nums ann-input" data-key={f.key} />
+              </div>
+            ))}
+          </div>
+          <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Rates: <a class="underline hover:opacity-80" href="/nepal/transport/vehicle-tax" style="color:var(--nk-accent);">Vehicle Tax calculator</a></p>
+            </div>
+            <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <p class="sec-head" style="margin-bottom:0;"><span class="sec-icon"><Wrench size={14} /></span> Maintenance</p>
+            <div class="flex gap-1.5" style="min-width:170px;max-width:220px;flex:1;">
+              <button type="button" class="unit-btn unit-active" data-mmode="simple">Simple</button>
+              <button type="button" class="unit-btn" data-mmode="detailed">Detailed</button>
+            </div>
+          </div>
+          <div id="maint-simple-wrap" class="relative" style="max-width:320px;">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px]" style="color:var(--nk-text-tertiary);">Rs.</span>
+            <input id="maintSimple" type="text" inputmode="numeric" autocomplete="off" placeholder="Maintenance per year" class="nk-input text-[14px] tabular-nums" style="padding-left:3rem;" />
+          </div>
+          <div id="maint-detail-wrap" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {MAINTENANCE_FIELDS.map((f) => (
+              <div>
+                <label for={`m-${f.key}`} class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">{f.label} (Rs./yr)</label>
+                <input id={`m-${f.key}`} type="text" inputmode="numeric" autocomplete="off" placeholder="Optional" class="nk-input text-[14px] tabular-nums maint-input" data-key={f.key} />
+              </div>
+            ))}
+          </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Monthly + depreciation -->
+        <section>
+          <div class="duo">
+            <div>
+          <p class="sec-head"><span class="sec-icon"><SquareParking size={14} /></span> Monthly extras</p>
+          <div class="grid grid-cols-1 min-[500px]:grid-cols-2 gap-2">
+            {MONTHLY_COST_FIELDS.map((f) => (
+              <div>
+                <label for={`r-${f.key}`} class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">{f.label} (Rs.)</label>
+                <input id={`r-${f.key}`} type="text" inputmode="numeric" autocomplete="off" placeholder="Optional" class="nk-input text-[14px] tabular-nums rec-input" data-key={f.key} />
+              </div>
+            ))}
+          </div>
+            </div>
+            <div class="rounded-lg border p-3" style="border-color:var(--nk-border);align-self:start;">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <p class="sec-head" style="margin-bottom:0;"><span class="sec-icon"><TrendingDown size={14} /></span> Depreciation <span class="opt-badge">Optional</span></p>
+            <label class="inc-check"><input type="checkbox" id="depToggle" /> Include</label>
+          </div>
+          <div id="dep-grid" class="hidden duo">
+            <div>
+              <label for="depPurchase" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Bought for (Rs.)</label>
+              <input id="depPurchase" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 35,00,000" class="nk-input text-[14px] tabular-nums" />
+              <p class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert" data-err="purchasePrice"></p>
+            </div>
+            <div>
+              <label for="depResale" class="block text-[12px] font-medium mb-1" style="color:var(--nk-text-secondary);">Resell for (Rs.)</label>
+              <input id="depResale" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 20,00,000" class="nk-input text-[14px] tabular-nums" />
+              <p class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert" data-err="resaleValue"></p>
+            </div>
+          </div>
+          <p class="text-[10.5px] mt-1.5 leading-relaxed" style="color:var(--nk-text-tertiary);">Value loss, not monthly cash spending.</p>
+            </div>
+          </div>
+        </section>
+
+        <button type="button" id="calc-btn" class="nk-btn nk-btn-primary w-full">
+          <Calculator size={15} /> Calculate ownership cost
+        </button>
+        <div class="flex gap-2">
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1"><RotateCcw size={13} /> Reset</button>
+          <button type="button" id="save-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1"><Save size={13} /> Save inputs</button>
+        </div>
+        <p class="text-[11px] leading-relaxed" style="color:var(--nk-text-tertiary);">Your inputs are stored only in your browser.</p>
+
+        <!-- Compare -->
+        <details class="exp-group">
+          <summary class="exp-summary"><Scale size={14} /><span>Compare two vehicles <span style="font-weight:400;color:var(--nk-text-tertiary);">— optional</span></span></summary>
+          <div class="exp-body">
+            <p class="text-[11px] sm:col-span-2" style="color:var(--nk-text-tertiary);">Quick side-by-side using totals you already know — e.g. Bike vs Car. 5-year figures assume the same driving pattern you enter.</p>
+            {['a', 'b'].map((side, si) => (
+              <div class="rounded-lg border p-3 space-y-2" style="border-color:var(--nk-border);">
+                <p class="text-[12.5px] font-semibold" style="color:var(--nk-text);">Vehicle {side.toUpperCase()}</p>
+                <div>
+                  <label for={`cmp-${side}-name`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">Name</label>
+                  <input id={`cmp-${side}-name`} type="text" autocomplete="off" value={si === 0 ? 'Bike' : 'Car'} class="nk-input text-[13px]" />
+                </div>
+                <div class="grid grid-cols-1 min-[500px]:grid-cols-2 gap-2">
+                  <div>
+                    <label for={`cmp-${side}-km`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">km / month</label>
+                    <input id={`cmp-${side}-km`} type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 600" class="nk-input text-[13px] tabular-nums" />
+                  </div>
+                  <div>
+                    <label for={`cmp-${side}-fuel`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">Fuel</label>
+                    <select id={`cmp-${side}-fuel`} class="nk-input text-[13px]">
+                      <option value="petrol">Petrol</option>
+                      <option value="diesel">Diesel</option>
+                      <option value="electric">Electric</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for={`cmp-${side}-eff`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">Mileage / km·kWh</label>
+                    <input id={`cmp-${side}-eff`} type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 45" class="nk-input text-[13px] tabular-nums" />
+                  </div>
+                  <div>
+                    <label for={`cmp-${side}-price`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">Fuel Rs. / unit</label>
+                    <input id={`cmp-${side}-price`} type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 199" class="nk-input text-[13px] tabular-nums" />
+                  </div>
+                  <div>
+                    <label for={`cmp-${side}-emi`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">EMI / month</label>
+                    <input id={`cmp-${side}-emi`} type="text" inputmode="numeric" autocomplete="off" placeholder="0 if none" class="nk-input text-[13px] tabular-nums" />
+                  </div>
+                  <div>
+                    <label for={`cmp-${side}-annual`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">Annual costs</label>
+                    <input id={`cmp-${side}-annual`} type="text" inputmode="numeric" autocomplete="off" placeholder="Tax+ins+etc." class="nk-input text-[13px] tabular-nums" />
+                  </div>
+                  <div>
+                    <label for={`cmp-${side}-maint`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">Maint. / year</label>
+                    <input id={`cmp-${side}-maint`} type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 12000" class="nk-input text-[13px] tabular-nums" />
+                  </div>
+                  <div>
+                    <label for={`cmp-${side}-monthly`} class="block text-[11px] font-medium mb-0.5" style="color:var(--nk-text-secondary);">Other / month</label>
+                    <input id={`cmp-${side}-monthly`} type="text" inputmode="numeric" autocomplete="off" placeholder="Park, wash…" class="nk-input text-[13px] tabular-nums" />
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div class="sm:col-span-2">
+              <button type="button" id="cmp-btn" class="nk-btn nk-btn-secondary nk-btn-sm w-full">Compare vehicles</button>
+              <p id="err-cmp" class="hidden text-[11px] mt-1" style="color:#dc2626;" role="alert"></p>
+              <div id="cmp-result" class="hidden mt-2"></div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- ═══ RIGHT: RESULT ═══ -->
+      <div class="lg:sticky lg:top-4">
+        <div class="nk-card p-4" aria-live="polite" id="result-card">
+          <div class="flex items-center justify-between gap-2 mb-3">
+            <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your cost</p>
+            <div class="flex gap-1" role="radiogroup" aria-label="Ownership period">
+              {PERIOD_OPTIONS.map((y) => (
+                <button type="button" class={`per-btn${y === DEFAULT_PERIOD_YEARS ? ' per-active' : ''}`} data-years={y} role="radio" aria-checked={y === DEFAULT_PERIOD_YEARS ? 'true' : 'false'}>{y}Y</button>
+              ))}
+            </div>
+          </div>
+
+          <div id="res-empty">
+            <div class="rounded-xl px-4 py-6 text-center" style="background-color:var(--nk-accent-subtle);">
+              <span class="res-empty-icon"><Calculator size={20} /></span>
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-secondary);">Monthly ownership cost</p>
+              <p class="text-[24px] font-bold tracking-tight" style="color:var(--nk-text-tertiary);">—</p>
+              <p class="text-[11.5px] mt-1.5" style="color:var(--nk-text-secondary);">Enter your details and click <strong>Calculate ownership cost</strong>.</p>
+            </div>
+          </div>
+
+          <div id="res-body" class="hidden">
+            <div class="res-hero">
+              <p class="res-hero-label">Monthly ownership cost</p>
+              <p class="tabular-nums" id="res-total">—</p>
+              <p class="res-hero-sub" id="res-subline"></p>
+            </div>
+
+            <div class="stat-duo">
+              <div class="stat-tile"><span>Yearly</span><strong class="tabular-nums" id="stat-year">—</strong></div>
+              <div class="stat-tile"><span>Cost / km</span><strong class="tabular-nums" id="stat-perkm">—</strong></div>
+              <div class="stat-tile"><span id="stat-period-label">5-year total</span><strong class="tabular-nums" id="stat-period">—</strong></div>
+              <div class="stat-tile"><span>Running / km</span><strong class="tabular-nums" id="stat-run">—</strong></div>
+            </div>
+
+            <div id="dep-hero-row" class="hidden rounded-lg px-3 py-2 mt-2 text-[12.5px] tabular-nums" style="background-color:var(--nk-hover);border:1px solid var(--nk-border);">
+              <div class="flex justify-between gap-2"><span style="color:var(--nk-text-secondary);" id="dep-hero-label">5-year incl. depreciation</span><strong id="dep-hero-val" style="color:var(--nk-text);">—</strong></div>
+            </div>
+
+            <p class="text-[11px] font-semibold uppercase tracking-wider mt-4 mb-1.5" style="color:var(--nk-text-tertiary);">Where your money goes</p>
+            <div id="res-rows"></div>
+
+            <div id="loan-box" class="hidden rounded-lg px-3 py-2.5 mt-3 text-[12.5px]" style="background-color:var(--nk-hover);border:1px solid var(--nk-border);">
+              <p class="font-semibold mb-1 flex items-center gap-1.5" style="color:var(--nk-text);"><Landmark size={13} /> Loan detail</p>
+              <div id="loan-rows" class="space-y-1 tabular-nums"></div>
+            </div>
+
+            <div id="dep-box" class="hidden rounded-lg px-3 py-2.5 mt-2 text-[12px] leading-relaxed" style="background-color:var(--nk-hover);border:1px solid var(--nk-border);">
+              <p class="font-semibold mb-1 flex items-center gap-1.5" style="color:var(--nk-text);"><TrendingDown size={13} /> Depreciation</p>
+              <div id="dep-rows" class="space-y-1 tabular-nums"></div>
+              <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Depreciation is an estimated loss in vehicle value and may not be an actual monthly cash expense.</p>
+            </div>
+
+            <div id="res-warnings" class="hidden mt-3 space-y-1.5"></div>
+
+            <div class="py-3 mt-1">
+              <button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm w-full"><Copy size={13} /> Copy summary</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ EDUCATIONAL CONTENT ═══ -->
+    <div class="mt-10 max-w-3xl space-y-8">
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">What is vehicle ownership cost?</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Owning a vehicle costs far more than fuel or EMI. The true cost adds fuel or charging, loan interest, servicing and repairs, insurance, annual vehicle tax, registration renewal, parking, tolls and washing — plus depreciation, the value your vehicle quietly loses each year. This calculator adds up your own figures so you see the real monthly, yearly and long-term cost before you buy — or to keep your current vehicle spending in check.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">How vehicle ownership cost is calculated</h2>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Monthly cash cost = EMI + monthly fuel or charging + annual costs ÷ 12 + monthly costs. Cost per kilometre = annual cost ÷ annual kilometres. Multi-year totals repeat fuel and monthly costs each month and annual costs each year, counting loan instalments only while the loan actually runs. Depreciation is always reported separately from cash spending.</p>
+      </section>
+
+      <section>
+        <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related Nepal calculators</h3>
+        <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+          <li>• <a class="underline hover:opacity-80" href="/nepal/vehicle/fuel-cost" style="color:var(--nk-accent);">Fuel Cost Calculator</a> — trip-wise fuel and per-km cost</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/transport/vehicle-tax" style="color:var(--nk-accent);">Vehicle Tax Calculator</a> — official tax, fines and renewal costs</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/finance/emi-calculator" style="color:var(--nk-accent);">EMI Calculator</a> — standalone loan instalment math</li>
+        </ul>
+      </section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'Fuel Cost', description: 'Trip fuel cost & cost per km', href: '/nepal/vehicle/fuel-cost' },
+      { title: 'Vehicle Tax, Fine & Renewal', description: 'Official tax & renewal costs', href: '/nepal/transport/vehicle-tax' },
+      { title: 'EMI Calculator', description: 'Monthly loan payments', href: '/nepal/finance/emi-calculator' },
+    ]} />
+  </div>
+
+  <div id="fuel-ref" class="hidden" data-petrol={fuelRef.petrol} data-diesel={fuelRef.diesel} data-date={fuelRef.effectiveDate} data-live={fuelRef.isLive ? '1' : ''}></div>
+</BaseLayout>
+
+<style>
+  .seg-wrap {
+    display: flex; gap: 3px; padding: 3px;
+    border: 1px solid var(--nk-border); border-radius: var(--radius-lg);
+    background-color: var(--nk-hover);
+  }
+  .seg-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 7px 10px; border-radius: 9px; border: 1px solid transparent;
+    background: transparent; color: var(--nk-text-secondary);
+    cursor: pointer; font: inherit; text-align: left;
+    transition: all 150ms ease;
+  }
+  .seg-btn span { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+  .seg-btn strong { font-size: 12.5px; font-weight: 600; line-height: 1.3; }
+  .seg-btn small { font-size: 10.5px; line-height: 1.3; color: var(--nk-text-tertiary); }
+  .seg-btn:hover { color: var(--nk-text); }
+  .seg-btn.seg-active {
+    background-color: var(--nk-surface); color: var(--nk-text);
+    border-color: var(--nk-border); box-shadow: var(--shadow-sm);
+  }
+  .per-btn {
+    font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 9999px;
+    border: 1px solid var(--nk-border); color: var(--nk-text-secondary);
+    background: transparent; cursor: pointer; transition: all 150ms; font-family: var(--font-sans);
+  }
+  .per-btn:hover { border-color: var(--nk-border-strong); color: var(--nk-text); }
+  .per-btn.per-active { border-color: var(--nk-accent); background-color: var(--nk-accent-subtle); color: var(--nk-accent); }
+  .duo { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 700px) { .duo { grid-template-columns: 1fr 1fr; } }
+  .hidden { display: none !important; }
+  .oc-wrap { background-image: linear-gradient(180deg, var(--nk-accent-subtle), transparent 340px); }
+  .oc-kicker {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 9999px;
+    background-color: var(--nk-accent-subtle); color: var(--nk-accent); margin-bottom: 8px;
+  }
+  .sec-head {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--nk-text);
+  }
+  .sec-head .sub { font-size: 11px; font-weight: 400; color: var(--nk-text-tertiary); }
+  .sec-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0;
+    background-color: var(--nk-accent-subtle); color: var(--nk-accent);
+  }
+  #input-card { position: relative; overflow: hidden; box-shadow: var(--shadow-md); }
+  #input-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--nk-gradient-primary);
+  }
+  #calc-btn {
+    box-shadow: 0 10px 22px -10px rgba(230,43,30,.55);
+    padding-top: 12px; padding-bottom: 12px; font-weight: 600;
+  }
+  [data-theme="dark"] #calc-btn { box-shadow: 0 10px 22px -10px rgba(0,0,0,.7); }
+  #result-card { box-shadow: var(--shadow-md); }
+  .res-hero {
+    border-radius: var(--radius-lg); padding: 12px 14px; text-align: center;
+    background: var(--nk-gradient-primary); color: #fff;
+  }
+  .res-hero-label { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; opacity: .85; margin-bottom: 2px; }
+  #res-total { font-size: 30px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+  .res-hero-sub { font-size: 11px; margin-top: 2px; opacity: .85; }
+  .stat-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .stat-tile {
+    border: 1px solid var(--nk-border); border-radius: var(--radius-lg);
+    padding: 8px 12px; background-color: var(--nk-hover);
+  }
+  .stat-tile span { display: block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--nk-text-tertiary); }
+  .stat-tile strong { font-size: 16px; font-weight: 700; color: var(--nk-text); }
+  .res-empty-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 12px; margin-bottom: 8px;
+    background-color: var(--nk-surface); color: var(--nk-accent); box-shadow: var(--shadow-sm);
+  }
+  .fuel-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500; padding: 7px 12px; border-radius: 9999px;
+    border: 1px solid var(--nk-border); background: transparent;
+    color: var(--nk-text-secondary); cursor: pointer;
+    transition: all 150ms ease; font-family: var(--font-sans);
+  }
+  .fuel-chip:hover { border-color: var(--nk-border-strong); color: var(--nk-text); }
+  .fuel-chip.chip-active { border-color: var(--nk-accent); background-color: var(--nk-accent-subtle); color: var(--nk-accent); font-weight: 600; }
+  .unit-btn {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center;
+    height: 28px; border-radius: var(--radius-md); font-size: 11.5px; font-weight: 500;
+    border: 1px solid var(--nk-border); cursor: pointer; transition: all 0.1s ease;
+    color: var(--nk-text-secondary); background: var(--nk-surface); font-family: var(--font-sans);
+  }
+  .unit-btn:hover { border-color: var(--nk-border-strong); color: var(--nk-text); }
+  .unit-btn.unit-active { background: var(--nk-accent); border-color: var(--nk-accent); color: white; font-weight: 600; }
+  .exp-group { border: 1px solid var(--nk-border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 150ms ease, box-shadow 150ms ease; }
+  .exp-group:hover { border-color: var(--nk-border-strong); }
+  .exp-summary {
+    display: flex; align-items: center; gap: 8px; padding: 9px 12px;
+    font-size: 12.5px; font-weight: 600; cursor: pointer; list-style: none;
+    color: var(--nk-text);
+  }
+  .exp-summary::-webkit-details-marker { display: none; }
+  .exp-summary:hover { background-color: var(--nk-hover); }
+  .exp-summary::after {
+    content: '+'; margin-left: auto; font-size: 14px; font-weight: 600;
+    color: var(--nk-text-tertiary); line-height: 1;
+  }
+  .exp-group[open] .exp-summary::after { content: '−'; color: var(--nk-accent); }
+  .exp-body { padding: 10px 12px 12px; display: grid; grid-template-columns: 1fr; gap: 12px; border-top: 1px solid var(--nk-border); }
+  @media (min-width: 640px) { .exp-body { grid-template-columns: 1fr 1fr; } }
+  .result-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; padding: 5px 0; font-size: 12.5px; color: var(--nk-text-secondary);
+  }
+  .result-row .rv { font-weight: 600; color: var(--nk-text); white-space: nowrap; }
+  .kv-row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+    padding: 3px 0; font-size: 12.5px; color: var(--nk-text-secondary);
+  }
+  .kv-row strong { color: var(--nk-text); font-weight: 600; white-space: nowrap; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .top-bar { height: 6px; border-radius: 9999px; background-color: var(--nk-hover); overflow: hidden; margin-top: 3px; }
+  .top-fill { height: 100%; border-radius: 9999px; background: var(--nk-gradient-primary); }
+  /* NOTE: warning lines are created by JS at runtime — keep :global(). */
+  :global(.warn-line) {
+    border-radius: 8px; padding: 8px 12px; font-size: 11px; line-height: 1.55;
+    background-color: #fef3cd; border: 1px solid #ffc107; color: #856404;
+  }
+  :global([data-theme="dark"] .warn-line) { background-color: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); color: #fbbf24; }
+  .err { font-size: 11px; margin-top: 4px; color: #dc2626; line-height: 1.4; }
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .cmp-table th, .cmp-table td { padding: 6px 8px; text-align: right; }
+  .cmp-table th:first-child, .cmp-table td:first-child { text-align: left; }
+  .cmp-table thead th { font-size: 11px; color: var(--nk-text-secondary); border-bottom: 1px solid var(--nk-border); }
+  .cmp-table tbody td { border-bottom: 1px dashed var(--nk-border); color: var(--nk-text); font-variant-numeric: tabular-nums; }
+  .cmp-table tbody tr:last-child td { border-bottom: none; }
+  .cmp-table td.win { font-weight: 700; color: #059669; }
+  .opt-badge {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 1px 7px; border-radius: 9999px; color: var(--nk-text-tertiary);
+    border: 1px solid var(--nk-border);
+  }
+  .inc-check {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 500; white-space: nowrap;
+    color: var(--nk-text-secondary); cursor: pointer;
+  }
+  .inc-check input { width: 14px; height: 14px; accent-color: var(--nk-accent); cursor: pointer; }
+  @media print {
+    #input-card, .nk-btn, .seg-wrap { display: none !important; }
+    #result-card { border: 1px solid #999; }
+  }
+</style>
+
+<script>
+  import {
+    calculateOwnershipCost, calculateEMI, summarizeOwnership,
+    formatNPR, formatNumberIN, parseAmount, sanitizeAmount,
+  } from '../../../lib/calculators/ownership-cost.js';
+  import {
+    VEHICLE_TYPES, FUEL_TYPES, PERIOD_OPTIONS,
+    STORAGE_KEY, EV_EFFICIENCY_EXAMPLE, OWNERSHIP_DATA_META,
+  } from '../../../data/vehicle/ownership-cost.js';
+
+  const $ = (id) => document.getElementById(id);
+  const VTYPE_DEFAULTS = Object.fromEntries(VEHICLE_TYPES.map((v) => [v.id, v.examples]));
+
+  let vehicleType = 'bike';
+  let fuelType = 'petrol';
+  let maintMode = 'simple';
+  let durUnit = 'years';
+  let periodYears = 5;
+  let lastSummary = '';
+
+  // ── Vehicle type ──
+  document.querySelectorAll('.seg-btn[data-vtype]').forEach((b) => b.addEventListener('click', () => {
+    vehicleType = b.dataset.vtype;
+    document.querySelectorAll('.seg-btn[data-vtype]').forEach((x) => {
+      const on = x === b;
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    applyVehicleExamples();
+    updateEmiPreview();
+  }));
+
+  function applyVehicleExamples() {
+    const ex = VTYPE_DEFAULTS[vehicleType] || {};
+    $('monthlyKm').placeholder = `e.g. ${formatNumberIN(ex.monthlyKm || 600)}`;
+    $('purchase').placeholder = `e.g. ${formatNumberIN(ex.purchasePrice || 300000)}`;
+    updateEfficiencyUI();
+  }
+
+  // ── Fuel type ──
+  document.querySelectorAll('.fuel-chip[data-fuel]').forEach((b) => b.addEventListener('click', () => {
+    fuelType = b.dataset.fuel;
+    document.querySelectorAll('.fuel-chip[data-fuel]').forEach((x) => {
+      const on = x === b;
+      x.classList.toggle('chip-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    updateEfficiencyUI();
+  }));
+
+  function updateEfficiencyUI() {
+    const electric = fuelType === 'electric';
+    const ex = VTYPE_DEFAULTS[vehicleType] || {};
+    $('eff-label').textContent = electric ? 'Use (km/kWh)' : 'Mileage (km/l)';
+    $('efficiency').placeholder = electric ? `e.g. ${EV_EFFICIENCY_EXAMPLE}` : `e.g. ${ex.mileage || 45}`;
+    $('eff-hint').textContent = electric
+      ? `Example: ${EV_EFFICIENCY_EXAMPLE} km/kWh.`
+      : `${ex.mileageHint || 'Example: 45 km/l.'}`;
+    $('price-label').textContent = electric ? 'Price per kWh (Rs.)' : 'Price per litre (Rs.)';
+    $('use-price').classList.toggle('hidden', electric);
+    if (!electric) updatePriceNote(); else $('price-note').textContent = 'Your NEA rate per kWh.';
+  }
+
+  // ── NOC reference price (button-filled only, with disclosure) ──
+  function fuelRef() {
+    const el = $('fuel-ref');
+    return {
+      petrol: el?.dataset?.petrol || '',
+      diesel: el?.dataset?.diesel || '',
+      date: el?.dataset?.date || '',
+      live: el?.dataset?.live === '1',
+    };
+  }
+  function updatePriceNote() {
+    const ref = fuelRef();
+    const price = fuelType === 'diesel' ? ref.diesel : ref.petrol;
+    $('price-note').textContent = price
+      ? `NOC: Rs. ${price}/L${ref.date ? ` (${ref.date}` : ''}${ref.live ? ', live' : ''}${ref.date ? ')' : ''} — editable.`
+      : 'Your price, or NOC reference:';
+  }
+  $('use-price').addEventListener('click', () => {
+    const ref = fuelRef();
+    const price = fuelType === 'diesel' ? ref.diesel : ref.petrol;
+    if (price) {
+      $('energyPrice').value = price;
+      updatePriceNote();
+    } else {
+      $('price-note').textContent = 'Unavailable — enter manually.';
+    }
+  });
+
+  // ── Loan ──
+  $('noloan').addEventListener('change', () => {
+    $('loan-grid').classList.toggle('hidden', $('noloan').checked);
+    updateEmiPreview();
+  });
+  document.querySelectorAll('[data-dunit]').forEach((b) => b.addEventListener('click', () => {
+    durUnit = b.dataset.dunit;
+    document.querySelectorAll('[data-dunit]').forEach((x) => x.classList.toggle('unit-active', x === b));
+    updateEmiPreview();
+  }));
+  ['purchase', 'down'].forEach((id) => $(id).addEventListener('input', () => {
+    // Auto-fill loan amount from price − down, until the user types their own.
+    if ($('loanAmount').value.trim() === '') {
+      const p = parseAmount($('purchase').value).value;
+      const d = parseAmount($('down').value).value || 0;
+      if (p != null && p > d) $('loanAmount').value = formatNumberIN(p - d);
+    }
+    if ($('depPurchase').value.trim() === '') {
+      const p = parseAmount($('purchase').value).value;
+      if (p != null) $('depPurchase').value = formatNumberIN(p);
+    }
+    updateEmiPreview();
+  }));
+  ['loanAmount', 'loanRate', 'loanDur'].forEach((id) => $(id).addEventListener('input', updateEmiPreview));
+
+  function loanMonths() {
+    const n = parseFloat(String($('loanDur').value).replace(/,/g, ''));
+    if (!Number.isFinite(n) || n <= 0) return 0;
+    return Math.floor(durUnit === 'years' ? n * 12 : n);
+  }
+  function updateEmiPreview() {
+    const el = $('emi-preview');
+    if ($('noloan').checked) { el.textContent = 'No loan — skipped'; return; }
+    const p = parseAmount($('loanAmount').value).value;
+    const r = parseFloat(String($('loanRate').value).replace(/,/g, ''));
+    const m = loanMonths();
+    if (p == null || p <= 0 || !Number.isFinite(r) || m < 1) { el.textContent = 'Enter amount, rate and duration'; return; }
+    el.textContent = `${formatNPR(calculateEMI(p, r, m).emi)} / month`;
+  }
+
+  // ── Maintenance mode ──
+  document.querySelectorAll('[data-mmode]').forEach((b) => b.addEventListener('click', () => {
+    maintMode = b.dataset.mmode;
+    document.querySelectorAll('[data-mmode]').forEach((x) => x.classList.toggle('unit-active', x === b));
+    $('maint-simple-wrap').classList.toggle('hidden', maintMode !== 'simple');
+    $('maint-detail-wrap').classList.toggle('hidden', maintMode !== 'detailed');
+  }));
+
+  // ── Depreciation toggle ──
+  $('depToggle').addEventListener('change', () => {
+    $('dep-grid').classList.toggle('hidden', !$('depToggle').checked);
+  });
+
+  // ── Period ──
+  document.querySelectorAll('.per-btn[data-years]').forEach((b) => b.addEventListener('click', () => {
+    periodYears = Number(b.dataset.years);
+    document.querySelectorAll('.per-btn[data-years]').forEach((x) => {
+      const on = x === b;
+      x.classList.toggle('per-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    if (!$('res-body').classList.contains('hidden')) doCalc();
+  }));
+
+  // ── Collect ──
+  function collectInput() {
+    const annual = {};
+    document.querySelectorAll('.ann-input').forEach((el) => { annual[el.dataset.key] = el.value; });
+    const detailed = {};
+    document.querySelectorAll('.maint-input').forEach((el) => { detailed[el.dataset.key] = el.value; });
+    const recurring = {};
+    document.querySelectorAll('.rec-input').forEach((el) => { recurring[el.dataset.key] = el.value; });
+    return {
+      vehicleType,
+      fuelType,
+      monthlyKm: $('monthlyKm').value,
+      efficiency: $('efficiency').value,
+      energyPrice: $('energyPrice').value,
+      loan: {
+        enabled: !$('noloan').checked,
+        amount: $('loanAmount').value,
+        annualRatePct: $('loanRate').value,
+        months: loanMonths(),
+      },
+      annual,
+      maintenance: { mode: maintMode, simpleAnnual: $('maintSimple').value, detailed },
+      recurring,
+      depreciation: {
+        enabled: $('depToggle').checked,
+        purchasePrice: $('depPurchase').value,
+        resaleValue: $('depResale').value,
+      },
+    };
+  }
+
+  // ── Validation display (inline, never alert) ──
+  function showErrors(errors) {
+    document.querySelectorAll('[data-err]').forEach((el) => el.classList.add('hidden'));
+    const general = [];
+    for (const [key, msg] of Object.entries(errors)) {
+      const el = document.querySelector(`[data-err="${key}"]`);
+      if (el) { el.textContent = msg; el.classList.remove('hidden'); }
+      else general.push(msg);
+    }
+    const box = $('form-errors');
+    if (general.length > 0) {
+      box.innerHTML = general.map((m) => `<div>• ${m}</div>`).join('');
+      box.classList.remove('hidden');
+    } else {
+      box.classList.add('hidden');
+    }
+    return Object.keys(errors).length === 0;
+  }
+
+  function rowHTML(label, value) {
+    return `<div class="result-row"><span>${label}</span><span class="rv">${value}</span></div>`;
+  }
+  function kvHTML(label, value) {
+    return `<div class="kv-row"><span>${label}</span><strong>${value}</strong></div>`;
+  }
+
+  // ── Calculate + render ──
+  function doCalc() {
+    const input = collectInput();
+    const r = calculateOwnershipCost(input, periodYears);
+    if (!r.valid) {
+      showErrors(r.errors);
+      $('res-body').classList.add('hidden');
+      $('res-empty').classList.remove('hidden');
+      document.querySelector('#input-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    showErrors({});
+    render(input, r);
+  }
+
+  function render(input, r) {
+    $('res-empty').classList.add('hidden');
+    $('res-body').classList.remove('hidden');
+
+    const vlabel = vehicleType === 'bike' ? 'Motorcycle / Scooter' : 'Car / Jeep';
+    const flabel = fuelType === 'electric' ? 'Electric' : fuelType === 'diesel' ? 'Diesel' : 'Petrol';
+    $('res-total').textContent = formatNPR(r.monthlyCost);
+    $('res-subline').textContent = `${vlabel} · ${flabel} · ${formatNumberIN(r.monthlyKm)} km/month`;
+    $('stat-year').textContent = formatNPR(r.annualCost);
+    $('stat-perkm').textContent = `Rs. ${r.costPerKm.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+    $('stat-period-label').textContent = `${r.period.years}-year total`;
+    $('stat-period').textContent = formatNPR(r.period.totalCost);
+    $('stat-run').textContent = `Rs. ${r.runningCostPerKm.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+
+    const depRow = $('dep-hero-row');
+    if (r.depreciation > 0) {
+      depRow.classList.remove('hidden');
+      $('dep-hero-label').textContent = `${r.period.years}-year incl. depreciation`;
+      $('dep-hero-val').textContent = formatNPR(r.totalCostIncludingDepreciation);
+    } else {
+      depRow.classList.add('hidden');
+    }
+
+    const max = r.breakdown.length > 0 ? r.breakdown[0].monthly : 0;
+    $('res-rows').innerHTML = r.breakdown.length > 0
+      ? r.breakdown.map((b) => {
+          const pct = max > 0 ? Math.max(4, Math.round((b.monthly / max) * 100)) : 0;
+          return `<div><div class="result-row" style="padding-bottom:0;"><span>${b.name}</span><span class="rv">${formatNPR(b.monthly)}/mo · ${b.pct}%</span></div>` +
+            `<div class="top-bar"><div class="top-fill" style="width:${pct}%;"></div></div>` +
+            `<div class="text-[11px] pb-1" style="color:var(--nk-text-tertiary);">${formatNPR(b.annual)}/year</div></div>`;
+        }).join('')
+      : rowHTML('No costs entered yet', 'Enter amounts on the left');
+
+    const loanBox = $('loan-box');
+    if (r.loan.enabled && r.emi.emi > 0) {
+      loanBox.classList.remove('hidden');
+      $('loan-rows').innerHTML =
+        kvHTML('Monthly EMI', formatNPR(r.emi.emi)) +
+        kvHTML('Principal', formatNPR(r.emi.principal)) +
+        kvHTML('Total interest', formatNPR(r.emi.totalInterest)) +
+        kvHTML('Total payment', formatNPR(r.emi.totalPayment)) +
+        kvHTML(`Paid in ${r.period.years} yrs (${r.period.loanMonthsPaid} mo)`, formatNPR(r.period.loanPaid));
+    } else {
+      loanBox.classList.add('hidden');
+    }
+
+    const depBox = $('dep-box');
+    if (r.depreciation > 0) {
+      depBox.classList.remove('hidden');
+      const buy = sanitizeAmount(input.depreciation.purchasePrice);
+      $('dep-rows').innerHTML =
+        kvHTML('Purchase price', formatNPR(buy)) +
+        kvHTML('Resale value', formatNPR(sanitizeAmount(input.depreciation.resaleValue))) +
+        kvHTML('Depreciation', formatNPR(r.depreciation));
+    } else {
+      depBox.classList.add('hidden');
+    }
+
+    const warnBox = $('res-warnings');
+    warnBox.innerHTML = '';
+    warnBox.classList.toggle('hidden', r.warnings.length === 0);
+    r.warnings.forEach((w) => {
+      const d = document.createElement('div');
+      d.className = 'warn-line';
+      d.textContent = w;
+      warnBox.appendChild(d);
+    });
+
+    buildSummary(input, r);
+    document.querySelector('#result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function buildSummary(input, r) {
+    const lines = ['SolutionsNepal — Vehicle Ownership Cost'];
+    lines.push(`Vehicle: ${vehicleType === 'bike' ? 'Motorcycle / Scooter' : 'Car / Jeep'} (${r.fuelType})`);
+    lines.push(`Driving: ${formatNumberIN(r.monthlyKm)} km/month`);
+    lines.push(`Monthly: ${formatNPR(r.monthlyCost)}`);
+    lines.push(`Yearly: ${formatNPR(r.annualCost)}`);
+    lines.push(`${r.period.years}-year total: ${formatNPR(r.period.totalCost)}`);
+    lines.push(`Cost per km: Rs. ${r.costPerKm} (running: Rs. ${r.runningCostPerKm})`);
+    lines.push('Breakdown (monthly):');
+    r.breakdown.forEach((b) => lines.push(`- ${b.name}: ${formatNPR(b.monthly)} (${b.pct}%)`));
+    if (r.loan.enabled) lines.push(`Loan: EMI ${formatNPR(r.emi.emi)} × ${r.emi.months} mo, interest ${formatNPR(r.emi.totalInterest)}`);
+    if (r.depreciation > 0) lines.push(`Depreciation: ${formatNPR(r.depreciation)} → ${r.period.years}-yr incl. dep: ${formatNPR(r.totalCostIncludingDepreciation)}`);
+    lastSummary = lines.join('\n');
+  }
+
+  $('calc-btn').addEventListener('click', doCalc);
+  ['monthlyKm', 'efficiency', 'energyPrice', 'loanAmount', 'loanRate', 'loanDur', 'depPurchase', 'depResale'].forEach((id) => {
+    const el = $(id);
+    if (el) el.addEventListener('keydown', (e) => { if (e.key === 'Enter') doCalc(); });
+  });
+
+  $('copy-btn').addEventListener('click', async () => {
+    const btn = $('copy-btn');
+    try {
+      await navigator.clipboard.writeText(lastSummary || 'SolutionsNepal — Vehicle Ownership Cost');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.innerHTML = 'Copy summary'; }, 2000);
+    } catch { /* clipboard unavailable */ }
+  });
+
+  // ── Compare A vs B ──
+  function collectSide(side) {
+    const v = (id) => $(`cmp-${side}-${id}`).value;
+    return {
+      name: v('name') || (side === 'a' ? 'Vehicle A' : 'Vehicle B'),
+      fuelType: $(`cmp-${side}-fuel`).value,
+      monthlyKm: v('km'),
+      efficiency: v('eff'),
+      energyPrice: v('price'),
+      loan: { enabled: false, amount: 0, annualRatePct: 0, months: 0 },
+      annual: { otherAnnual: v('annual') },
+      maintenance: { mode: 'simple', simpleAnnual: v('maint') },
+      // EMI entered directly counts as a monthly cash cost here.
+      recurring: { otherMonthly: String((parseAmount(v('emi')).value || 0) + (parseAmount(v('monthly')).value || 0)) },
+      depreciation: { enabled: false },
+    };
+  }
+  $('cmp-btn').addEventListener('click', () => {
+    const err = $('err-cmp');
+    err.classList.add('hidden');
+    const box = $('cmp-result');
+    const a = summarizeOwnership(collectSide('a'));
+    const b = summarizeOwnership(collectSide('b'));
+    if (!a.valid || !b.valid) {
+      const msgs = [...Object.values(a.errors || {}), ...Object.values(b.errors || {})];
+      err.textContent = msgs[0] || 'Enter distance, efficiency and price for both vehicles.';
+      err.classList.remove('hidden');
+      box.classList.add('hidden');
+      return;
+    }
+    const nameA = $('cmp-a-name').value || 'Vehicle A';
+    const nameB = $('cmp-b-name').value || 'Vehicle B';
+    const rows = [
+      ['Monthly cost', a.monthly, b.monthly, 'low'],
+      ['Annual cost', a.annual, b.annual, 'low'],
+      ['Cost per km', a.perKm, b.perKm, 'low'],
+      ['5-year cost', a.fiveYear, b.fiveYear, 'low'],
+    ];
+    const fmt = (k, v) => (k === 'Cost per km' ? `Rs. ${v.toLocaleString('en-IN', { maximumFractionDigits: 2 })}` : formatNPR(v));
+    box.innerHTML = `<table class="cmp-table"><thead><tr><th></th><th>${nameA}</th><th>${nameB}</th></tr></thead><tbody>` +
+      rows.map(([k, va, vb]) => {
+        const aWin = va < vb; const bWin = vb < va;
+        return `<tr><td style="color:var(--nk-text-secondary);">${k}</td><td class="${aWin ? 'win' : ''}">${fmt(k, va)}</td><td class="${bWin ? 'win' : ''}">${fmt(k, vb)}</td></tr>`;
+      }).join('') + '</tbody></table>';
+    box.classList.remove('hidden');
+  });
+
+  // ── Reset / save (localStorage only) ──
+  function snapshot() {
+    const snap = { vehicleType, fuelType, maintMode, durUnit, periodYears };
+    ['purchase', 'down', 'loanAmount', 'loanRate', 'loanDur', 'monthlyKm', 'efficiency', 'energyPrice', 'maintSimple', 'depPurchase', 'depResale'].forEach((id) => {
+      snap[id] = $(id) ? $(id).value : '';
+    });
+    snap.noloan = $('noloan').checked;
+    snap.depOn = $('depToggle').checked;
+    snap.annual = {}; snap.detailed = {}; snap.recurring = {};
+    document.querySelectorAll('.ann-input').forEach((el) => { snap.annual[el.dataset.key] = el.value; });
+    document.querySelectorAll('.maint-input').forEach((el) => { snap.detailed[el.dataset.key] = el.value; });
+    document.querySelectorAll('.rec-input').forEach((el) => { snap.recurring[el.dataset.key] = el.value; });
+    return snap;
+  }
+  function restore(snap) {
+    if (!snap || typeof snap !== 'object') return false;
+    const setVal = (id, v) => { const el = $(id); if (el && v !== undefined) el.value = v; };
+    ['purchase', 'down', 'loanAmount', 'loanRate', 'loanDur', 'monthlyKm', 'efficiency', 'energyPrice', 'maintSimple', 'depPurchase', 'depResale'].forEach((id) => setVal(id, snap[id]));
+    if (snap.vehicleType) {
+      vehicleType = snap.vehicleType;
+      document.querySelectorAll('.seg-btn[data-vtype]').forEach((x) => {
+        const on = x.dataset.vtype === vehicleType;
+        x.classList.toggle('seg-active', on);
+        x.setAttribute('aria-checked', String(on));
+      });
+    }
+    if (snap.fuelType) {
+      fuelType = snap.fuelType;
+      document.querySelectorAll('.fuel-chip[data-fuel]').forEach((x) => {
+        const on = x.dataset.fuel === fuelType;
+        x.classList.toggle('chip-active', on);
+        x.setAttribute('aria-checked', String(on));
+      });
+    }
+    if (snap.maintMode) {
+      maintMode = snap.maintMode;
+      document.querySelectorAll('[data-mmode]').forEach((x) => x.classList.toggle('unit-active', x.dataset.mmode === maintMode));
+      $('maint-simple-wrap').classList.toggle('hidden', maintMode !== 'simple');
+      $('maint-detail-wrap').classList.toggle('hidden', maintMode !== 'detailed');
+    }
+    if (snap.durUnit) {
+      durUnit = snap.durUnit;
+      document.querySelectorAll('[data-dunit]').forEach((x) => x.classList.toggle('unit-active', x.dataset.dunit === durUnit));
+    }
+    if (snap.periodYears) {
+      periodYears = Number(snap.periodYears);
+      document.querySelectorAll('.per-btn[data-years]').forEach((x) => {
+        const on = Number(x.dataset.years) === periodYears;
+        x.classList.toggle('per-active', on);
+        x.setAttribute('aria-checked', String(on));
+      });
+    }
+    if (snap.noloan !== undefined) {
+      $('noloan').checked = !!snap.noloan;
+      $('loan-grid').classList.toggle('hidden', !!snap.noloan);
+    }
+    if (snap.depOn !== undefined) {
+      $('depToggle').checked = !!snap.depOn;
+      $('dep-grid').classList.toggle('hidden', !snap.depOn);
+    }
+    for (const [cls, obj] of [['ann-input', snap.annual], ['maint-input', snap.detailed], ['rec-input', snap.recurring]]) {
+      if (obj) document.querySelectorAll(`.${cls}`).forEach((el) => { if (obj[el.dataset.key] !== undefined) el.value = obj[el.dataset.key]; });
+    }
+    return true;
+  }
+
+  $('reset-btn').addEventListener('click', () => {
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* private mode */ }
+    vehicleType = 'bike'; fuelType = 'petrol'; maintMode = 'simple'; durUnit = 'years'; periodYears = 5;
+    document.querySelectorAll('.seg-btn[data-vtype]').forEach((x) => {
+      const on = x.dataset.vtype === 'bike';
+      x.classList.toggle('seg-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    document.querySelectorAll('.fuel-chip[data-fuel]').forEach((x) => {
+      const on = x.dataset.fuel === 'petrol';
+      x.classList.toggle('chip-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    document.querySelectorAll('[data-mmode]').forEach((x) => x.classList.toggle('unit-active', x.dataset.mmode === 'simple'));
+    document.querySelectorAll('[data-dunit]').forEach((x) => x.classList.toggle('unit-active', x.dataset.dunit === 'years'));
+    document.querySelectorAll('.per-btn[data-years]').forEach((x) => {
+      const on = Number(x.dataset.years) === 5;
+      x.classList.toggle('per-active', on);
+      x.setAttribute('aria-checked', String(on));
+    });
+    ['purchase', 'down', 'loanAmount', 'loanRate', 'loanDur', 'monthlyKm', 'efficiency', 'energyPrice', 'maintSimple', 'depPurchase', 'depResale'].forEach((id) => { $(id).value = ''; });
+    document.querySelectorAll('.ann-input,.maint-input,.rec-input').forEach((el) => { el.value = ''; });
+    $('noloan').checked = true;
+    $('loan-grid').classList.add('hidden');
+    $('depToggle').checked = false;
+    $('dep-grid').classList.add('hidden');
+    $('maint-simple-wrap').classList.remove('hidden');
+    $('maint-detail-wrap').classList.add('hidden');
+    $('cmp-result').classList.add('hidden');
+    $('res-body').classList.add('hidden');
+    $('res-empty').classList.remove('hidden');
+    showErrors({});
+    applyVehicleExamples();
+    updateEmiPreview();
+  });
+
+  $('save-btn').addEventListener('click', () => {
+    const btn = $('save-btn');
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot()));
+      btn.textContent = 'Saved!';
+      setTimeout(() => { btn.innerHTML = 'Save inputs'; }, 2000);
+    } catch {
+      btn.textContent = 'Could not save';
+      setTimeout(() => { btn.innerHTML = 'Save inputs'; }, 2000);
+    }
+  });
+
+  // ── Init ──
+  (function init() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) restore(JSON.parse(raw));
+    } catch { /* corrupted storage — start fresh */ }
+    applyVehicleExamples();
+    updateEfficiencyUI();
+    updateEmiPreview();
+  })();
+</script>

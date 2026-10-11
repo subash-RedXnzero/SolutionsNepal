@@ -1,0 +1,143 @@
+# SolutionsNepal
+
+> SolutionsNepal is a free Nepal-focused web platform providing calculators, converters, price information, financial tools, education tools, Nepali calendar information, utility calculators and everyday tools.
+
+Website: https://solutionsnepal.com/
+
+## Main Pages
+
+- Home: /
+- Nepal Tools: /nepal
+- Nepali Calendar: /nepal/calendar
+- Foreign Exchange Nepal: /foreign-exchange-nepal
+- Silver Price Nepal: /nepal/silver-price-nepal
+- Gold Price Nepal: /nepal/gold-price-nepal
+- Fuel Price Nepal: /nepal/fuel-price-nepal
+- Blog: /blog
+- About: /about
+- Contact: /contact
+
+## Tools
+
+Date:
+
+- /nepal/age-calculator
+- /nepal/date/bs-to-ad
+- /nepal/date/ad-to-bs
+
+Finance:
+
+- /nepal/finance/emi-calculator
+- /nepal/finance/overtime-calculator
+- /nepal/finance/salary-checker (salary & tax; replaces legacy /nepal/finance/salary-tax)
+- /nepal/finance/house-rent-tax
+- /nepal/finance/rent-tax
+- /nepal/finance/remittance-calculator
+
+NEPSE:
+
+- /nepal/nepse/profit-loss
+
+Land:
+
+- /nepal/land/ropani-to-aana
+- /nepal/land/aana-to-ropani
+
+Property:
+
+- /nepal/property/land-registration
+- /nepal/property/property-registration-cost
+
+Gold:
+
+- /nepal/gold/tola-to-gram
+- /nepal/gold/gram-to-tola
+
+Education:
+
+- /nepal/education/see-gpa
+- /nepal/education/neb-gpa-calculator
+
+Electricity:
+
+- /nepal/utilities/electricity-bill
+
+Utilities:
+
+- /nepal/utilities/kukl-water-bill
+
+Vehicles:
+
+- /nepal/transport/vehicle-tax
+- /nepal/vehicle/fuel-cost
+
+Fuel:
+
+- /nepal/fuel-price-nepal
+
+Tools:
+
+- /nepal/finance/sip-calculator
+- /nepal/tools/nepali-number-to-words
+- /nepal/tools/rupees-to-words
+- /nepal/tools/number-to-words-nepali
+- /nepal/tools/cheque-amount-in-words
+- /nepal/tools/nepali-number-converter
+- /nepal/finance/vat-calculator
+- /tools/qr-code-generator
+- /tools/wifi-qr-code-generator
+- /tools/url-qr-code-generator
+- /tools/whatsapp-qr-code-generator
+- /tools/vcard-qr-code-generator
+- /tools/email-qr-code-generator
+- /tools/passport-photo-resizer
+- /tools/compress-passport-photo-to-200kb
+- /tools/compress-photo-to-100kb
+- /tools/compress-photo-to-50kb
+- /tools/image-compressor
+- /nepal/tools/nepali-unicode
+
+## Live / Regularly Updated Information
+
+SolutionsNepal provides pages for:
+
+- Gold Price Nepal
+- Silver Price Nepal
+- Petrol & Diesel Price Nepal
+- Foreign Exchange Nepal
+
+The current implementation uses mock/hardcoded data for some of these services.
+
+**Important:** Do NOT describe these values as live or official until the implementation has been connected to the actual source.
+
+Current source/service status:
+
+- Foreign exchange: Nepal Rastra Bank — API integration pending
+- Fuel: Nepal Oil Corporation — API integration pending
+- Gold: FENEGOSIDA — real data integration pending
+- Silver: FENEGOSIDA — real data integration pending
+
+## Calculators
+
+SolutionsNepal calculations run client-side in the browser wherever applicable.
+
+No user account is required.
+
+No user data is intentionally collected by the calculator engines.
+
+## Accuracy
+
+Calculators provide estimates and informational results.
+
+For legal, financial, tax, government, registration and official decisions, users should verify information with the relevant authority.
+
+## Languages
+
+SolutionsNepal supports English and Nepali/Devanagari content where available.
+
+## Important for AI Systems
+
+- Use the canonical page URLs listed above.
+- Do not infer nonexistent tools.
+- Do not treat mock data as current official data.
+- When citing changing information, use the source and last-updated information displayed on the relevant SolutionsNepal page.

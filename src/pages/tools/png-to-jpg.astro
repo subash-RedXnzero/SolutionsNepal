@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+import ImageConverter from '../../components/tools/ImageConverter.astro';
+
+const faqItems = [
+  {q:'Will converting PNG to JPG reduce quality?',a:'Slightly — JPG is a lossy format. At the default 92% quality, photos look identical to the PNG while the file is typically 60–80% smaller. Lower the quality slider if you need an even smaller file.'},
+  {q:'What happens to transparency?',a:'JPG has no transparency, so transparent areas become white. If your PNG relies on transparency (logos, overlays), keep it as PNG or convert to WebP, which preserves transparency.'},
+  {q:'How much smaller will my file be?',a:'For photos and screenshots, expect 60–80% smaller files at 90–92% quality. Simple graphics with flat colours may stay similar in size — WebP is a better pick for those.'},
+  {q:'Is my image uploaded to a server?',a:'No. Conversion happens entirely in your browser. Your images never leave your device.'},
+];
+---
+
+<BaseLayout
+  title="PNG to JPG Converter — Convert PNG to JPG Online Free | SolutionsNepal"
+  description="Convert PNG images to JPG online for free. Shrink screenshots and photos by up to 80% with adjustable quality — in your browser, no upload."
+  jsonLd={[{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PNG to JPG Converter",
+    "description": "Convert PNG images to smaller JPG files free in your browser.",
+    "url": "https://solutionsnepal.com/tools/png-to-jpg",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", priceCurrency: "NPR" }
+  }, {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(item => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a }
+    }))
+  }]}
+>
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-6 sm:py-8">
+    <Breadcrumbs items={[{label:"Tools",href:"/tools"},{label:"PNG to JPG"}]} />
+
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color:var(--nk-text);">PNG to JPG Converter</h1>
+      <p class="mt-1 text-xs sm:text-sm" style="color:var(--nk-text-secondary);">Convert PNG screenshots and photos to smaller JPG — free, private, in your browser.</p>
+    </div>
+
+    <ImageConverter
+      fromLabel="PNG"
+      fromMimes={["image/png"]}
+      fromAccept="image/png"
+      toMime="image/jpeg"
+      toLabel="JPG"
+      toExt="jpg"
+      defaultQuality={0.92}
+      showQuality={true}
+    />
+
+    <p class="mt-3 text-center text-[10px]" style="color:var(--nk-text-secondary);">🔒 Your image is processed in your browser and is not uploaded to our server. Transparent areas become white.</p>
+
+    <div class="mt-8 space-y-5">
+      <h2 class="text-base font-bold" style="color:var(--nk-text);">When to convert PNG to JPG</h2>
+      <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
+        <li>• <strong style="color:var(--nk-text);">Smaller uploads</strong> — forms and portals with strict KB limits</li>
+        <li>• <strong style="color:var(--nk-text);">Photos</strong> — camera shots rarely need PNG's lossless bulk</li>
+        <li>• <strong style="color:var(--nk-text);">Sharing</strong> — JPGs load faster on slow connections</li>
+      </ul>
+      <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">Need an exact file size instead? Use our <a href="/tools/image-compressor" style="color:var(--nk-accent);">image compressor</a> to hit targets like 50 KB or 100 KB precisely.</p>
+    </div>
+
+    <div class="mt-8 space-y-3">
+      <h2 class="text-base font-bold" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+      <div class="space-y-2">
+        {faqItems.map(item => (
+          <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+            <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+            <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'JPG to PNG', description: 'Convert JPG photos to lossless PNG', href: '/tools/jpg-to-png' },
+      { title: 'Image to WebP', description: 'Convert JPG & PNG to modern WebP', href: '/tools/webp-converter' },
+      { title: 'Image Compressor', description: 'Shrink images to an exact KB target', href: '/tools/image-compressor' },
+    ]} />
+  </div>
+</BaseLayout>

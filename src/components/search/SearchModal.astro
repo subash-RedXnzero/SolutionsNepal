@@ -1,0 +1,247 @@
+---
+import { tools } from '../../data/tools.js';
+---
+
+<div id="search-modal" class="search-backdrop" data-tools={JSON.stringify(tools)}>
+  <div class="search-panel" role="dialog" aria-label="Search tools">
+    <div class="search-input-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input
+        id="search-input"
+        type="text"
+        placeholder='Ask anything — "80 हजार salary tax" or "2 ropani कति आना"'
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <kbd class="search-esc">ESC</kbd>
+    </div>
+
+    <div id="search-results" class="search-results">
+      <div class="search-section">
+        <span class="search-section-label">Popular</span>
+        <div id="search-popular"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { routeQuery } from '../../lib/search/smart-router.js';
+
+  (function() {
+    const modal = document.getElementById('search-modal');
+    const input = document.getElementById('search-input');
+    const results = document.getElementById('search-results');
+    const allTools = JSON.parse(modal.dataset.tools || '[]');
+
+    // ─── RESULT RENDERING ───────────────────────────────────────
+    const ARROW = `<svg class="search-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`;
+
+    function toolItem(t) {
+      return `<a href="${t.href}" class="search-item">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:var(--fs-body);font-weight:500;color:var(--nk-text);">${t.title}</div>
+          <div style="font-size:var(--fs-xs);color:var(--nk-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.description}</div>
+        </div>${ARROW}</a>`;
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function searchText(query) {
+      const q = query.toLowerCase();
+      return allTools.filter(t =>
+        t.title.toLowerCase().includes(q) ||
+        t.description.toLowerCase().includes(q) ||
+        t.category.toLowerCase().includes(q)
+      );
+    }
+
+    function renderSmart(hit, query) {
+      const amountNote = hit.amount ? ` — prefill ${hit.amount}` : '';
+      results.innerHTML = `
+        <div class="search-section">
+          <span class="search-section-label">Smart match</span>
+          <a href="${hit.href}" class="search-item smart-hit">
+            <span class="smart-dot" aria-hidden="true"></span>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:var(--fs-body);font-weight:600;color:var(--nk-text);">${hit.label}</div>
+              <div style="font-size:var(--fs-xs);color:var(--nk-text-tertiary);">${hit.why}${amountNote}</div>
+            </div>${ARROW}</a>
+        </div>
+        <div class="search-section">
+          <span class="search-section-label">All results for “${escapeHtml(query)}”</span>
+          <div id="search-text-matches"></div>
+        </div>`;
+      const box = document.getElementById('search-text-matches');
+      const textMatches = searchText(query).slice(0, 5);
+      box.innerHTML = textMatches.length
+        ? textMatches.map(toolItem).join('')
+        : `<div class="search-empty" style="padding:16px;">Open the smart match above.</div>`;
+    }
+
+    function renderPopularList() {
+      return allTools.filter(t => t.popular).slice(0, 6).map(toolItem).join('');
+    }
+
+    function search(query) {
+      if (!query.trim()) {
+        results.innerHTML = `<div class="search-section"><span class="search-section-label">Popular</span>${renderPopularList()}</div>`;
+        return;
+      }
+
+      const smart = routeQuery(query);
+      if (smart) { renderSmart(smart, query.trim()); return; }
+
+      const matches = searchText(query);
+      if (matches.length === 0) {
+        results.innerHTML = `<div class="search-empty">No tools found for "${escapeHtml(query)}"<br><span style="font-size:var(--fs-xs);">Try “salary”, “ropani”, “emi”, “सुन” or “patro”.</span></div>`;
+        return;
+      }
+      results.innerHTML = `
+        <div class="search-section">
+          <span class="search-section-label">${matches.length} result${matches.length > 1 ? 's' : ''}</span>
+          ${matches.map(toolItem).join('')}
+        </div>`;
+    }
+
+    // ─── OPEN / CLOSE ───────────────────────────────────────────
+    window.openSearch = function() {
+      modal.classList.add('open');
+      setTimeout(() => input.focus(), 100);
+    };
+
+    window.closeSearch = function() {
+      modal.classList.remove('open');
+      input.value = '';
+      search('');
+    };
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeSearch();
+    });
+
+    input.addEventListener('input', (e) => search(e.target.value));
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        modal.classList.contains('open') ? closeSearch() : openSearch();
+      }
+      if (e.key === 'Escape' && modal.classList.contains('open')) {
+        closeSearch();
+      }
+    });
+
+    search('');
+  })();
+</script>
+
+<style>
+  .search-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(23, 23, 23, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 80px 16px 16px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .search-backdrop.open { display: flex; }
+
+  .search-panel {
+    width: 100%;
+    max-width: 580px;
+    background: var(--nk-surface);
+    border: 1px solid var(--nk-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    animation: command-open 0.18s var(--ease-out) forwards;
+  }
+
+  .search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--nk-border);
+    color: var(--nk-text-tertiary);
+  }
+  .search-input-wrap input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--nk-text);
+    font-size: var(--fs-md);
+    font-family: var(--font-sans);
+    outline: none;
+  }
+  .search-input-wrap input::placeholder { color: var(--nk-text-tertiary); }
+  .search-esc {
+    padding: 2px 8px;
+    border-radius: var(--radius-md);
+    background: var(--nk-muted);
+    border: 1px solid var(--nk-border);
+    font-size: var(--fs-2xs);
+    font-family: var(--font-mono);
+    color: var(--nk-text-tertiary);
+    flex-shrink: 0;
+  }
+
+  .search-results {
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 8px;
+  }
+  .search-section-label {
+    display: block;
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    color: var(--nk-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 8px 12px 4px;
+  }
+  .search-item {
+    padding: 9px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .search-item:hover { background-color: var(--nk-hover); }
+  .search-item:hover .search-arrow { opacity: 0.7; transform: translateX(2px); }
+  .search-arrow { color: var(--nk-text-tertiary); transition: opacity var(--duration-fast) ease, transform var(--duration-fast) ease; flex-shrink: 0; }
+
+  .smart-hit {
+    background: var(--nk-accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--nk-accent) 25%, transparent);
+    margin-bottom: 4px;
+  }
+  .smart-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--nk-accent);
+    flex-shrink: 0;
+  }
+  .search-empty {
+    text-align: center;
+    padding: 32px 16px;
+    font-size: var(--fs-body);
+    color: var(--nk-text-tertiary);
+  }
+
+  @keyframes command-open {
+    from { opacity: 0; transform: scale(0.97) translateY(-4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+</style>

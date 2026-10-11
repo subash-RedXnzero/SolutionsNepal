@@ -1,0 +1,18 @@
+---
+const { label, value, unit, highlight = false } = Astro.props;
+---
+
+<div class="py-3">
+  <p class="text-xs font-medium uppercase tracking-wider mb-1" style="color: var(--nk-text-tertiary);">
+    {label}
+  </p>
+  <p
+    class="text-[20px] sm:text-[24px] font-semibold tracking-[-0.02em]"
+    style={`color: ${highlight ? 'var(--nk-accent)' : 'var(--nk-text)'};`}
+  >
+    {value}
+    {unit && (
+      <span class="text-[13px] font-normal ml-1" style="color: var(--nk-text-tertiary);">{unit}</span>
+    )}
+  </p>
+</div>

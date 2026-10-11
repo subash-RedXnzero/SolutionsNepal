@@ -1,0 +1,434 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Calculator } from '@lucide/astro';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+import {
+  VEHICLE_TYPES, CAR_BRANDS, BIKE_BRANDS, CAR_FUELS, BIKE_FUELS,
+  CONDITIONS, ACCIDENTS, SERVICES, OWNERSHIPS, DEMANDS, DEFAULTS, HAS_LIVE_MARKET_DATA,
+} from '../../../../data/vehicle-resale.js';
+
+const title = 'Vehicle Resale Value Calculator Nepal (2026) | SolutionsNepal';
+const description = "Estimate your car or bike's current resale value in Nepal based on age, mileage, condition and market factors.";
+const canonical = 'https://solutionsnepal.com/nepal/vehicles/vehicle-resale-value-calculator-nepal';
+const NOW = new Date().getFullYear();
+const YEARS = Array.from({ length: 31 }, (_, i) => NOW - i);
+
+const faq = [
+  { q:'How is car resale value calculated in Nepal?', a:'Start with the original purchase price, apply age-based depreciation, then adjust for mileage vs expected usage, condition, accident and service history, ownership count, fuel type and demand. This calculator does all of that instantly and shows a likely value plus a range.' },
+  { q:'How much does a car depreciate each year?', a:'There is no single rate — this model assumes roughly 12% in the first year and about 7% yearly after that, slowing as the vehicle ages, with a floor so very old vehicles keep a small residual value. Brand and model demand can shift real prices significantly.' },
+  { q:'How can I increase my vehicle\u2019s resale value?', a:'Service regularly and keep records, fix cosmetic issues, keep mileage moderate, avoid accidents, keep all documents ready, and sell a popular model at the right season. Complete service history alone adds a small premium in this model.' },
+  { q:'Does mileage affect resale value?', a:'Yes. Mileage well above the expected annual usage (about 10,000 km/year for cars, 5,000–6,000 for two-wheelers) pulls the estimate down; unusually low mileage lifts it slightly. The calculator shows your computed km/year and lets you override it.' },
+  { q:'Does accident history reduce vehicle value?', a:'Yes. A minor accident trims about 5% and a major accident about 15% in this model, since buyers discount repair uncertainty. Clean history with documentation holds value best.' },
+  { q:'Do electric vehicles have good resale value in Nepal?', a:'It varies. EVs save on running costs, which supports demand, but battery-health uncertainty can weigh on used prices. This model applies a small cautious discount to electrics — treat it as a planning figure and check comparable listings.' },
+  { q:'Is the calculator\u2019s price the actual market price?', a:'No. It is a model-based estimate for planning, not live market data. Real prices move with brand, model, location, import availability, tax changes and whether you sell privately or to a dealer.' },
+  { q:'Should I use the estimated value as my selling price?', a:'Use it as an anchor, not a sticker price. The suggested listing price sits slightly above the likely value to leave room for normal negotiation — then confirm against similar listings and an inspection.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'Vehicle Resale Value Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1600px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Vehicles'}, {label:'Resale Value Calculator'}]} />
+
+    <div class="mb-2.5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">🇳🇵 Used vehicle value estimator for Nepal</div>
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">Vehicle Resale Value Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[660px]" style="color:var(--nk-text-secondary);">Estimate your car or bike's current resale value in Nepal based on age, mileage, condition and market factors.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[2fr_400px] xl:grid-cols-[2.15fr_420px] gap-4 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-2.5 min-w-0">
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◈</span> Vehicle Details</p>
+          <div class="flex flex-wrap gap-1.5" id="vt-chips" role="radiogroup" aria-label="Vehicle type">
+            {VEHICLE_TYPES.map(t=>{
+              const active = t.id===DEFAULTS.vehicleType;
+              return <button type="button" class={`chip vt-chip${active?' chip-active':''}`} data-vt={t.id} role="radio" aria-checked={active?'true':'false'}>{t.label}</button>
+            })}
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2.5 mt-2.5">
+            <div class="cm-field"><label class="cm-label" for="v-brand">Brand</label>
+              <select id="v-brand" class="nk-input text-[13px]" style="height:36px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;"></select>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="v-model">Model</label><div class="cm-box"><input id="v-model" type="text" placeholder="e.g. Hyundai Creta" autocomplete="off" maxlength="40" class="cm-input" style="padding-left:12px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="v-year">Purchase year</label>
+              <select id="v-year" class="nk-input text-[13px]" style="height:36px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                <option value="">Select year</option>
+                {YEARS.map(y=> <option value={String(y)}>{y}</option>)}
+              </select>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="v-price">Original purchase price</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="v-price" type="text" inputmode="decimal" placeholder="e.g. 35,00,000" class="cm-input" /></div></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2.5 pt-2.5" style="border-top:1px solid var(--nk-border);">
+            <div class="cm-field"><label class="cm-label" for="v-odo">Distance Driven</label><div class="cm-box"><input id="v-odo" type="text" inputmode="numeric" placeholder="e.g. 45,000" class="cm-input" style="padding-left:12px;" /><span class="cm-suffix">km</span></div></div>
+            <div class="cm-field"><label class="cm-label" for="v-annual">Avg. annual usage <span class="font-normal" style="color:var(--nk-text-tertiary);">(override)</span></label><div class="cm-box"><input id="v-annual" type="text" inputmode="numeric" placeholder="auto" class="cm-input" style="padding-left:12px;" /><span class="cm-suffix">km/yr</span></div></div>
+          </div>
+          <p class="text-[10.5px] mt-1.5 tabular-nums" style="color:var(--nk-text-tertiary);" id="annual-hint">Mileage ÷ age gives your annual usage automatically.</p>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">✦</span> Condition &amp; Factors</p>
+          <div class="grid grid-cols-2 xl:grid-cols-4 gap-2" id="cond-grid" role="radiogroup" aria-label="Condition">
+            {CONDITIONS.map(c=>{
+              const active = c.id===DEFAULTS.condition;
+              return <button type="button" class={`cond-btn${active?' cond-active':''}`} data-cond={c.id} role="radio" aria-checked={active?'true':'false'}><strong>{c.label}</strong><span>{c.desc}</span></button>
+            })}
+          </div>
+          <div class="mt-2.5 pt-2.5 space-y-2" style="border-top:1px solid var(--nk-border);">
+            <div class="factor-row"><p class="cm-label">Accident history</p><div class="flex flex-wrap gap-1.5" id="acc-chips" role="radiogroup" aria-label="Accident history">
+              {ACCIDENTS.map(a=>{
+                const active = a.id===DEFAULTS.accident;
+                return <button type="button" class={`chip acc-chip${active?' chip-active':''}`} data-acc={a.id} role="radio" aria-checked={active?'true':'false'}>{a.label}</button>
+              })}
+            </div></div>
+            <div class="factor-row"><p class="cm-label">Service history</p><div class="flex flex-wrap gap-1.5" id="serv-chips" role="radiogroup" aria-label="Service history">
+              {SERVICES.map(s=>{
+                const active = s.id===DEFAULTS.service;
+                return <button type="button" class={`chip serv-chip${active?' chip-active':''}`} data-serv={s.id} role="radio" aria-checked={active?'true':'false'}>{s.label}</button>
+              })}
+            </div></div>
+            <div class="factor-row"><p class="cm-label">Ownership</p><div class="flex flex-wrap gap-1.5" id="own-chips" role="radiogroup" aria-label="Ownership">
+              {OWNERSHIPS.map(o=>{
+                const active = o.id===DEFAULTS.ownership;
+                return <button type="button" class={`chip own-chip${active?' chip-active':''}`} data-own={o.id} role="radio" aria-checked={active?'true':'false'}>{o.label}</button>
+              })}
+            </div></div>
+            <div class="factor-row"><p class="cm-label">Fuel / powertrain</p><div class="flex flex-wrap gap-1.5" id="fuel-chips" role="radiogroup" aria-label="Fuel"></div></div>
+            <div class="factor-row"><div><p class="cm-label">Market demand</p><p class="text-[10.5px] mt-0.5" style="color:var(--nk-text-tertiary);">{HAS_LIVE_MARKET_DATA ? 'Live market data.' : 'Model-based estimate.'}</p></div><div class="flex flex-wrap gap-1.5" id="dem-chips" role="radiogroup" aria-label="Market demand">
+              {DEMANDS.map(d=>{
+                const active = d.id===DEFAULTS.demand;
+                return <button type="button" class={`chip dem-chip${active?' chip-active':''}`} data-dem={d.id} role="radio" aria-checked={active?'true':'false'}>{d.label}</button>
+              })}
+            </div></div>
+          </div>
+        </section>
+
+        <div class="flex gap-2.5">
+          <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> Calculate</button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2 text-[13px] font-semibold" style="border-radius:12px;">Reset Calculator</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium" style="color:#DC2626;"></p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated Resale Value</p>
+            <p class="text-[26px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter price, year and mileage, then click <strong>Calculate</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+            <div class="px-4 pt-4 pb-3 text-center res-hero" style="border-bottom:1px solid var(--nk-border);">
+              <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated Resale Value</p>
+              <p class="text-[30px] font-extrabold leading-tight tabular-nums nk-gradient-text" id="r-likely">—</p>
+              <p class="text-[12px] tabular-nums font-semibold" style="color:var(--nk-text-secondary);">Likely range: <span id="r-range">—</span></p>
+              <p class="text-[10.5px] mt-1" style="color:var(--nk-text-tertiary);">Model-based estimate — not a guaranteed selling price.</p>
+            </div>
+            <div class="p-3.5 space-y-2.5">
+              <div class="rounded-xl text-[12px]" style="border:1px solid var(--nk-border);">
+                <div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Original price</span><strong style="color:var(--nk-text);" id="r-orig">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Estimated depreciation</span><strong style="color:var(--nk-text);" id="r-dep">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Value retained</span><strong style="color:var(--nk-accent);" id="r-ret">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Age · Mileage</span><strong style="color:var(--nk-text);" id="r-age-mile">—</strong></div>
+              </div>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <div class="flex justify-between text-[11px] font-bold tabular-nums mb-1.5"><span style="color:var(--nk-text-tertiary);" id="r-lo-l">—</span><span style="color:var(--nk-accent);" id="r-likely-l">—</span><span style="color:var(--nk-text-tertiary);" id="r-hi-l">—</span></div>
+                <div class="relative h-2 rounded-full" style="background:var(--nk-muted);">
+                  <div class="absolute top-0 bottom-0 rounded-full" id="r-bar" style="background:var(--nk-accent-subtle); border:1px solid var(--nk-accent-muted); left:0%; width:100%;"></div>
+                  <div id="r-dot" class="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2" style="background:var(--nk-accent); border-color:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); left:50%;"></div>
+                </div>
+                <div class="flex justify-between text-[10px] mt-1" style="color:var(--nk-text-tertiary);"><span>Lower value</span><span>Likely value</span><span>Higher value</span></div>
+              </div>
+
+              <details class="rounded-xl" style="border:1px solid var(--nk-border);">
+                <summary class="px-3 py-2 text-[12px] font-semibold cursor-pointer select-none" style="color:var(--nk-text);">Estimated value history</summary>
+                <div class="px-3 pb-2.5"><table class="w-full text-[12px] tabular-nums">
+                  <tbody id="r-history"></tbody>
+                </table></div>
+              </details>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">What is affecting your value?</p>
+                <div id="r-factors" class="space-y-1 text-[12px]"></div>
+              </div>
+
+              <div class="rounded-xl p-3" style="background:var(--nk-hover); border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Suggested listing price</p>
+                <p class="text-[18px] font-extrabold tabular-nums mt-0.5" style="color:var(--nk-text);" id="r-list">—</p>
+                <p class="text-[11.5px] tabular-nums" style="color:var(--nk-text-secondary);">Negotiation range: <strong style="color:var(--nk-text);" id="r-neg">—</strong></p>
+                <p class="text-[10.5px] mt-1 leading-relaxed" style="color:var(--nk-text-tertiary);">Listing slightly above your target can leave room for normal negotiation — not a guaranteed selling price.</p>
+              </div>
+
+              <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-accent-subtle); border:1px solid var(--nk-accent-muted); color:var(--nk-text-secondary);">
+                <strong style="color:var(--nk-text);">Nepal note:</strong> Used-vehicle prices vary significantly by brand, model, condition, location, import availability, tax/regulatory changes, demand and dealer/private-sale conditions. This is a planning estimate.
+              </div>
+
+              <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+                <strong style="color:var(--nk-text);">Important:</strong> Estimated resale value, not a professional valuation. Actual prices differ by inspection, documentation, location, demand and sale type.
+              </div>
+
+              <div id="res-warn" class="space-y-1.5"></div>
+              <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Is Vehicle Resale Value Calculated in Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Start with the original purchase price, apply age-based depreciation, then adjust for mileage against expected annual usage, condition, accident and service history, ownership count, fuel type and demand. The result is a likely value with a range — because no two used vehicles, buyers or sale conditions are identical.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Does a Car Depreciate in Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Depreciation is not identical for every vehicle — this model assumes a sharper first-year drop that flattens over time. In reality, brand and model demand move prices a lot: popular models with good parts availability hold value far better than rare or discontinued ones.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">What Increases a Vehicle's Resale Value?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Good maintenance with complete service records, low-to-moderate mileage, a clean accident history, good cosmetic condition, a popular model and proper documentation (bluebook, tax clearance, transfer papers) all support a stronger price.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">What Reduces Resale Value?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">High mileage, major accident history, poor maintenance, multiple owners, mechanical problems, poor cosmetics and weak model demand all pull value down — as does selling in a hurry to a dealer rather than privately.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[{title:'Ownership Cost Calculator', description:'True cost of owning a bike or car', href:'/nepal/vehicle/ownership-cost-calculator'}, {title:'Fuel Cost Calculator', description:'Trip fuel and cost per km', href:'/nepal/vehicle/fuel-cost'}, {title:'Vehicle Tax Calculator', description:'Tax, fines & renewal in Nepal', href:'/nepal/transport/vehicle-tax'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .sec-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--nk-text); margin-bottom:5px; letter-spacing:-0.01em; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11px; font-weight:500; cursor:pointer; transition:all 140ms ease; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .cm-field{ display:flex; flex-direction:column; gap:4px; }
+  .cm-label{ font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:36px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; outline:none; border-radius:10px; color:var(--nk-text); }
+  .cond-btn{ display:flex; flex-direction:column; align-items:flex-start; gap:1px; padding:7px 10px; border-radius:10px; border:1px solid var(--nk-border); background:var(--nk-surface); cursor:pointer; transition:all 140ms ease; text-align:left; min-width:0; }
+  .cond-btn strong{ font-size:12px; font-weight:700; color:var(--nk-text); }
+  .cond-btn span{ font-size:10px; line-height:1.35; color:var(--nk-text-tertiary); }
+  .cond-btn:hover{ border-color:var(--nk-border-strong); }
+  .cond-btn.cond-active{ border-color:var(--nk-accent); background:var(--nk-accent-subtle); box-shadow:0 0 0 2px var(--nk-accent-subtle); }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); }
+  .factor-row{ display:grid; grid-template-columns:140px minmax(0,1fr); gap:10px; align-items:center; padding:7px 10px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); }
+  .factor-row .cm-label{ margin:0; }
+  .hidden{ display:none !important; }
+  @media (max-width: 640px){
+    .factor-row{ grid-template-columns:1fr; gap:6px; }
+  }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input{ font-size:16px !important; }
+  }
+</style>
+
+<script>
+  import { calcResale, formatNPR, formatKm, formatLakh } from '../../../../lib/calculators/vehicle-resale.js';
+  import { CAR_BRANDS, BIKE_BRANDS, CAR_FUELS, BIKE_FUELS, getType, getDemand } from '../../../../data/vehicle-resale.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let hasCalculated = false;
+  let vehicleType = 'car';
+  let condition = 'good';
+  let accident = 'none';
+  let service = 'complete';
+  let ownership = 'first';
+  let fuel = 'petrol';
+  let demandId = 'normal';
+
+  function setChip(selector, attr, val){
+    document.querySelectorAll(selector).forEach(c=>{
+      const on = c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+  function setCond(id){
+    condition = id;
+    document.querySelectorAll('.cond-btn').forEach(c=>{
+      const on = c.dataset.cond===id;
+      c.classList.toggle('cond-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+
+  function rebuildBrandFuel(){
+    const bike = getType(vehicleType).bike;
+    const brands = bike ? BIKE_BRANDS : CAR_BRANDS;
+    const prevBrand = $('v-brand').value;
+    $('v-brand').innerHTML = `<option value="">Select brand</option>` + brands.map(b=>`<option value="${b}">${b}</option>`).join('');
+    if(brands.includes(prevBrand)) $('v-brand').value = prevBrand;
+    const fuels = bike ? BIKE_FUELS : CAR_FUELS;
+    if(!fuels.some(f=>f.id===fuel)) fuel = 'petrol';
+    $('fuel-chips').innerHTML = fuels.map(f=>`<button type="button" class="chip${f.id===fuel?' chip-active':''}" data-fuel="${f.id}" role="radio" aria-checked="${f.id===fuel}">${f.label}</button>`).join('');
+    $('fuel-chips').querySelectorAll('[data-fuel]').forEach(b=> b.addEventListener('click', ()=>{
+      fuel = b.dataset.fuel;
+      $('fuel-chips').querySelectorAll('[data-fuel]').forEach(c=>{
+        const on=c.dataset.fuel===fuel;
+        c.classList.toggle('chip-active', on);
+        c.setAttribute('aria-checked', String(on));
+      });
+      recalc();
+    }));
+  }
+
+  // chip groups
+  document.querySelectorAll('.vt-chip').forEach(b=> b.addEventListener('click', ()=>{ vehicleType=b.dataset.vt; setChip('.vt-chip','vt',vehicleType); rebuildBrandFuel(); recalc(); }));
+  document.querySelectorAll('.cond-btn').forEach(b=> b.addEventListener('click', ()=>{ setCond(b.dataset.cond); recalc(); }));
+  const chipGroups = [['.acc-chip','acc',v=>accident=v],['.serv-chip','serv',v=>service=v],['.own-chip','own',v=>ownership=v],['.dem-chip','dem',v=>demandId=v]];
+  chipGroups.forEach(([sel,attr,set])=>{
+    document.querySelectorAll(sel).forEach(b=> b.addEventListener('click', ()=>{ set(b.dataset[attr]); setChip(sel,attr,b.dataset[attr]); recalc(); }));
+  });
+
+  // text inputs: clean + live recalc, commas on blur
+  ['v-price','v-odo','v-annual'].forEach(id=>{
+    $(id)?.addEventListener('input', ()=>{
+      if($(id).value.includes('-')) $(id).value=$(id).value.replace(/-/g,'');
+      recalc();
+    });
+    $(id)?.addEventListener('blur', ()=>{
+      const raw=String($(id).value).replace(/,/g,'').replace(/km/i,'').trim();
+      if(raw==='') { recalc(); return; }
+      const n=Number(raw);
+      if(Number.isFinite(n) && n>=0) $(id).value = id==='v-price' ? Math.round(n).toLocaleString('en-IN') : Math.round(n).toLocaleString('en-IN');
+      recalc();
+    });
+  });
+  $('v-model')?.addEventListener('input', ()=>{});
+  ['v-brand','v-year'].forEach(id=> $(id)?.addEventListener('change', recalc));
+
+  function esc(s){ return String(s ?? '').replace(/[&<>"']/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function recalc(){
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const r = calcResale({
+      originalPrice: $('v-price').value,
+      purchaseYear: $('v-year').value,
+      odometerKm: $('v-odo').value,
+      annualKmOverride: $('v-annual').value,
+      vehicleType, condition, accident, service, ownership, fuel,
+      demandFactor: getDemand(demandId).factor,
+    });
+
+    // annual hint
+    const ah=$('annual-hint');
+    if(r.age>0 && ($('v-odo').value.trim()!=='')){
+      ah.textContent = `Approx. ${Math.round(r.annualKmAuto ? (r.odo/r.age) : r.annualKm).toLocaleString('en-IN')} km/year${r.annualKmAuto?' (automatic)':' (your override)'} · expected ~${r.expectedAnnualKm.toLocaleString('en-IN')} km/year for this vehicle type.`;
+      if($('v-annual').placeholder !== undefined && !$('v-annual').value) $('v-annual').placeholder = `e.g. ${Math.round(r.odo/r.age).toLocaleString('en-IN')}`;
+    } else {
+      ah.textContent = 'Mileage ÷ age gives your annual usage automatically.';
+      $('v-annual').placeholder = 'auto';
+    }
+
+    if(!hasCalculated){
+      $('res-empty')?.classList.remove('hidden');
+      $('res-body')?.classList.add('hidden');
+      return;
+    }
+    if(!r.valid){
+      $('res-empty')?.classList.remove('hidden');
+      $('res-body')?.classList.add('hidden');
+      if(r.warnings.length){
+        if(hint){ hint.textContent=r.warnings[0]; hint.classList.remove('hidden'); }
+      }
+      $('calc-btn')?.animate?.([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],{duration:220});
+      return;
+    }
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+
+    const typeLabel = getType(vehicleType).label;
+    const brand = $('v-brand').value, model = $('v-model').value.trim();
+    const name = [brand && brand!=='Other' ? brand : '', model].filter(Boolean).join(' ') || typeLabel;
+
+    $('r-likely').textContent = formatNPR(r.likely);
+    $('r-range').textContent = `${formatNPR(r.low)} – ${formatNPR(r.high)}`;
+    $('r-orig').textContent = formatNPR(r.price);
+    $('r-dep').textContent = '− ' + formatNPR(r.depreciation);
+    $('r-ret').textContent = r.retainedPct.toFixed(0) + '%';
+    $('r-age-mile').textContent = `${r.age} yr${r.age===1?'':'s'} · ${formatKm(r.odo)}`;
+
+    // range viz
+    const span = Math.max(1, r.high - r.low);
+    const pos = Math.min(96, Math.max(4, ((r.likely - r.low) / span) * 100));
+    $('r-lo-l').textContent = formatLakh(r.low);
+    $('r-likely-l').textContent = formatLakh(r.likely);
+    $('r-hi-l').textContent = formatLakh(r.high);
+    $('r-dot').style.left = `calc(${pos}% - 7px)`;
+
+    // history
+    $('r-history').innerHTML = r.history.map((h,i)=>{
+      const last = i===r.history.length-1;
+      return `<tr style="${last?'border-top:2px solid var(--nk-border-strong); font-weight:700;':(i>0?'border-top:1px solid var(--nk-border);':'')}">
+        <td class="py-1.5 pr-2" style="color:${last?'var(--nk-text)':'var(--nk-text-secondary);'}">${h.label}</td>
+        <td class="py-1.5 pl-2 text-right" style="color:${last?'var(--nk-accent)':'var(--nk-text);'}">${formatNPR(h.value)}</td></tr>`;
+    }).join('');
+
+    // factors
+    $('r-factors').innerHTML = r.factors.map(f=>{
+      const neg = f.delta < 0, zero = f.delta === 0;
+      const dot = zero ? 'var(--nk-border-strong)' : neg ? '#DC2626' : '#16A34A';
+      return `<div class="flex justify-between items-center"><span style="color:var(--nk-text-secondary);">${f.label}</span><span class="inline-flex items-center gap-1.5" style="color:var(--nk-text); font-weight:600;"><span style="width:7px; height:7px; border-radius:9999px; background:${dot}; display:inline-block;"></span>${f.text}</span></div>`;
+    }).join('');
+
+    // listing
+    $('r-list').textContent = formatNPR(r.listing.suggested);
+    $('r-neg').textContent = `${formatNPR(r.listing.negLow)} – ${formatNPR(r.listing.negHigh)}`;
+
+    // warnings
+    $('res-warn').innerHTML = r.warnings.length
+      ? r.warnings.map(w=>`<div class="text-[11px] p-2.5 rounded-lg" style="background:#FEF2F2; border:1px solid #FECACA; color:#991B1B;">${w}</div>`).join('') : '';
+
+    window.__lastResale = { r, name };
+    if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+  }
+
+  function doCalc(){
+    hasCalculated = true;
+    recalc();
+  }
+
+  function doReset(){
+    hasCalculated = false;
+    vehicleType='car'; condition='good'; accident='none'; service='complete'; ownership='first'; fuel='petrol'; demandId='normal';
+    setChip('.vt-chip','vt','car'); setCond('good');
+    setChip('.acc-chip','acc','none'); setChip('.serv-chip','serv','complete');
+    setChip('.own-chip','own','first'); setChip('.dem-chip','dem','normal');
+    rebuildBrandFuel();
+    ['v-model','v-price','v-odo','v-annual'].forEach(id=>{ $(id).value=''; });
+    $('v-year').value=''; $('v-brand').value='';
+    $('v-annual').placeholder='auto';
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    recalc();
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalc);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && e.target.matches('input, select')) doCalc(); });
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('copy-btn')?.addEventListener('click', async()=>{
+    if($('res-body')?.classList.contains('hidden')){
+      doCalc();
+      if($('res-body')?.classList.contains('hidden')) return;
+    }
+    const d=window.__lastResale; if(!d) return;
+    const text=`${d.name} — Estimated resale ${formatNPR(d.r.likely)} (range ${formatNPR(d.r.low)} – ${formatNPR(d.r.high)})\nOriginal ${formatNPR(d.r.price)} · ${d.r.age}y · ${formatKm(d.r.odo)} · Suggested listing ${formatNPR(d.r.listing.suggested)}\nModel-based estimate — SolutionsNepal vehicle resale calculator`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const t=b.textContent; b.textContent='Copied!'; setTimeout(()=> b.textContent=t,1500);}catch{}
+  });
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+
+  rebuildBrandFuel();
+  recalc();
+</script>

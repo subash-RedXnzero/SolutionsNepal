@@ -1,0 +1,268 @@
+---
+/**
+ * BmiCalculator — height (ft/in or cm) + weight (kg or lb) → BMI.
+ * Manual Calculate button, no auto-calc.
+ */
+---
+
+<div id="bmi-root" class="nk-card overflow-hidden">
+  <div class="p-5 sm:p-6">
+
+    <!-- Height -->
+    <div class="mb-4">
+      <div class="flex items-center justify-between mb-1.5">
+        <label class="text-[12px] font-medium" style="color:var(--nk-text-secondary);">Height</label>
+        <div class="flex rounded-md overflow-hidden" style="border:1px solid var(--nk-border);">
+          <button id="bmi-h-ft" class="bmi-unit-btn px-2.5 py-0.5 text-[11px] font-medium transition-all" style="background:var(--nk-accent);color:#fff;">ft / in</button>
+          <button id="bmi-h-cm" class="bmi-unit-btn px-2.5 py-0.5 text-[11px] font-medium transition-all" style="background:var(--nk-surface);color:var(--nk-text-secondary);">cm</button>
+        </div>
+      </div>
+      <!-- ft/in -->
+      <div id="bmi-h-ft-wrap" class="flex items-center gap-2">
+        <div class="relative flex-1">
+          <input id="bmi-ft" type="number" min="1" max="8" placeholder="5" class="w-full nk-input text-[18px] font-semibold tabular-nums text-center" style="color:var(--nk-text);" />
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] pointer-events-none" style="color:var(--nk-text-tertiary);">ft</span>
+        </div>
+        <span class="text-[14px] font-medium" style="color:var(--nk-text-tertiary);">+</span>
+        <div class="relative flex-1">
+          <input id="bmi-in" type="number" min="0" max="11" placeholder="7" class="w-full nk-input text-[18px] font-semibold tabular-nums text-center" style="color:var(--nk-text);" />
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] pointer-events-none" style="color:var(--nk-text-tertiary);">in</span>
+        </div>
+      </div>
+      <!-- cm -->
+      <div id="bmi-h-cm-wrap" class="hidden relative">
+        <input id="bmi-cm" type="number" min="1" max="300" placeholder="170" class="w-full nk-input text-[18px] font-semibold tabular-nums text-center pr-10" style="color:var(--nk-text);" />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] pointer-events-none" style="color:var(--nk-text-tertiary);">cm</span>
+      </div>
+    </div>
+
+    <!-- Weight -->
+    <div class="mb-5">
+      <div class="flex items-center justify-between mb-1.5">
+        <label class="text-[12px] font-medium" style="color:var(--nk-text-secondary);">Weight</label>
+        <div class="flex rounded-md overflow-hidden" style="border:1px solid var(--nk-border);">
+          <button id="bmi-w-kg" class="bmi-unit-btn px-2.5 py-0.5 text-[11px] font-medium transition-all" style="background:var(--nk-accent);color:#fff;">kg</button>
+          <button id="bmi-w-lb" class="bmi-unit-btn px-2.5 py-0.5 text-[11px] font-medium transition-all" style="background:var(--nk-surface);color:var(--nk-text-secondary);">lb</button>
+        </div>
+      </div>
+      <!-- kg -->
+      <div id="bmi-w-kg-wrap" class="relative">
+        <input id="bmi-kg" type="number" min="1" max="500" placeholder="65" class="w-full nk-input text-[18px] font-semibold tabular-nums text-center pr-10" style="color:var(--nk-text);" />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] pointer-events-none" style="color:var(--nk-text-tertiary);">kg</span>
+      </div>
+      <!-- lb -->
+      <div id="bmi-w-lb-wrap" class="hidden relative">
+        <input id="bmi-lb" type="number" min="1" max="1000" placeholder="143" class="w-full nk-input text-[18px] font-semibold tabular-nums text-center pr-10" style="color:var(--nk-text);" />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] pointer-events-none" style="color:var(--nk-text-tertiary);">lb</span>
+      </div>
+    </div>
+
+    <!-- Calculate -->
+    <button id="bmi-calc" class="w-full py-2.5 rounded-lg text-[14px] font-semibold transition-all hover:opacity-90 active:scale-[0.99]" style="background-color:var(--nk-accent);color:#fff;">
+      Calculate BMI
+    </button>
+
+    <!-- Error -->
+    <p id="bmi-error" class="hidden mt-3 text-[12px] text-center" style="color:var(--nk-danger, #dc2626);"></p>
+
+    <!-- Result (hidden until calculated) -->
+    <div id="bmi-result" class="hidden mt-5 rounded-lg p-5 text-center" style="background:var(--nk-bg);">
+      <p class="text-[11px] font-medium mb-1" style="color:var(--nk-text-tertiary);">Your BMI</p>
+      <p id="bmi-value" class="text-[48px] font-bold tracking-[-0.02em] tabular-nums leading-tight" style="color:var(--nk-accent);">—</p>
+      <p id="bmi-category" class="text-[14px] font-semibold mt-1" style="color:var(--nk-text);">—</p>
+
+      <!-- Scale bar -->
+      <div class="mt-4 relative h-2 rounded-full overflow-hidden" style="background:linear-gradient(to right, #3b82f6 0%, #3b82f6 37%, #22c55e 37%, #22c55e 50%, #f59e0b 50%, #f59e0b 60%, #ef4444 60%, #ef4444 100%);">
+        <div id="bmi-marker" class="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white shadow" style="background:var(--nk-text);left:50%;transition:left 0.3s ease;"></div>
+      </div>
+      <div class="flex justify-between mt-1.5 text-[9px] font-medium" style="color:var(--nk-text-tertiary);">
+        <span>Underweight</span>
+        <span>Normal</span>
+        <span>Overweight</span>
+        <span>Obesity</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-4 flex gap-2">
+      <button id="bmi-reset" class="nk-btn nk-btn-ghost nk-btn-sm flex-1 text-[12px]">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = (sel: string) => document.getElementById(sel);
+
+  // Unit buttons
+  const hFtBtn = $('bmi-h-ft')!;
+  const hCmBtn = $('bmi-h-cm')!;
+  const wKgBtn = $('bmi-w-kg')!;
+  const wLbBtn = $('bmi-w-lb')!;
+  const hFtWrap = $('bmi-h-ft-wrap')!;
+  const hCmWrap = $('bmi-h-cm-wrap')!;
+  const wKgWrap = $('bmi-w-kg-wrap')!;
+  const wLbWrap = $('bmi-w-lb-wrap')!;
+  const ftInput = $('bmi-ft') as HTMLInputElement;
+  const inInput = $('bmi-in') as HTMLInputElement;
+  const cmInput = $('bmi-cm') as HTMLInputElement;
+  const kgInput = $('bmi-kg') as HTMLInputElement;
+  const lbInput = $('bmi-lb') as HTMLInputElement;
+  const resultBox = $('bmi-result')!;
+  const bmiValue = $('bmi-value')!;
+  const bmiCategory = $('bmi-category')!;
+  const bmiMarker = $('bmi-marker')!;
+  const errorEl = $('bmi-error')!;
+
+  let heightUnit = 'ft'; // 'ft' | 'cm'
+  let weightUnit = 'kg'; // 'kg' | 'lb'
+
+  function setHeightUnit(unit: string) {
+    heightUnit = unit;
+    if (unit === 'ft') {
+      hFtBtn.style.background = 'var(--nk-accent)'; hFtBtn.style.color = '#fff';
+      hCmBtn.style.background = 'var(--nk-surface)'; hCmBtn.style.color = 'var(--nk-text-secondary)';
+      hFtWrap.classList.remove('hidden'); hCmWrap.classList.add('hidden');
+    } else {
+      hCmBtn.style.background = 'var(--nk-accent)'; hCmBtn.style.color = '#fff';
+      hFtBtn.style.background = 'var(--nk-surface)'; hFtBtn.style.color = 'var(--nk-text-secondary)';
+      hCmWrap.classList.remove('hidden'); hFtWrap.classList.add('hidden');
+    }
+  }
+
+  function setWeightUnit(unit: string) {
+    weightUnit = unit;
+    if (unit === 'kg') {
+      wKgBtn.style.background = 'var(--nk-accent)'; wKgBtn.style.color = '#fff';
+      wLbBtn.style.background = 'var(--nk-surface)'; wLbBtn.style.color = 'var(--nk-text-secondary)';
+      wKgWrap.classList.remove('hidden'); wLbWrap.classList.add('hidden');
+    } else {
+      wLbBtn.style.background = 'var(--nk-accent)'; wLbBtn.style.color = '#fff';
+      wKgBtn.style.background = 'var(--nk-surface)'; wKgBtn.style.color = 'var(--nk-text-secondary)';
+      wLbWrap.classList.remove('hidden'); wKgWrap.classList.add('hidden');
+    }
+  }
+
+  function getHeightMeters(): number | null {
+    if (heightUnit === 'ft') {
+      const ft = parseFloat(ftInput.value);
+      const inches = parseFloat(inInput.value) || 0;
+      if (!Number.isFinite(ft) || ft <= 0) return null;
+      const totalInches = ft * 12 + inches;
+      return totalInches * 0.0254;
+    } else {
+      const cm = parseFloat(cmInput.value);
+      if (!Number.isFinite(cm) || cm <= 0) return null;
+      return cm / 100;
+    }
+  }
+
+  function getWeightKg(): number | null {
+    if (weightUnit === 'kg') {
+      const kg = parseFloat(kgInput.value);
+      if (!Number.isFinite(kg) || kg <= 0) return null;
+      return kg;
+    } else {
+      const lb = parseFloat(lbInput.value);
+      if (!Number.isFinite(lb) || lb <= 0) return null;
+      return lb * 0.453592;
+    }
+  }
+
+  function getCategory(bmi: number): string {
+    if (bmi < 18.5) return 'Underweight';
+    if (bmi < 25) return 'Normal';
+    if (bmi < 30) return 'Overweight';
+    return 'Obesity';
+  }
+
+  function getCategoryColor(bmi: number): string {
+    if (bmi < 18.5) return '#3b82f6';
+    if (bmi < 25) return '#22c55e';
+    if (bmi < 30) return '#f59e0b';
+    return '#ef4444';
+  }
+
+  function getMarkerPosition(bmi: number): number {
+    // Map BMI to 0-100% on the scale bar
+    // Scale: 10 (left edge) to 40 (right edge)
+    const min = 10, max = 40;
+    const clamped = Math.min(Math.max(bmi, min), max);
+    return ((clamped - min) / (max - min)) * 100;
+  }
+
+  function calculate() {
+    const heightM = getHeightMeters();
+    const weightKg = getWeightKg();
+
+    errorEl.classList.add('hidden');
+    resultBox.classList.add('hidden');
+
+    if (heightM === null) {
+      errorEl.textContent = 'Please enter your height.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+    if (weightKg === null) {
+      errorEl.textContent = 'Please enter your weight.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    const bmi = weightKg / (heightM * heightM);
+    if (!Number.isFinite(bmi) || bmi <= 0) {
+      errorEl.textContent = 'Please enter a valid height and weight.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    const rounded = Math.round(bmi * 10) / 10;
+    bmiValue.textContent = rounded.toFixed(1);
+    bmiCategory.textContent = getCategory(rounded);
+    bmiCategory.style.color = getCategoryColor(rounded);
+    bmiValue.style.color = getCategoryColor(rounded);
+    bmiMarker.style.left = getMarkerPosition(rounded) + '%';
+    resultBox.classList.remove('hidden');
+  }
+
+  // Events
+  hFtBtn.addEventListener('click', () => setHeightUnit('ft'));
+  hCmBtn.addEventListener('click', () => setHeightUnit('cm'));
+  wKgBtn.addEventListener('click', () => setWeightUnit('kg'));
+  wLbBtn.addEventListener('click', () => setWeightUnit('lb'));
+  $('bmi-calc')?.addEventListener('click', calculate);
+
+  // Hide result when inputs change (require re-calculate)
+  [ftInput, inInput, cmInput, kgInput, lbInput].forEach((el) => {
+    el?.addEventListener('input', () => {
+      resultBox.classList.add('hidden');
+      errorEl.classList.add('hidden');
+    });
+  });
+
+  // Reset
+  $('bmi-reset')?.addEventListener('click', () => {
+    ftInput.value = '5';
+    inInput.value = '7';
+    cmInput.value = '';
+    kgInput.value = '65';
+    lbInput.value = '';
+    setHeightUnit('ft');
+    setWeightUnit('kg');
+    resultBox.classList.add('hidden');
+    errorEl.classList.add('hidden');
+  });
+
+  // Init
+  ftInput.value = '5';
+  inInput.value = '7';
+  kgInput.value = '65';
+</script>
+
+<style>
+  .bmi-unit-btn {
+    cursor: pointer;
+    font-family: var(--font-sans);
+    border: none;
+    outline: none;
+  }
+</style>

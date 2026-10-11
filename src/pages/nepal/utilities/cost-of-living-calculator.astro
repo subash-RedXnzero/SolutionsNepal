@@ -1,0 +1,569 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../components/ui/RelatedTools.astro';
+import { CITIES, HOUSEHOLD_OPTIONS, PROPERTY_OPTIONS, FURNISHING_OPTIONS, EXPENSE_CATEGORIES, buildDefaults, rentEstimate } from '../../../data/cost-of-living.js';
+import { KeyRound, House } from '@lucide/astro';
+import Disclaimer from '../../../components/ui/Disclaimer.astro';
+
+const title = 'Nepal Cost of Living Calculator (2026) – Monthly Expenses | SolutionsNepal';
+const description = 'Calculate your estimated cost of living in Nepal. Compare rent, food, transportation, utilities and other monthly expenses by city and household size.';
+
+const faqItems = [
+  { q: 'How much money do you need to live comfortably in Nepal?', a: 'It depends heavily on city, housing, and household size. A single person renting a small flat in Kathmandu might spend Rs 40,000–65,000 per month including food, utilities and transport, while outside the Valley the same lifestyle can cost noticeably less. Enter your own city, household size and actual rent above to see a personalised estimate.' },
+  { q: 'How much does it cost to live in Kathmandu?', a: 'Kathmandu is the most expensive city in Nepal for housing, followed by Lalitpur and Pokhara. Rent is the largest single variable — a 1 BHK in Kathmandu typically costs more than the same flat in Chitwan or Dharan. Food, internet and transport costs also trend higher inside the Ring Road. Use the city selector above to load a Kathmandu-based starting budget that you can then edit.' },
+  { q: 'Is Nepal expensive to live in?', a: 'Nepal is affordable compared to most regional capitals, but costs have risen steadily for rent, groceries and fuel. Outside the major cities living costs are lower. The calculator does not claim an official national average — it helps you add up your own expenses to understand where your money goes.' },
+  { q: 'How much does rent cost in Nepal?', a: 'Rent varies widely by city, neighbourhood, property size and furnishing. As an illustrative starting point, the calculator suggests rents from roughly Rs 8,000 (room, unfurnished) to Rs 65,000 (4+ BHK, furnished) in Kathmandu, with lower suggestions for other cities — but you should overwrite the rent field with the actual amount your landlord charges. Select “Own home” if you do not pay rent.' },
+  { q: 'How much does a single person spend per month in Nepal?', a: 'A single person who rents in Kathmandu often spends in the Rs 35,000–65,000 range for all living costs combined (rent, food, utilities, transport, phone, health and leisure). Outside Kathmandu the same budget can stretch further. Change household size to “1 person” and enter your real rent to get a sharper personal figure.' },
+  { q: 'How accurate is this calculator?', a: 'These are estimated living expenses based on the amounts you enter. The suggested defaults are illustrative examples, not official statistics. For accuracy, enter your actual monthly spending — the calculator then simply adds your numbers and shows the breakdown. No data is sent to a server.' },
+];
+
+const placeholderDefaults = buildDefaults({ cityId: 'kathmandu', householdSize: 1, housingStatus: 'renting', property: '1bhk', furnishing: 'unfurnished' });
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Nepal Cost of Living Calculator',
+      description: 'Estimate your monthly and yearly living expenses in Nepal based on city, household, housing, and lifestyle.',
+      url: 'https://solutionsnepal.com/nepal/utilities/cost-of-living-calculator',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <div class="mx-auto max-w-[1280px] px-4 sm:px-6 py-4 sm:py-6 col-wrap">
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Utilities', href: '/nepal/utilities' },
+      { label: 'Cost of Living Calculator' },
+    ]} />
+
+    <div class="mb-4 flex items-start justify-between gap-4 flex-wrap">
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">Nepal Utilities • 2026 • Estimates</div>
+        <h1 class="text-[24px] sm:text-[28px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-2" style="color:var(--nk-text);">Nepal Cost of Living Calculator</h1>
+        <p class="text-[13px] leading-[1.55] mt-1.5 max-w-[680px]" style="color:var(--nk-text-secondary);">Estimate your monthly and yearly living expenses in Nepal — city, household, house rent and everyday spending. Placeholders are guides — enter your real amounts.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.75fr_420px] gap-5 xl:gap-6 items-start">
+
+      <!-- LEFT: INPUTS -->
+      <div class="nk-card p-4 sm:p-5" id="input-card">
+        <div class="space-y-4">
+
+          <!-- Duo: Location + Household -->
+          <div class="duo">
+            <section>
+              <p class="sec-head"><span class="sec-icon">⌖</span> Location</p>
+              <div class="flex flex-wrap gap-1.5" id="city-chips" role="radiogroup" aria-label="City">
+                {CITIES.map((c, i) => (
+                  <button type="button" class={`city-chip${i===0 ? ' chip-active' : ''}`} data-city={c.id} role="radio" aria-checked={i===0 ? 'true' : 'false'}>{c.label}</button>
+                ))}
+              </div>
+              <p class="text-[11px] mt-1.5" style="color:var(--nk-text-tertiary);">City adjusts the house-rent suggestion.</p>
+            </section>
+            <section>
+              <p class="sec-head"><span class="sec-icon">◫</span> Household</p>
+              <div class="flex flex-wrap gap-1.5" id="hh-chips" role="radiogroup" aria-label="Household size">
+                {HOUSEHOLD_OPTIONS.map((o, i) => (
+                  <button type="button" class={`hh-chip${i===0 ? ' chip-active' : ''}`} data-hh={o.id} data-size={o.size ?? ''} role="radio" aria-checked={i===0 ? 'true' : 'false'}>{o.label}</button>
+                ))}
+              </div>
+              <div id="hh-custom-wrap" class="hidden mt-2 flex items-center gap-1.5">
+                <input id="hh-custom" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 6" aria-label="Custom household size" class="nk-input text-[13px] tabular-nums" style="width:80px; padding:6px 10px; height:34px;" />
+                <span class="text-[11px] font-medium" style="color:var(--nk-text-tertiary);">people</span>
+              </div>
+              <p class="text-[11px] mt-1.5" style="color:var(--nk-text-tertiary);">Used for per-person result.</p>
+            </section>
+          </div>
+
+          <!-- Housing -->
+          <section class="housing-box">
+            <p class="sec-head !mb-2.5"><span class="sec-icon">⌂</span> Housing</p>
+            <div class="housing-grid">
+              <div class="housing-toggle" role="radiogroup" aria-label="Housing status">
+                <button type="button" class="seg-btn seg-active" data-housing="renting" role="radio" aria-checked="true"><KeyRound size={14} /><span>Renting</span></button>
+                <button type="button" class="seg-btn" data-housing="own" role="radio" aria-checked="false"><House size={14} /><span>Own</span></button>
+              </div>
+              <select id="prop-select" class="nk-input text-[13px] housing-select" style="height:36px; padding:6px 28px 6px 12px; border-radius:12px;">
+                {PROPERTY_OPTIONS.map((p) => (<option value={p.id}>{p.label}</option>))}
+              </select>
+              <select id="furn-select" class="nk-input text-[13px] housing-select" style="height:36px; padding:6px 28px 6px 12px; border-radius:12px;">
+                {FURNISHING_OPTIONS.map((f) => (<option value={f.id}>{f.label}</option>))}
+              </select>
+            </div>
+          </section>
+
+          <!-- Expenses -->
+          <section>
+            <div class="flex items-center justify-between mb-3">
+              <p class="sec-head !mb-0"><span class="sec-icon">₨</span> Monthly expenses <span class="sub">— 15 categories</span></p>
+              <span class="hidden sm:inline-flex text-[10.5px] px-2.5 py-1 rounded-full font-medium" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);">placeholders are suggestions • leave empty = Rs 0</span>
+            </div>
+            <div class="exp-grid" id="exp-list">
+              {EXPENSE_CATEGORIES.map((cat) => {
+                const ph = placeholderDefaults[cat.key] ?? 0;
+                const phText = ph > 0 ? `e.g. ${ph.toLocaleString('en-IN')}` : '—';
+                return (
+                  <div class="exp-field">
+                    <label for={`exp-${cat.key}`} class="exp-label">{cat.label}</label>
+                    <div class="exp-box">
+                      <span class="exp-prefix">Rs</span>
+                      <input id={`exp-${cat.key}`} type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder={phText} data-key={cat.key} data-ph={String(ph)} class="exp-input tabular-nums" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          <div class="flex gap-2.5 pt-1">
+            <button type="button" id="calculate-btn" class="nk-btn nk-btn-primary flex-1 py-3 text-[14px] font-bold tracking-[-0.01em]">Calculate →</button>
+            <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-6 py-3 text-[13px] font-semibold">Reset</button>
+          </div>
+          <p id="calc-hint" class="hidden text-[11px] text-center -mt-1 font-medium" style="color:#DC2626;"></p>
+        </div>
+      </div>
+
+      <!-- RIGHT: RESULTS -->
+      <div class="lg:sticky lg:top-4">
+        <div class="nk-card overflow-hidden" id="result-card">
+
+          <div id="res-empty">
+            <div class="res-hero res-hero--empty">
+              <p class="res-kicker">Estimated Monthly Cost</p>
+              <p class="res-amount tabular-nums" style="color:var(--nk-text-tertiary);">—</p>
+              <p class="text-[12px] mt-2 leading-snug max-w-[300px] mx-auto" style="color:var(--nk-text-secondary);">Fill your expenses and click <strong style="color:var(--nk-text);">Calculate</strong> to see your personal estimate.</p>
+              <div class="mt-3 inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full" style="background:var(--nk-surface); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);">No data sent • instant in browser</div>
+            </div>
+            <div class="p-4">
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">Expense breakdown</p>
+              <p class="text-[12px] leading-relaxed" style="color:var(--nk-text-tertiary);">Your breakdown will appear here after calculation — with share % and bars.</p>
+              <div class="mt-3 rounded-xl px-3.5 py-3" style="border:1px solid var(--nk-border);background:var(--nk-hover);">
+                <p class="text-[10.5px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated spending level</p>
+                <p class="text-[12px] mt-1" style="color:var(--nk-text-tertiary);">Budget / Moderate / Comfortable / Premium — shown after you calculate.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="res-body" class="hidden">
+            <div class="res-hero">
+              <p class="res-kicker">Estimated Monthly Cost</p>
+              <p class="res-amount tabular-nums" id="res-monthly">—</p>
+              <div class="res-meta">
+                <span class="res-pill"><strong class="tabular-nums" id="res-yearly">—</strong> <span class="res-meta-label">/ year</span></span>
+                <span class="res-dot">·</span>
+                <span class="res-pill"><strong class="tabular-nums" id="res-perperson">—</strong> <span class="res-meta-label">/ person</span></span>
+              </div>
+            </div>
+
+            <div class="p-4">
+              <p class="text-[10.5px] font-semibold uppercase tracking-wider mb-2.5" style="color:var(--nk-text-tertiary);">Expense breakdown</p>
+              <div id="res-breakdown" class="space-y-2"></div>
+
+              <div class="mt-4 rounded-xl px-3.5 py-3" id="lifestyle-box" style="border:1px solid var(--nk-border);background:var(--nk-hover);">
+                <p class="text-[10.5px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated spending level</p>
+                <p class="text-[13.5px] font-bold mt-1" id="life-label" style="color:var(--nk-text);">—</p>
+                <p class="text-[11.5px] leading-relaxed mt-1" id="life-desc" style="color:var(--nk-text-secondary);">Based on your entered expenses.</p>
+                <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">For reference only — not an official classification.</p>
+              </div>
+
+              <div class="mt-3.5 flex gap-2">
+                <button type="button" id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1 text-[12px] h-9">Copy summary</button>
+                <button type="button" id="fill-example" class="nk-btn nk-btn-ghost-sm flex-1 text-[12px] h-9" title="Fill inputs with city-based suggestions">Fill example</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT — compact -->
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Does It Cost to Live in Nepal?</h2>
+        <p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Living costs in Nepal vary a lot by city, housing, household size and personal spending habits. House rent is usually the biggest single expense, followed by food and groceries, transportation and education. Kathmandu and other major cities tend to cost more than smaller towns, and larger households spend more on food, utilities and daily essentials. The most accurate way to understand your own cost of living is to add up your actual monthly expenses — which is what this calculator is built for.</p>
+      </section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Cost of Living in Kathmandu</h2>
+        <p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">As the capital and largest city, Kathmandu has the highest living costs in Nepal — especially for rent inside the Ring Road and in popular neighbourhoods. Food, internet and eating out also tend to cost more than elsewhere. That said, Kathmandu offers more housing choices and income opportunities, so two households with very different budgets can live in the same city. Use the city selector above and enter your real rent to see how your Kathmandu budget compares across categories.</p>
+      </section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Cost of Living in Pokhara</h2>
+        <p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Pokhara generally costs less than Kathmandu for rent and daily expenses, while still offering city amenities and a strong tourism economy. Lakeside and central areas are pricier than outer neighbourhoods. Grocery prices, school fees and transport costs can still be significant, so it helps to fill in your own numbers rather than relying on a single city average. Switch to Pokhara above to see a lower suggested rent and adjust it to your situation.</p>
+      </section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Average Monthly Expenses in Nepal</h2>
+        <p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">A typical single-person monthly budget — including house rent — often falls around Rs 35,000 to Rs 65,000 in Kathmandu, and somewhat lower outside the Valley. A small family of three or four commonly spends Rs 60,000 to Rs 1,10,000 depending on housing and lifestyle. These are broad illustrative ranges, not guarantees; your household could reasonably spend more or less. The breakdown panel appears after you calculate, showing where your own money goes and how each category contributes to the total.</p>
+      </section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How to Calculate Your Cost of Living</h2>
+        <ol class="text-[12.5px] leading-relaxed list-decimal pl-5 space-y-1" style="color:var(--nk-text-secondary);">
+          <li>Choose your city — the house rent placeholder updates as a guide.</li>
+          <li>Choose household size — this helps compare per-person costs.</li>
+          <li>Set housing (renting or own home) and enter your actual house rent if renting.</li>
+          <li>Fill each expense category with your real monthly spending (placeholders are only suggestions).</li>
+          <li>Click <strong style="color:var(--nk-text);">Calculate</strong> to see your monthly total, yearly total and per-person cost instantly.</li>
+        </ol>
+      </section>
+      <section>
+        <h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-1.5">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-2">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+
+    <Disclaimer variant="general" />
+    <RelatedTools tools={[
+      { title: 'NEA Electricity Bill', description: 'Estimate your monthly electricity cost', href: '/nepal/utilities/electricity-bill' },
+      { title: 'KUKL Water Bill', description: 'Estimate Kathmandu water supply charges', href: '/nepal/utilities/kukl-water-bill' },
+      { title: 'Salary Calculator', description: 'Take-home salary after tax & SSF', href: '/nepal/finance/salary-checker' },
+      { title: 'Fuel Cost', description: 'Trip fuel and cost per km', href: '/nepal/vehicle/fuel-cost' },
+    ]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .col-wrap { background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .duo { display:grid; grid-template-columns:1fr; gap:16px; }
+  @media (min-width: 640px) { .duo { grid-template-columns:1fr 1fr; } }
+  .sec-head { display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--nk-text);margin-bottom:6px;letter-spacing:-0.01em; }
+  .sec-head .sub { font-size:10px;font-weight:400;color:var(--nk-text-tertiary); }
+  .sec-icon { display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;font-size:10px;background-color:var(--nk-accent-subtle);color:var(--nk-accent);flex-shrink:0; }
+  .city-chip, .hh-chip { display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:9999px;border:1px solid var(--nk-border);background:transparent;color:var(--nk-text-secondary);font-size:11px;font-weight:500;cursor:pointer;transition:all 140ms ease;font-family:var(--font-sans);line-height:1; }
+  .city-chip:hover, .hh-chip:hover { border-color:var(--nk-border-strong);color:var(--nk-text); }
+  .city-chip.chip-active, .hh-chip.chip-active { background-color:var(--nk-accent);border-color:var(--nk-accent);color:#fff;font-weight:600; }
+  .housing-toggle { display:inline-flex; align-items:center; gap:3px; padding:3px; border-radius:9999px; background:var(--nk-muted); border:1px solid var(--nk-border); box-shadow: inset 0 1px 2px rgba(0,0,0,0.04); width:100%; min-width:0; }
+  .seg-btn { flex:1; display:inline-flex; align-items:center; justify-content:center; gap:5px; height:34px; padding:0 10px; border-radius:9999px; border:1px solid transparent; background:transparent; color:var(--nk-text-secondary); font-size:12.5px; font-weight:600; cursor:pointer; transition: all 180ms cubic-bezier(0.16,1,0.3,1); font-family:var(--font-sans); letter-spacing:-0.01em; white-space:nowrap; min-width:0; }
+  .seg-btn svg { flex-shrink:0; opacity:0.75; transition: opacity 150ms ease; }
+  .seg-btn.seg-active svg { opacity:1; }
+  .seg-btn.seg-active { background:var(--nk-surface); border-color:var(--nk-border-strong); color:var(--nk-text); font-weight:700; box-shadow: 0 2px 10px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.08); transform:translateY(-0.5px); }
+  .seg-btn:not(.seg-active):hover { background:color-mix(in srgb, var(--nk-surface) 85%, transparent); border-color:var(--nk-border); color:var(--nk-text); }
+  .seg-btn:active { transform:scale(0.98); }
+  [data-theme="dark"] .seg-btn.seg-active { background:var(--nk-surface); border-color:var(--nk-border-strong); box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+  .housing-box { background: var(--nk-surface); border:1px solid var(--nk-border); border-radius:14px; padding:12px; box-shadow: var(--shadow-xs); }
+  .housing-grid { display:grid; grid-template-columns: 1fr; gap:10px; align-items:center; }
+  @media (min-width: 560px) { .housing-grid { grid-template-columns: max-content minmax(0,1fr) minmax(0,1fr); align-items:center; column-gap:10px; }
+    .housing-select { min-width:0; width:100%; }
+    .housing-toggle { width:auto; }
+  }
+  /* wide expense grid — label outside box, height unchanged */
+  .exp-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
+  @media (min-width: 700px) { .exp-grid { grid-template-columns:1fr 1fr 1fr; } }
+  @media (max-width: 380px) { .exp-grid { grid-template-columns:1fr; } }
+  .exp-field { display:flex; flex-direction:column; gap:5px; }
+  .exp-label { font-size:11px; font-weight:600; color:var(--nk-text); line-height:1.2; letter-spacing:-0.01em; padding-left:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .exp-box { position:relative; display:flex; align-items:center; height:38px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease, background 150ms ease; }
+  .exp-box:hover { border-color: var(--nk-border-strong); background: var(--nk-hover); }
+  .exp-box:focus-within { border-color: var(--nk-accent); background: var(--nk-surface); box-shadow: 0 0 0 3px var(--nk-accent-subtle); }
+  .exp-box:has(input:disabled) { opacity:0.5; background:var(--nk-muted); }
+  .exp-field:has(input:focus) .exp-label { color: var(--nk-accent); }
+  .exp-prefix { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; letter-spacing:-0.01em; }
+  .exp-input { width:100%; height:100%; border:none !important; box-shadow:none !important; background:transparent !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; color:var(--nk-text); outline:none; border-radius:10px; }
+  .exp-input::placeholder { color: var(--nk-text-tertiary); font-size:11px; font-weight:400; }
+  .hidden { display:none !important; }
+  #input-card { position:relative; overflow:hidden; box-shadow:var(--shadow-sm); border-radius:14px; }
+  #input-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--nk-gradient-primary); }
+  #result-card { box-shadow:var(--shadow-sm); border-radius:14px; }
+  .res-hero { text-align:center; padding:14px 12px 12px; background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 66%); border-bottom:1px solid var(--nk-border); }
+  .res-hero--empty { background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); }
+  .res-kicker { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--nk-text-tertiary); margin-bottom:3px; }
+  .res-amount { font-size:26px; font-weight:800; letter-spacing:-.03em; line-height:1; color:var(--nk-accent); }
+  @media (max-width: 640px) { .res-amount { font-size:22px; } }
+  .res-meta { display:flex; align-items:center; justify-content:center; gap:7px; flex-wrap:wrap; margin-top:6px; font-size:11.5px; color:var(--nk-text-secondary); }
+  .res-pill { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:9999px; background:var(--nk-hover); border:1px solid var(--nk-border); font-size:11px; color:var(--nk-text-secondary); }
+  .res-pill strong { font-size:12px; color:var(--nk-text); }
+  .res-meta-label { font-size:10.5px; color:var(--nk-text-tertiary); }
+  .res-dot { color:var(--nk-border-strong); font-weight:700; }
+  .bd-row { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:11.5px; color:var(--nk-text-secondary); }
+  .bd-row .rv { font-weight:600; color:var(--nk-text); white-space:nowrap; font-size:11.5px; }
+  .bd-bar { height:4px; border-radius:9999px; background-color:var(--nk-hover); overflow:hidden; margin-top:3px; }
+  .bd-fill { height:100%; border-radius:9999px; background:var(--nk-accent); opacity:.9; transition:width 220ms ease; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .nk-btn-primary { box-shadow: 0 8px 18px -10px rgba(230,43,30,.55); }
+  [data-theme="dark"] .nk-btn-primary { box-shadow: 0 8px 18px -10px rgba(0,0,0,.6); }
+</style>
+
+<script>
+  import { buildDefaults, rentEstimate } from '../../../data/cost-of-living.js';
+  import { calculateCostOfLiving, formatNPR } from '../../../lib/calculators/cost-of-living.js';
+  import { EXPENSE_CATEGORIES } from '../../../data/cost-of-living.js';
+
+  const $ = (id) => document.getElementById(id);
+
+  let cityId = 'kathmandu';
+  let householdMode = '1';
+  let housingStatus = 'renting';
+  let property = '1bhk';
+  let furnishing = 'unfurnished';
+
+  function currentHouseholdSize() {
+    if (householdMode === 'custom') {
+      const raw = $('hh-custom')?.value ?? '6';
+      const n = Number(String(raw).replace(/,/g,''));
+      return Number.isFinite(n) && n >= 1 ? Math.min(Math.floor(n), 20) : 6;
+    }
+    if (householdMode === '5plus') return 5;
+    const n = Number(householdMode);
+    return Number.isFinite(n) && n >= 1 ? n : 1;
+  }
+
+  function setCity(id) {
+    cityId = id;
+    document.querySelectorAll('.city-chip').forEach((c) => {
+      const on = c.dataset.city === id;
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+    updateRentPlaceholder();
+  }
+
+  function setHousehold(mode) {
+    householdMode = mode;
+    document.querySelectorAll('.hh-chip').forEach((c) => {
+      const on = c.dataset.hh === mode;
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+    const wrap = $('hh-custom-wrap');
+    if (wrap) {
+      const show = mode === 'custom';
+      wrap.classList.toggle('hidden', !show);
+      wrap.classList.toggle('flex', show);
+    }
+  }
+
+  function setHousing(status) {
+    housingStatus = status;
+    document.querySelectorAll('[data-housing]').forEach((b) => {
+      const on = b.dataset.housing === status;
+      b.classList.toggle('seg-active', on);
+      b.setAttribute('aria-checked', String(on));
+    });
+    const prop = $('prop-select');
+    const furn = $('furn-select');
+    if (prop) prop.disabled = status !== 'renting';
+    if (furn) furn.disabled = status !== 'renting';
+    const hInput = document.querySelector('.exp-input[data-key="housing"]');
+    const hField = hInput?.closest('.exp-field');
+    if (hInput) {
+      hInput.disabled = status !== 'renting';
+      if (hField) hField.style.opacity = status !== 'renting' ? '0.55' : '';
+      if (status !== 'renting') {
+        hInput.placeholder = '—';
+        hInput.value = '';
+      } else {
+        updateRentPlaceholder();
+      }
+    }
+  }
+
+  function updateRentPlaceholder() {
+    if (housingStatus !== 'renting') return;
+    const rent = rentEstimate(cityId, property, furnishing);
+    const hInput = document.querySelector('.exp-input[data-key="housing"]');
+    if (hInput) {
+      hInput.placeholder = `e.g. ${rent.toLocaleString('en-IN')}`;
+      hInput.dataset.ph = String(rent);
+    }
+  }
+
+  function collectExpenses() {
+    const out = {};
+    for (const cat of EXPENSE_CATEGORIES) {
+      const el = document.querySelector(`.exp-input[data-key="${cat.key}"]`);
+      out[cat.key] = el ? el.value : '';
+    }
+    if (housingStatus === 'own') out.housing = '0';
+    return out;
+  }
+
+  function hasAnyInput() {
+    for (const cat of EXPENSE_CATEGORIES) {
+      const el = document.querySelector(`.exp-input[data-key="${cat.key}"]`);
+      if (el && String(el.value).trim() !== '') return true;
+    }
+    return false;
+  }
+
+  function doCalculate() {
+    const hint = $('calc-hint');
+    if (hint) { hint.classList.add('hidden'); hint.textContent = ''; }
+
+    if (!hasAnyInput()) {
+      if (hint) {
+        hint.textContent = 'Enter at least one expense (e.g. house rent) and click Calculate.';
+        hint.classList.remove('hidden');
+      }
+      const btn = $('calculate-btn');
+      if (btn) { btn.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(0)' }], { duration: 220 }); }
+      return;
+    }
+
+    const expenses = collectExpenses();
+    const size = currentHouseholdSize();
+    const r = calculateCostOfLiving({ expenses, householdSize: size });
+
+    $('res-monthly').textContent = formatNPR(r.monthly);
+    $('res-yearly').textContent = formatNPR(r.yearly);
+    $('res-perperson').textContent = formatNPR(r.perPerson);
+
+    $('life-label').textContent = r.lifestyle.label;
+    $('life-desc').textContent = r.lifestyle.desc + ' Based on your entered expenses.';
+    const lb = $('lifestyle-box');
+    if (lb) lb.style.borderColor = r.lifestyle.color + '30';
+
+    const max = r.sorted.length ? r.sorted[0].amount : 0;
+    const container = $('res-breakdown');
+    if (container) {
+      if (r.monthly === 0) {
+        container.innerHTML = `<p class="text-[11.5px] leading-relaxed" style="color:var(--nk-text-tertiary);">All entered amounts are 0 — enter your spending above and calculate again.</p>`;
+      } else {
+        container.innerHTML = r.sorted.map((b) => {
+          const pct = max > 0 ? Math.max(3, Math.round((b.amount / max) * 100)) : 0;
+          const share = r.monthly > 0 ? ((b.amount / r.monthly) * 100).toFixed(1) : '0.0';
+          const isZero = b.amount === 0;
+          return `<div class="${isZero ? 'opacity-50' : ''}">
+            <div class="bd-row"><span>${b.label}</span><span class="rv">${formatNPR(b.amount)} <span style="color:var(--nk-text-tertiary);font-weight:400;font-size:10px;">· ${share}%</span></span></div>
+            <div class="bd-bar"><div class="bd-fill" style="width:${isZero ? 0 : pct}%;"></div></div>
+          </div>`;
+        }).join('');
+      }
+    }
+
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+    if (window.innerWidth < 1024) {
+      setTimeout(() => $('result-card')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+    }
+  }
+
+  function doReset() {
+    setCity('kathmandu');
+    setHousehold('1');
+    if ($('hh-custom')) $('hh-custom').value = '';
+    setHousing('renting');
+    property = '1bhk'; furnishing = 'unfurnished';
+    const ps = $('prop-select'); if (ps) ps.value = '1bhk';
+    const fs = $('furn-select'); if (fs) fs.value = 'unfurnished';
+    updateRentPlaceholder();
+    document.querySelectorAll('.exp-input').forEach((el) => {
+      el.value = '';
+      el.style.borderColor = '';
+    });
+    const hint = $('calc-hint');
+    if (hint) { hint.classList.add('hidden'); hint.textContent = ''; }
+    $('res-body')?.classList.add('hidden');
+    $('res-empty')?.classList.remove('hidden');
+  }
+
+  document.querySelectorAll('.city-chip').forEach((btn) => {
+    btn.addEventListener('click', () => setCity(btn.dataset.city));
+  });
+
+  document.querySelectorAll('.hh-chip').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      setHousehold(btn.dataset.hh);
+      if (btn.dataset.hh === 'custom') $('hh-custom')?.focus();
+    });
+  });
+  $('hh-custom')?.addEventListener('input', () => {
+    let v = $('hh-custom').value.replace(/[^0-9]/g,'');
+    if (v !== $('hh-custom').value) $('hh-custom').value = v;
+  });
+
+  document.querySelectorAll('[data-housing]').forEach((btn) => {
+    btn.addEventListener('click', () => setHousing(btn.dataset.housing));
+  });
+  $('prop-select')?.addEventListener('change', (e) => {
+    property = e.target.value;
+    updateRentPlaceholder();
+  });
+  $('furn-select')?.addEventListener('change', (e) => {
+    furnishing = e.target.value;
+    updateRentPlaceholder();
+  });
+
+  document.querySelectorAll('.exp-input').forEach((el) => {
+    el.addEventListener('input', () => {
+      if (String(el.value).trim().startsWith('-')) el.value = String(el.value).replace(/-/g,'');
+    });
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') doCalculate(); });
+    el.addEventListener('blur', () => {
+      const raw = String(el.value).trim().replace(/,/g,'').replace(/^rs\.?\s*/i,'');
+      if (raw === '') return;
+      const n = Number(raw);
+      if (Number.isFinite(n) && n >= 0) el.value = String(Math.round(n));
+    });
+  });
+
+  $('calculate-btn')?.addEventListener('click', doCalculate);
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('fill-example')?.addEventListener('click', () => {
+    const size = currentHouseholdSize();
+    const d = buildDefaults({ cityId, householdSize: size, housingStatus, property, furnishing });
+    for (const cat of EXPENSE_CATEGORIES) {
+      if (cat.key === 'housing' && housingStatus !== 'renting') continue;
+      const el = document.querySelector(`.exp-input[data-key="${cat.key}"]`);
+      if (el) el.value = String(d[cat.key] ?? 0);
+    }
+    doCalculate();
+  });
+
+  $('copy-btn')?.addEventListener('click', async () => {
+    if ($('res-body')?.classList.contains('hidden')) {
+      doCalculate();
+      if ($('res-body')?.classList.contains('hidden')) return;
+    }
+    const expenses = collectExpenses();
+    const size = currentHouseholdSize();
+    const r = calculateCostOfLiving({ expenses, householdSize: size });
+    const cityLabel = document.querySelector('.city-chip.chip-active')?.textContent?.trim() || cityId;
+    const lines = [
+      `Nepal Cost of Living — ${cityLabel} · ${size} ${size===1?'person':'people'} · ${housingStatus==='renting' ? `Renting (${property}, ${furnishing})` : 'Own home'}`,
+      ``,
+      `Estimated monthly: ${formatNPR(r.monthly)}`,
+      `Estimated yearly:  ${formatNPR(r.yearly)}`,
+      `Per person:        ${formatNPR(r.perPerson)}  (Estimated spending level: ${r.lifestyle.label})`,
+      ``,
+      `Breakdown:`,
+      ...r.breakdown.map(b => `- ${b.label}: ${formatNPR(b.amount)}`),
+      ``,
+      `Estimates based on your entered amounts — not official statistics.`,
+    ].join('\n');
+    try {
+      await navigator.clipboard.writeText(lines);
+      const btn = $('copy-btn');
+      const prev = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = prev, 1800);
+    } catch {}
+  });
+
+  setHousing('renting');
+  updateRentPlaceholder();
+</script>
+

@@ -1,0 +1,425 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Calculator } from '@lucide/astro';
+import { DISCOUNT_MODES, DELIVERY_PAYS, AD_MODE, DEFAULTS } from '../../../../data/online-selling-profit.js';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+
+const title = 'Online Selling Profit Calculator Nepal (2026) | SolutionsNepal';
+const description = 'Calculate your real profit per sale after product cost, delivery, platform fees, ads, discounts and other selling expenses.';
+const canonical = 'https://solutionsnepal.com/nepal/finance/online-selling-profit-calculator-nepal';
+
+const faq = [
+  { q:'How do I calculate profit on an online sale in Nepal?', a:'Profit per completed order = net selling price minus total variable costs (product + packaging + seller delivery + platform and payment fees + advertising + other per-order costs). This calculator does that and annualises it for monthly profit.' },
+  { q:'Does delivery cost reduce my profit?', a:'Only the portion you pay. If the customer pays, your seller delivery cost is Rs 0. If split, only your share counts. The calculator models all three cases.' },
+  { q:'How should I calculate Daraz or marketplace fees?', a:'Enable Platform Fee and enter the actual percentage your marketplace charges on the net selling price. Marketplace fees change, so always use the latest rate from your seller dashboard.' },
+  { q:'Should advertising costs be included in product profit?', a:'Yes, if ads drive the sale — either as a per-order cost or spread from a monthly budget across orders. The calculator lets you choose.' },
+  { q:'What is the difference between profit and profit margin?', a:'Profit is rupees per order (Rs 450). Margin is profit divided by net selling price (e.g. 18%). Margin lets you compare products at different prices.' },
+  { q:'How do I calculate my break-even selling price?', a:'Solve net price × (1 − fee %) = product + packaging + delivery share + fixed payment + ads + other. The calculator does this for your fees and discounts, showing the minimum gross price that avoids a loss.' },
+  { q:'How do returns and cancellations affect online selling profit?', a:'Only completed orders earn profit. Expected completed = orders × (1 − return %). Monthly profit uses completed orders, so a 5% return on 100 orders means about 95 paid sales.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'Online Selling Profit Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Finance', href:'/nepal/finance'}, {label:'Online Selling Profit Calculator'}]} />
+
+    <div class="mb-2.5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">For Nepal Online Sellers</div>
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">Online Selling Profit Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[660px]" style="color:var(--nk-text-secondary);">Calculate your real profit per sale after product cost, delivery, platform fees, ads, discounts and other selling expenses.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.8fr_400px] gap-4 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-2.5 min-w-0" id="input-col">
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">₨</span> Product &amp; Selling Price</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="sp-selling">Selling price</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="sp-selling" type="text" inputmode="decimal" placeholder="e.g. 2,500" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="sp-cost">Product cost</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="sp-cost" type="text" inputmode="decimal" placeholder="e.g. 1,400" class="cm-input" /></div></div>
+            <div class="cm-field sm:col-span-2">
+              <p class="cm-label mb-1">Discount</p>
+              <div class="flex flex-wrap gap-1.5" id="disc-chips" role="radiogroup" aria-label="Discount">
+                {DISCOUNT_MODES.map(m=> <button type="button" class={`chip disc-chip${m.id==='none'?' chip-active':''}`} data-disc={m.id} role="radio" aria-checked={m.id==='none'?'true':'false'}>{m.label}</button>)}
+              </div>
+              <div class="grid grid-cols-2 gap-2.5 mt-2">
+                <div class="cm-field hidden" id="disc-pct-wrap"><label class="cm-label" for="disc-pct">Discount %</label><div class="cm-box"><input id="disc-pct" type="text" inputmode="decimal" placeholder="e.g. 10" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">%</span></div></div>
+                <div class="cm-field hidden" id="disc-fix-wrap"><label class="cm-label" for="disc-fix">Discount amount</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="disc-fix" type="text" inputmode="decimal" placeholder="e.g. 200" class="cm-input" /></div></div>
+              </div>
+              <p class="text-[11.5px] mt-1.5 tabular-nums" style="color:var(--nk-text-secondary);" id="final-price-line">Final customer price: <strong style="color:var(--nk-text);" data-final>Rs 0</strong></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">▤</span> Order Costs</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="ord-pack">Packaging cost</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="ord-pack" type="text" inputmode="decimal" placeholder="e.g. 50" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="ord-delivery">Delivery cost</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="ord-delivery" type="text" inputmode="decimal" placeholder="e.g. 100" class="cm-input" /></div></div>
+          </div>
+          <div class="mt-2.5">
+            <p class="cm-label mb-1">Who pays delivery?</p>
+            <div class="flex flex-wrap gap-1.5" id="del-chips" role="radiogroup" aria-label="Who pays delivery">
+              {DELIVERY_PAYS.map(d=> <button type="button" class={`chip del-chip${d.id==='customer'?' chip-active':''}`} data-del={d.id} role="radio" aria-checked={d.id==='customer'?'true':'false'}>{d.label}</button>)}
+            </div>
+            <div id="split-wrap" class="hidden mt-2 cm-field max-w-[220px]"><label class="cm-label" for="split-pct">Seller share</label><div class="cm-box"><input id="split-pct" type="text" inputmode="decimal" placeholder="50" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">%</span></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◈</span> Platform &amp; Payment Fees</p>
+          <p class="text-[11px]" style="color:var(--nk-text-tertiary);">Enter the actual fee charged by your selling platform or payment provider.</p>
+          <div class="space-y-2.5 mt-2">
+            <label class="flex items-center gap-2 cursor-pointer"><input id="plat-on" type="checkbox" style="width:15px; height:15px; accent-color:var(--nk-accent);" /> <span class="text-[12.5px] font-semibold" style="color:var(--nk-text);">Platform fee</span><span class="text-[11px] px-2 py-0.5 rounded-full" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);">5% default — editable</span></label>
+            <div id="plat-row" class="hidden cm-field max-w-[220px]"><div class="cm-box"><input id="plat-pct" type="text" inputmode="decimal" placeholder="5" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">%</span></div></div>
+            <label class="flex items-center gap-2 cursor-pointer"><input id="pay-on" type="checkbox" style="width:15px; height:15px; accent-color:var(--nk-accent);" /> <span class="text-[12.5px] font-semibold" style="color:var(--nk-text);">Payment processing fee</span></label>
+            <div id="pay-row" class="hidden grid grid-cols-2 gap-2.5">
+              <div class="cm-field"><label class="cm-label" for="pay-pct">Percentage</label><div class="cm-box"><input id="pay-pct" type="text" inputmode="decimal" placeholder="2" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">%</span></div></div>
+              <div class="cm-field"><label class="cm-label" for="pay-fixed">Fixed payment fee</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="pay-fixed" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◎</span> Marketing &amp; Other Costs</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="adv-per">Advertising cost per order</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="adv-per" type="text" inputmode="decimal" placeholder="e.g. 150" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="other-per">Other cost per order</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="other-per" type="text" inputmode="decimal" placeholder="e.g. 50" class="cm-input" /></div></div>
+          </div>
+          <details class="mt-2.5 rounded-xl" style="border:1px solid var(--nk-border);">
+            <summary class="px-3 py-2 text-[12px] font-semibold cursor-pointer select-none" style="color:var(--nk-text);">Monthly fixed business costs</summary>
+            <div class="p-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div class="cm-field"><label class="cm-label" for="fix-rent">Rent</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-fixed="rent" id="fix-rent" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+              <div class="cm-field"><label class="cm-label" for="fix-staff">Staff</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-fixed="staff" id="fix-staff" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+              <div class="cm-field"><label class="cm-label" for="fix-net">Internet / software</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-fixed="internet" id="fix-net" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+              <div class="cm-field"><label class="cm-label" for="fix-other">Other fixed expenses</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-fixed="fixedOther" id="fix-other" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            </div>
+          </details>
+        </section>
+
+        <section class="nk-card top-accent p-3 sm:p-3.5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◫</span> Monthly Sales</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="cm-field"><label class="cm-label" for="mn-orders">Orders per month</label><div class="cm-box"><input id="mn-orders" type="text" inputmode="numeric" placeholder="e.g. 100" class="cm-input" style="padding-left:10px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="mn-return">Average return / cancel rate</label><div class="cm-box"><input id="mn-return" type="text" inputmode="decimal" placeholder="5" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix">%</span></div></div>
+            <div class="cm-field sm:col-span-2"><label class="cm-label" for="mn-adbudget">Monthly advertising budget <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="mn-adbudget" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+          <div class="flex flex-wrap gap-1.5 mt-2.5" id="ad-mode" role="radiogroup" aria-label="Advertising mode">
+            {AD_MODE.map(a=> <button type="button" class={`chip ad-chip${a.id==='per-order'?' chip-active':''}`} data-ad={a.id} role="radio" aria-checked={a.id==='per-order'?'true':'false'}>{a.label}</button>)}
+          </div>
+        </section>
+
+        <div class="flex gap-2.5">
+          <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2.5 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> Calculate Profit →</button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2.5 text-[13px] font-semibold" style="border-radius:12px;">Reset</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium" style="color:#DC2626;"></p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Profit per Order</p>
+            <p class="text-[28px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter selling price and product cost, then click <strong>Calculate Profit</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+            <div class="px-4 pt-4 pb-3 text-center" style="background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 70%); border-bottom:1px solid var(--nk-border);">
+              <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Profit per Order</p>
+              <p class="text-[30px] font-extrabold leading-tight tabular-nums" style="color:var(--nk-accent);" id="res-profit">—</p>
+              <p class="text-[12px] tabular-nums font-semibold" style="color:var(--nk-text-secondary);"><span id="res-margin">—</span> • Break-even: <span id="res-breakeven">—</span></p>
+              <p class="text-[11.5px] mt-1 max-w-[320px] mx-auto" style="color:var(--nk-text-secondary);" id="res-status">—</p>
+            </div>
+            <div class="p-3.5 space-y-2.5">
+              <div class="rounded-xl text-[12px]" style="border:1px solid var(--nk-border);">
+                <div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Selling price</span><strong style="color:var(--nk-text);" id="res-sp">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Customer price after discount</span><strong style="color:var(--nk-text);" id="res-net">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Product cost</span><strong style="color:var(--nk-text);" id="res-cost">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Total selling costs</span><strong style="color:var(--nk-text);" id="res-tcost">—</strong></div>
+                <div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Profit per order</span><strong style="color:var(--nk-text);" id="res-profit2">—</strong></div>
+              </div>
+
+              <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider mb-2" style="color:var(--nk-text-tertiary);">Where your money goes</p>
+                <div id="res-breakdown" class="space-y-1.5"></div>
+              </div>
+
+              <div class="rounded-xl overflow-hidden text-[12px]" style="border:1px solid var(--nk-border);">
+                <p class="px-3 py-2 text-[11px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary); background:var(--nk-hover);">Pricing insights</p>
+                <table class="w-full tabular-nums"><tbody id="res-scenarios"></tbody></table>
+              </div>
+
+              <div class="rounded-xl p-3 text-[12px]" style="border:1px solid var(--nk-border);">
+                <p class="text-[11px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Monthly Profit Estimate</p>
+                <div id="res-monthly" class="mt-2 space-y-1.5"></div>
+              </div>
+
+              <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How to Calculate Online Selling Profit in Nepal</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Profit = Net Selling Revenue − Total Selling Costs. Net selling price is your list price minus any discount. Costs go well beyond product cost — include packaging, the seller’s share of delivery, percentage platform and payment fees plus any fixed payment charge, advertising and other per-order expenses. Your margin improves only when net price rises or those costs fall.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">What Costs Should Online Sellers Include?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Product purchase or manufacturing cost, packaging, delivery (or your split share), platform commission as a percentage of net price, payment processing as percentage plus fixed, advertising per order or spread from a monthly budget, discounts, expected returns and cancellations, plus other operating expenses. Fixed monthly costs like rent and staff matter at the monthly level, not per-order.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Profit Should an Online Seller Make?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">There is no single correct margin — it depends on product category, competition, ad costs, return rates and operating expenses. Judge profitability per completed order and at monthly scale after fixed costs, and test higher prices with the scenarios above.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+      <p class="text-[11px] p-3 rounded-xl" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-tertiary);">This calculator provides estimates based on the information you enter. Actual profit may vary due to taxes, returns, delivery charges, platform commissions, payment fees, discounts, advertising costs, and other business expenses. Always use the latest fees charged by your platform or service provider.</p>
+    </div>
+
+    <Disclaimer variant="finance" />
+    <RelatedTools tools={[{title:'Business Break-Even Calculator', description:'Required sales & profit', href:'/nepal/business/break-even-calculator'}, {title:'EMI Calculator', description:'Monthly EMI for loans', href:'/nepal/finance/emi-calculator'}, {title:'Discount Calculator', description:'Discounts & sale prices', href:'/tools/discount-calculator'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  .sec-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--nk-text); margin-bottom:5px; letter-spacing:-0.01em; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:11px; font-weight:500; cursor:pointer; transition:all 140ms ease; font-family:inherit; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .cm-field{ display:flex; flex-direction:column; gap:4px; }
+  .cm-label{ font-size:11px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:36px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 10px 0 30px !important; font-size:13px; font-weight:500; outline:none; border-radius:10px; color:var(--nk-text); }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); }
+  .bbar{ height:5px; border-radius:9999px; background:var(--nk-accent); }
+  .hidden{ display:none !important; }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input{ font-size:16px !important; }
+  }
+</style>
+
+<script>
+  import { calcOnlineProfit, sanitizeAmount, formatNPR, formatPct } from '../../../../lib/calculators/online-selling-profit.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let discountMode='none', deliveryPays='customer', adMode='per-order';
+
+  function setChip(selector, attr, val){
+    document.querySelectorAll(selector).forEach(c=>{
+      const on=c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+
+  // toggles
+  document.querySelectorAll('.disc-chip').forEach(b=> b.addEventListener('click', ()=>{
+    discountMode=b.dataset.disc;
+    setChip('.disc-chip','disc',discountMode);
+    $('disc-pct-wrap')?.classList.toggle('hidden', discountMode!=='pct');
+    $('disc-fix-wrap')?.classList.toggle('hidden', discountMode!=='fixed');
+    markDirty();
+  }));
+  document.querySelectorAll('.del-chip').forEach(b=> b.addEventListener('click', ()=>{
+    deliveryPays=b.dataset.del;
+    setChip('.del-chip','del',deliveryPays);
+    $('split-wrap')?.classList.toggle('hidden', deliveryPays!=='split');
+    markDirty();
+  }));
+  document.querySelectorAll('.ad-chip').forEach(b=> b.addEventListener('click', ()=>{
+    adMode=b.dataset.ad;
+    setChip('.ad-chip','ad',adMode);
+    markDirty();
+  }));
+  $('plat-on')?.addEventListener('change', (e)=>{
+    $('plat-row')?.classList.toggle('hidden', !e.target.checked); markDirty();
+  });
+  $('pay-on')?.addEventListener('change', (e)=>{
+    $('pay-row')?.classList.toggle('hidden', !e.target.checked); markDirty();
+  });
+
+  function markDirty(){ if(window.__profitCalc) $('stale-note')?.remove(), showStale(); }
+  function showStale(){
+    if(!$('res-body') || $('res-body').classList.contains('hidden')) return;
+    if(!$('stale-note')){
+      const d=document.createElement('div');
+      d.id='stale-note';
+      d.className='px-3.5 py-2 text-[11px] font-semibold text-center';
+      d.style.cssText='background:#FFFBEB; border-bottom:1px solid #FDE68A; color:#92400E;';
+      d.textContent='Inputs changed — recalculate to update results';
+      $('result-card').prepend(d);
+    }
+  }
+
+  // formatting
+  document.querySelectorAll('.cm-input').forEach(el=>{
+    el.addEventListener('input', ()=>{
+      if(el.value.includes('-')) el.value=el.value.replace(/-/g,'');
+      markDirty();
+      if(el.id==='sp-selling' || el.id==='disc-pct' || el.id==='disc-fix'){
+        const r=collectDiscounted();
+        $('final-price-line').innerHTML=`Final customer price: <strong style="color:var(--nk-text);" data-final>${formatNPR(r.net)}</strong>`;
+      }
+    });
+    el.addEventListener('blur', ()=>{
+      const raw=String(el.value).replace(/,/g,'').trim();
+      if(raw==='') return;
+      const n=Number(raw);
+      if(el.id==='disc-pct'){ el.value=String(Math.min(100, Math.max(0, n))); return; }
+      if(el.id==='split-pct'){ el.value=String(Math.min(100, Math.max(0, n))); return; }
+      if(raw!=null && raw!=='' && Number.isFinite(n) && n>=0) el.value=Math.round(n).toLocaleString('en-IN');
+    });
+    el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  });
+
+  function collectDiscounted(){
+    const sp=Number(String($('sp-selling').value).replace(/,/g,''))||0;
+    let disc=0;
+    if(discountMode==='pct') disc=(sp*sanitizeAmount($('disc-pct').value))/100;
+    else if(discountMode==='fixed') disc=sanitizeAmount($('disc-fix').value);
+    disc=Math.min(disc, sp);
+    return {sp, disc, net:Math.max(0, sp-disc)};
+  }
+
+  function collect(){
+    return {
+      sellingPrice: $('sp-selling').value,
+      productCost: $('sp-cost').value,
+      discountMode,
+      discountPct: $('disc-pct').value,
+      discountAmount: $('disc-fix').value,
+      packagingCost: $('ord-pack').value,
+      deliveryCost: $('ord-delivery').value,
+      deliveryPays,
+      splitShare: $('split-pct').value || '50', // empty = default 50% (placeholder)
+      platformEnabled: $('plat-on').checked,
+      platformPct: $('plat-pct').value || '5', // empty = default 5% (placeholder)
+      paymentEnabled: $('pay-on').checked,
+      paymentPct: $('pay-pct').value || '2', // empty = default 2% (placeholder)
+      fixedPaymentFee: $('pay-fixed').value,
+      advertisingPerOrder: $('adv-per').value,
+      monthlyAdBudget: $('mn-adbudget').value,
+      adMode,
+      otherCost: $('other-per').value,
+      ordersPerMonth: $('mn-orders').value,
+      returnRate: $('mn-return').value,
+      rent: $('fix-rent').value,
+      staff: $('fix-staff').value,
+      internet: $('fix-net').value,
+      fixedOther: $('fix-other').value,
+    };
+  }
+
+  function sanitizeAmountLocal(v){ const n=Number(String(v).replace(/,/g,''))||0; return n<0?0:n; }
+
+  function doCalc(){
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const r=calcOnlineProfit(collect());
+    const errs=[];
+    const sp=sanitizeAmount($('sp-selling').value);
+    const pc=sanitizeAmount($('sp-cost').value);
+    const ords=Math.floor(Number(String($('mn-orders').value).replace(/,/g,''))||0);
+    if(!(sp>0)) errs.push('Selling price must be greater than 0.');
+    if(sp<=0 || !(pc>=0)) errs.push('Product cost cannot be negative.');
+    const disc=discountMode==='pct'?Number(String($('disc-pct').value).replace(/,/g,''))||0:discountMode==='fixed'?1:0;
+    if(discountMode==='pct' && !(disc>=0 && disc<=100)) errs.push('Discount percentage must be between 0 and 100.');
+    if(discountMode==='fixed' && r.discountAmt>r.inputs.sellingPrice) errs.push('Discount cannot exceed selling price.');
+    if($('plat-on').checked && !(Number(String($('plat-pct').value).replace(/,/g,''))>=0 && Number(String($('plat-pct').value).replace(/,/g,''))<=100)) errs.push('Platform fee must be between 0 and 100%.');
+    if($('pay-on').checked && !(Number(String($('pay-pct').value).replace(/,/g,''))>=0 && Number(String($('pay-pct').value).replace(/,/g,''))<=100)) errs.push('Payment fee must be between 0 and 100%.');
+    if(!Number.isInteger(ords) || !(ords>=0)) errs.push('Orders/month must be a positive whole number.');
+    if(ords===0 && (r.inputs.ordersPerMonth===0)) errs.push('Enter expected orders per month to see monthly profit.');
+    if(errs.length){
+      $('res-empty')?.classList.remove('hidden'); $('res-body')?.classList.add('hidden');
+      if(hint){ hint.textContent=errs[0]; hint.classList.remove('hidden'); }
+      return;
+    }
+    window.__profitCalc=r;
+    $('stale-note')?.remove();
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+
+    const isProfit=r.profitPerOrder>0, isLoss=r.profitPerOrder<0, isBreak=r.profitPerOrder===0;
+    $('res-profit').textContent=formatNPR(Math.abs(r.profitPerOrder));
+    $('res-profit').style.color=isProfit?'#16A34A':isLoss?'#DC2626':'var(--nk-text)';
+    $('res-margin').textContent=(isProfit||isLoss?formatPct(Math.abs(r.profitMargin)):(r.profitMargin===0?'0.0%':formatPct(r.profitMargin)));
+    $('res-margin').style.color=isProfit?'#16A34A':isLoss?'#DC2626':'var(--nk-text-tertiary)';
+    $('res-breakeven').textContent=Number.isFinite(r.breakEvenSelling)?formatNPR(r.breakEvenSelling):'—';
+    $('res-status').innerHTML=isProfit?`<span style="color:#16A34A;">✓ Profitable</span> You are making ${formatNPR(r.profitPerOrder)} per completed order.` : isLoss ? `<span style="color:#DC2626;">⚠ Loss</span> You are losing ${formatNPR(Math.abs(r.profitPerOrder))} per order.` : `<span style="color:var(--nk-text);">Break-even</span> Your current selling price covers your estimated costs.`;
+
+    $('res-sp').textContent=formatNPR(r.inputs.sellingPrice);
+    $('res-net').textContent=formatNPR(r.netSellingPrice);
+    $('res-cost').textContent=formatNPR(r.inputs.productCost);
+    $('res-tcost').textContent=formatNPR(r.totalVariableCost);
+    $('res-profit2').textContent=formatNPR(r.profitPerOrder);
+    $('res-profit2').style.color=isProfit?'#16A34A':isLoss?'#DC2626':'var(--nk-text)';
+
+    // breakdown
+    const rows=[
+      ['Product cost', r.inputs.productCost],
+      ['Packaging', sanitizeAmount($('ord-pack').value)],
+      ['Delivery', r.sellerDelivery],
+      ['Platform fee', r.platformFee],
+      ['Payment fee', r.paymentFee],
+      ['Advertising', r.advPerOrder],
+      ['Other', sanitizeAmount($('other-per').value)],
+    ];
+    const totalCost=r.totalVariableCost, profit=r.profitPerOrder, net=r.netSellingPrice;
+    const max=Math.max(totalCost, profit>0?profit:0, 1);
+    $('res-breakdown').innerHTML = rows.map(([k,v])=> v>0 ? `<div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">${k}</span><span style="color:var(--nk-text); font-weight:600;">${formatNPR(v)}</span></div><div class="bbar" style="width:${(v/max)*100}%"></div>` : '').join('') + `<div class="flex justify-between pt-1.5 mt-1 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text); font-weight:700;">Total cost</span><span style="color:var(--nk-text); font-weight:700;">${formatNPR(totalCost)}</span></div><div class="flex justify-between tabular-nums"><span style="color:var(--nk-text); font-weight:700;">Profit</span><span style="color:${isProfit?'#16A34A':isLoss?'#DC2626':'var(--nk-text)'}; font-weight:800;">${formatNPR(profit)}</span></div>`;
+
+    // scenarios
+    $('res-scenarios').innerHTML=r.scenarios.map(s=>`<tr style="border-top:1px solid var(--nk-border);${s.sellingPrice===r.inputs.sellingPrice?' font-weight:700; background:var(--nk-hover);':''}"><td class="px-3 py-1.5">${formatNPR(s.sellingPrice)}</td><td class="px-3 py-1.5 text-right" style="color:${s.profit>=0?'#16A34A':'#DC2626'};">${formatNPR(s.profit)}</td><td class="px-3 py-1.5 text-right">${Number.isFinite(s.margin)?formatPct(s.margin):'—'}</td></tr>`).join('');
+
+    // monthly
+    $('res-monthly').innerHTML=`
+      <div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">${r.inputs.ordersPerMonth} orders/month</span><span style="color:var(--nk-text);">${r.expectedCompleted.toFixed(0)} completed</span></div>
+      <div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">Estimated revenue</span><span style="color:var(--nk-text); font-weight:600;">${formatNPR(r.netMonthlyRevenue)}</span></div>
+      <div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">Total variable costs</span><span style="color:var(--nk-text);">${formatNPR(r.totalVariableCost * r.expectedCompleted)}</span></div>
+      <div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">Monthly fixed costs</span><span style="color:var(--nk-text);">${formatNPR(r.monthlyFixed)}</span></div>
+      <div class="flex justify-between pt-1.5 mt-1 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text); font-weight:800;">Estimated monthly profit</span><span style="color:${r.estimatedMonthlyBusinessProfit>=0?'#16A34A':'#DC2626'}; font-weight:800;">${formatNPR(r.estimatedMonthlyBusinessProfit)}</span></div>
+      <p class="text-[11px] mt-1" style="color:var(--nk-text-tertiary);">Annual ~ ${formatNPR(r.estimatedMonthlyBusinessProfit*12)} · profit/order avg ${formatNPR(r.profitPerOrder)} · returns ~ ${r.expectedReturned.toFixed(0)}</p>`;
+
+    if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+  }
+
+  function doReset(){
+    ['sp-selling','sp-cost','disc-pct','disc-fix','ord-pack','ord-delivery','split-pct','plat-pct','pay-pct','pay-fixed','adv-per','other-per','mn-orders','mn-return','mn-adbudget','fix-rent','fix-staff','fix-net','fix-other'].forEach(id=>{ $(id).value=''; });
+    discountMode='none'; setChip('.disc-chip','disc','none');
+    $('disc-pct-wrap')?.classList.add('hidden'); $('disc-fix-wrap')?.classList.add('hidden');
+    deliveryPays='customer'; setChip('.del-chip','del','customer'); $('split-wrap')?.classList.add('hidden');
+    $('plat-on').checked=false; $('plat-row')?.classList.add('hidden');
+    $('pay-on').checked=false; $('pay-row')?.classList.add('hidden');
+    adMode='per-order'; setChip('.ad-chip','ad','per-order');
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+    updateFinalPrice(); window.__profitCalc=null; $('stale-note')?.remove();
+  }
+
+  function updateFinalPrice(){
+    const r=collectDiscounted();
+    $('final-price-line').innerHTML=`Final customer price: <strong style="color:var(--nk-text);" data-final>${formatNPR(r.net)}</strong>`;
+  }
+  $('calc-btn')?.addEventListener('click', doCalc);
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('copy-btn')?.addEventListener('click', async()=>{
+    if($('res-body')?.classList.contains('hidden')){ doCalc(); if($('res-body')?.classList.contains('hidden')) return; }
+    const r=window.__profitCalc; if(!r) return;
+    const text=`Profit per order: ${formatNPR(r.profitPerOrder)} (margin ${formatPct(r.profitMargin)})\nBreak-even: ${formatNPR(r.breakEvenSelling)}\n— SolutionsNepal online selling profit calculator`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const t=b.textContent; b.textContent='Copied!'; setTimeout(()=> b.textContent=t,1500);}catch{}
+  });
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+  updateFinalPrice();
+</script>

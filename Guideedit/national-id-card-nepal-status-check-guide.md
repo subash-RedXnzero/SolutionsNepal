@@ -1,0 +1,177 @@
+---
+title: "National ID Card Nepal (Rastriya Parichayapatra): Status Check & Guide"
+description: Check your National ID status online, understand NIN requirements, complete pre-enrollment, prepare documents, and resolve common DoNIDCR application problems in Nepal.
+category: Documents
+author: SolutionsNepal Team
+authorCredential: Nepal documentation researchers
+date: September 10, 2026
+readTime: 13 min read
+image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=630&fit=crop"
+tags: [National ID, NIN, Rastriya Parichayapatra, Documents, Nepal]
+relatedTools: [passport-size-photo, nepali-age-calculator]
+headings:
+  - id: status
+    text: National ID Status Check in Nepal
+    level: 2
+  - id: what
+    text: What Is the National ID Card in Nepal?
+    level: 2
+  - id: who
+    text: Who Needs a National ID Card?
+    level: 2
+  - id: application
+    text: National ID Card Application in Nepal
+    level: 2
+  - id: online-form
+    text: Rastriya Parichayapatra Online Form
+    level: 2
+  - id: documents
+    text: Documents and Information Required
+    level: 2
+  - id: processing
+    text: How Long Does Processing Take?
+    level: 2
+  - id: collection
+    text: How to Get or Collect Your National ID Card
+    level: 2
+  - id: problems
+    text: Common Problems and Status Issues
+    level: 2
+  - id: passport
+    text: National ID and Passport Renewal
+    level: 2
+  - id: services
+    text: National ID for Government and Social Security Services
+    level: 2
+  - id: conclusion
+    text: Conclusion
+    level: 2
+faqs:
+  - q: How can I check my National ID status online in Nepal?
+    a: Visit the DoNIDCR Citizen Portal NID Search page at citizenportal.donidcr.gov.np/ne/check-national-id-number (linked as "NID Search" on donidcr.gov.np; last verified October 2026) and enter your request number or NIN. If the page does not load, start from donidcr.gov.np and follow its current NID Search link.
+  - q: How do I check my Rastriya Parichayapatra status?
+    a: National ID and Rastriya Parichayapatra refer to the same card. Use the DoNIDCR Citizen Portal status-check page with your request number or NIN.
+  - q: Who needs a National ID Card in Nepal?
+    a: Any Nepali citizen aged 16 or older with a citizenship certificate is eligible. Whether it is required depends on the specific service, such as a domestic passport application, banking KYC, or SIM registration.
+  - q: How do I apply for a National ID Card?
+    a: Complete online pre-enrollment at enrollment.donidcr.gov.np, then visit a DAO or designated enrollment centre for in-person biometric capture.
+  - q: Is the Rastriya Parichayapatra online form enough?
+    a: No. The online form is only pre-enrollment. Fingerprints, iris scan, photo, and signature must still be captured in person.
+  - q: What should I do if my National ID status is not showing?
+    a: Recheck the details, wait if biometrics were recently completed, and contact your enrollment DAO or DoNIDCR if the status remains missing after a reasonable wait.
+  - q: Is National ID required for passport renewal in Nepal?
+    a: For applications filed within Nepal, applicants are generally asked for their NIN. Overseas missions may have different rules, so check the specific embassy or consulate.
+---
+
+<h2 id="status">National ID Status Check in Nepal</h2>
+
+The official way to check your National ID (Rastriya Parichayapatra) status is through the <strong>DoNIDCR Citizen Portal</strong>, operated by the Department of National ID and Civil Registration under the Ministry of Home Affairs.
+
+> **Official status page:** <a href="https://citizenportal.donidcr.gov.np/ne/check-national-id-number">citizenportal.donidcr.gov.np/ne/check-national-id-number</a> (the "NID Search" link published on <a href="https://donidcr.gov.np">donidcr.gov.np</a>; last verified October 2026). If that address does not load, start from donidcr.gov.np and follow its current NID Search link rather than trusting a forwarded URL.
+
+You need your request or application number from enrollment, or your National Identity Number (NIN) if one has already been issued.
+
+1. Open the Citizen Portal NID Search link.
+2. Enter your request number or NIN.
+3. Complete the CAPTCHA or verification step.
+4. Submit to view the current status.
+
+> **SMS note:** An SMS format ("N [space] your 16-digit application number" to 30001) is commonly reported online but could not be confirmed on the official DoNIDCR portal (last checked October 2026). Use the portal lookup above as the reliable method, and only use an SMS short code shown in current official DoNIDCR instructions.
+
+If nothing appears, recheck the number exactly as printed, confirm you are on an official donidcr.gov.np domain, and wait a few days if biometrics were recent. Printing backlogs can delay status updates. Contact the DAO where you enrolled or DoNIDCR if the issue continues.
+
+<h2 id="what">What Is the National ID Card in Nepal?</h2>
+
+The National ID Card, or <strong>Rastriya Parichayapatra</strong>, is Nepal's federal biometric identity card issued by DoNIDCR under the National Identity Card and Registration Act, 2076 (2019). It carries a microchip with your photo, fingerprints, iris scan, digital signature, and a unique lifetime National Identity Number.
+
+The NID does not replace your citizenship certificate. Citizenship remains a separate legal document and is needed to apply for the NID.
+
+<h2 id="who">Who Needs a National ID Card in Nepal?</h2>
+
+Any Nepali citizen who is <strong>16 or older</strong> and holds a citizenship certificate can apply.
+
+- Domestic new passport and renewal applications generally ask for the NIN
+- Bank KYC, SIM registration, PAN registration, driving licence applications, and social security services are increasingly adopting NIN requirements
+- DoNIDCR has continued phased enrollment rollout through DAOs and enrollment centres (confirm current rollout notices on donidcr.gov.np)
+- Some Nepali missions abroad have stated that NID is not currently required for passport services, so check the mission's current instructions
+
+People under 16 or without a citizenship certificate cannot apply yet. Whether NID is strictly mandatory depends on the specific service, so confirm directly with the office handling that service.
+
+<h2 id="application">National ID Card Application in Nepal</h2>
+
+1. <strong>Online pre-enrollment:</strong> Register and enter your details on the official DoNIDCR enrollment portal.
+2. <strong>In-person biometrics:</strong> Visit your DAO or designated enrollment centre for fingerprints, iris scan, photo, and signature.
+3. <strong>Printing and issuance:</strong> Your application enters the printing queue and you are notified when the card is ready.
+
+> **Online form is not enough:** Biometric capture in person is mandatory. Filling the online form alone does not create an NID or issue a NIN.
+
+<h2 id="online-form">Rastriya Parichayapatra Online Form</h2>
+
+The online pre-enrollment form is available at <a href="https://enrollment.donidcr.gov.np">enrollment.donidcr.gov.np</a>. It lets you register a mobile number, verify by OTP, enter personal and family information, and choose an enrollment appointment.
+
+- Personal details: name, date of birth, gender, citizenship number
+- Contact details: permanent and temporary address, phone, email
+- Family details: parents, grandparents, and spouse where applicable
+- Appointment details: centre and date/time for biometrics
+
+<h2 id="documents">Documents and Information Required</h2>
+
+- <strong>Citizenship certificate:</strong> original plus photocopy
+- <strong>Proof of date of birth:</strong> birth registration or school certificate if citizenship does not clearly show it
+- <strong>Migration certificate:</strong> if your current address differs from citizenship
+- <strong>Marriage or relationship certificate:</strong> if a spouse's name is not recorded on citizenship
+- <strong>Passport:</strong> if already issued, for cross-checking details
+
+A PAN card, driving licence, or voter ID is not a prerequisite for NID enrollment. Check your centre's current checklist before attending.
+
+<h2 id="processing">How Long Does National ID Processing Take?</h2>
+
+Processing varies by district, centre workload, and the nationwide printing backlog. DoNIDCR does not publish one guaranteed turnaround time for everyone. Your NIN may already be active while the physical card is still waiting to be printed and distributed.
+
+If you urgently need proof of identity, the NIN itself may be usable before the physical card arrives. Ask the relevant service provider which proof it accepts.
+
+<h2 id="collection">How to Get or Collect Your National ID Card</h2>
+
+1. Wait for an SMS or other notification that the card has been printed.
+2. Collect it from the DAO or centre where you completed biometrics, bringing valid ID and your reference slip.
+3. If the physical card is delayed, use the eNID download through the Citizen Portal after verifying your details and OTP.
+4. Use the Nagarik App to access your digital National ID after your NIN has been generated.
+
+<h2 id="problems">What to Do If Your National ID Status Is Not Showing</h2>
+
+1. Recheck your request number or NIN exactly as issued.
+2. Allow time if biometrics were completed recently.
+3. Use only official donidcr.gov.np subdomains.
+4. Contact your enrollment DAO for a direct lookup.
+5. Contact DoNIDCR through its published channels, including info@donidcr.gov.np. Confirm current phone numbers on the official site before calling.
+
+<h3 id="common-problems">Common Problems</h3>
+
+- <strong>Status not found:</strong> usually processing delay or an incorrectly entered number.
+- <strong>Stuck at biometrics:</strong> common during high-volume periods; ask your DAO if the wait becomes unusual.
+- <strong>Incorrect details:</strong> corrections caused by DoNIDCR may be free, while applicant-caused corrections may carry a fee.
+- <strong>Card not received:</strong> use eNID or Nagarik App while waiting for printing.
+- <strong>Lost or damaged card:</strong> request replacement through DoNIDCR and confirm the current fee, commonly cited as NPR 500 as of October 2026.
+- <strong>Duplicate enrollment:</strong> contact your DAO or DoNIDCR rather than enrolling again.
+
+<h2 id="passport">National ID and Passport Renewal</h2>
+
+For passport applications and renewals filed within Nepal, applicants are generally asked to enter the NIN on the online passport form. Getting the NIN ahead of a domestic passport renewal is therefore useful even if the physical card has not arrived.
+
+Requirements through Nepali missions abroad can differ. Check the specific embassy or consulate instead of assuming domestic requirements apply.
+
+<h2 id="services">National ID for Government and Social Security Services</h2>
+
+- Bank account KYC and related banking services
+- SIM registration with telecom operators
+- PAN registration
+- Driving licence applications
+- Social security allowance payments
+
+Agencies are adopting the NIN on different timelines. If another office asks for it, confirm that office's current requirement directly.
+
+<h2 id="conclusion">Conclusion</h2>
+
+If you have already applied, start with the DoNIDCR Citizen Portal and check using your request number or NIN. Do not panic if the physical card is slow because printing delays are common. If you have not applied, pre-enroll online and complete the biometric appointment at your DAO — that in-person step is what moves the application forward.
+
+> **Verify before applying:** Fees, processing timelines, and which services require NID are changing as rollout continues. Confirm current details at <a href="https://donidcr.gov.np">donidcr.gov.np</a>, <a href="https://citizenportal.donidcr.gov.np/ne/check-national-id-number">the Citizen Portal NID Search page</a> or <a href="https://enrollment.donidcr.gov.np">enrollment.donidcr.gov.np</a>. Last verified October 2026. DoNIDCR toll-free: 1147 (as published on donidcr.gov.np).

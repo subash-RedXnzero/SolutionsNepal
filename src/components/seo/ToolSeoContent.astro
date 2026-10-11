@@ -1,0 +1,98 @@
+---
+/**
+ * ToolSeoContent — scalable SEO body template for every tool.
+ * Renders: intro, how-to steps, formula, worked example, FAQ (visible + matching FAQPage schema),
+ * and related-tool internal links. All copy must be passed in uniquely per tool —
+ * never reuse the same paragraph across tools.
+ *
+ * Usage:
+ *   <ToolSeoContent
+ *     intro="..."
+ *     howTo={[{t:'..',d:'..'}]}
+ *     formula="..."
+ *     example={{t:'..',d:'..'}}
+ *     faqs={[{q:'..',a:'..'}]}
+ *     related={[{title,description,href}]}
+ *   />
+ */
+import RelatedTools from '../ui/RelatedTools.astro';
+
+const { intro, howTo = [], formula, example, faqs = [], related = [], note } = Astro.props;
+
+const faqLd = faqs.length ? {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+} : null;
+---
+
+{intro && (
+  <p class="nk-seo-intro">{intro}</p>
+)}
+
+<slot />
+
+{howTo.length > 0 && (
+  <section class="nk-seo-section" aria-label="How to use">
+    <h2>How to use</h2>
+    <ol>
+      {howTo.map(s => (
+        <li><strong>{s.t}:</strong> {s.d}</li>
+      ))}
+    </ol>
+  </section>
+)}
+
+{formula && (
+  <section class="nk-seo-section" aria-label="Formula">
+    <h2>Formula</h2>
+    <p><code>{formula}</code></p>
+  </section>
+)}
+
+{example && (
+  <section class="nk-seo-section" aria-label="Example">
+    <h2>Example</h2>
+    <p><strong>{example.t}</strong> {example.d}</p>
+  </section>
+)}
+
+{note && (
+  <section class="nk-seo-section" aria-label="Note">
+    <h2>Good to know</h2>
+    <p>{note}</p>
+  </section>
+)}
+
+{faqs.length > 0 && (
+  <>
+  <section class="nk-seo-section" aria-label="Frequently asked questions">
+    <h2>FAQs</h2>
+    {faqs.map(f => (
+      <details>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </section>
+  {faqLd && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
+  </>
+)}
+
+{related.length > 0 && <RelatedTools tools={related} />}
+
+<style>
+  .nk-seo-intro { font-size: 14px; line-height: 1.7; color: var(--nk-text-secondary); margin: 12px 0 20px; max-width: 70ch; }
+  .nk-seo-section { margin-top: 28px; }
+  .nk-seo-section h2 { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px; color: var(--nk-text); }
+  .nk-seo-section p, .nk-seo-section li { font-size: 13.5px; line-height: 1.7; color: var(--nk-text-secondary); }
+  .nk-seo-section ol { padding-left: 20px; display: grid; gap: 6px; }
+  .nk-seo-section code { font-family: ui-monospace, monospace; font-size: 12.5px; background: var(--nk-hover); padding: 2px 6px; border-radius: 6px; }
+  .nk-seo-section details { border: 1px solid var(--nk-border); border-radius: 12px; padding: 10px 14px; margin-top: 8px; background: var(--nk-surface); }
+  .nk-seo-section summary { font-size: 13.5px; font-weight: 600; cursor: pointer; color: var(--nk-text); }
+  .nk-seo-section details p { margin-top: 6px; }
+</style>

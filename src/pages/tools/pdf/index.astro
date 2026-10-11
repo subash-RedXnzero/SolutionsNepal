@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import Sidebar from '../../../components/navigation/Sidebar.astro';
+import ToolCard from '../../../components/cards/ToolCard.astro';
+import { getToolsByCategory } from '../../../data/tools.js';
+const tools = getToolsByCategory('pdf');
+const currentPath = Astro.url.pathname;
+---
+<BaseLayout title="PDF Tools — Free Online PDF Utilities | SolutionsNepal" description="Convert, combine, and compress your PDF files with five simple free tools from SolutionsNepal.">
+  <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+    <Breadcrumbs items={[{ label: 'PDF Tools' }]} />
+    <div class="flex gap-10">
+      <Sidebar currentPath={currentPath} />
+      <main class="min-w-0 flex-1">
+        <div class="mb-8"><h1 class="text-3xl font-bold sm:text-4xl" style="color:var(--nk-text);">PDF Tools</h1><p class="mt-2 text-base" style="color:var(--nk-text-secondary);">Convert, combine, compress, and manage your PDF files with simple free tools.</p></div>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {tools.map((tool) => <ToolCard title={tool.title} description={tool.description} href={tool.href} />)}
+        </div>
+      </main>
+    </div>
+  </div>
+</BaseLayout>

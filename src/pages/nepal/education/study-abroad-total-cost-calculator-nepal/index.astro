@@ -1,0 +1,719 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../../../components/ui/RelatedTools.astro';
+import { Calculator } from '@lucide/astro';
+import Disclaimer from '../../../../components/ui/Disclaimer.astro';
+import {
+  COUNTRIES, CURRENCIES, SUGGESTED_RATES, COUNTRY_CURRENCY,
+  PROGRAM_LEVELS, DURATION_PRESETS, ENGLISH_TESTS,
+  TUITION_FREQS, RECUR_FREQS, DEFAULTS,
+} from '../../../../data/study-abroad.js';
+
+const title = 'Study Abroad Total Cost Calculator Nepal (2026) | SolutionsNepal';
+const description = 'Estimate how much you need to study abroad from Nepal, including tuition, visa, travel, living expenses and other major costs.';
+const canonical = 'https://solutionsnepal.com/nepal/education/study-abroad-total-cost-calculator-nepal';
+
+const LIVING_FIELDS = [
+  { key: 'rent', label: 'Accommodation', ph: 'e.g. 800' },
+  { key: 'food', label: 'Food', ph: 'e.g. 300' },
+  { key: 'transport', label: 'Transportation', ph: 'e.g. 100' },
+  { key: 'phone', label: 'Internet / phone', ph: 'e.g. 40' },
+  { key: 'utilities', label: 'Utilities', ph: 'e.g. 80' },
+  { key: 'personal', label: 'Personal expenses', ph: 'e.g. 100' },
+  { key: 'other', label: 'Other living expenses', ph: 'e.g. 0' },
+];
+
+const faq = [
+  { q:'How much money do I need to study abroad from Nepal?', a:'Beyond tuition, budget for applications, English tests, deposits, visa and medical fees, insurance, flights, setup costs and full-duration living expenses. Enter your own numbers above for a personalised total.' },
+  { q:'What is the total cost of studying abroad?', a:'Total = net tuition + living + visa/immigration + insurance + travel + other costs − funding-side scholarships come off the gap, not the total. Monthly amounts scale by months, annual amounts by years (fractions like 1.5 years work), one-time fees count once.' },
+  { q:'How much money should I have before flying from Nepal?', a:'You need pre-departure cash: deposit, visa and medical fees, insurance, flight, setup costs and documents. The “money needed before flying” box above totals exactly those items separately from the full study cost.' },
+  { q:'Does the calculator include tuition fees?', a:'Yes. Enter tuition with its frequency — per year, per semester or whole program — and it is scaled to your study duration. Scholarships (percentage or fixed) reduce it automatically, with the NPR equivalent shown at your exchange rate.' },
+  { q:'Does the calculator include living expenses?', a:'Yes. Seven categories, each with its own monthly/annual frequency, all scaled to your exact study duration — including partial years like 1.5.' },
+  { q:'How much does accommodation cost abroad?', a:'It varies enormously by country and city, so this tool uses your own figure rather than assuming one. Enter the rent you found in your housing research for an accurate total.' },
+  { q:'Does exchange rate affect the total cost?', a:'Directly — every foreign amount is multiplied by your entered rate. A 5% weaker rupee raises the NPR total by 5%. Enter the rate you want to plan with; it is not a live feed.' },
+  { q:'Can I include scholarships?', a:'Yes, twice: a tuition scholarship (percentage or fixed amount) that lowers tuition, and a funding-side scholarship in NPR alongside savings, loans and sponsors.' },
+  { q:'Can I include an education loan?', a:'Yes. Enter the approved loan amount under funding — it counts toward available funding and shrinks the funding gap like savings or sponsorship.' },
+  { q:'Is this calculator accurate for every university?', a:'No. Costs vary significantly by university, city, course, accommodation, exchange rates and visa rules. Confirm tuition, visa fees and insurance with the university and authorities — this is a planning estimate.' },
+  { q:'What is the difference between first-year cost and total study cost?', a:'First-year figures cover one year plus all one-time costs. This calculator totals the entire study duration — tuition and living scaled across all years with one-time fees counted once — and also shows per-year and monthly equivalents.' },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}
+  jsonLd={[
+    { '@type':'WebApplication', '@context':'https://schema.org', name:'Study Abroad Total Cost Calculator Nepal', description, url:canonical, applicationCategory:'FinanceApplication', operatingSystem:'Web', offers:{'@type':'Offer', price:'0', priceCurrency:'NPR'} },
+    { '@type':'FAQPage', '@context':'https://schema.org', mainEntity: faq.map(f=>({ '@type':'Question', name:f.q, acceptedAnswer:{'@type':'Answer', text:f.a}})) }
+  ]}>
+  <div class="mx-auto max-w-[1600px] px-4 sm:px-6 py-2.5 sm:py-3 cm-wrap">
+    <Breadcrumbs items={[{label:'Nepal', href:'/nepal'}, {label:'Education', href:'/nepal/education'}, {label:'Study Abroad Cost Calculator'}]} />
+
+    <div class="mb-2.5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);">🇳🇵 Study abroad cost planner for Nepali students</div>
+      <h1 class="text-[20px] sm:text-[24px] font-extrabold tracking-[-0.03em] leading-[1.05] mt-1" style="color:var(--nk-text);">Study Abroad Total Cost Calculator Nepal</h1>
+      <p class="text-[12.5px] leading-[1.4] mt-0.5 max-w-[680px]" style="color:var(--nk-text-secondary);">Estimate how much you need to study abroad from Nepal, including tuition, visa, travel, living expenses and other major costs.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.9fr_360px] xl:grid-cols-[2.2fr_380px] gap-5 items-start">
+
+      <!-- LEFT -->
+      <div class="space-y-3.5 min-w-0" id="input-col">
+        <section class="nk-card top-accent p-4 sm:p-5" style="border-radius:16px;">
+          <p class="sec-head"><span class="sec-icon">◈</span> Study Destination</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="cm-field"><label class="cm-label" for="sb-country">Country</label>
+              <select id="sb-country" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                {COUNTRIES.map(c=> <option value={c} selected={c===DEFAULTS.country}>{c}</option>)}
+              </select>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="sb-uni">University / institution <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></label><div class="cm-box"><input id="sb-uni" type="text" placeholder="e.g. University of Sydney" autocomplete="off" maxlength="60" class="cm-input" style="padding-left:12px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="sb-course">Course / program <span class="font-normal" style="color:var(--nk-text-tertiary);">(optional)</span></label><div class="cm-box"><input id="sb-course" type="text" placeholder="e.g. BSc Computer Science" autocomplete="off" maxlength="60" class="cm-input" style="padding-left:12px;" /></div></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2.5">
+            <div class="cm-field"><label class="cm-label" for="sb-intake">Starting Year</label><div class="cm-box"><input id="sb-intake" type="text" placeholder="e.g. Feb 2027" autocomplete="off" maxlength="20" class="cm-input" style="padding-left:12px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="sb-currency">Currency</label>
+              <select id="sb-currency" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                {CURRENCIES.map(c=> <option value={c.id} selected={c.id===DEFAULTS.currency}>{c.label}</option>)}
+              </select>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="sb-rate">Exchange rate <span class="font-normal" style="color:#DC2626;">*</span></label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="sb-rate" type="text" inputmode="decimal" placeholder="105" class="cm-input" /></div></div>
+          </div>
+          <p class="text-[11px] mt-1.5 tabular-nums" style="color:var(--nk-text-secondary);">1 <span id="rate-code">AUD</span> = NPR <strong style="color:var(--nk-text);" id="rate-val">105</strong></p>
+          <p class="text-[10.5px]" style="color:var(--nk-text-tertiary);">Enter the exchange rate you want to use. Rates can change over time — not a live feed.</p>
+        </section>
+
+        <section class="nk-card top-accent p-4 sm:p-5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">◎</span> Study Details</p>
+          <div class="flex flex-wrap gap-1.5 mb-2.5" id="level-chips" role="radiogroup" aria-label="Program level">
+            {PROGRAM_LEVELS.map((l,i)=> <button type="button" class={`chip level-chip${i===1?' chip-active':''}`} data-level={l} role="radio" aria-checked={i===1?'true':'false'}>{l}</button>)}
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="cm-field"><label class="cm-label" for="sb-duration">Program duration <span class="font-normal" style="color:#DC2626;">*</span></label>
+              <select id="sb-duration" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                {DURATION_PRESETS.map(d=> <option value={String(d)}>{d} year{d===1?'':'s'}</option>)}
+                <option value="custom">Custom…</option>
+              </select>
+            </div>
+            <div class="cm-field hidden" id="dur-custom-wrap"><label class="cm-label" for="sb-duration-custom">Custom years <span class="font-normal">(e.g. 1.5)</span></label><div class="cm-box"><input id="sb-duration-custom" type="text" inputmode="decimal" placeholder="e.g. 1.5" class="cm-input" style="padding-left:10px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="sb-tuition">Tuition fee <span class="font-normal" style="color:#DC2626;">*</span> <span class="fcur font-normal">(AUD)</span></label><div class="cm-box"><span class="cm-prefix fcur-sym">A$</span><input id="sb-tuition" type="text" inputmode="decimal" placeholder="e.g. 35,000" class="cm-input fcur-pad" /></div>
+              <p class="text-[10.5px] mt-1 tabular-nums" style="color:var(--nk-text-tertiary);" id="tuition-npr">—</p>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="tuition-freq">Tuition frequency</label>
+              <select id="tuition-freq" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                {TUITION_FREQS.map(f=> <option value={f.id} selected={f.id==='annual'}>{f.label}</option>)}
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2.5">
+            <div class="cm-field"><label class="cm-label" for="sch-mode">Scholarship / reduction</label>
+              <select id="sch-mode" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                <option value="none">No scholarship</option>
+                <option value="pct">Percentage</option>
+                <option value="fixed">Fixed amount</option>
+              </select>
+            </div>
+            <div class="cm-field hidden" id="sch-val-wrap"><label class="cm-label" for="sch-val">Scholarship value</label><div class="cm-box"><input id="sch-val" type="text" inputmode="decimal" placeholder="e.g. 20" class="cm-input" style="padding-left:10px;" /><span class="cm-suffix" id="sch-suffix">%</span></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-4 sm:p-5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">⌂</span> Living Expenses <span class="sub">— set monthly or annual each</span></p>
+          <div class="space-y-2" id="living-rows">
+            {LIVING_FIELDS.map(f=> (
+              <div class="liv-row">
+                <span class="cm-label liv-name">{f.label}</span>
+                <div class="cm-box liv-amt"><span class="cm-prefix fcur-sym">A$</span><input data-liv={f.key} type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input fcur-pad" aria-label={f.label} /></div>
+                <select class="liv-freq nk-input text-[12px]" data-lfreq={f.key} aria-label={`${f.label} frequency`}>
+                  {RECUR_FREQS.map(r=> <option value={r.id} selected={r.id==='monthly'}>{r.label}</option>)}
+                </select>
+              </div>
+            ))}
+          </div>
+          <p class="text-[11px] mt-2 tabular-nums" style="color:var(--nk-text-secondary);">Monthly equivalent: <strong style="color:var(--nk-text);" id="living-preview">—</strong></p>
+        </section>
+
+        <section class="nk-card top-accent p-4 sm:p-5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">✈</span> Visa &amp; Immigration <span class="sub">— one-time</span></p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="cm-field"><label class="cm-label" for="visa-fee">Visa / application fee <span class="fcur font-normal">(AUD)</span></label><div class="cm-box"><span class="cm-prefix fcur-sym">A$</span><input id="visa-fee" type="text" inputmode="decimal" placeholder="e.g. 700" class="cm-input fcur-pad" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="bio-cost">Biometrics</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="bio-cost" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="imm-cost">Immigration / permit fees</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="imm-cost" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="mand-cost">Other mandatory fees</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="mand-cost" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-4 sm:p-5" style="border-radius:14px;">
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <p class="sec-head"><span class="sec-icon">✚</span> Insurance</p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="cm-field"><label class="cm-label" for="ins-amt">Insurance cost</label><div class="cm-box"><span class="cm-prefix" id="ins-prefix">A$</span><input id="ins-amt" type="text" inputmode="decimal" placeholder="e.g. 600" class="cm-input" style="padding-left:34px;" /></div></div>
+                <div class="cm-field"><label class="cm-label" for="ins-unit">Frequency</label>
+                  <select id="ins-unit" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                    <option value="annual" selected>Annual</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="onetime">One-time</option>
+                  </select>
+                </div>
+                <div class="cm-field"><label class="cm-label" for="ins-cur">Currency</label>
+                  <select id="ins-cur" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                    <option value="foreign" selected>Foreign</option>
+                    <option value="npr">NPR</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="sec-head"><span class="sec-icon">➤</span> Travel &amp; Flights</p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="cm-field"><label class="cm-label" for="flight-out">Initial flight</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="flight-out" type="text" inputmode="decimal" placeholder="e.g. 1,20,000" class="cm-input" /></div></div>
+                <div class="cm-field"><label class="cm-label" for="flight-back">Return flight <span class="font-normal" style="color:var(--nk-text-tertiary);">(if any)</span></label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="flight-back" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+                <div class="cm-field"><label class="cm-label" for="local-amt">Local transport</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="local-amt" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+              </div>
+              <div class="cm-field mt-2 max-w-[220px]"><label class="cm-label" for="local-freq">Local transport frequency</label>
+                <select id="local-freq" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                  <option value="onetime" selected>One-time</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-4 sm:p-5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">▤</span> Other Costs</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="cm-field"><label class="cm-label" for="app-count">Applications</label><div class="cm-box"><input id="app-count" type="text" inputmode="numeric" placeholder="3" class="cm-input" style="padding-left:10px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="app-fee">Fee per university <span class="fcur font-normal">(AUD)</span></label><div class="cm-box"><span class="cm-prefix fcur-sym">A$</span><input id="app-fee" type="text" inputmode="decimal" placeholder="e.g. 100" class="cm-input fcur-pad" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="test-cost">Test / exam fees <span class="fcur font-normal">(AUD)</span></label><div class="cm-box"><span class="cm-prefix fcur-sym">A$</span><input id="test-cost" type="text" inputmode="decimal" placeholder="e.g. 300" class="cm-input fcur-pad" /></div></div>
+            <div><p class="cm-label mb-1">English test</p><div class="flex flex-wrap gap-1.5" id="test-chips" role="radiogroup" aria-label="English test">
+              {ENGLISH_TESTS.map((t,i)=> <button type="button" class={`chip test-chip${i===0?' chip-active':''}`} data-test={t} role="radio" aria-checked={i===0?'true':'false'}>{t}</button>)}
+            </div></div>
+            <div class="cm-field"><label class="cm-label" for="deposit">University deposit <span class="fcur font-normal">(AUD)</span></label><div class="cm-box"><span class="cm-prefix fcur-sym">A$</span><input id="deposit" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input fcur-pad" /></div>
+              <label class="flex items-center gap-1.5 mt-1.5 cursor-pointer text-[11px]" style="color:var(--nk-text-secondary);"><input id="deposit-in-tuition" type="checkbox" style="width:13px; height:13px; accent-color:var(--nk-accent);" /> Already in tuition</label>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="docs-cost">Documents</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="docs-cost" type="text" inputmode="decimal" placeholder="e.g. 20,000" class="cm-input" /></div>
+              <p class="text-[10px] mt-1" style="color:var(--nk-text-tertiary);">Translation, notarization, courier &amp; printing.</p>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="med-cost">Medical examination</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="med-cost" type="text" inputmode="decimal" placeholder="e.g. 15,000" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="setup-amt">Initial setup</label><div class="cm-box"><span class="cm-prefix" id="setup-prefix">A$</span><input id="setup-amt" type="text" inputmode="decimal" placeholder="e.g. 2,000" class="cm-input" style="padding-left:34px;" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="setup-cur">Setup currency</label>
+              <select id="setup-cur" class="nk-input text-[13px]" style="height:42px; padding:7px 28px 7px 12px; line-height:1.4; border-radius:10px;">
+                <option value="foreign" selected>Foreign</option>
+                <option value="npr">NPR</option>
+              </select>
+            </div>
+            <div class="cm-field"><label class="cm-label" for="other-costs">Other costs</label><div class="cm-box"><span class="cm-prefix">Rs</span><input id="other-costs" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+        </section>
+
+        <section class="nk-card top-accent p-4 sm:p-5" style="border-radius:14px;">
+          <p class="sec-head"><span class="sec-icon">♥</span> How Will You Fund Your Study? <span class="sub">— NPR</span></p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="cm-field"><label class="cm-label" for="fd-save">Personal / family savings</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-fund="savings" id="fd-save" type="text" inputmode="decimal" placeholder="e.g. 20,00,000" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="fd-loan">Education loan</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-fund="loan" id="fd-loan" type="text" inputmode="decimal" placeholder="e.g. 15,00,000" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="fd-sch">Scholarship (funding)</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-fund="scholarship" id="fd-sch" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+            <div class="cm-field"><label class="cm-label" for="fd-spon">Sponsor / other funding</label><div class="cm-box"><span class="cm-prefix">Rs</span><input data-fund="sponsor" id="fd-spon" type="text" inputmode="decimal" placeholder="e.g. 0" class="cm-input" /></div></div>
+          </div>
+        </section>
+
+        <div class="flex gap-4">
+          <button type="button" id="calc-btn" class="nk-btn nk-btn-primary flex-1 py-2 text-[14px] font-bold" style="border-radius:12px;"><Calculator size={16}/> Calculate Total Cost →</button>
+          <button type="button" id="reset-btn" class="nk-btn nk-btn-secondary px-5 py-2 text-[13px] font-semibold" style="border-radius:12px;">Reset Calculator</button>
+        </div>
+        <p id="calc-hint" class="hidden text-[11px] text-center font-medium mt-2" style="color:#DC2626;"></p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="lg:sticky lg:top-4 space-y-2.5">
+        <div class="nk-card overflow-hidden" id="result-card" style="border-radius:16px;">
+          <div id="res-empty" class="p-5 text-center">
+            <div class="w-11 h-11 rounded-xl mx-auto flex items-center justify-center mb-2" style="background:var(--nk-accent-subtle); color:var(--nk-accent); border:1px solid var(--nk-accent-muted);"><Calculator size={18}/></div>
+            <p class="text-[12px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated Study Abroad Cost</p>
+            <p class="text-[26px] font-extrabold leading-none mt-1" style="color:var(--nk-text-tertiary);">—</p>
+            <p class="text-[11.5px] mt-2" style="color:var(--nk-text-secondary);">Enter tuition and living costs, then click <strong>Calculate Total Cost</strong>.</p>
+          </div>
+          <div id="res-body" class="hidden">
+            <div class="px-4 pt-4 pb-3 text-center res-hero" style="border-bottom:1px solid var(--nk-border);">
+              <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Estimated Total Study Cost</p>
+              <p class="text-[32px] font-extrabold leading-tight tabular-nums nk-gradient-text" id="res-total" style="letter-spacing:-0.03em;">—</p>
+              <p class="text-[11.5px] tabular-nums" style="color:var(--nk-text-secondary);" id="res-sub">—</p>
+              <p class="text-[11px] tabular-nums" style="color:var(--nk-text-tertiary);" id="res-rate-line">—</p>
+            </div>
+            <div class="p-3.5 space-y-2.5">
+              <div class="rounded-xl text-[12px]" style="border:1px solid var(--nk-border);" id="res-lines"></div>
+
+              <details class="rounded-xl" style="border:1px solid var(--nk-border);">
+                <summary class="px-3 py-2 text-[12px] font-semibold cursor-pointer select-none" style="color:var(--nk-text);">How this total is calculated</summary>
+                <div id="res-formulas" class="px-3 pb-2.5 space-y-1.5 text-[11.5px]"></div>
+              </details>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                  <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">One-time</p>
+                  <div id="res-onetime-list" class="mt-1 space-y-1 text-[11.5px] tabular-nums"></div>
+                </div>
+                <div class="rounded-xl p-3" style="border:1px solid var(--nk-border);">
+                  <p class="text-[10.5px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Recurring</p>
+                  <div id="res-recurring-list" class="mt-1 space-y-1 text-[11.5px] tabular-nums"></div>
+                </div>
+              </div>
+
+              <div class="rounded-xl p-3" style="background:var(--nk-accent-subtle); border:1px solid var(--nk-accent-muted);">
+                <p class="text-[11px] font-bold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">How much do you need before flying?</p>
+                <p class="text-[19px] font-extrabold tabular-nums mt-0.5" style="color:var(--nk-text);" id="res-fly">—</p>
+                <p class="text-[10.5px]" style="color:var(--nk-text-secondary);">Deposit + visa + medical + insurance + flight + setup + documents</p>
+              </div>
+
+              <div id="res-gapbox" class="rounded-xl p-3 text-[12px]"></div>
+
+              <details class="rounded-xl" style="border:1px solid var(--nk-border);">
+                <summary class="px-3 py-2 text-[12px] font-semibold cursor-pointer select-none" style="color:var(--nk-text);">Compare study destinations</summary>
+                <div class="px-3 pb-2.5">
+                  <div id="scenario-rows" class="space-y-2"></div>
+                  <button type="button" id="scen-add" class="mt-2 text-[11.5px] font-semibold px-3 py-1.5 rounded-full border" style="border-color:var(--nk-border); color:var(--nk-text-secondary);">+ Add destination</button>
+                  <p class="text-[10.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Your own figures — simplified first-year estimate (tuition + 12× living). Upgradeable to verified data later.</p>
+                </div>
+              </details>
+
+              <div class="rounded-xl p-3 text-[11px] leading-relaxed" style="background:var(--nk-hover); border:1px solid var(--nk-border); color:var(--nk-text-secondary);">
+                <strong style="color:var(--nk-text);">Important:</strong> Study-abroad costs vary significantly by university, city, course, accommodation, exchange rates, visa rules and personal spending. This calculator provides an estimate for planning purposes only.
+              </div>
+
+              <div id="res-warn" class="space-y-1.5"></div>
+              <div class="flex gap-2"><button id="copy-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Copy</button><button id="print-btn" class="nk-btn nk-btn-secondary nk-btn-sm flex-1">Print</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl space-y-6">
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Does It Cost to Study Abroad From Nepal?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Students need to budget for far more than tuition: university applications, English tests, deposits, visa and medical fees, insurance, flights, setup costs and full-duration living expenses. The calculator above adds every category in NPR at your own exchange rate.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">What Costs Should Nepali Students Budget For?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">University application, English test, tuition, university deposit, visa, medical, insurance, flight, accommodation, food, transportation and initial setup — each has its own field above so nothing is forgotten.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How Much Money Do I Need Before Going Abroad?</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Pre-departure funds (deposit, visa, medical, insurance, flight, setup, documents) are the cash you must have before leaving Nepal. The full study total additionally includes tuition and living across the whole duration.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">How to Reduce Study Abroad Costs</h2><p class="text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary);">Apply for scholarships, compare universities and cities, choose accommodation carefully, budget monthly spending, book flights early and look at total tuition across the full duration rather than only the first year — while remembering no option guarantees savings.</p></section>
+      <section><h2 class="text-[14px] font-bold mb-1.5" style="color:var(--nk-text);">Frequently Asked Questions</h2><div class="space-y-1.5">{faq.map(f=> <details class="rounded-lg border" style="border-color:var(--nk-border); background:var(--nk-surface);"><summary class="px-3.5 py-2 text-[12.5px] font-medium cursor-pointer select-none" style="color:var(--nk-text);">{f.q}</summary><div class="px-3.5 pb-2.5 text-[12.5px] leading-relaxed" style="color:var(--nk-text-secondary); border-top:1px solid var(--nk-border);"><p class="pt-2">{f.a}</p></div></details>)}</div></section>
+    </div>
+
+    <Disclaimer variant="education" />
+    <RelatedTools tools={[{title:'EMI Calculator', description:'Monthly EMI for education loans', href:'/nepal/finance/emi-calculator'}, {title:'Loan Eligibility Calculator', description:'How much can you borrow?', href:'/nepal/finance/loan-eligibility-calculator-nepal'}, {title:'Cost of Living Calculator', description:'Budget monthly expenses', href:'/nepal/utilities/cost-of-living-calculator'}]} />
+  </div>
+</BaseLayout>
+
+<style>
+  .cm-wrap{ background-image: radial-gradient(900px 320px at 20% 0%, var(--nk-accent-subtle), transparent 65%), linear-gradient(180deg, var(--nk-accent-subtle), transparent 280px); }
+  #input-col{ counter-reset:sb-step; }
+  .sec-head{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--nk-text); margin-bottom:8px; letter-spacing:-0.01em; }
+  #input-col .sec-head::before{ counter-increment:sb-step; content:counter(sb-step); display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:9999px; font-size:10.5px; font-weight:800; background:var(--nk-hover); border:1px solid var(--nk-border-strong); color:var(--nk-text-tertiary); flex-shrink:0; }
+  .sec-icon{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; font-size:10px; background:var(--nk-gradient-primary); color:#fff; flex-shrink:0; }
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:9999px; border:1px solid var(--nk-border); background:var(--nk-surface); color:var(--nk-text-secondary); font-size:12px; font-weight:500; cursor:pointer; transition:all 140ms ease; font-family:inherit; }
+  .chip:hover{ border-color:var(--nk-accent); color:var(--nk-accent); transform:translateY(-1px); }
+  .chip.chip-active{ background:var(--nk-gradient-primary); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 12px -4px rgba(230,43,30,.5); }
+  .cm-field{ display:flex; flex-direction:column; gap:6px; }
+  .cm-label{ font-size:12px; font-weight:600; color:var(--nk-text); }
+  .cm-box{ position:relative; display:flex; align-items:center; height:42px; border:1px solid var(--nk-border); border-radius:12px; background:var(--nk-surface); transition:border-color 150ms ease, box-shadow 150ms ease; }
+  .cm-box:hover{ border-color:var(--nk-border-strong); }
+  .cm-box:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 3px var(--nk-accent-subtle); }
+  .cm-prefix{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-suffix{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--nk-text-tertiary); pointer-events:none; }
+  .cm-input{ width:100%; height:100%; border:none !important; background:transparent !important; box-shadow:none !important; padding:0 12px 0 32px !important; font-size:14px; font-weight:500; outline:none; border-radius:12px; color:var(--nk-text); }
+  .liv-row{ display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 112px; gap:10px; align-items:center; padding:8px 10px; border:1px solid var(--nk-border); border-radius:12px; background:var(--nk-surface); transition:border-color 140ms ease, box-shadow 140ms ease, transform 120ms ease; }
+  .liv-row:hover{ border-color:var(--nk-border-strong); box-shadow:var(--shadow-xs); transform:translateY(-1px); }
+  .liv-row + .liv-row{ margin-top:6px; }
+  .liv-name{ font-size:12px; font-weight:600; color:var(--nk-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .liv-amt{ position:relative; display:flex; align-items:center; height:38px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-hover); min-width:0; }
+  .liv-amt:focus-within{ border-color:var(--nk-accent); box-shadow:0 0 0 2px var(--nk-accent-subtle); background:var(--nk-surface); }
+  .liv-amt .rs{ position:absolute; left:8px; font-size:10.5px; font-weight:700; color:var(--nk-text-secondary); pointer-events:none; }
+  .liv-amt input{ width:100%; min-width:0; border:none; background:transparent; outline:none; padding:6px 8px 6px 26px; font-size:12.5px; font-weight:600; color:var(--nk-text); border-radius:8px; }
+  .liv-freq{ height:38px; border:1px solid var(--nk-border); border-radius:10px; background:var(--nk-surface); font-size:12px; font-weight:600; color:var(--nk-text-secondary); padding:4px 8px; outline:none; cursor:pointer; }
+  .liv-freq:focus{ border-color:var(--nk-accent); }
+  .top-accent{ position:relative; overflow:hidden; }
+  .top-accent::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--nk-gradient-primary); }
+  .res-hero{ background:linear-gradient(180deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 72%); position:relative; overflow:hidden; }
+  .res-hero::after{ content:''; position:absolute; left:50%; top:-46px; width:220px; height:90px; transform:translateX(-50%); background:radial-gradient(closest-side, var(--nk-accent-subtle), transparent); pointer-events:none; }
+  #result-card{ box-shadow:var(--shadow-md); border-top:3px solid var(--nk-accent); scroll-margin-top:12px; }
+  #res-lines > div{ border-radius:8px; transition:background 120ms ease; }
+  #res-lines > div:hover{ background:var(--nk-hover); }
+  .res-total-row{ background:linear-gradient(90deg, var(--nk-accent-subtle), transparent 70%); border-radius:8px; }
+  #calc-btn{ box-shadow:0 10px 24px -10px rgba(230,43,30,.55); transition:transform 120ms ease, box-shadow 160ms ease, filter 140ms ease; }
+  #calc-btn:hover{ filter:brightness(1.03); box-shadow:0 12px 28px -10px rgba(230,43,30,.6); }
+  #calc-btn:active{ transform:scale(0.99); }
+  #result-card details summary::-webkit-details-marker{ display:none; }
+  #result-card details summary::after{ content:'+'; font-weight:700; color:var(--nk-text-tertiary); margin-left:auto; }
+  #result-card details[open] summary::after{ content:'−'; color:var(--nk-accent); }
+  #result-card details summary{ display:flex; align-items:center; gap:8px; list-style:none; cursor:pointer; }
+  .hidden{ display:none !important; }
+  .scen-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 28px; gap:6px; align-items:center; }
+  .scen-row input, .scen-row select{ width:100%; min-width:0; border:1px solid var(--nk-border); border-radius:8px; background:var(--nk-surface); padding:6px 8px; font-size:12px; outline:none; color:var(--nk-text); }
+  .scen-row input:focus, .scen-row select:focus{ border-color:var(--nk-accent); box-shadow:0 0 0 2px var(--nk-accent-subtle); }
+  .scen-del{ width:26px; height:26px; border-radius:8px; border:none; background:transparent; color:var(--nk-text-tertiary); cursor:pointer; font-size:15px; }
+  .scen-del:hover{ color:#DC2626; background:#FEF2F2; }
+  @media (max-width: 640px){
+    .liv-row{ grid-template-columns:1fr 1fr; }
+    .liv-name{ grid-column:1 / -1; }
+  }
+  @media (max-width: 480px){
+    .cm-box{ height:44px !important; }
+    .cm-input{ font-size:16px !important; }
+    .liv-amt{ height:40px !important; }
+    .liv-amt input, .liv-freq{ font-size:14px !important; }
+    .scen-row{ grid-template-columns:1fr 1fr; }
+    .scen-row .scen-del{ grid-column:2; justify-self:end; }
+  }
+</style>
+
+<script>
+  import { calcStudyAbroad, formatNPR, formatForeign } from '../../../../lib/calculators/study-abroad.js';
+  import { COUNTRY_CURRENCY, SUGGESTED_RATES, currencySymbol } from '../../../../data/study-abroad.js';
+
+  const $ = (id)=> document.getElementById(id);
+  let hasCalculated = false;
+  let programLevel = "Bachelor's";
+  let testName = 'IELTS';
+  const scenarios = [];
+
+  function cur(){ return $('sb-currency').value || 'NPR'; }
+  function sym(){ return currencySymbol(cur()) || cur(); }
+  function rateVal(){
+    const n = Number(String($('sb-rate').value).replace(/,/g,''));
+    return Number.isFinite(n) ? n : NaN;
+  }
+  function refreshCurrency(){
+    const c = cur(), s = sym();
+    document.querySelectorAll('.fcur').forEach(el=>{ el.textContent = `(${c})`; });
+    document.querySelectorAll('.fcur-sym').forEach(el=>{ el.textContent = s; });
+    document.querySelectorAll('.fcur-pad').forEach(el=>{ el.style.paddingLeft = s ? '34px' : '10px'; });
+    $('rate-code').textContent = c;
+    updateTuitionNpr();
+    updateRateLine();
+    markDirty();
+  }
+  function fnum(id){
+    const el=$(id);
+    const n = Number(String(el.value).replace(/,/g,'').trim());
+    return Number.isFinite(n) ? n : NaN;
+  }
+  function updateTuitionNpr(){
+    const t = fnum('sb-tuition'), r = rateVal();
+    $('tuition-npr').textContent = (!Number.isNaN(t) && t>0 && Number.isFinite(r) && r>0)
+      ? `≈ ${formatNPR(t*r)}` : '—';
+  }
+  function updateRateLine(){
+    const r = rateVal();
+    const rv = $('rate-val');
+    if(rv) rv.textContent = Number.isFinite(r) && r>0 ? r.toLocaleString('en-US') : '—';
+  }
+  function setChip(selector, attr, val){
+    document.querySelectorAll(selector).forEach(c=>{
+      const on=c.dataset[attr]===String(val);
+      c.classList.toggle('chip-active', on);
+      c.setAttribute('aria-checked', String(on));
+    });
+  }
+  function markDirty(){ if(hasCalculated) showStale(); }
+  function showStale(){
+    if(!hasCalculated || $('res-body')?.classList.contains('hidden')) return;
+    if(!$('stale-note')){
+      const d=document.createElement('div');
+      d.id='stale-note';
+      d.className='px-3.5 py-2 text-[11px] font-semibold text-center';
+      d.style.cssText='background:#FFFBEB; border-bottom:1px solid #FDE68A; color:#92400E;';
+      d.textContent='Inputs changed — recalculate to update results';
+      $('result-card').prepend(d);
+    }
+  }
+  function clearStale(){ $('stale-note')?.remove(); }
+
+  // destination
+  $('sb-country')?.addEventListener('change', ()=>{
+    const c=$('sb-country').value;
+    $('sb-currency').value = COUNTRY_CURRENCY[c] || 'USD';
+    const sug = SUGGESTED_RATES[$('sb-currency').value];
+    if(sug) $('sb-rate').value = sug;
+    refreshCurrency();
+  });
+  $('sb-currency')?.addEventListener('change', ()=>{
+    const sug = SUGGESTED_RATES[$('sb-currency').value];
+    if(sug && !$('sb-rate').value) $('sb-rate').value = sug;
+    refreshCurrency();
+  });
+  document.querySelectorAll('.level-chip').forEach(b=> b.addEventListener('click', ()=>{ programLevel=b.dataset.level; setChip('.level-chip','level',programLevel); markDirty(); }));
+  document.querySelectorAll('.test-chip').forEach(b=> b.addEventListener('click', ()=>{ testName=b.dataset.test; setChip('.test-chip','test',testName); markDirty(); }));
+
+  // scholarship + duration
+  $('sch-mode')?.addEventListener('change', ()=>{
+    const m=$('sch-mode').value;
+    $('sch-val-wrap')?.classList.toggle('hidden', m==='none');
+    $('sch-suffix').textContent = m==='pct' ? '%' : sym();
+    markDirty();
+  });
+  $('sb-duration')?.addEventListener('change', ()=>{
+    $('dur-custom-wrap')?.classList.toggle('hidden', $('sb-duration').value!=='custom');
+    markDirty();
+  });
+  ['deposit-in-tuition','ins-cur','setup-cur','ins-unit','local-freq'].forEach(id=> $(id)?.addEventListener('change', ()=>{ refreshInsSetupPrefix(); markDirty(); }));
+  function refreshInsSetupPrefix(){
+    $('ins-prefix').textContent = $('ins-cur').value==='npr' ? 'Rs' : sym();
+    $('setup-prefix').textContent = $('setup-cur').value==='npr' ? 'Rs' : sym();
+  }
+
+  // inputs: strip negatives, comma-format on blur, Enter calculates
+  document.querySelectorAll('.cm-input, .liv-amt input').forEach(el=>{
+    el.addEventListener('input', ()=>{ if(el.value.includes('-')) el.value=el.value.replace(/-/g,''); markDirty(); });
+    el.addEventListener('blur', ()=>{
+      const raw=String(el.value).replace(/,/g,'').trim();
+      if(raw==='') return;
+      const n=Number(raw);
+      if(Number.isFinite(n) && n>=0) el.value=Math.round(n).toLocaleString('en-IN');
+      markDirty();
+    });
+    el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+  });
+  ['sb-rate','sb-duration','sb-duration-custom','sch-val','app-count'].forEach(id=>{
+    $(id)?.addEventListener('input', ()=>{ updateTuitionNpr(); updateRateLine(); markDirty(); });
+    $(id)?.addEventListener('change', ()=>{ updateTuitionNpr(); updateRateLine(); markDirty(); });
+  });
+
+  function durationYears(){
+    if($('sb-duration').value==='custom'){
+      const n=Number(String($('sb-duration-custom').value).replace(/,/g,''));
+      return Number.isFinite(n) && n>0 ? Math.min(n,10) : NaN;
+    }
+    return Number($('sb-duration').value)||0;
+  }
+
+  function collect(){
+    const liv={};
+    document.querySelectorAll('#living-rows [data-liv]').forEach(el=>{
+      const f=document.querySelector(`[data-lfreq="${el.dataset.liv}"]`);
+      liv[el.dataset.liv]={ amount: el.value, freq: f ? f.value : 'monthly' };
+    });
+    const fund={};
+    document.querySelectorAll('[data-fund]').forEach(el=>{ fund[el.dataset.fund]=el.value; });
+    return {
+      rate: $('sb-rate').value,
+      currency: cur(),
+      tuitionF: $('sb-tuition').value,
+      tuitionFreq: $('tuition-freq').value,
+      scholarshipMode: $('sch-mode').value,
+      scholarshipVal: $('sch-val').value,
+      durationYears: durationYears(),
+      applications: $('app-count').value || '3', // empty = default 3 (placeholder value)
+      appFeeF: $('app-fee').value,
+      testCostF: $('test-cost').value,
+      depositF: $('deposit').value,
+      depositInTuition: $('deposit-in-tuition').checked,
+      visaFeeF: $('visa-fee').value,
+      biometricNPR: $('bio-cost').value,
+      immigrationNPR: $('imm-cost').value,
+      otherMandatoryNPR: $('mand-cost').value,
+      medicalNPR: $('med-cost').value,
+      docsNPR: $('docs-cost').value,
+      flightInitialNPR: $('flight-out').value,
+      flightReturnNPR: $('flight-back').value,
+      localTransportNPR: $('local-amt').value,
+      localTransportFreq: $('local-freq').value,
+      insuranceAmt: $('ins-amt').value,
+      insuranceUnit: $('ins-unit').value,
+      insuranceForeign: $('ins-cur').value==='foreign',
+      living: liv,
+      setupAmt: $('setup-amt').value,
+      setupForeign: $('setup-cur').value==='foreign',
+      otherCostsNPR: $('other-costs').value,
+      funding: fund,
+    };
+  }
+
+  function validate(c){
+    if(!(c.rate>0)) return 'Enter an exchange rate greater than 0.';
+    if(!(c.durationYears>0)) return 'Enter a study duration greater than 0.';
+    if(c.scholarshipMode==='pct'){
+      const p=Number(String(c.scholarshipVal).replace(/,/g,''));
+      if(!(p>=0 && p<=100)) return 'Scholarship percentage must be between 0–100%.';
+    }
+    return null;
+  }
+
+  // "AUD 35,000/yr × 3 yrs = Rs 38,32,500" style transparency lines
+  function fmtPer(line, code){
+    const unit = line.freq==='monthly' ? '/mo' : line.freq==='annual' ? '/yr' : line.freq==='semester' ? '/sem' : '';
+    if(line.perF>0) return `${code} ${Math.round(line.perF).toLocaleString('en-US')}${unit}`;
+    return `${formatNPR(line.per)}${unit}`;
+  }
+  function fmtCount(line){
+    if(line.freq==='monthly') return `× ${line.count} mo`;
+    if(line.freq==='annual') return `× ${line.count} ${line.count===1?'yr':'yrs'}`;
+    if(line.freq==='semester') return `× ${line.count} sem`;
+    return 'one-time';
+  }
+  function formulaLine(line, code){
+    return `<div class="flex justify-between gap-2 tabular-nums"><span style="color:var(--nk-text-secondary);">${line.label}<br><span style="color:var(--nk-text-tertiary); font-size:10.5px;">${fmtPer(line, code)} ${fmtCount(line)}</span></span><span style="color:var(--nk-text); font-weight:600; white-space:nowrap;">${formatNPR(line.total)}</span></div>`;
+  }
+
+  function doCalc(){
+    const hint=$('calc-hint');
+    if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    const c=collect();
+    const err=validate(c);
+    if(err){
+      $('res-empty')?.classList.remove('hidden');
+      $('res-body')?.classList.add('hidden');
+      if(hint){ hint.textContent=err; hint.classList.remove('hidden'); }
+      $('calc-btn')?.animate?.([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],{duration:220});
+      return;
+    }
+    const r=calcStudyAbroad(c);
+    hasCalculated=true;
+    clearStale();
+    $('res-empty')?.classList.add('hidden');
+    $('res-body')?.classList.remove('hidden');
+
+    const code=r.inputs.currency;
+    $('res-total').textContent=formatNPR(r.total);
+    $('res-sub').textContent=`${r.inputs.years} ${r.inputs.years===1?'year':'years'} · ${r.inputs.months} months · ${formatNPR(r.perYear)} / year`;
+    $('res-rate-line').textContent=`Exchange rate used: 1 ${code} = ${formatNPR(r.inputs.rate)}`;
+
+    // line items
+    const L=(label,val,neg=false)=>`<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">${label}</span><strong style="color:${neg?'#DC2626':'var(--nk-text)'};">${neg?'− ':''}${formatNPR(val).replace('-','')}</strong></div>`;
+    const utilTotal=r.livingLines.find(l=>l.key==='utilities').total + r.livingLines.find(l=>l.key==='phone').total;
+    const persTotal=r.livingLines.find(l=>l.key==='personal').total + r.livingLines.find(l=>l.key==='other').total;
+    const g=(k)=>r.livingLines.find(l=>l.key===k).total;
+    $('res-lines').innerHTML =
+      `<div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Tuition</span><strong style="color:var(--nk-text);">${formatNPR(r.tuition.total)}</strong></div>`+
+      (r.tuition.discount>0?L('Scholarship / discount',r.tuition.discount,true):'')+
+      `<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Accommodation</span><strong style="color:var(--nk-text);">${formatNPR(g('rent'))}</strong></div>`+
+      `<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Food</span><strong style="color:var(--nk-text);">${formatNPR(g('food'))}</strong></div>`+
+      `<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Transportation</span><strong style="color:var(--nk-text);">${formatNPR(g('transport'))}</strong></div>`+
+      `<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Utilities</span><strong style="color:var(--nk-text);">${formatNPR(utilTotal)}</strong></div>`+
+      (persTotal>0?`<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Personal &amp; other living</span><strong style="color:var(--nk-text);">${formatNPR(persTotal)}</strong></div>`:'')+
+      `<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Insurance</span><strong style="color:var(--nk-text);">${formatNPR(r.insurance.total)}</strong></div>`+
+      `<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Visa &amp; immigration</span><strong style="color:var(--nk-text);">${formatNPR(r.visaTotal)}</strong></div>`+
+      `<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Flights &amp; travel</span><strong style="color:var(--nk-text);">${formatNPR(r.travelTotal)}</strong></div>`+
+      `<div class="flex justify-between px-3 py-2 tabular-nums" style="border-top:1px solid var(--nk-border);"><span style="color:var(--nk-text-secondary);">Other costs</span><strong style="color:var(--nk-text);">${formatNPR(r.otherTotal)}</strong></div>`+
+      `<div class="res-total-row flex justify-between px-3 py-2 tabular-nums" style="border-top:2px solid var(--nk-border-strong); font-size:13px;"><span style="color:var(--nk-text); font-weight:800;">TOTAL</span><strong style="color:var(--nk-accent);">${formatNPR(r.total)}</strong></div>`+
+      `<div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Funding available</span><strong style="color:var(--nk-text);">${formatNPR(r.fundingTotal)}</strong></div>`+
+      (r.gap>0
+        ? `<div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Funding gap</span><strong style="color:#DC2626;">${formatNPR(r.gap)}</strong></div>`
+        : `<div class="flex justify-between px-3 py-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Remaining funds</span><strong style="color:#16A34A;">${formatNPR(Math.abs(r.gap))}</strong></div>`);
+
+    // transparency
+    const show=[r.tuition, ...r.livingLines, ...r.visaLines, ...r.travelLines, r.insurance, ...r.otherLines].filter(l=>l.total>0);
+    $('res-formulas').innerHTML =
+      show.map(l=>formulaLine(l,code)).join('')+
+      (r.tuition.discount>0?`<div class="flex justify-between gap-2 tabular-nums"><span style="color:var(--nk-text-secondary);">Scholarship<span style="color:var(--nk-text-tertiary); font-size:10.5px;"> (off tuition)</span></span><span style="color:#DC2626; font-weight:600; white-space:nowrap;">− ${formatNPR(r.tuition.discount)}</span></div>`:'')+
+      `<div class="flex justify-between gap-2 tabular-nums pt-1.5 mt-1" style="border-top:1px solid var(--nk-border); font-weight:700;"><span style="color:var(--nk-text);">Total</span><span style="color:var(--nk-text); white-space:nowrap;">${formatNPR(r.total)}</span></div>`;
+
+    const li=(rows)=>rows.filter(x=>x.amount>0).map(x=>`<div class="flex justify-between tabular-nums"><span style="color:var(--nk-text-secondary);">${x.label}</span><span style="color:var(--nk-text); font-weight:600;">${formatNPR(x.amount)}</span></div>`).join('') || `<p class="text-[11px]" style="color:var(--nk-text-tertiary);">—</p>`;
+    $('res-onetime-list').innerHTML=li(r.oneTimeList);
+    $('res-recurring-list').innerHTML=li(r.recurringList);
+    $('res-fly').textContent=formatNPR(r.beforeFlying);
+
+    // gap box
+    const gb=$('res-gapbox');
+    if(r.gap>0){
+      gb.style.background='#FEF2F2'; gb.style.borderColor='#FECACA';
+      gb.innerHTML=`<p class="font-bold" style="color:#DC2626;">Estimated funding gap: ${formatNPR(r.gap)}</p><p class="mt-1" style="color:#991B1B;">You may need additional savings, scholarship support, income or financing to cover the estimated cost.</p>`;
+    } else {
+      gb.style.background='var(--nk-accent-subtle)'; gb.style.borderColor='var(--nk-accent-muted)';
+      gb.innerHTML=`<p class="font-bold" style="color:var(--nk-accent);">✓ Your entered funding covers the estimated cost.</p><p class="mt-1 tabular-nums" style="color:var(--nk-text-secondary);">Estimated remaining funds: <strong style="color:var(--nk-text);">${formatNPR(Math.abs(r.gap))}</strong></p>`;
+    }
+
+    renderScenarios();
+    $('res-warn').innerHTML = r.total<=0
+      ? `<div class="text-[11px] p-2.5 rounded-lg" style="background:#FEF2F2; border:1px solid #FECACA; color:#991B1B;">Your total is Rs 0 — enter tuition or living costs to estimate.</div>` : '';
+
+    window.__lastStudy={r};
+    if(window.innerWidth<1024) setTimeout(()=> $('result-card')?.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+  }
+
+  // scenarios (user-editable rows)
+  function scenRowHtml(s){
+    return `<div class="scen-row" data-id="${s.id}">
+      <select class="scen-dest" aria-label="Destination">${['Australia','Canada','UK','USA','Japan','Germany','New Zealand','Other'].map(c=>`<option ${c===s.dest?'selected':''}>${c}</option>`).join('')}</select>
+      <input class="scen-tuition" type="text" inputmode="decimal" placeholder="Tuition/yr" value="${s.tuition}" aria-label="Annual tuition" />
+      <input class="scen-living" type="text" inputmode="decimal" placeholder="Living/mo" value="${s.living}" aria-label="Monthly living" />
+      <input class="scen-rate" type="text" inputmode="decimal" placeholder="Rate" value="${s.rate}" aria-label="Exchange rate" />
+      <button type="button" class="scen-del" data-del="${s.id}" aria-label="Remove">×</button>
+      <div class="scen-out text-[11.5px] tabular-nums sm:col-span-5" style="color:var(--nk-text-secondary); grid-column:1/-1;">${s.out||''}</div>
+    </div>`;
+  }
+  function renderScenarios(){
+    const wrap=$('scenario-rows');
+    wrap.innerHTML = scenarios.length
+      ? scenarios.map(scenRowHtml).join('')
+      : `<p class="text-[11.5px]" style="color:var(--nk-text-tertiary);">Add up to 3 destinations to compare first-year estimates side by side.</p>`;
+    wrap.querySelectorAll('.scen-row').forEach(row=>{
+      const id=row.dataset.id;
+      const update=()=>{
+        const s=scenarios.find(x=>x.id===id); if(!s) return;
+        s.dest=row.querySelector('.scen-dest').value;
+        s.tuition=row.querySelector('.scen-tuition').value;
+        s.living=row.querySelector('.scen-living').value;
+        s.rate=row.querySelector('.scen-rate').value;
+        const t=Number(String(s.tuition).replace(/,/g,''))||0;
+        const l=Number(String(s.living).replace(/,/g,''))||0;
+        const r=Number(String(s.rate).replace(/,/g,''))||0;
+        const out=row.querySelector('.scen-out');
+        out.textContent = (t>0||l>0) && r>0 ? `${s.dest}: first-year ≈ ${formatNPR((t+l*12)*r)}` : '';
+      };
+      row.querySelectorAll('input,select').forEach(el=> el.addEventListener('input', update));
+      row.querySelector('[data-del]').addEventListener('click', ()=>{
+        const i=scenarios.findIndex(x=>x.id===id);
+        if(i>-1) scenarios.splice(i,1);
+        renderScenarios();
+      });
+      update();
+    });
+  }
+  let scenSeq=0;
+  $('scen-add')?.addEventListener('click', ()=>{
+    if(scenarios.length>=3) return;
+    const presets=[{dest:'Australia',tuition:'35000',living:'1500',rate:'105'},{dest:'Canada',tuition:'25000',living:'1200',rate:'102'},{dest:'UK',tuition:'18000',living:'1100',rate:'175'}];
+    scenarios.push({id:'s'+(++scenSeq)+'_'+Date.now(), ...presets[scenarios.length % presets.length], out:''});
+    renderScenarios();
+  });
+
+  function doReset(){
+    $('sb-country').value='Australia';
+    $('sb-currency').value='AUD';
+    $('sb-rate').value='';
+    programLevel="Bachelor's"; setChip('.level-chip','level',programLevel);
+    testName='IELTS'; setChip('.test-chip','test',testName);
+    $('sb-duration').value='1'; $('dur-custom-wrap')?.classList.add('hidden'); $('sb-duration-custom').value='';
+    $('tuition-freq').value='annual';
+    ['sb-tuition','app-fee','test-cost','deposit','visa-fee','med-cost','bio-cost','imm-cost','mand-cost','docs-cost','flight-out','flight-back','local-amt','ins-amt','setup-amt','other-costs','sch-val'].forEach(id=>{ $(id).value=''; });
+    document.querySelectorAll('[data-liv]').forEach(el=>{ el.value=''; });
+    document.querySelectorAll('[data-lfreq]').forEach(el=>{ el.value='monthly'; });
+    $('local-freq').value='onetime';
+    $('app-count').value='';
+    $('sch-mode').value='none'; $('sch-val-wrap')?.classList.add('hidden');
+    $('deposit-in-tuition').checked=false;
+    $('ins-unit').value='annual'; $('ins-cur').value='foreign';
+    $('setup-cur').value='foreign';
+    ['sb-uni','sb-course','sb-intake'].forEach(id=>{ $(id).value=''; });
+    document.querySelectorAll('[data-fund]').forEach(el=>{ el.value=''; });
+    scenarios.length=0; renderScenarios();
+    const hint=$('calc-hint'); if(hint){ hint.classList.add('hidden'); hint.textContent=''; }
+    hasCalculated=false;
+    clearStale();
+    $('res-body')?.classList.add('hidden'); $('res-empty')?.classList.remove('hidden');
+    refreshCurrency(); updateLivingPreview();
+  }
+
+  $('calc-btn')?.addEventListener('click', doCalc);
+  $('reset-btn')?.addEventListener('click', doReset);
+  $('copy-btn')?.addEventListener('click', async()=>{
+    if($('res-body')?.classList.contains('hidden')){
+      doCalc();
+      if($('res-body')?.classList.contains('hidden')) return;
+    }
+    const d=window.__lastStudy; if(!d) return;
+    const text=`Study Abroad Estimate (${d.r.inputs.years}y)\nTotal: ${formatNPR(d.r.total)}\nTuition: ${formatNPR(d.r.tuition.net)}/total · Living: ${formatNPR(d.r.livingTotal)}\nFunding: ${formatNPR(d.r.fundingTotal)} · Gap: ${formatNPR(Math.max(0,d.r.gap))}\n— SolutionsNepal study abroad calculator`;
+    try{ await navigator.clipboard.writeText(text); const b=$('copy-btn'); const t=b.textContent; b.textContent='Copied!'; setTimeout(()=> b.textContent=t,1500);}catch{}
+  });
+  $('print-btn')?.addEventListener('click', ()=> window.print());
+
+  renderScenarios();
+  refreshCurrency();
+  updateLivingPreview();
+</script>

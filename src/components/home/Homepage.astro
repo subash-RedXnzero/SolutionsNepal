@@ -1,0 +1,2142 @@
+---
+import { tools as registry } from '../../data/tools.js';
+
+const REG_BY_ID = Object.fromEntries(registry.map(t => [t.id, t]));
+
+// ─── POPULAR TOOLS (large, well-designed cards) ───
+const POPULAR = [
+  { id: 'salary-checker', icon: 'salary' },
+  { id: 'nepali-age-calculator', icon: 'calendar' },
+  { id: 'emi-calculator', icon: 'percent' },
+  { id: 'nepali-unicode', icon: 'keyboard' },
+  { id: 'gold-price', icon: 'coins' },
+  { id: 'vehicle-tax-new', icon: 'car' },
+].map(({ id, icon }) => {
+  const t = REG_BY_ID[id];
+  return t ? { href: t.href, icon, title: t.title, desc: t.description } : null;
+}).filter(Boolean);
+
+// Minimal 1.5px line icons for popular tool tiles
+const POP_ICONS = {
+  salary: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/>',
+  calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.6h17"/><path d="M8 3v4"/><path d="M16 3v4"/>',
+  percent: '<path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+  keyboard: '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9 14h6"/>',
+  coins: '<circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/>',
+  car: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+};
+
+// ─── WHAT WE DO (6 everyday areas — linked to real hubs with live counts) ───
+const CATS = [
+  { icon: 'money', name: 'Money', info: 'Salary, tax, loans, savings & costs.', href: '/nepal/finance', cats: ['finance'] },
+  { icon: 'dates', name: 'Dates & Calendar', info: 'BS/AD, festivals, holidays & age.', href: '/nepal/date', cats: ['date'] },
+  { icon: 'home', name: 'Property & Home', info: 'Land, registration, housing & construction.', href: '/nepal/land', cats: ['land', 'construction'] },
+  { icon: 'education', name: 'Education', info: 'GPA, grades, percentages & study costs.', href: '/nepal/education', cats: ['education'] },
+  { icon: 'transport', name: 'Transport', info: 'Fuel, vehicles, taxes & travel.', href: '/nepal/transport', cats: ['vehicle', 'transport'] },
+  { icon: 'everyday', name: 'Everyday Life', info: 'Utilities, documents, language & more.', href: '/nepal/utilities', cats: ['utilities', 'language', 'gold', 'nepse', 'names', 'photo', 'pdf', 'image-convert'] },
+].map((c) => ({ ...c, count: registry.filter((t) => c.cats.includes(t.category)).length }));
+
+// Minimal 1.5px line icons (stroke inherits from the <svg> wrapper)
+const CAT_ICONS = {
+  money: '<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.2h18"/><circle cx="16.6" cy="14.6" r="1.1"/>',
+  dates: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.6h17"/><path d="M8 3v4"/><path d="M16 3v4"/><circle cx="8.4" cy="14" r="0.9"/><circle cx="12" cy="14" r="0.9"/><circle cx="15.6" cy="14" r="0.9"/>',
+  home: '<path d="M4 10.4 12 4l8 6.4"/><path d="M6.2 9.4V20h11.6V9.4"/><path d="M10.4 20v-4.8h3.2V20"/>',
+  education: '<path d="M12 4 2.8 8.4 12 12.8l9.2-4.4L12 4z"/><path d="M6.2 10.6v4.2c0 1.5 2.6 2.9 5.8 2.9s5.8-1.4 5.8-2.9v-4.2"/><path d="M21.2 8.6v5.2"/>',
+  transport: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  everyday: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+};
+
+const TOOL_COUNT = registry.length;
+
+// ─── GUIDES (latest library how-tos — how/why behind the calculators) ───
+import { getGuides } from '../../data/guides.js';
+const GUIDES = getGuides().slice(0, 4);
+
+// ─── NEW & UPDATED (honest changelog — only shipped items, newest first) ───
+const UPDATES = [
+  {
+    badge: 'New',
+    date: 'Sep 2026',
+    title: 'Foreign Employment Cost Estimator',
+    desc: 'Estimate going-abroad costs, out-of-pocket share, and payback time.',
+    href: '/nepal/foreign-employment-cost-calculator',
+  },
+  {
+    badge: 'New',
+    date: 'Sep 2026',
+    title: 'Business Registration Cost Estimator',
+    desc: 'Estimate OCR registration costs for Pvt. Ltd., sole, partnership & public companies.',
+    href: '/business-registration-cost-nepal',
+  },
+  {
+    badge: 'Updated',
+    date: 'Sep 2026',
+    title: 'VAT Calculator',
+    desc: 'Simpler add-only flow with placeholders and a proper Calculate button.',
+    href: '/nepal/finance/vat-calculator',
+  },
+  {
+    badge: 'Updated',
+    date: 'Aug 2026',
+    title: 'FY 2083/84 tax slabs',
+    desc: 'Salary and tax tools updated for the new unified slabs (top rate 29%).',
+    href: '/nepal/finance/salary-checker',
+  },
+];
+
+// ─── TRUST (visible guarantees — mirrors the homepage JSON-LD FAQ) ───
+const TRUST = [
+  { title: 'Free forever', desc: 'Every tool is free. No fees, no subscriptions, no ads.' },
+  { title: 'No signup', desc: 'Open a tool and use it instantly. No accounts, ever.' },
+  { title: 'Private by design', desc: 'Calculations run in your browser. Your numbers never leave your device.' },
+  { title: 'Verified sources', desc: 'Rates from NRB, IRD, NOC and official schedules — with last-checked dates.' },
+];
+
+const HP_FAQS = [
+  {
+    q: 'What is SolutionsNepal?',
+    a: 'SolutionsNepal is a free collection of calculators, converters, and utility tools built for everyday life in Nepal. It includes salary calculators, date converters, gold weight converters, vehicle tax calculators, and more. All calculations run in your browser — no data is sent to any server.',
+  },
+  {
+    q: 'Is SolutionsNepal free to use?',
+    a: 'Yes, SolutionsNepal is completely free. There are no sign-ups, no subscriptions, no ads, and no data collection. All tools work entirely in your browser.',
+  },
+  {
+    q: 'How accurate are SolutionsNepal calculators?',
+    a: 'SolutionsNepal uses verified tax rules from IRD Nepal, SSF rates from the Social Security Fund, and NRB exchange rates. However, always confirm with your employer or IRD Nepal for official purposes.',
+  },
+  {
+    q: 'Is my data private?',
+    a: 'Yes. Every calculation happens locally in your browser. SolutionsNepal has no accounts and collects none of your input — there is nothing to leak or sell.',
+  },
+  {
+    q: 'Does SolutionsNepal work on mobile phones?',
+    a: 'Yes, SolutionsNepal is fully responsive and works on phones, tablets, and desktops, with touch-friendly layouts throughout.',
+  },
+];
+
+// ─── NP NEPAL TODAY — market snapshot (server-computed, no client JS) ───
+import { getTodayInfo, BS_MONTHS_NP } from '../../lib/nepal/nepal-time.js';
+import { getGoldPriceAsync } from '../../lib/nepal/gold-price.js';
+import { getSilverPriceAsync } from '../../lib/nepal/silver-price.js';
+import { getFuelPriceAsync } from '../../lib/nepal/fuel-price.js';
+import { getHomepageCurrenciesAsync } from '../../lib/nepal/forex.js';
+import { boardUpdatedLabel, freshness } from '../../lib/nepal/providers/live-snapshot.js';
+import { npb as FLAG_PATHS } from '../../lib/utils/nepal-flag.js';
+import { getWeather } from '../../lib/nepal/weather.js';
+import { formatNumber, toDevanagari } from '../../lib/utils/npr.js';
+
+const today = getTodayInfo();
+const bsShort = `${toDevanagari(String(today.bsDay))} ${BS_MONTHS_NP[today.bsMonth - 1]}`;
+const bsFull = `${toDevanagari(String(today.bsYear))} ${bsShort}`;
+// Parallel fetches — these are independent snapshot reads, no reason to await serially.
+const [gold, silver, fuel, currencies] = await Promise.all([
+  getGoldPriceAsync(),
+  getSilverPriceAsync(),
+  getFuelPriceAsync('kathmandu'),
+  getHomepageCurrenciesAsync(),
+]);
+const usd = currencies.find(c => c.iso3 === 'USD');
+const eur = currencies.find(c => c.iso3 === 'EUR');
+const inr = currencies.find(c => c.iso3 === 'INR');
+// Pill is green only when every market section is freshly fetched.
+// Silver shares the gold section; 'stale'/'mock' sections flip it to Offline.
+const isLive = ['forex', 'gold', 'fuel'].every((k) => freshness(k) === 'live');
+const boardUpdated = boardUpdatedLabel();
+const ktmWeather = getWeather('kathmandu');
+
+function badge(dir, text) {
+  const up = dir === 'up';
+  const flat = dir === 'flat';
+  return { arrow: flat ? '→' : up ? '↑' : '↓', text, cls: flat ? 'flat' : up ? 'up' : 'down' };
+}
+
+const gold24k = gold.fineGold.pricePerTola;
+
+// Minimal stroke weather glyphs (no emoji in the data board)
+const WX_SVG = {
+  clear: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  partly: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><path d="M8 2.5V4M2.5 8H4M4.3 4.3l1 1M11.7 4.3l-1 1"/><path d="M9.5 20h8a3.5 3.5 0 0 0 .6-6.95A5 5 0 0 0 8.7 14.5 2.8 2.8 0 0 0 9.5 20z"/></svg>',
+  cloudy: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 0 0 .9-8.9A6 6 0 0 0 6.7 11.6 3.8 3.8 0 0 0 7.5 19h10z"/></svg>',
+  rain: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 14a4.5 4.5 0 0 0 .9-8.9A6 6 0 0 0 6.7 6.6 3.8 3.8 0 0 0 7.5 14h10z"/><path d="M8 17v2.5M12 17v2.5M16 17v2.5"/></svg>',
+};
+
+// Honest 2-point trend (yesterday → today) from snapshot values only.
+// The snapshot carries no multi-day history, so the hero shows a straight
+// line between the two real points — never fabricated volatility.
+function trendD(yesterday, today, w = 220, h = 56, pad = 10) {
+  const min = Math.min(yesterday, today);
+  const max = Math.max(yesterday, today);
+  const range = max - min || 1;
+  const y = (v) => (h - pad - ((v - min) / range) * (h - pad * 2)).toFixed(1);
+  return `M0,${y(yesterday)} L${w},${y(today)}`;
+}
+
+const goldTrend = trendD(gold.yesterday.pricePerTola, gold24k);
+const goldBadge = badge(gold.change.direction, `${gold.change.percent.toFixed(1)}% today`);
+const silverBadge = badge(silver.change.direction, `${silver.change.percent.toFixed(1)}% today`);
+const petrolBadge = fuel.petrol.change.direction === 'none' ? null : badge(fuel.petrol.change.direction, `Rs ${formatNumber(Math.abs(fuel.petrol.change.amount))}/L`);
+const wxIcon = WX_SVG[ktmWeather.today.cond.k] || WX_SVG.rain;
+
+const STRIP = [
+  {
+    label: 'EUR/NPR',
+    text: `Rs ${formatNumber(eur?.sellPerUnit ?? 0)}`,
+    badge: null,
+    href: '/foreign-exchange-nepal',
+  },
+  {
+    label: 'INR/NPR',
+    text: inr ? `Rs ${formatNumber(inr.sell)}` : 'N/A',
+    unit: '100 INR',
+    badge: null,
+    href: '/foreign-exchange-nepal',
+  },
+  {
+    label: 'DIESEL',
+    text: `Rs ${formatNumber(fuel.diesel.price)}/L`,
+    badge: null,
+    href: '/nepal/fuel-price-nepal',
+  },
+  {
+    label: 'LPG',
+    text: `Rs ${formatNumber(fuel.lpg.price)}`,
+    badge: null,
+    href: '/nepal/fuel-price-nepal',
+  },
+  {
+    label: 'DATE',
+    text: bsShort,
+    badge: null,
+    href: '/nepal/calendar',
+  },
+];
+---
+
+<div class="hp">
+  <div class="hp-grain" aria-hidden="true"></div>
+  <!-- ═══ HERO: crimson banner, big search ═══ -->
+  <section class="hp-hero" aria-label="Smart Nepali Tools">
+    <div class="hp-container hp-hero-grid">
+      <div class="hp-hero-copy">
+      <p class="hp-dateline">{today.dayOfWeek}, <span lang="ne">{bsShort}</span>, Kathmandu {ktmWeather.today.temp}°</p>
+      <h1 class="hp-title">Tools for everyday <span class="hp-title-accent">Nepal</span></h1>
+      <p class="hp-sub hp-sub-strong">{TOOL_COUNT}+ free calculators, converters and checkers for everyday life in Nepal.</p>
+      <p class="hp-sub-np" lang="ne">नेपालका लागि निःशुल्क उपकरणहरू</p>
+      <form class="hp-search" id="hp-search-form" role="search" aria-label="Search tools">
+        <svg class="hp-search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <label class="hp-sr-only" for="hp-search-input">Search tools</label>
+        <input id="hp-search-input" class="hp-search-input" type="search" placeholder='Try "80 हजार salary tax" or "2 ropani कति आना"' autocomplete="off" spellcheck="false" />
+        <kbd class="hp-search-kbd" aria-hidden="true">/</kbd>
+      </form>
+      <div class="hp-hero-actions">
+        <a href="/nepal" class="hp-hero-cta">Explore all tools <span aria-hidden="true">→</span></a>
+        <a href="/guides" class="hp-hero-ghost">Browse guides</a>
+      </div>
+      <div class="hp-quick" aria-label="Popular searches">
+        <span class="hp-quick-label">Popular:</span>
+        <a href="/nepal/finance/salary-checker">Salary</a>
+        <a href="/nepal/finance/emi-calculator">EMI</a>
+        <a href="/nepal/gold-price-nepal">Gold price</a>
+        <a href="/nepal/calendar">Calendar</a>
+        <a href="/nepal/fuel-price-nepal">Fuel price</a>
+        </div>
+      </div>
+      <aside class="hp-today" aria-label="Nepal today at a glance">
+        <div class="hp-today-bar">
+          <p class="hp-today-head"><span class="hp-today-dot" aria-hidden="true"></span>Nepal Today</p>
+          <p class="hp-today-date">{today.dayOfWeek} · {bsShort} {toDevanagari(String(today.bsYear))}</p>
+        </div>
+        <div class="hp-today-mini">
+          <div class="hp-mini hp-mini-wx">
+            <p class="hp-mini-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Kathmandu</p>
+            <p class="hp-mini-big">{ktmWeather.today.temp}°</p>
+            <p class="hp-mini-sub"><span class="hp-mini-ico" aria-hidden="true" set:html={WX_SVG[ktmWeather.today.cond.k] || WX_SVG.rain} />{ktmWeather.today.cond.label}</p>
+            <p class="hp-mini-sub">H {ktmWeather.daily[0].hi}° · L {ktmWeather.daily[0].lo}°</p>
+          </div>
+          <a href="/nepal/calendar" class="hp-mini hp-mini-cal">
+            <p class="hp-mini-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.6h17M8 3v4M16 3v4"/></svg>Nepal Calendar</p>
+            <p class="hp-mini-big" lang="ne">{toDevanagari(String(today.bsDay))}</p>
+            <p class="hp-mini-sub" lang="ne">{BS_MONTHS_NP[today.bsMonth - 1]} {toDevanagari(String(today.bsYear))}</p>
+            <p class="hp-mini-sub" lang="ne">{today.dayOfWeekNp}</p>
+          </a>
+        </div>
+        <div class="hp-today-fx">
+          <a class="hp-fx" href="/nepal/gold-price-nepal">
+            <span class="hp-fx-ico hp-fx-gold" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={POP_ICONS.coins} /></span>
+            <span class="hp-fx-body"><span class="hp-fx-label">Gold <span>(per tola)</span></span><span class="hp-fx-val">Rs {formatNumber(gold24k)}</span></span>
+            <span class:list={['npb-chg', 'hp-fx-chg', gold.change.direction === 'up' ? 'up' : gold.change.direction === 'flat' ? 'flat' : 'down']}>{gold.change.direction === 'up' ? '↑' : gold.change.direction === 'flat' ? '→' : '↓'} {gold.change.percent.toFixed(1)}%</span>
+          </a>
+          <a class="hp-fx" href="/foreign-exchange-nepal">
+            <span class="hp-fx-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 20 20"><defs><clipPath id="hp-usclip"><circle cx="10" cy="10" r="10"/></clipPath></defs><g clip-path="url(#hp-usclip)"><rect width="20" height="20" fill="#B31942"/><g fill="#fff"><rect y="2.6" width="20" height="2"/><rect y="6.5" width="20" height="2"/><rect y="10.4" width="20" height="2"/><rect y="14.3" width="20" height="2"/></g><rect width="9" height="10" fill="#0A3161"/></g></svg></span>
+            <span class="hp-fx-body"><span class="hp-fx-label">USD / NPR</span><span class="hp-fx-val">Rs {formatNumber(usd?.sellPerUnit ?? 0)}</span></span>
+          </a>
+        </div>
+        <div class="hp-today-links">
+          <a href="/nepal/fuel-price-nepal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M4 21h12"/><path d="M15 10h2.5A2.5 2.5 0 0 1 20 12.5V17a1.5 1.5 0 0 0 3 0V9.5L20.5 7"/><path d="M8 8h4v4H8z"/></svg>Diesel <strong>Rs {formatNumber(fuel.diesel.price)}/L</strong><span aria-hidden="true">→</span></a>
+          <a href="/nepal/fuel-price-nepal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.3 6 11a6 6 0 0 1-12 0c0-4.7 6-11 6-11z"/></svg>LPG <strong>Rs {formatNumber(fuel.lpg.price)}</strong><span aria-hidden="true">→</span></a>
+          <a href="/nepal/calendar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.6h17M8 3v4M16 3v4"/></svg>Date <strong lang="ne">{bsShort}</strong><span aria-hidden="true">→</span></a>
+          <a class="hp-today-more" href="#snapshot">View more <span aria-hidden="true">→</span></a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═══ NP NEPAL TODAY — market snapshot ═══ -->
+  <section class="hp-board-wrap" id="snapshot" aria-label="Nepal today market snapshot">
+    <div class="hp-container">
+      <p class="hp-board-eyebrow">Live snapshot · Gold, fuel, currency &amp; weather</p>
+      <div class="npb" role="group" aria-label="Market snapshot: gold, silver, petrol, currency, weather">
+        <header class="npb-head">
+          <div class="npb-head-left">
+            <p class="npb-title">
+              <svg class="npb-flag" width="18" height="18" viewBox="0 0 44 44" fill="none" aria-hidden="true" set:html={FLAG_PATHS} />
+              Live snapshot
+            </p>
+            <p class="npb-subtitle">Gold · Fuel · Currency · Weather</p>
+          </div>
+          <span class="npb-live">
+            <span class="npb-live-row">
+              <span class="npb-dot" aria-hidden="true"></span>
+              <span class:list={["npb-live-label", !isLive && "offline"]}>{isLive ? 'Live' : 'Offline'}</span>
+            </span>
+            <span class="npb-live-time">{boardUpdated}</span>
+          </span>
+        </header>
+
+        <div class="npb-bento">
+          <a href="/nepal/gold-price-nepal" class="npb-card npb-gold">
+            <p class="npb-label"><span class="npb-gold-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={POP_ICONS.coins} /></span>Gold</p>
+            <p class="npb-gold-value">Rs {formatNumber(gold24k)}</p>
+            <p class="npb-unit">per tola</p>
+            <p class:list={['npb-chg', goldBadge.cls]}>{goldBadge.arrow} {goldBadge.text}</p>
+            <svg class="npb-trend" viewBox="0 0 220 56" preserveAspectRatio="none" aria-hidden="true">
+              <path class:list={['npb-trend-line', gold.change.direction]} d={goldTrend} fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <p class="npb-trend-cap"><span>vs yesterday</span><span class="npb-more">View details <span aria-hidden="true">→</span></span></p>
+          </a>
+
+          <a href="/nepal/silver-price-nepal" class="npb-card npb-mini" aria-label={`Silver: Rs ${formatNumber(silver.silver.pricePerTola)} per tola`}>
+            <p class="npb-label">Silver</p>
+            <p class="npb-value">Rs {formatNumber(silver.silver.pricePerTola)}</p>
+            <p class="npb-unit">per tola</p>
+            <p class:list={['npb-chg', silverBadge.cls]}>{silverBadge.arrow} {silverBadge.text}</p>
+          </a>
+
+          <a href="/foreign-exchange-nepal" class="npb-card npb-mini" aria-label={`US Dollar: Rs ${formatNumber(usd?.sellPerUnit ?? 0)}`}>
+            <p class="npb-label">USD / NPR</p>
+            <p class="npb-value">Rs {formatNumber(usd?.sellPerUnit ?? 0)}</p>
+            <p class="npb-unit">1 USD · NRB</p>
+          </a>
+
+          <a href="/nepal/fuel-price-nepal" class="npb-card npb-mini npb-petrol" aria-label={`Petrol: Rs ${formatNumber(fuel.petrol.price)} per litre, Kathmandu`}>
+            <p class="npb-label"><span class="npb-petrol-ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M4 21h12"/><path d="M15 10h2.5A2.5 2.5 0 0 1 20 12.5V17a1.5 1.5 0 0 0 3 0V9.5L20.5 7"/><path d="M8 8h4v4H8z"/></svg></span>Petrol</p>
+            <p class="npb-value">Rs {formatNumber(fuel.petrol.price)}/L</p>
+            <p class="npb-unit">Kathmandu</p>
+            {petrolBadge && (
+              <p class:list={['npb-chg', petrolBadge.cls]}>{petrolBadge.arrow} {petrolBadge.text}</p>
+            )}
+          </a>
+
+          <a href="/weather" class="npb-card npb-wx" aria-label={`Kathmandu weather: ${ktmWeather.today.temp} degrees, ${ktmWeather.today.cond.label}`}>
+            <span class="npb-wx-ico" aria-hidden="true" set:html={wxIcon} />
+            <span class="npb-wx-body">
+              <span class="npb-label">Kathmandu</span>
+              <span class="npb-unit">Today · {ktmWeather.today.cond.label}</span>
+            </span>
+            <span class="npb-wx-temp">{ktmWeather.today.temp}°</span>
+            <span class="npb-wx-hilo">H {ktmWeather.daily[0].hi}° · L {ktmWeather.daily[0].lo}°<span class="npb-more">Details <span aria-hidden="true">→</span></span></span>
+          </a>
+        </div>
+
+        <footer class="npb-strip" aria-label="More rates">
+          {STRIP.map((item) => (
+            <>
+              <a href={item.href} class="npb-strip-item">
+                <span class="npb-strip-label">{item.label}</span>
+                <span class="npb-strip-val">{item.text}</span>
+                {item.unit && <span class="npb-strip-unit">{item.unit}</span>}
+                {item.badge && <span class:list={['npb-strip-chg', item.badge.cls]}>{item.badge.arrow}{item.badge.text}</span>}
+              </a>
+            </>
+          ))}
+        </footer>
+        <p class="npb-src">Rates from NRB, NOC, FENEGOSIDA and Open-Meteo ({isLive ? 'live' : 'cached snapshot'}).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ POPULAR TOOLS (large cards) ═══ -->
+  <section class="hp-section hp-section-roomy" aria-label="Popular tools">
+    <div class="hp-container">
+      <div class="hp-sec-head">
+        <h2 class="hp-sec-title">Popular tools</h2>
+        <a href="/nepal" class="hp-sec-link">See all →</a>
+      </div>
+      <div class="hp-pop-grid">
+        {POPULAR.map((tool, i) => (
+          <a href={tool.href} class={`hp-pop-card${i === 0 ? ' is-tall' : ''}${i === POPULAR.length - 1 ? ' is-wide' : ''}`}>
+            <span class="hp-pop-icon" aria-hidden="true">
+              <svg class="hp-pop-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={POP_ICONS[tool.icon]} />
+            </span>
+            <span class="hp-pop-body">
+              <span class="hp-pop-name">{tool.title}</span>
+              <span class="hp-pop-desc">{tool.desc}</span>
+            </span>
+            <span class="hp-pop-arrow" aria-hidden="true">→</span>
+            {i === 0 && <span class="hp-pop-open">Open tool <span aria-hidden="true">→</span></span>}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TRUST ═══ -->
+  <section class="hp-section hp-section-tinted" aria-label="Why trust SolutionsNepal">
+    <div class="hp-container">
+      <header class="hp-cg-head">
+        <h2 class="hp-sec-title">Why SolutionsNepal?</h2>
+        <p class="hp-cg-sub">Built to be the toolkit you can rely on.</p>
+      </header>
+      <div class="hp-trust-grid">
+        {TRUST.map(item => (
+          <div class="hp-trust-card">
+            <svg class="hp-trust-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            <p class="hp-trust-name">{item.title}</p>
+            <p class="hp-trust-desc">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHAT WE DO — editorial information rows ═══ -->
+  <section class="hp-section" aria-label="Browse by category">
+    <div class="hp-container">
+      <header class="hp-cg-head hp-cg-head--left">
+        <h2 class="hp-sec-title">What can we help you with?</h2>
+        <p class="hp-cg-sub">Practical information and everyday answers, made for Nepal.</p>
+      </header>
+      <div class="hp-cg-list">
+        {CATS.map((tile, i) => (
+          <a href={tile.href} class="hp-cg-row" aria-label={`${tile.name}: ${tile.count} tools`}>
+            <span class="hp-cg-icon" aria-hidden="true">
+              <svg class="hp-cg-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={CAT_ICONS[tile.icon]} />
+            </span>
+            <div class="hp-cg-text">
+              <div class="hp-cg-title">
+                <span class="hp-cg-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <p class="hp-cg-name">{tile.name} <span class="hp-cg-count">{tile.count} tools</span></p>
+              </div>
+              <p class="hp-cg-desc">{tile.info}</p>
+            </div>
+            <span class="hp-cg-arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GUIDES (how/why explainers) ═══ -->
+  <section class="hp-section" aria-label="Guides and explainers">
+    <div class="hp-container">
+      <div class="hp-sec-head">
+        <h2 class="hp-sec-title">Learn how things work</h2>
+        <a href="/guides" class="hp-sec-link">All guides →</a>
+      </div>
+      <div class="hp-guide-grid">
+        {GUIDES.map((post, i) => (
+          <a href={`/guides/${post.slug}`} class={`hp-guide-card${i === 0 ? ' is-lead' : ''}`}>
+            <span class="hp-guide-thumb" aria-hidden="true"><img src={post.image} alt="" loading="lazy" width="640" height="400" /></span>
+            <span class="hp-guide-main">
+              <span class="hp-guide-top">
+                <span class="hp-guide-badge">{i === 0 ? 'Featured guide' : 'Guide'}</span>
+                <span class="hp-guide-date">{post.date}</span>
+              </span>
+              <span class="hp-guide-title">{post.title}</span>
+              <span class="hp-guide-desc">{post.description}</span>
+              <span class="hp-guide-more">Read guide <span aria-hidden="true">→</span></span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ NEW & UPDATED ═══ -->
+  <section class="hp-section hp-section-tight" aria-label="New and updated tools">
+    <div class="hp-container">
+      <div class="hp-sec-head">
+        <h2 class="hp-sec-title">New &amp; updated</h2>
+        <a href="/nepal" class="hp-sec-link">See all →</a>
+      </div>
+      <div class="hp-upd-list">
+        {UPDATES.map(item => (
+          <a href={item.href} class="hp-upd-row">
+            <span class="hp-upd-meta">
+              <span class:list={['hp-upd-badge', item.badge === 'New' ? 'is-new' : 'is-upd']}>{item.badge}</span>
+              <span class="hp-upd-date">{item.date}</span>
+            </span>
+            <span class="hp-upd-body">
+              <span class="hp-upd-name">{item.title}</span>
+              <span class="hp-upd-desc">{item.desc}</span>
+            </span>
+            <span class="hp-upd-arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="hp-section" aria-label="Frequently asked questions">
+    <div class="hp-container">
+      <div class="hp-faq-grid">
+        <div class="hp-faq-side">
+          <h2 class="hp-faq-title">Any questions?<br />We got you.</h2>
+          <p class="hp-faq-sub">We&rsquo;re here to help. Find answers to the most common questions.</p>
+          <a href="/contact" class="hp-faq-more-link">Still curious? Contact us <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hp-faq">
+          {HP_FAQS.map((item, i) => (
+            <details class="hp-faq-item" name="hp-faq" open={i === 0}>
+              <summary class="hp-faq-q"><span>{item.q}</span></summary>
+              <div class="hp-faq-a"><p>{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL CTA ═══ -->
+  <section class="hp-cta" aria-label="Find a tool">
+    <div class="hp-container hp-cta-inner">
+      <svg class="hp-cta-flag" width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+        <!-- crimson pennant with crimson-white-crimson stack -->
+        <path d="M8 4 L34 17.5 L8 31 Z" fill="#E62B1E"/>
+        <path d="M8 31 L36 45.5 L8 60 Z" fill="#E62B1E" transform="translate(0 -14.5)"/>
+        <circle cx="17.5" cy="13.5" r="4.2" fill="#fff"/>
+        <path d="M17.5 9.3 a4.2 4.2 0 0 1 0 8.4 a3.1 3.1 0 0 0 0 -8.4" fill="#E62B1E"/>
+        <circle cx="17.5" cy="24.5" r="3.4" fill="#fff"/>
+        <path d="M17.5 21.1 a3.4 3.4 0 0 0 0 6.8 a2.5 2.5 0 0 1 0 -6.8" fill="#E62B1E"/>
+        <rect x="7" y="4" width="1.8" height="42" rx="0.9" fill="#F0EBE2"/>
+      </svg>
+      <p class="hp-cta-eyebrow">100% FREE · NO SIGNUP</p>
+      <h2 class="hp-cta-title">Looking for something useful?</h2>
+      <p class="hp-cta-sub">Explore all the tools built for everyday life in Nepal.</p>
+      <a href="/nepal" class="hp-cta-btn">Explore all tools <span aria-hidden="true">→</span></a>
+      <p class="hp-cta-count">{TOOL_COUNT}+ useful tools</p>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* SHAPE + LAYER SCALES (one system): pills = buttons/chips/badges only;
+     cards = 16-24px; inputs = 8px (global). Layers: page < grain 60 < nav 100 < search modal 200. */
+  /* ═══ NEPAL PALETTE (spec) ═══ */
+  .hp {
+    /* Colour tokens alias the global --nk-* system (single source of truth) */
+    --hp-bg: var(--nk-bg);
+    --hp-card: var(--nk-surface);
+    --hp-text: var(--nk-text);
+    --hp-text-2: #45413C;
+    --hp-text-3: #5F5B55;
+    --hp-border: var(--nk-border);
+    --hp-woven: #F6F3EE;            /* subtle band tint derived from border */
+    --hp-crimson: var(--nk-accent);         /* primary — Nepal-inspired red */
+    --hp-crimson-dark: var(--nk-accent-hover); /* primary hover */
+    --hp-red: var(--nk-accent);
+    --hp-gold: #D9A441;
+    --hp-green: var(--color-success);       /* positive prices/results */
+    --hp-blue: #1F5D8B;             /* Himalaya sky (accents only) */
+    --hp-radius: 20px;
+  }
+  /* Dark mode: bg/text/border/accent inherit the --nk-* dark tokens automatically;
+     only the tuned surfaces and button reds keep homepage-specific values. */
+  :global([data-theme="dark"]) .hp {
+    --hp-woven: #262420;
+    --hp-crimson: #F24A38;          /* band/button red tuned for dark surfaces */
+    --hp-crimson-dark: #D32F20;     /* hover red on white buttons */
+    --hp-red: #F24A38;
+    --hp-gold: #E8BC5C;
+    --hp-green: #4ADE80;
+    --hp-blue: #7FB3D8;
+  }
+
+  .hp-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  /* Overflow + wrapping safety nets (sitewide guard for the homepage) */
+  .hp {
+    overflow-x: clip;
+  }
+  .hp :is(h1, h2, h3, p, a, span) { overflow-wrap: break-word; }
+  .hp img, .hp svg, .hp video { max-width: 100%; height: auto; }
+  .hp :is(button, a, input, select) { touch-action: manipulation; }
+
+  /* ═══ HERO ═══ */
+  .hp-hero {
+    position: relative;
+    background:
+      radial-gradient(1200px 420px at 28% -140px, color-mix(in srgb, var(--hp-crimson) 10%, transparent), transparent 70%),
+      var(--hp-bg);
+    padding: 64px 0 50px;
+    text-align: left;
+    overflow: hidden;
+  }
+  .hp-container { position: relative; }
+  .hp-hero-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 56px; align-items: center; }
+  .hp-hero-copy { min-width: 0; }
+  /* One authored entrance: staggered rise establishes reading order on first paint */
+  .hp-hero-copy > * { animation: hp-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .hp-hero-copy > :nth-child(2) { animation-delay: 0.06s; }
+  .hp-hero-copy > :nth-child(3) { animation-delay: 0.12s; }
+  .hp-hero-copy > :nth-child(4) { animation-delay: 0.16s; }
+  .hp-hero-copy > :nth-child(5) { animation-delay: 0.22s; }
+  .hp-hero-copy > :nth-child(6) { animation-delay: 0.28s; }
+  @keyframes hp-rise { from { opacity: 0; transform: translateY(14px); } }
+  .hp-today {
+    border: 1px solid var(--hp-border);
+    border-radius: var(--hp-radius);
+    background: var(--hp-card);
+    padding: 16px;
+    box-shadow: var(--shadow-md);
+    animation: hp-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  }
+  .hp-today-bar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hp-border);
+  }
+  .hp-today-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--hp-text);
+  }
+  .hp-today-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: var(--hp-green);
+    animation: npb-pulse 2.2s ease-out infinite;
+  }
+  .hp-today-date { margin: 0; font-size: 12px; color: var(--hp-text-2); white-space: nowrap; }
+  .hp-today-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 0; }
+  .hp-mini { border: 1px solid var(--hp-border); border-radius: 14px; padding: 14px; min-width: 0; }
+  .hp-mini-wx { background: color-mix(in srgb, var(--hp-blue) 10%, var(--hp-card)); }
+  .hp-mini-cal { background: color-mix(in srgb, var(--hp-crimson) 6%, var(--hp-card)); text-decoration: none; color: inherit; display: block; transition: border-color 0.15s ease, background 0.15s ease; }
+  .hp-mini-cal:hover { border-color: var(--hp-border-strong); background: color-mix(in srgb, var(--hp-crimson) 10%, var(--hp-card)); }
+  .hp-mini-cal .hp-mini-loc svg { color: var(--hp-crimson); }
+  .hp-mini-loc { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; font-size: 12px; font-weight: 600; color: var(--hp-text-2); }
+  .hp-mini-loc svg { color: var(--hp-text-3); flex-shrink: 0; }
+  .hp-mini-big { margin: 0; font-size: 42px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: var(--hp-text); font-variant-numeric: tabular-nums; }
+  .hp-mini-sub { display: flex; align-items: center; gap: 6px; margin: 6px 0 0; font-size: 12.5px; color: var(--hp-text-2); }
+  .hp-today-fx { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--hp-border); border-radius: 14px; overflow: hidden; }
+  .hp-fx { display: flex; align-items: center; gap: 10px; padding: 12px 14px; text-decoration: none; min-width: 0; }
+  .hp-fx + .hp-fx { border-left: 1px solid var(--hp-border); }
+  .hp-fx:hover { background: var(--nk-hover); }
+  .hp-fx-ico { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: color-mix(in srgb, var(--hp-gold) 16%, transparent); color: var(--hp-gold); overflow: hidden; }
+  .hp-fx-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+  .hp-fx-label { font-size: 11.5px; color: var(--hp-text-2); white-space: nowrap; }
+  .hp-fx-label span { color: var(--hp-text-3); }
+  .hp-fx-val { font-size: 16.5px; font-weight: 800; letter-spacing: -0.01em; color: var(--hp-text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .hp-fx .hp-fx-chg { margin: 0 0 0 auto; font-size: 11px; }
+  .hp-today-links { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 12px; }
+  .hp-today-links a {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 12px; border: 1px solid var(--hp-border); border-radius: 9999px;
+    font-size: 12.5px; color: var(--hp-text-2); text-decoration: none; background: var(--hp-card);
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .hp-today-links a:hover { border-color: var(--hp-crimson); color: var(--hp-crimson); }
+  .hp-today-links strong { font-weight: 700; color: var(--hp-text); font-variant-numeric: tabular-nums; }
+  .hp-today-links .hp-today-more { border: none; background: none; color: var(--hp-crimson); font-weight: 600; padding: 8px 4px; }
+  .hp-today-more span { transition: transform 0.2s ease; }
+  .hp-today-more:hover span { transform: translateX(3px); }
+  @media (max-width: 420px) {
+    .hp-today-mini { grid-template-columns: 1fr; }
+    .hp-today-fx { grid-template-columns: 1fr; }
+    .hp-fx + .hp-fx { border-left: none; border-top: 1px solid var(--hp-border); }
+  }
+  @media (max-width: 900px) {
+    .hp-hero-grid { grid-template-columns: 1fr; gap: 36px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hp-hero-copy > *, .hp-today, .hp-today-dot { animation: none; }
+  }
+  /* System layer: fixed film grain, never on scrolling content */
+  .hp-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  }
+
+  .hp-title {
+    font-family: var(--font-sans);
+    font-size: var(--fs-hero);
+    font-weight: 700;
+    letter-spacing: -0.032em;
+    line-height: 1.06;
+    color: var(--hp-text);
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .hp-sub {
+    font-family: var(--font-sans);
+    font-size: var(--fs-lg);
+    line-height: 1.55;
+    color: var(--hp-text-2);
+    max-width: 620px;
+    margin: 0;
+  }
+  .hp-sub-strong {
+    font-size: var(--fs-value);
+    font-weight: 700;
+    letter-spacing: -0.012em;
+    color: var(--hp-text);
+    margin-bottom: 10px;
+  }
+  .hp-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 26px;
+    padding: 14px 30px;
+    border-radius: var(--radius-full);
+    background: var(--hp-crimson);
+    color: #fff;
+    font-size: var(--fs-md);
+    font-weight: 600;
+    font-family: var(--font-sans);
+    text-decoration: none;
+    box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--hp-crimson) 55%, transparent);
+    transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  .hp-hero-cta:hover {
+    background: var(--hp-crimson-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 18px 36px -12px color-mix(in srgb, var(--hp-crimson) 60%, transparent);
+  }
+  .hp-hero-cta:active { transform: translateY(0); }
+  .hp-hero-cta span { transition: transform 0.2s ease; }
+  .hp-hero-cta:hover span { transform: translateX(3px); }
+
+  .hp-hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--hp-text-3);
+    margin: 16px 0 0;
+  }
+  .hp-sub-np { font-size: var(--fs-md); color: var(--hp-text-3); margin: 8px 0 0; }
+  .hp-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .hp-hero-actions .hp-hero-cta { margin-top: 0; }
+  .hp-dateline {
+    margin: 0 0 16px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--hp-text-3);
+  }
+  .hp-hero .hp-title {
+    font-size: clamp(48px, 6vw, 76px);
+    letter-spacing: -0.032em;
+    max-width: 16ch;
+  }
+  .hp-cta-title { font-family: var(--font-sans); }
+  .hp-title-accent {
+    color: var(--hp-crimson);
+    text-decoration: underline;
+    text-decoration-color: var(--hp-gold);
+    text-decoration-thickness: 4px;
+    text-underline-offset: 8px;
+  }
+  .hp-hero-ghost {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 28px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--hp-border);
+    background: var(--hp-card);
+    color: var(--hp-text);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .hp-hero-ghost:hover { border-color: var(--hp-crimson); color: var(--hp-crimson); transform: translateY(-2px); }
+  .hp-quick {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-top: 22px;
+    font-size: var(--fs-sm);
+  }
+  .hp-quick-label { color: var(--hp-text-3); font-weight: 500; }
+  .hp-quick a {
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--hp-border);
+    background: var(--hp-card);
+    color: var(--hp-text-2);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .hp-quick a:hover { border-color: var(--hp-crimson); color: var(--hp-crimson); }
+  .hp-sr-only {
+    position: absolute; width: 1px; height: 1px;
+    margin: -1px; padding: 0; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .hp-search {
+    display: flex; align-items: center; gap: 10px;
+    max-width: 560px; height: 52px; padding: 0 8px 0 16px;
+    margin-top: 22px;
+    background: var(--hp-card);
+    border: 1px solid var(--hp-border);
+    border-radius: var(--radius-full);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .hp-search:focus-within { border-color: var(--hp-crimson); box-shadow: 0 0 0 3px color-mix(in srgb, var(--hp-crimson) 18%, transparent); }
+  .hp-search-icon { color: var(--hp-text-3); flex-shrink: 0; }
+  .hp-search-input {
+    flex: 1; min-width: 0; height: 100%;
+    border: none; outline: none; background: transparent;
+    font: inherit; font-size: var(--fs-md); color: var(--hp-text);
+  }
+  .hp-search-input::placeholder { color: var(--hp-text-3); }
+  .hp-search-kbd {
+    flex-shrink: 0;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    color: var(--hp-text-3);
+    border: 1px solid var(--hp-border); border-bottom-width: 2px;
+    border-radius: 8px;
+    padding: 2px 8px;
+    background: var(--hp-woven);
+  }
+  .hp-hero-stats li + li { border-left: 1px solid var(--hp-border); padding-left: 22px; }
+  .npb-src { margin: 10px 4px 0; font-size: var(--fs-xs); line-height: 1.5; color: var(--hp-text-3); }
+
+  /* ═══ NP NEPAL TODAY — market snapshot ═══ */
+  .hp-board-wrap {
+    background: #FAF9F7;
+    border-top: 1px solid var(--hp-border);
+    border-bottom: 1px solid var(--hp-border);
+    padding: 44px 0;
+  }
+  :global([data-theme="dark"]) .hp-board-wrap { background: var(--hp-woven); }
+  .npb-gold-value, .npb-value, .npb-wx-temp, .hp-hero-stats strong { font-variant-numeric: tabular-nums; }
+  .hp-board-eyebrow {
+    margin: 0 0 16px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hp-text-3);
+  }
+  .npb {
+    --npb-bg: #FAF9F7;
+    --npb-surface: #FFFFFF;
+    --npb-text: #17212B;
+    --npb-muted: #5D646C;
+    --npb-pos: #16A05D;
+    --npb-neg: #D95757;
+    --npb-border: #EAE7E2;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--npb-surface);
+    border: 1px solid var(--npb-border);
+    border-radius: 22px;
+    box-shadow: 0 24px 48px -28px rgba(23, 33, 43, 0.18), 0 1px 4px rgba(23, 33, 43, 0.04);
+    overflow: hidden;
+  }
+  :global([data-theme="dark"]) .npb {
+    --npb-bg: #222222;
+    --npb-surface: #1B1B1B;
+    --npb-text: #F5F1E8;
+    --npb-muted: #9A958B;
+    --npb-pos: #4ADE80;
+    --npb-neg: #F47272;
+    --npb-border: #2E2E2E;
+    box-shadow: 0 24px 50px -20px rgba(0, 0, 0, 0.6);
+  }
+  .npb-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 22px 14px;
+    border-bottom: 1px solid var(--npb-border);
+  }
+  .npb-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: var(--fs-md);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--npb-text);
+  }
+  .npb-flag { flex-shrink: 0; }
+  .npb-subtitle {
+    margin: 2px 0 0 26px;
+    font-size: var(--fs-sm);
+    color: var(--npb-muted);
+    font-family: var(--font-nepali);
+  }
+  .npb-live {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .npb-live-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--npb-pos) 10%, transparent);
+  }
+  .npb-live-label {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: capitalize;
+    color: var(--npb-pos);
+  }
+  .npb-live-label.offline { color: var(--hp-crimson-dark); }
+  .npb-live-time {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--npb-muted);
+    white-space: nowrap;
+  }
+  .npb-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--radius-full);
+    background: var(--npb-pos);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--npb-pos) 45%, transparent);
+    animation: npb-pulse 2.2s ease-out infinite;
+  }
+  @keyframes npb-pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--npb-pos) 45%, transparent); }
+    70% { box-shadow: 0 0 0 6px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .npb-dot { animation: none; }
+    .npb-card { transition: none; }
+    .npb-card:hover { transform: none; }
+    .npb-more span { transition: none; }
+  }
+
+  /* ═══ BENTO GRID — gold hero, supporting minis, full-width weather ═══ */
+  .npb-bento {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr 1fr;
+    gap: 14px;
+    padding: 18px 22px 4px;
+  }
+  .npb-card {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    padding: 18px 20px 16px;
+    background: #FFFDFB;
+    border: 1px solid var(--npb-border);
+    border-radius: 20px;
+    box-shadow: 0 1px 3px rgba(23, 33, 43, 0.04);
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  :global([data-theme="dark"]) .npb-card { background: var(--npb-surface); }
+  .npb-card:hover {
+    transform: translateY(-3px);
+    border-color: #D8D3C9;
+    box-shadow: 0 16px 30px -20px rgba(23, 33, 43, 0.28), 0 2px 6px rgba(23, 33, 43, 0.05);
+  }
+  .npb-card:focus-visible { outline: 2px solid var(--hp-crimson); outline-offset: 2px; }
+
+  /* Gold hero — visual focal point, mostly white with a champagne accent */
+  .npb-gold { grid-row: span 2; padding: 22px 24px 18px; }
+  .npb-gold-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 8px;
+    border-radius: 9px;
+    background: #F8EEDC;
+    border: 1px solid #F0DFC0;
+    color: #A67C1A;
+    vertical-align: -6px;
+  }
+  .npb-gold-ico svg { display: block; }
+  .npb-gold-value {
+    margin: 2px 0 0;
+    font-size: clamp(32px, 3.4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--npb-text);
+    overflow-wrap: anywhere;
+  }
+  .npb-trend { width: 100%; height: 56px; margin-top: 12px; overflow: visible; }
+  .npb-trend-line.up { stroke: var(--npb-pos); }
+  .npb-trend-line.down { stroke: var(--npb-neg); }
+  .npb-trend-line.flat { stroke: var(--npb-muted); }
+  .npb-trend-cap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 8px 0 0;
+    font-size: var(--fs-xs);
+    color: var(--npb-muted);
+  }
+  .npb-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    color: var(--hp-crimson);
+    white-space: nowrap;
+  }
+  .npb-more span { transition: transform 0.2s ease; }
+  .npb-card:hover .npb-more span { transform: translateX(3px); }
+
+  /* Supporting minis — consistent, smaller than the hero */
+  .npb-mini .npb-value { font-size: 24px; }
+  .npb-petrol-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 7px;
+    border-radius: 8px;
+    background: var(--npb-bg);
+    border: 1px solid var(--npb-border);
+    color: var(--npb-muted);
+    vertical-align: -5px;
+  }
+  .npb-petrol-ico svg { display: block; }
+  .npb-petrol { grid-column: span 2; }
+
+  /* Weather — full-width, spacious and lighter */
+  .npb-wx {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+  }
+  .npb-wx-ico {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--hp-blue) 10%, #fff);
+    border: 1px solid var(--npb-border);
+    color: var(--npb-muted);
+  }
+  .npb-wx-ico svg { display: block; width: 22px; height: 22px; }
+  .npb-wx-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+  .npb-wx-temp {
+    margin: 0 0 0 auto;
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--npb-text);
+    flex-shrink: 0;
+  }
+  .npb-wx-hilo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    font-size: var(--fs-sm);
+    color: var(--npb-muted);
+    white-space: nowrap;
+  }
+  .npb-label {
+    margin: 0 0 3px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--npb-muted);
+  }
+  .npb-value {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--npb-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .npb-unit {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--npb-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .npb-chg {
+    margin: 2px 0 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .npb-chg.up, .npb-chg.down {
+    display: inline-flex; align-items: center; align-self: flex-start;
+    padding: 2px 9px; border-radius: 999px;
+  }
+  .npb-chg.up { color: var(--npb-pos); background: color-mix(in srgb, var(--npb-pos) 12%, transparent); }
+  .npb-chg.down { color: var(--npb-neg); background: color-mix(in srgb, var(--npb-neg) 12%, transparent); }
+  .npb-chg.flat { color: var(--npb-muted); font-weight: 500; }
+
+  .npb-strip {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0;
+    min-height: 40px;
+    margin-top: 14px;
+    padding: 8px 22px;
+    border-top: 1px solid var(--npb-border);
+    background: var(--npb-bg);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .npb-strip::-webkit-scrollbar { display: none; }
+  .npb-strip-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px 14px;
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .npb-strip-item:first-child { padding-left: 0; }
+  .npb-strip-item + .npb-strip-item { border-left: 1px solid var(--npb-border); }
+  .npb-strip-item:hover .npb-strip-label { color: var(--npb-text); }
+  .npb-strip-label {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--npb-muted);
+    transition: color 0.15s ease;
+  }
+  .npb-strip-val {
+    font-weight: 600;
+    color: var(--npb-text);
+    font-family: var(--font-nepali);
+  }
+  .npb-strip-unit { font-size: var(--fs-xs); color: var(--npb-muted); }
+  .npb-strip-chg { font-size: var(--fs-sm); font-weight: 600; }
+  .npb-strip-chg.up { color: var(--npb-pos); }
+  .npb-strip-chg.down { color: var(--npb-neg); }
+  .npb-strip-chg.flat { color: var(--npb-muted); }
+
+  /* ═══ SECTION SCAFFOLD ═══ */
+  .hp-section { background: var(--hp-bg); padding: 54px 0; }
+  .hp-section-tinted { background: var(--hp-woven); border-top: 1px solid var(--hp-border); border-bottom: 1px solid var(--hp-border); }
+  .hp-section-roomy { padding: 64px 0 68px; }
+  .hp-sec-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .hp-sec-title {
+    font-size: var(--fs-display);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--hp-text);
+    margin: 0;
+  }
+  .hp-sec-link {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--hp-red);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .hp-sec-link:hover { color: var(--hp-crimson-dark); }
+
+  /* ═══ POPULAR TOOL CARDS (large, horizontal) ═══ */
+  .hp-pop-grid {
+    display: grid;
+    grid-template-columns: 1.12fr 1fr 1fr;
+    grid-auto-flow: dense;
+    gap: 18px;
+  }
+  .hp-pop-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 24px;
+    background: var(--hp-card);
+    border: 1px solid var(--hp-border);
+    border-radius: var(--hp-radius);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+  }
+  /* Left edge penna (vertical gold stripe) — Dhaka topi motif */
+  .hp-pop-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12%;
+    bottom: 12%;
+    width: 3.5px;
+    border-radius: var(--radius-full);
+    background: var(--hp-crimson);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .hp-pop-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--hp-crimson);
+    box-shadow: 0 18px 38px -18px rgba(120, 84, 40, 0.30);
+  }
+  .hp-pop-card:hover::before { opacity: 1; }
+  /* Bento lead card: tall feature + pinned action */
+  .hp-pop-card.is-tall {
+    grid-row: span 2;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--hp-woven);
+  }
+  .hp-pop-card.is-tall .hp-pop-icon { width: 72px; height: 72px; }
+  .hp-pop-card.is-tall .hp-pop-svg { width: 34px; height: 34px; }
+  .hp-pop-card.is-tall .hp-pop-desc { -webkit-line-clamp: unset; }
+  .hp-pop-card.is-tall .hp-pop-arrow { display: none; }
+  .hp-pop-open {
+    margin-top: auto;
+    padding-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--hp-crimson);
+  }
+  .hp-pop-card.is-tall:hover .hp-pop-open span:last-child { transform: translateX(3px); }
+  .hp-pop-open span:last-child { transition: transform 0.2s ease; }
+  .hp-pop-card.is-wide { grid-column: 1 / -1; padding: 18px 24px; }
+  /* Pressed feedback */
+  .hp-hero-cta:active, .hp-hero-ghost:active, .hp-quick a:active,
+  .hp-pop-card:active, .hp-chip:active { transform: scale(0.98); }
+  .hp-pop-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--hp-crimson) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--hp-crimson) 22%, var(--hp-border));
+    color: var(--hp-crimson);
+  }
+  .hp-pop-svg { width: 30px; height: 30px; }
+  .hp-pop-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+  .hp-pop-name {
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--hp-text);
+    line-height: 1.28;
+  }
+  .hp-pop-desc {
+    font-size: var(--fs-body);
+    line-height: 1.55;
+    color: var(--hp-text-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hp-pop-arrow {
+    font-size: var(--fs-lg);
+    color: var(--hp-text-3);
+    flex-shrink: 0;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .hp-pop-card:hover .hp-pop-arrow { transform: translateX(3px); color: var(--hp-red); }
+
+  /* ═══ CATEGORY DISCOVERY — editorial, borderless ═══ */
+  .hp-cg-head { text-align: center; margin-bottom: 36px; }
+  .hp-cg-head .hp-sec-title { letter-spacing: -0.028em; }
+  .hp-cg-sub {
+    margin: 10px 0 0;
+    font-size: var(--fs-md);
+    color: var(--hp-text-2);
+  }
+  /* ═══ WHAT WE DO — linked category rows ═══ */
+  .hp-cg-head--left {
+    text-align: left;
+    margin-bottom: 12px;
+  }
+  .hp-cg-list {
+    margin: 0;
+    border-top: 1px solid var(--hp-border);
+  }
+  .hp-cg-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 16px 4px;
+    border-bottom: 1px solid var(--hp-border);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s ease;
+  }
+  a.hp-cg-row:hover { background: color-mix(in srgb, var(--hp-crimson) 4%, transparent); }
+  a.hp-cg-row:hover .hp-cg-name { color: var(--hp-crimson); }
+  a.hp-cg-row:hover .hp-cg-arrow { transform: translateX(4px); color: var(--hp-crimson); }
+  a.hp-cg-row:focus-visible { outline: 2px solid var(--hp-crimson); outline-offset: -2px; }
+  .hp-cg-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    color: var(--hp-crimson);
+  }
+  .hp-cg-svg { width: 22px; height: 22px; }
+  .hp-cg-text {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    gap: 8px 28px;
+    min-width: 0;
+  }
+  .hp-cg-title {
+    flex: 0 0 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .hp-cg-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--hp-text-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .hp-cg-name {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    color: var(--hp-text);
+  }
+  .hp-cg-count {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 9px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--hp-border);
+    background: var(--hp-woven);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--hp-text-2);
+    vertical-align: 2px;
+    white-space: nowrap;
+  }
+  .hp-cg-arrow {
+    flex-shrink: 0;
+    margin-left: auto;
+    align-self: center;
+    font-size: 18px;
+    color: var(--hp-text-3);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .hp-cg-desc {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: 1.6;
+    color: var(--hp-text-2);
+  }
+
+  /* ═══ EXPLORE ALL TOOLS ═══ */
+  .hp-explore {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 1040px;
+  }
+  .hp-explore-row {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+  }
+  .hp-explore-group {
+    flex-shrink: 0;
+    width: 180px;
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--hp-text);
+    text-decoration: none;
+    letter-spacing: -0.015em;
+  }
+  .hp-explore-group:hover { color: var(--hp-red); }
+  .hp-explore-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .hp-chip {
+    padding: 9px 18px;
+    border-radius: var(--radius-full);
+    border: 1px solid color-mix(in srgb, var(--hp-crimson) 32%, var(--hp-border));
+    background: color-mix(in srgb, var(--hp-crimson) 7%, var(--hp-card));
+    color: var(--hp-text-2);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .hp-chip:hover {
+    border-color: var(--hp-red);
+    color: var(--hp-red);
+    background: color-mix(in srgb, var(--hp-red) 5%, var(--hp-card));
+  }
+
+  /* ═══ NEW & UPDATED — borderless editorial changelog ═══ */
+  .hp-section-tight { padding: 56px 0; }
+  .hp-upd-list {
+    max-width: 980px;
+    border-top: 1px solid var(--hp-border);
+  }
+  .hp-upd-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 10px;
+    border-bottom: 1px solid var(--hp-border);
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .hp-upd-row:hover { background: color-mix(in srgb, var(--hp-crimson) 4%, transparent); }
+  .hp-upd-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    flex-shrink: 0;
+    width: 96px;
+  }
+  .hp-upd-badge {
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: var(--radius-full);
+  }
+  .hp-upd-badge.is-new { background: var(--hp-crimson); color: #fff; }
+  .hp-upd-badge.is-upd {
+    border: 1px solid var(--hp-border);
+    color: var(--hp-text-2);
+  }
+  .hp-upd-date { font-size: var(--fs-sm); color: var(--hp-text-3); white-space: nowrap; }
+
+  /* ═══ GUIDES — rich reading cards ═══ */
+  .hp-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: dense;
+    gap: 18px;
+  }
+  .hp-guide-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px 24px 22px;
+    border: 1px solid var(--hp-border);
+    border-radius: var(--hp-radius);
+    background: var(--hp-card);
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+  }
+  .hp-guide-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--hp-crimson);
+    box-shadow: var(--shadow-md);
+  }
+  .hp-guide-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .hp-guide-badge {
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 11px;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--hp-crimson) 10%, transparent);
+    color: var(--hp-crimson);
+  }
+  .hp-guide-date { font-size: var(--fs-xs); color: var(--hp-text-3); white-space: nowrap; }
+  .hp-guide-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.35;
+    color: var(--hp-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hp-guide-desc {
+    font-size: var(--fs-body);
+    line-height: 1.55;
+    color: var(--hp-text-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hp-guide-more {
+    margin-top: auto;
+    padding-top: 6px;
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--hp-crimson);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hp-guide-more span { transition: transform 0.2s ease; }
+  .hp-guide-card:hover .hp-guide-more span { transform: translateX(4px); }
+  @media (max-width: 900px) { .hp-guide-grid { grid-template-columns: 1fr; } }
+  .hp-guide-thumb {
+    display: block;
+    overflow: hidden;
+    margin: -24px -24px 0;
+    aspect-ratio: 16 / 10;
+    background: var(--hp-woven);
+  }
+  .hp-guide-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
+  .hp-guide-card:hover .hp-guide-thumb img { transform: scale(1.04); }
+  .hp-guide-main { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 0; }
+  .hp-guide-card.is-lead { grid-column: 1 / -1; flex-direction: row; align-items: stretch; gap: 0; padding: 0; }
+  .hp-guide-card.is-lead .hp-guide-thumb { margin: 0; aspect-ratio: auto; flex: 0 0 42%; min-height: 280px; }
+  .hp-guide-card.is-lead .hp-guide-main { padding: 30px 32px; }
+  .hp-guide-card.is-lead .hp-guide-title { font-size: 24px; -webkit-line-clamp: 2; }
+  @media (max-width: 900px) {
+    .hp-guide-card.is-lead { flex-direction: column; align-items: stretch; }
+    .hp-guide-card.is-lead .hp-guide-thumb { flex: none; width: 100%; aspect-ratio: 16 / 9; min-height: 0; }
+    .hp-guide-card.is-lead .hp-guide-main { padding: 20px 22px 22px; }
+    .hp-guide-card.is-lead .hp-guide-title { font-size: 20px; }
+  }
+  .hp-upd-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 0;
+  }
+  .hp-upd-name {
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--hp-text);
+    line-height: 1.35;
+  }
+  .hp-upd-row:hover .hp-upd-name { color: var(--hp-crimson); }
+  .hp-upd-desc { font-size: var(--fs-body); line-height: 1.55; color: var(--hp-text-2); }
+  .hp-upd-arrow {
+    flex-shrink: 0;
+    font-size: var(--fs-lg);
+    color: var(--hp-text-3);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .hp-upd-row:hover .hp-upd-arrow { transform: translateX(4px); color: var(--hp-crimson); }
+
+  /* ═══ TRUST + FAQ — borderless ═══ */
+  .hp-trust-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 20px;
+    max-width: 1100px;
+    margin: 0 auto 44px;
+  }
+  .hp-trust-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px 14px;
+  }
+  .hp-trust-tick {
+    width: 42px;
+    height: 42px;
+    padding: 10px;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--hp-green) 13%, transparent);
+    color: var(--hp-green);
+    margin-bottom: 12px;
+  }
+  .hp-trust-name {
+    margin: 0 0 6px;
+    font-size: var(--fs-md);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--hp-text);
+  }
+  .hp-trust-desc { margin: 0; font-size: var(--fs-sm); line-height: 1.55; color: var(--hp-text-2); }
+  .hp-faq-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 72px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  .hp-faq-side {
+    position: sticky;
+    top: 24px;
+    padding: 8px 0;
+  }
+  .hp-faq-title {
+    margin: 0 0 16px;
+    font-size: clamp(32px, 3.6vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--hp-text);
+    text-wrap: balance;
+  }
+  .hp-faq-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--hp-crimson);
+    text-decoration: none;
+  }
+  .hp-faq-more-link span { transition: transform 0.2s ease; }
+  .hp-faq-more-link:hover span { transform: translateX(3px); }
+  .hp-faq-sub { margin: 0; font-size: var(--fs-md); line-height: 1.55; color: var(--hp-text-2); }
+  .hp-faq { min-width: 0; }
+  .hp-faq-item { border-bottom: 1px solid var(--hp-border); }
+  .hp-faq-item:first-child { border-top: 1px solid var(--hp-border); }
+  .hp-faq-q {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    color: var(--hp-text);
+    cursor: pointer;
+    list-style: none;
+  }
+  .hp-faq-q::-webkit-details-marker { display: none; }
+  .hp-faq-q::after {
+    content: '+';
+    flex-shrink: 0;
+    margin-left: auto;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--hp-text-3);
+  }
+  .hp-faq-item[open] .hp-faq-q::after { content: '\2212'; color: var(--hp-text); }
+  .hp-faq-a {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+  .hp-faq-item[open] .hp-faq-a { grid-template-rows: 1fr; }
+  .hp-faq-a > p {
+    overflow: hidden;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    font-size: var(--fs-body);
+    line-height: 1.75;
+    color: var(--hp-text-2);
+    max-width: 62ch;
+  }
+  .hp-faq-item[open] .hp-faq-a > p { padding-bottom: 24px; }
+  @media (prefers-reduced-motion: reduce) {
+    .hp-faq-a { transition: none; }
+    .hp-faq-q, .hp-faq-q::after { transition: none; }
+  }
+
+  /* ═══ FINAL CTA — quiet woven band ═══ */
+  .hp-cta {
+    position: relative;
+    background: var(--hp-woven);
+    border-top: 1px solid var(--hp-border);
+    border-bottom: 1px solid var(--hp-border);
+    padding: 72px 0;
+    overflow: hidden;
+  }
+  .hp-cta-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .hp-cta-eyebrow {
+    margin: 0 0 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--hp-crimson);
+  }
+  .hp-cta-flag {
+    display: block;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.12));
+  }
+  .hp-cta-title {
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--hp-text);
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+  .hp-cta-sub {
+    font-size: var(--fs-lg);
+    line-height: 1.55;
+    color: var(--hp-text-2);
+    margin: 0 0 28px;
+    max-width: 520px;
+  }
+  .hp-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    border-radius: var(--radius-full);
+    background: var(--hp-crimson);
+    color: #fff;
+    font-size: var(--fs-md);
+    font-weight: 600;
+    font-family: var(--font-sans);
+    text-decoration: none;
+    box-shadow: 0 14px 30px -14px color-mix(in srgb, var(--hp-crimson) 55%, transparent);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.15s ease;
+  }
+  .hp-cta-btn:hover {
+    transform: translateY(-2px);
+    background: var(--hp-crimson-dark);
+    box-shadow: 0 18px 36px -14px color-mix(in srgb, var(--hp-crimson) 60%, transparent);
+  }
+  .hp-cta-btn:active { transform: translateY(0); }
+  .hp-cta-btn span { transition: transform 0.2s ease; }
+  .hp-cta-btn:hover span { transform: translateX(3px); }
+  .hp-cta-count {
+    margin: 22px 0 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--hp-text-3);
+  }
+
+  /* MINI TRANSITIONS — scroll reveal, hover physics, image scale */
+  .hp-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--rv-d, 0ms);
+    will-change: opacity, transform;
+  }
+  .hp-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .hp-pop-grid.hp-reveal-group > *:nth-child(2) { --rv-d: 70ms; }
+  .hp-pop-grid.hp-reveal-group > *:nth-child(3) { --rv-d: 140ms; }
+  .hp-pop-grid.hp-reveal-group > *:nth-child(4) { --rv-d: 210ms; }
+  .hp-pop-grid.hp-reveal-group > *:nth-child(5) { --rv-d: 280ms; }
+  .hp-pop-grid.hp-reveal-group > *:nth-child(6) { --rv-d: 350ms; }
+  .hp-cg-list.hp-reveal-group > *:nth-child(2) { --rv-d: 80ms; }
+  .hp-cg-list.hp-reveal-group > *:nth-child(3) { --rv-d: 160ms; }
+  .hp-cg-list.hp-reveal-group > *:nth-child(4) { --rv-d: 120ms; }
+  .hp-cg-list.hp-reveal-group > *:nth-child(5) { --rv-d: 200ms; }
+  .hp-cg-list.hp-reveal-group > *:nth-child(6) { --rv-d: 280ms; }
+  .hp-guide-grid.hp-reveal-group > *:nth-child(2) { --rv-d: 90ms; }
+  .hp-guide-grid.hp-reveal-group > *:nth-child(3) { --rv-d: 180ms; }
+  .hp-guide-grid.hp-reveal-group > *:nth-child(4) { --rv-d: 270ms; }
+  .hp-trust-grid.hp-reveal-group > *:nth-child(2) { --rv-d: 80ms; }
+  .hp-trust-grid.hp-reveal-group > *:nth-child(3) { --rv-d: 160ms; }
+  .hp-trust-grid.hp-reveal-group > *:nth-child(4) { --rv-d: 240ms; }
+  .hp-pop-card,
+  .hp-guide-card,
+  .hp-chip,
+  .hp-quick a {
+    transition:
+      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      box-shadow 0.35s ease,
+      background-color 0.25s ease,
+      color 0.2s ease;
+  }
+  .hp-guide-thumb {
+    overflow: hidden;
+  }
+  .hp-guide-thumb img {
+    transform: scale(0.985);
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hp-guide-card:hover .hp-guide-thumb img {
+    transform: scale(1.045);
+  }
+  .hp-hero-cta,
+  .hp-hero-ghost,
+  .hp-cta-btn {
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.3s ease,
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hp-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .hp-guide-thumb img {
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* ═══ RESPONSIVE ═══
+     Tiers: ≥1024 desktop · 768–1023 tablet · <768 mobile · <480 small mobile.
+     Smaller screens reflow (grids collapse, rows become carousels), not shrink. */
+
+  /* ── Desktop-large (≤1440px): cap content width tighter ── */
+  @media (max-width: 1440px) {
+    .hp-container { max-width: 1240px; }
+  }
+
+  /* ── Tablet (≤1023px): gold stays prominent, minis wrap below ── */
+  @media (max-width: 1023px) {
+    .hp-container { padding: 0 28px; }
+    .hp-section { padding: 60px 0; }
+    .hp-sec-head { margin-bottom: 26px; }
+    /* Nepal Today bento: hero spans full width, three minis share a row */
+    .npb-bento { grid-template-columns: repeat(3, 1fr); }
+    .npb-gold { grid-column: 1 / -1; grid-row: auto; }
+    .npb-petrol { grid-column: auto; }
+    .hp-pop-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .hp-pop-card { padding: 22px 24px; gap: 16px; }
+    .hp-pop-icon { width: 54px; height: 54px; font-size: var(--fs-value); border-radius: var(--radius-xl); }
+    .hp-cg-title { flex-basis: 240px; }
+    .hp-cg-head { margin-bottom: 30px; }
+    .hp-explore { max-width: 100%; }
+    .hp-explore-row { gap: 20px; }
+    .hp-explore-group { width: 150px; }
+  }
+
+  /* ── Mobile (<768px): genuine reflow — one column, carousels, 44px targets ── */
+  @media (max-width: 767px) {
+    .hp-container { padding: 0 20px; }
+    .hp-section { padding: 36px 0; }
+    .hp-sec-head { margin-bottom: 18px; }
+
+    /* Mobile reading order: tools first, proof later.
+       DOM stays the same (screen readers, SEO); only visual order changes. */
+    .hp { display: flex; flex-direction: column; }
+    .hp-hero { order: 0; }
+    .hp-section[aria-label="Popular tools"] { order: 1; }
+    .hp-section[aria-label="Browse by category"] { order: 2; }
+    .hp-section[aria-label="Guides and explainers"] { order: 3; }
+    .hp-section[aria-label="New and updated tools"] { order: 4; }
+    .hp-section[aria-label="Why trust SolutionsNepal"] { order: 5; }
+    .hp-section[aria-label="Frequently asked questions"] { order: 6; }
+    .hp-cta { order: 7; }
+
+    /* Hero */
+    .hp-hero { padding: 32px 0 24px; }
+    .hp-hero-grid { gap: 24px; }
+    .hp-hero-ghost { display: none; }
+    .hp-search { height: 48px; margin-top: 18px; }
+    .hp-title { font-size: var(--fs-hero-m); margin-bottom: 12px; }
+    .hp-sub-strong { font-size: var(--fs-md); margin-bottom: 8px; }
+    .hp-sub { font-size: var(--fs-body); }
+    .hp-hero-cta { margin-top: 22px; min-height: 46px; padding: 12px 26px; font-size: var(--fs-body); }
+    .hp-hero-trust { margin-top: 14px; font-size: var(--fs-sm); }
+
+    /* Nepal Today bento on phones: gold first, silver + USD side by
+       side, then petrol, weather and the secondary strip — stacked,
+       never squeezed into tiny columns. */
+    .hp-board-wrap { padding: 28px 0; }
+    .hp-board-eyebrow { margin-bottom: 12px; }
+    .npb-bento { grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px 14px 2px; }
+    .npb-card { padding: 16px 16px 14px; border-radius: 18px; }
+    .npb-gold { grid-column: 1 / -1; }
+    .npb-gold-value { font-size: 34px; }
+    .npb-mini .npb-value { font-size: 20px; }
+    .npb-petrol { grid-column: 1 / -1; }
+    .npb-wx { grid-column: 1 / -1; flex-wrap: wrap; row-gap: 8px; }
+    .npb-wx-temp { font-size: 32px; }
+    .npb-wx-hilo { flex-basis: 100%; }
+    .npb-strip { margin-top: 10px; padding: 8px 14px; }
+    .hp-today-more { display: none; }
+
+    /* New & updated: comfortable stacked rows */
+    .hp-section-tight { padding: 32px 0; }
+    .hp-upd-list { max-width: 100%; }
+    .hp-upd-row { gap: 14px; padding: 15px 4px; }
+    .hp-upd-meta { width: 78px; }
+    .hp-upd-name { font-size: var(--fs-md); }
+    .hp-upd-desc { font-size: var(--fs-sm); }
+
+    /* Trust: 2-up, borderless */
+    .hp-trust-grid { grid-template-columns: repeat(2, 1fr); gap: 16px 12px; margin-bottom: 28px; }
+    .hp-trust-card { padding: 6px 8px; }
+
+    /* FAQ: stacked, side header on top */
+    .hp-faq-grid { grid-template-columns: 1fr; gap: 28px; }
+    .hp-faq-side { position: static; }
+    .hp-faq-title { font-size: 30px; }
+    .hp-faq-q { padding: 18px 0; }
+    .hp-faq-item[open] .hp-faq-a > p { padding-bottom: 20px; }
+
+    /* Popular tools: compact uniform rows — icon + name + arrow.
+       Descriptions are hidden on phones so 6 tools scan like a list. */
+    .hp-pop-grid { grid-template-columns: 1fr; gap: 8px; }
+    .hp-pop-card { padding: 12px 16px; gap: 12px; min-height: 58px; }
+    .hp-pop-card.is-tall { flex-direction: row; align-items: center; gap: 12px; }
+    .hp-pop-card.is-tall .hp-pop-icon { width: 42px; height: 42px; }
+    .hp-pop-card.is-tall .hp-pop-svg { width: 22px; height: 22px; }
+    .hp-pop-card.is-wide { padding: 12px 16px; }
+    .hp-pop-open { display: none; }
+    .hp-pop-icon { width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0; }
+    .hp-pop-svg { width: 22px; height: 22px; }
+    .hp-pop-name { font-size: var(--fs-body); }
+    .hp-pop-desc { display: none; }
+    .hp-pop-arrow { font-size: var(--fs-md); }
+
+    /* Guides: text-only cards on phones — 4 large photos cost
+       a lot of scroll and mobile data for little meaning. */
+    .hp-guide-thumb { display: none; }
+    .hp-guide-grid { gap: 10px; }
+    .hp-guide-card { padding: 18px; gap: 8px; }
+    .hp-guide-card.is-lead .hp-guide-main { padding: 20px; }
+    .hp-guide-title { font-size: var(--fs-md); }
+    .hp-guide-desc { font-size: var(--fs-sm); }
+
+    /* What-we-do rows: stack naturally, same minimalist style */
+    .hp-cg-head--left { margin-bottom: 20px; }
+    .hp-cg-row { gap: 12px; padding: 14px 2px; }
+    .hp-cg-icon { width: 32px; height: 32px; }
+    .hp-cg-svg { width: 20px; height: 20px; }
+    .hp-cg-text { flex-direction: column; gap: 4px; }
+    .hp-cg-title { flex: none; flex-direction: row; align-items: baseline; gap: 10px; }
+    .hp-cg-name { font-size: var(--fs-md); }
+    .hp-cg-desc { font-size: var(--fs-body); }
+
+    /* CTA: shorter band, near full-width button */
+    .hp-cta { padding: 44px 0; }
+    .hp-cta-flag { width: 36px; height: 36px; }
+    .hp-cta-title { font-size: var(--fs-display); }
+    .hp-cta-sub { font-size: var(--fs-body); }
+    .hp-cta-btn {
+      display: flex;
+      width: 100%;
+      max-width: 340px;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 22px;
+    }
+    .hp-cta-count { margin-top: 16px; font-size: var(--fs-sm); }
+  }
+
+  /* ── Small mobile (<480px): touch-first sizing ── */
+  @media (max-width: 479px) {
+    .hp-container { padding: 0 16px; }
+    .hp-hero { padding: 28px 0 20px; }
+    .hp-section { padding: 32px 0; }
+    .hp-title { font-size: var(--fs-hero-m); }
+    .npb-bento { padding: 12px 12px 2px; }
+    .npb-mini .npb-value { font-size: 19px; }
+    .hp-pop-card { padding: 14px; min-height: 72px; }
+    .hp-cg-desc { font-size: var(--fs-sm); }
+    .hp-cta { padding: 48px 0; }
+    .hp-chip { padding: 10px 14px; font-size: var(--fs-sm); }
+  }
+
+  /* ── Tiny phones (≤375px) ── */
+  @media (max-width: 375px) {
+    .hp-title { font-size: var(--fs-hero-m); }
+    .hp-sub-strong { font-size: var(--fs-md); }
+    .hp-sub { font-size: var(--fs-body); }
+    .npb-gold-value { font-size: 30px; }
+    .hp-cta-title { font-size: var(--fs-display); }
+    .hp-cta-sub { font-size: var(--fs-body); }
+    .hp-chip { padding: 9px 13px; font-size: var(--fs-sm); min-height: 44px; }
+    .hp-cg-name { font-size: var(--fs-sm); }
+    .hp-cg-desc { font-size: var(--fs-sm); }
+  }
+
+  /* ── 320px floor: nothing clips, everything still readable ── */
+  @media (max-width: 330px) {
+    .npb-bento { grid-template-columns: 1fr; }
+    .npb-wx-temp { font-size: 30px; }
+    .hp-title { font-size: 25px; }
+  }
+</style>
+
+<script>
+  /* Mini transitions — staggered scroll reveal for homepage sections. */
+  function initHpReveals() {
+    const targets = document.querySelectorAll(
+      '.hp-board-wrap, .hp-section, .hp-cta'
+    );
+    if (!targets.length || !('IntersectionObserver' in window)) {
+      targets.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      targets.forEach((el) => el.classList.add('is-visible'));
+      document.querySelectorAll('.hp-reveal-group > *').forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+    targets.forEach((el) => {
+      if (!el.classList.contains('hp-reveal')) el.classList.add('hp-reveal');
+    });
+    document.querySelectorAll(
+      '.hp-pop-grid, .hp-cg-list, .hp-guide-grid, .hp-trust-grid'
+    ).forEach((grid) => grid.classList.add('hp-reveal-group'));
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-visible');
+          entry.target.querySelectorAll(':scope > *').forEach((child) => {
+            child.classList.add('is-visible');
+          });
+          io.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+    );
+    targets.forEach((el) => io.observe(el));
+  }
+  initHpReveals();
+  document.addEventListener('astro:page-load', initHpReveals);
+
+  /* Hero search — delegates to the global SearchModal (single search logic). */
+  function initHpSearch() {
+    const form = document.getElementById('hp-search-form');
+    const heroInput = document.getElementById('hp-search-input');
+    if (!form || !heroInput || form.dataset.bound) return;
+    form.dataset.bound = '1';
+    const forward = () => {
+      if (typeof window.openSearch === 'function') {
+        window.openSearch();
+      } else {
+        document.getElementById('search-modal')?.classList.add('open');
+      }
+      const modalInput = document.getElementById('search-input');
+      if (modalInput) {
+        modalInput.value = heroInput.value;
+        modalInput.dispatchEvent(new Event('input', { bubbles: true }));
+        setTimeout(() => modalInput.focus(), 50);
+      }
+    };
+    // Typing or focusing funnels into the full search (smart routing + full list).
+    heroInput.addEventListener('focus', forward);
+    heroInput.addEventListener('input', () => {
+      const modal = document.getElementById('search-modal');
+      if (!modal?.classList.contains('open')) forward();
+      else {
+        const modalInput = document.getElementById('search-input');
+        if (modalInput && modalInput.value !== heroInput.value) {
+          modalInput.value = heroInput.value;
+          modalInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+    });
+    form.addEventListener('submit', (e) => { e.preventDefault(); forward(); });
+    // "/" focuses hero search when the modal is closed and user isn't typing.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (document.getElementById('search-modal')?.classList.contains('open')) return;
+      const t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+      e.preventDefault();
+      heroInput.focus();
+    });
+  }
+  initHpSearch();
+  document.addEventListener('astro:page-load', initHpSearch);
+</script>
+

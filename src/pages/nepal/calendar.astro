@@ -1,0 +1,1682 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import {
+  todayInNepal,
+  getDaysInBsMonth,
+  bsToAd,
+  getBsMonthName,
+  getBsMonthNameNp,
+  BS_MONTH_DAYS,
+} from '../../lib/nepal/calendar.js';
+import { getEventsForBsMonth, getUpcomingEvents, getEventsForBsYear } from '../../data/nepal/calendar-events.js';
+import { getTithi } from '../../data/nepal/tithi-data.js';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const today = todayInNepal();
+const currentBsYear = today.bs.year;
+const currentBsMonth = today.bs.month;
+
+// Pre-compute events and tithi for current + adjacent months
+function getMonthData(year, month) {
+  const events = getEventsForBsMonth(year, month);
+  const daysInMonth = getDaysInBsMonth(year, month);
+  const tithis = {};
+  for (let d = 1; d <= daysInMonth; d++) {
+    const t = getTithi(year, month, d);
+    if (t) tithis[d] = t;
+  }
+  return { events, daysInMonth, tithis };
+}
+
+// Pre-load ALL 12 months for years 2075-2085
+const monthsData = {};
+for (let y = 2075; y <= 2085; y++) {
+  for (let m = 1; m <= 12; m++) {
+    monthsData[`${y}-${m}`] = getMonthData(y, m);
+  }
+}
+
+// Upcoming events for sidebar
+const upcomingEvents = getUpcomingEvents(today.bs, { limit: 15 });
+
+// Pass initial data to client
+const initialData = JSON.stringify({
+  today: today.bs,
+  currentYear: currentBsYear,
+  currentMonth: currentBsMonth,
+  monthsData,
+  upcomingEvents,
+});
+---
+
+<BaseLayout
+  title="Nepali Calendar 2083 — BS Calendar with Festivals & Tithi"
+  description="Interactive Nepali Bikram Sambat calendar with festivals, tithi, and events. Browse months, check holidays, and view upcoming events."
+>
+  <div class="cal-page">
+    <div class="cal-breadcrumbs">
+      <Breadcrumbs items={[
+        { label: 'Nepal', href: '/nepal' },
+        { label: 'Calendar' },
+      ]} />
+    </div>
+
+    <div class="cal-layout">
+      <!-- Left: Calendar Card -->
+      <div class="cal-card" id="calendar-card">
+        <div class="cal-header">
+          <div class="cal-header-left">
+            <button class="cal-nav-btn" id="prev-btn" aria-label="Previous month">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <div class="cal-title-area">
+              <h1 class="cal-month-title" id="month-title">Nepali Calendar</h1>
+              <div class="cal-subtitle-row">
+                <span class="cal-subtitle" id="month-subtitle"></span>
+                <button class="cal-btn-icon cal-dropdown-btn" id="dropdown-btn" aria-label="Select month">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+              </div>
+            </div>
+            <button class="cal-nav-btn" id="next-btn" aria-label="Next month">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+          <button class="cal-today-btn" id="today-btn">आज</button>
+        </div>
+
+        <!-- Month picker dropdown -->
+        <div class="cal-month-picker hidden" id="month-picker">
+          <div class="cal-picker-header">
+            <button class="cal-nav-btn" id="picker-prev-year">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <span class="cal-picker-year" id="picker-year"></span>
+            <button class="cal-nav-btn" id="picker-next-year">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+          <div class="cal-picker-grid" id="picker-grid"></div>
+        </div>
+
+        <div class="cal-weekdays">
+          <div class="cal-weekday"><span class="cal-weekday-full">आइतबार</span><span class="cal-weekday-short">आइत</span></div>
+          <div class="cal-weekday"><span class="cal-weekday-full">सोमवार</span><span class="cal-weekday-short">सोम</span></div>
+          <div class="cal-weekday"><span class="cal-weekday-full">मंगलवार</span><span class="cal-weekday-short">मंगल</span></div>
+          <div class="cal-weekday"><span class="cal-weekday-full">बुधवार</span><span class="cal-weekday-short">बुध</span></div>
+          <div class="cal-weekday"><span class="cal-weekday-full">बिहिबार</span><span class="cal-weekday-short">बिहि</span></div>
+          <div class="cal-weekday"><span class="cal-weekday-full">शुक्रबार</span><span class="cal-weekday-short">शुक्र</span></div>
+          <div class="cal-weekday cal-weekday-sat"><span class="cal-weekday-full">शनिबार</span><span class="cal-weekday-short">शनि</span></div>
+        </div>
+
+        <div class="cal-grid" id="calendar-grid"></div>
+        <div class="cal-legend">
+          <span class="cal-legend-item"><span class="cal-legend-box cal-legend-today"></span>आज</span>
+          <span class="cal-legend-item"><span class="cal-legend-box cal-legend-holiday"></span>बिदा</span>
+          <span class="cal-legend-item"><span class="cal-legend-dot cal-legend-festival"></span>चाडपर्व</span>
+          <span class="cal-legend-item"><span class="cal-legend-sat">६</span>शनिबार</span>
+        </div>
+      </div>
+
+      <!-- Right: Events Sidebar -->
+      <div class="cal-sidebar" id="events-sidebar">
+        <div class="cal-tabs">
+          <button class="cal-tab" data-tab="festivals">पर्वहरू</button>
+          <button class="cal-tab" data-tab="weekly">साप्ताहिक</button>
+          <button class="cal-tab active" data-tab="upcoming">आगामी दिन</button>
+        </div>
+        <div class="cal-events-list" id="events-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <Disclaimer variant="general" />
+
+  <script is:inline define:vars={{ initialData }}>
+    // ═══════════════════════════════════════════════════════════════
+    // Nepali Calendar — Client-side Engine
+    // ═══════════════════════════════════════════════════════════════
+
+    const DATA = JSON.parse(initialData);
+
+    // ── Nepali month names ──
+    const BS_MONTHS_EN = ['Baisakh','Jestha','Ashadh','Shrawan','Bhadra','Ashwin','Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'];
+    const BS_MONTHS_NP = ['बैशाख','जेठ','असार','साउन','भदौ','असोज','कात्तिक','मंसिर','पुष','माघ','फाल्गुन','चैत'];
+    const BS_MONTH_AD_RANGES = ['Apr/May','May/Jun','Jun/Jul','Jul/Aug','Aug/Sep','Sep/Oct','Oct/Nov','Nov/Dec','Dec/Jan','Jan/Feb','Feb/Mar','Mar/Apr'];
+
+    // ── Nepali numeral conversion ──
+    const NP_DIGITS = ['०','१','२','३','४','५','६','७','८','९'];
+    function toNp(num) {
+      return String(num).split('').map(d => NP_DIGITS[parseInt(d)] || d).join('');
+    }
+
+    // ── Calendar engine (inline for client) ──
+    const BS_MONTH_DAYS_INLINE = {
+      2080:[30,32,31,32,31,30,30,30,29,30,29,31],
+      2081:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2082:[31,32,31,32,31,30,30,30,29,29,30,30],
+      2083:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2084:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2085:[30,32,31,32,31,30,30,30,29,30,29,31],
+    };
+
+    const MS_PER_DAY = 86400000;
+    const EPOCH_UTC = Date.UTC(1943, 3, 14);
+
+    // Full month data (must be before precompute)
+    const BS_MONTH_DAYS_FULL = {
+      2000:[30,32,31,32,31,30,30,30,29,30,29,31],2001:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2002:[31,31,32,32,31,30,30,29,30,29,30,30],2003:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2004:[30,32,31,32,31,30,30,30,29,30,29,31],2005:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2006:[31,31,32,32,31,30,30,29,30,29,30,30],2007:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2008:[31,31,31,32,31,31,29,30,30,29,29,31],2009:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2010:[31,31,32,32,31,30,30,29,30,29,30,30],2011:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2012:[31,31,31,32,31,31,29,30,30,29,30,30],2013:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2014:[31,31,32,32,31,30,30,29,30,29,30,30],2015:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2016:[31,31,31,32,31,31,29,30,30,29,30,30],2017:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2018:[31,32,31,32,31,30,30,29,30,29,30,30],2019:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2020:[31,31,31,32,31,31,30,29,30,29,30,30],2021:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2022:[31,32,31,32,31,30,30,30,29,29,30,30],2023:[31,32,31,32,31,30,30,30,29,30,29,31],
+      2024:[31,31,31,32,31,31,30,29,30,29,30,30],2025:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2026:[31,32,31,32,31,30,30,30,29,29,30,31],2027:[30,32,31,32,31,30,30,30,29,30,29,31],
+      2028:[31,31,32,31,31,31,30,29,30,29,30,30],2029:[31,31,32,31,32,30,30,29,30,29,30,30],
+      2030:[31,32,31,32,31,30,30,30,29,29,30,31],2031:[30,32,31,32,31,30,30,30,29,30,29,31],
+      2032:[31,31,32,31,31,31,30,29,30,29,30,30],2033:[31,31,32,32,31,30,30,29,30,29,30,30],
+      2034:[31,32,31,32,31,30,30,30,29,29,30,31],2035:[30,32,31,32,31,31,29,30,30,29,29,31],
+      2036:[31,31,32,31,31,31,30,29,30,29,30,30],2037:[31,31,32,32,31,30,30,29,30,29,30,30],
+      2038:[31,32,31,32,31,30,30,30,29,29,30,31],2039:[31,31,31,32,31,31,29,30,30,29,30,30],
+      2040:[31,31,32,31,31,31,30,29,30,29,30,30],2041:[31,31,32,32,31,30,30,29,30,29,30,30],
+      2042:[31,32,31,32,31,30,30,30,29,29,30,31],2043:[31,31,31,32,31,31,29,30,30,29,30,30],
+      2044:[31,31,32,31,31,31,30,29,30,29,30,30],2045:[31,32,31,32,31,30,30,29,30,29,30,30],
+      2046:[31,32,31,32,31,30,30,30,29,29,30,31],2047:[31,31,31,32,31,31,30,29,30,29,30,30],
+      2048:[31,31,32,31,31,31,30,29,30,29,30,30],2049:[31,32,31,32,31,30,30,30,29,29,30,30],
+      2050:[31,32,31,32,31,30,30,30,29,30,29,31],2051:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2052:[31,31,32,31,32,30,30,29,30,29,30,30],2053:[31,32,31,32,31,30,30,30,29,29,30,30],
+      2054:[31,32,31,32,31,30,30,30,29,30,29,31],2055:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2056:[31,31,32,31,32,30,30,29,30,29,30,30],2057:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2058:[30,32,31,32,31,30,30,30,29,30,29,31],2059:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2060:[31,31,32,32,31,30,30,29,30,29,30,30],2061:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2062:[30,32,31,32,31,31,29,30,29,30,29,31],2063:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2064:[31,31,32,32,31,30,30,29,30,29,30,30],2065:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2066:[31,31,31,32,31,31,29,30,30,29,29,31],2067:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2068:[31,31,32,32,31,30,30,29,30,29,30,30],2069:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2070:[31,31,31,32,31,31,29,30,30,29,30,30],2071:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2072:[31,32,31,32,31,30,30,29,30,29,30,30],2073:[31,32,31,32,31,30,30,30,29,29,30,31],
+      2074:[31,31,31,32,31,31,30,29,30,29,30,30],2075:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2076:[31,32,31,32,31,30,30,30,29,29,30,30],2077:[31,32,31,32,31,30,30,30,29,30,29,31],
+      2078:[31,31,31,32,31,31,30,29,30,29,30,30],2079:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2080:[31,32,31,32,31,30,30,30,29,29,30,30],2081:[31,32,31,32,31,30,30,30,29,30,29,31],
+      2082:[31,31,32,31,31,31,30,29,30,29,30,30],2083:[31,31,32,31,31,31,30,29,30,29,30,30],
+      2084:[31,32,31,32,31,30,30,30,29,29,30,31],2085:[30,32,31,32,31,30,30,30,29,30,29,31],
+      2086:[31,31,32,31,31,31,30,29,30,29,30,30],2087:[31,31,32,31,31,31,30,30,29,30,30,30],
+      2088:[30,31,32,32,30,31,30,30,29,30,30,30],2089:[30,32,31,32,31,30,30,30,29,30,30,30],
+      2090:[30,32,31,32,31,30,30,30,29,30,30,30],
+    };
+
+    const ALL_BS_MONTH_DAYS = Object.assign({}, BS_MONTH_DAYS_INLINE, BS_MONTH_DAYS_FULL);
+
+    const YEAR_START_OFFSET_INLINE = {};
+    (function precompute() {
+      let offset = 0;
+      for (let y = 2000; y <= 2090; y++) {
+        YEAR_START_OFFSET_INLINE[y] = offset;
+        const row = ALL_BS_MONTH_DAYS[y];
+        if (row) for (let m = 0; m < 12; m++) offset += row[m];
+      }
+    })();
+
+    function getDaysInMonth(y, m) {
+      const row = ALL_BS_MONTH_DAYS[y];
+      return row ? row[m - 1] : 30;
+    }
+
+    function bsToAdClient(bsY, bsM, bsD) {
+      let offset = 0;
+      const yearOffsets = {};
+      let off = 0;
+      for (let y = 2000; y <= 2090; y++) {
+        yearOffsets[y] = off;
+        const r = ALL_BS_MONTH_DAYS[y];
+        if (r) for (let m = 0; m < 12; m++) off += r[m];
+      }
+      offset = yearOffsets[bsY] || 0;
+      const row = ALL_BS_MONTH_DAYS[bsY];
+      if (!row) return null;
+      for (let m = 1; m < bsM; m++) offset += row[m - 1];
+      const totalDays = offset + (bsD - 1);
+      const d = new Date(EPOCH_UTC + totalDays * MS_PER_DAY);
+      return { year: d.getUTCFullYear(), month: d.getUTCMonth() + 1, day: d.getUTCDate() };
+    }
+
+    function getWeekdayOfFirstDay(bsY, bsM) {
+      const ad = bsToAdClient(bsY, bsM, 1);
+      if (!ad) return 0;
+      return new Date(Date.UTC(ad.year, ad.month - 1, ad.day)).getUTCDay();
+    }
+
+    // ── State ──
+    let viewYear = DATA.currentYear;
+    let viewMonth = DATA.currentMonth;
+    let selectedDay = DATA.today.day;
+    let selectedMonth = DATA.today.month;
+    let selectedYear = DATA.today.year;
+    let activeTab = 'upcoming';
+    let pickerYear = viewYear;
+    let allMonthsData = { ...DATA.monthsData };
+
+    // ── DOM refs ──
+    const titleEl = document.getElementById('month-title');
+    const subtitleEl = document.getElementById('month-subtitle');
+    const gridEl = document.getElementById('calendar-grid');
+    const eventsListEl = document.getElementById('events-list');
+    const todayBtn = document.getElementById('today-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const dropdownBtn = document.getElementById('dropdown-btn');
+    const monthPicker = document.getElementById('month-picker');
+    const pickerGrid = document.getElementById('picker-grid');
+    const pickerYearEl = document.getElementById('picker-year');
+    const pickerPrevYear = document.getElementById('picker-prev-year');
+    const pickerNextYear = document.getElementById('picker-next-year');
+
+    // ── Ensure month data exists ──
+    function ensureMonthData(y, m) {
+      const key = `${y}-${m}`;
+      if (!allMonthsData[key]) {
+        // Fallback: create empty data for years outside pre-loaded range
+        const daysInMonth = getDaysInMonth(y, m);
+        allMonthsData[key] = { events: [], daysInMonth, tithis: {} };
+      }
+      return allMonthsData[key];
+    }
+
+    // ── Helpers ──
+    function formatAdDateShort(ad) {
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return `${ad.day} ${months[ad.month - 1]} ${ad.year}`;
+    }
+
+    function getCategoryLabel(cat) {
+      const labels = {
+        'festival': 'चाडपर्व',
+        'religious': 'धार्मिक',
+        'observance': 'पर्व',
+        'public-holiday': 'सार्वजनिक बिदा',
+        'national': 'राष्ट्रिय',
+        'international': 'अन्तर्राष्ट्रिय',
+      };
+      return labels[cat] || 'चाडपर्व';
+    }
+
+    function getCategoryColor(cat) {
+      const colors = {
+        'festival': '#FEF0EE',
+        'religious': '#FEF0EE',
+        'observance': '#EBF1FE',
+        'public-holiday': '#FEF0EE',
+        'national': '#EBF1FE',
+        'international': '#FEF6E6',
+      };
+      return colors[cat] || '#F7F7F5';
+    }
+
+    function getCategoryDotColor(cat) {
+      const colors = {
+        'festival': '#D92D20',
+        'religious': '#D92D20',
+        'observance': '#2563EB',
+        'public-holiday': '#D92D20',
+        'national': '#2563EB',
+        'international': '#EA8A17',
+      };
+      return colors[cat] || '#737373';
+    }
+
+    function getRelativeText(bsDate) {
+      const todayBs = DATA.today;
+      const adEvent = bsToAdClient(bsDate.year, bsDate.month, bsDate.day);
+      const adToday = bsToAdClient(todayBs.year, todayBs.month, todayBs.day);
+      if (!adEvent || !adToday) return '';
+
+      const diffMs = Date.UTC(adEvent.year, adEvent.month - 1, adEvent.day) - Date.UTC(adToday.year, adToday.month - 1, adToday.day);
+      const diffDays = Math.round(diffMs / 86400000);
+
+      if (diffDays === 0) return 'आज';
+      if (diffDays > 0) return `${toNp(diffDays)} दिन पछि`;
+      return `${toNp(Math.abs(diffDays))} दिन अगाडि`;
+    }
+
+    function getEventName(ev) {
+      return ev.event?.np || ev.event?.name || ev.np || ev.name || '';
+    }
+
+    function getEventCategory(ev) {
+      return ev.event?.category || ev.category || 'festival';
+    }
+
+    // Deduplicate events by name+day
+    function dedupEvents(events) {
+      const seen = new Set();
+      return events.filter(ev => {
+        const name = getEventName(ev);
+        const key = `${name}|${ev.bs.year}-${ev.bs.month}-${ev.bs.day}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    // ── Render calendar ──
+    function renderCalendar() {
+      const md = ensureMonthData(viewYear, viewMonth);
+      const daysInMonth = md.daysInMonth || getDaysInMonth(viewYear, viewMonth);
+      const firstWeekday = getWeekdayOfFirstDay(viewYear, viewMonth);
+
+      // Update header
+      titleEl.textContent = `${BS_MONTHS_NP[viewMonth - 1]} ${toNp(viewYear)}`;
+
+      // Compute AD range for subtitle
+      const adFirst = bsToAdClient(viewYear, viewMonth, 1);
+      const adLast = bsToAdClient(viewYear, viewMonth, daysInMonth);
+      let subtitle = `${BS_MONTHS_EN[viewMonth - 1]}`;
+      if (adFirst && adLast) {
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const startM = monthNames[adFirst.month - 1];
+        const endM = monthNames[adLast.month - 1];
+        if (startM === endM) {
+          subtitle += ` · ${startM} ${adFirst.year}`;
+        } else {
+          subtitle += ` · ${startM}/${endM} ${adFirst.year}`;
+        }
+      }
+      subtitleEl.textContent = subtitle;
+
+      // Build grid cells
+      const cells = [];
+
+      // Previous month trailing days
+      if (firstWeekday > 0) {
+        let prevM = viewMonth - 1;
+        let prevY = viewYear;
+        if (prevM < 1) { prevM = 12; prevY--; }
+        const prevDays = getDaysInMonth(prevY, prevM);
+        for (let i = firstWeekday - 1; i >= 0; i--) {
+          const day = prevDays - i;
+          const ad = bsToAdClient(prevY, prevM, day);
+          cells.push({ bsY: prevY, bsM: prevM, bsD: day, ad, isCurrentMonth: false, isSat: false, tithi: '', dayEvents: [] });
+        }
+      }
+
+      // Current month days
+      for (let d = 1; d <= daysInMonth; d++) {
+        const ad = bsToAdClient(viewYear, viewMonth, d);
+        const wd = new Date(Date.UTC(ad.year, ad.month - 1, ad.day)).getUTCDay();
+        const isSat = wd === 6;
+        const tithi = md.tithis ? (md.tithis[d] || '') : '';
+        const dayEvents = md.events ? dedupEvents(md.events.filter(e => e.bs.day === d)) : [];
+        const isToday = viewYear === DATA.today.year && viewMonth === DATA.today.month && d === DATA.today.day;
+        const isSelected = viewYear === selectedYear && viewMonth === selectedMonth && d === selectedDay;
+        cells.push({ bsY: viewYear, bsM: viewMonth, bsD: d, ad, isCurrentMonth: true, isSat, tithi, dayEvents, isToday, isSelected });
+      }
+
+      // Next month leading days
+      const totalCells = cells.length;
+      const rows = Math.ceil(totalCells / 7);
+      const remaining = rows * 7 - totalCells;
+      let nextM = viewMonth + 1;
+      let nextY = viewYear;
+      if (nextM > 12) { nextM = 1; nextY++; }
+      for (let d = 1; d <= remaining; d++) {
+        const ad = bsToAdClient(nextY, nextM, d);
+        cells.push({ bsY: nextY, bsM: nextM, bsD: d, ad, isCurrentMonth: false, isSat: false, tithi: '', dayEvents: [] });
+      }
+
+      // Render
+      gridEl.innerHTML = '';
+      const isMobileCalendar = window.matchMedia('(max-width: 640px)').matches;
+      const MAX_VISIBLE_EVENTS = 2;
+      let prevAdMonth = null;
+
+      cells.forEach((cell, cellIdx) => {
+        const div = document.createElement('div');
+        div.className = 'cal-cell';
+        if (!cell.isCurrentMonth) div.classList.add('cal-cell-other');
+
+        const isPublicHoliday = cell.dayEvents.some(ev => getEventCategory(ev) === 'public-holiday');
+        const isFestival = cell.dayEvents.some(ev => getEventCategory(ev) === 'festival');
+        const hasHolidayOrFestival = isPublicHoliday || isFestival;
+
+        if (cell.isSat && cell.isCurrentMonth) div.classList.add('cal-cell-sat');
+        if (isPublicHoliday && cell.isCurrentMonth) div.classList.add('cal-cell-holiday');
+        if (hasHolidayOrFestival && cell.isCurrentMonth && !cell.isToday) div.classList.add('cal-cell-holiday-bg');
+        if (cell.isToday) div.classList.add('cal-cell-today');
+        if (cell.isSelected) div.classList.add('cal-cell-selected');
+
+        // AD date formatting
+        const AD_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        let adDateHtml = '';
+        if (cell.ad) {
+          const showMonthName = cell.bsD === 1 || cell.ad.day === 1 || (prevAdMonth !== null && cell.ad.month !== prevAdMonth) || cellIdx === 0;
+          if (cell.isCurrentMonth) prevAdMonth = cell.ad.month;
+          const adStr = showMonthName ? `${AD_MONTHS[cell.ad.month - 1]} ${cell.ad.day}` : `${cell.ad.day}`;
+          adDateHtml = `<span class="cal-cell-ad">${adStr}</span>`;
+        }
+
+        // Tithi formatting
+        let tithiHtml = '';
+        if (cell.tithi && cell.isCurrentMonth) {
+          const isMajorTithi = ['पूर्णिमा', 'अमावस्या', 'एकादशी', 'संक्रान्ति', 'अष्टमी', 'नवमी', 'चतुर्थी'].some(t => cell.tithi.includes(t));
+          const tithiClass = (isMajorTithi || isPublicHoliday || isFestival) ? 'cal-cell-tithi cal-cell-tithi-red' : 'cal-cell-tithi';
+          const tithiShort = cell.tithi.length > 12 ? cell.tithi.slice(0, 11) + '…' : cell.tithi;
+          tithiHtml = `<div class="${tithiClass}">${tithiShort}</div>`;
+        }
+
+        // Holiday badge
+        let holidayBadgeHtml = '';
+        if (!isMobileCalendar && hasHolidayOrFestival && cell.isCurrentMonth) {
+          holidayBadgeHtml = `<span class="cal-cell-holiday-badge">●</span>`;
+        }
+
+        // Event lines. On mobile the grid cells stay clean (date/day only) —
+        // event details live in the आगामी दिन sidebar below the grid.
+        let eventsHtml = '';
+        const visibleEvents = isMobileCalendar ? [] : cell.dayEvents.slice(0, MAX_VISIBLE_EVENTS);
+        let overflowCount = cell.dayEvents.length - visibleEvents.length;
+        if (isMobileCalendar) overflowCount = 0;
+
+        visibleEvents.forEach((ev, evIdx) => {
+          const evName = getEventName(ev);
+          const isHolidayEvent = hasHolidayOrFestival && evIdx === 0;
+          const lineClass = isHolidayEvent ? 'cal-cell-event-line cal-cell-event-holiday' : 'cal-cell-event-line';
+          const barClass = isHolidayEvent ? 'cal-cell-event-bar cal-cell-event-bar-holiday' : 'cal-cell-event-bar';
+          const textClass = isHolidayEvent ? 'cal-cell-event-text cal-cell-event-text-holiday' : 'cal-cell-event-text';
+          eventsHtml += `
+            <div class="${lineClass}" title="${evName.replace(/"/g, '&quot;')}">
+              <span class="${barClass}"></span>
+              <span class="${textClass}">${evName}</span>
+            </div>
+          `;
+        });
+
+        if (overflowCount > 0) {
+          eventsHtml += `<div class="cal-cell-more">+${toNp(overflowCount)} थप</div>`;
+        }
+
+        const eventsContainerHtml = (cell.isCurrentMonth && eventsHtml)
+          ? `<div class="cal-cell-events-container">${eventsHtml}</div>`
+          : '';
+
+        div.innerHTML = `
+          <div class="cal-cell-top">
+            ${cell.isCurrentMonth ? adDateHtml : ''}
+            ${holidayBadgeHtml}
+          </div>
+          <div class="cal-cell-center">
+            <span class="cal-cell-bs">${toNp(cell.bsD)}</span>
+            ${tithiHtml}
+          </div>
+          ${eventsContainerHtml}
+        `;
+
+        if (cell.isCurrentMonth) {
+          div.setAttribute('role', 'button');
+          div.setAttribute('tabindex', '0');
+          div.setAttribute('aria-label', `${BS_MONTHS_NP[cell.bsM - 1]} ${toNp(cell.bsD)}, ${toNp(cell.bsY)}`);
+          div.addEventListener('click', () => {
+            selectedDay = cell.bsD;
+            selectedMonth = cell.bsM;
+            selectedYear = cell.bsY;
+            renderCalendar();
+            renderEvents();
+          });
+          div.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectedDay = cell.bsD;
+              selectedMonth = cell.bsM;
+              selectedYear = cell.bsY;
+              renderCalendar();
+              renderEvents();
+            }
+          });
+        }
+
+        gridEl.appendChild(div);
+      });
+    }
+
+    // ── Render events sidebar ──
+    function renderEvents() {
+      eventsListEl.innerHTML = '';
+
+      if (activeTab === 'festivals') {
+        renderFestivalEvents();
+      } else if (activeTab === 'weekly') {
+        renderWeeklyEvents();
+      } else if (activeTab === 'upcoming') {
+        renderUpcomingEvents();
+      }
+    }
+
+    function renderEventItem(ev, isLast) {
+      const cat = getEventCategory(ev);
+      const catDotColor = getCategoryDotColor(cat);
+      const evName = getEventName(ev);
+      const relative = getRelativeText(ev.bs);
+      const item = document.createElement('div');
+      item.className = 'cal-event-item';
+      if (isLast) item.classList.add('cal-event-item-last');
+      item.innerHTML = `
+        <div class="cal-event-dot-col">
+          <span class="cal-event-dot" style="background-color: ${catDotColor}"></span>
+        </div>
+        <div class="cal-event-info">
+          <div class="cal-event-name">${evName}</div>
+          ${relative ? `<span class="cal-event-relative">${relative}</span>` : ''}
+        </div>
+      `;
+      return item;
+    }
+
+    function renderEventsGrouped(events) {
+      const groups = {};
+      const order = [];
+      events.forEach(ev => {
+        const key = `${ev.bs.year}-${ev.bs.month}-${ev.bs.day}`;
+        if (!groups[key]) {
+          groups[key] = [];
+          order.push(key);
+        }
+        groups[key].push(ev);
+      });
+      order.forEach((key, groupIdx) => {
+        const groupEvents = groups[key];
+        const firstEv = groupEvents[0];
+        const ad = bsToAdClient(firstEv.bs.year, firstEv.bs.month, firstEv.bs.day);
+        const adStr = ad ? formatAdDateShort(ad) : '';
+        const bsDateStr = `${toNp(firstEv.bs.day)} ${BS_MONTHS_NP[firstEv.bs.month - 1]}`;
+        const relative = getRelativeText(firstEv.bs);
+        const isToday = relative === 'आज';
+        const dateGroup = document.createElement('div');
+        dateGroup.className = 'cal-event-date-group';
+        if (isToday) dateGroup.classList.add('cal-event-date-group-today');
+        dateGroup.innerHTML = `
+          <div class="cal-event-date-header">
+            <div class="cal-event-date-header-left">
+              <span class="cal-event-date-header-day">${toNp(firstEv.bs.day)}</span>
+              <div class="cal-event-date-header-text">
+                <span class="cal-event-date-header-ad">${adStr}</span>
+                <span class="cal-event-date-header-bs">${bsDateStr}</span>
+              </div>
+            </div>
+            ${relative ? `<span class="cal-event-date-relative${isToday ? ' cal-event-date-relative-today' : ''}">${relative}</span>` : ''}
+          </div>
+        `;
+        groupEvents.forEach((ev, evIdx) => {
+          dateGroup.appendChild(renderEventItem(ev, evIdx === groupEvents.length - 1));
+        });
+        eventsListEl.appendChild(dateGroup);
+      });
+    }
+
+    function renderFestivalEvents() {
+      const md = ensureMonthData(selectedYear, selectedMonth);
+      const events = dedupEvents(md.events || []);
+
+      if (events.length === 0) {
+        eventsListEl.innerHTML = `<div class="cal-events-empty"><span class="cal-events-empty-icon">📅</span><span>यस महिनामा कुनै चाडपर्व छैन</span></div>`;
+        return;
+      }
+
+      renderEventsGrouped(events);
+    }
+
+    function renderWeeklyEvents() {
+      const md = ensureMonthData(selectedYear, selectedMonth);
+      const events = md.events || [];
+
+      const firstWeekday = getWeekdayOfFirstDay(selectedYear, selectedMonth);
+      const weekStart = selectedDay - firstWeekday;
+      const weekEnd = Math.min(weekStart + 6, md.daysInMonth || 30);
+
+      const weekEvents = dedupEvents(events.filter(e => e.bs.day >= Math.max(1, weekStart) && e.bs.day <= weekEnd));
+
+      if (weekEvents.length === 0) {
+        eventsListEl.innerHTML = `<div class="cal-events-empty"><span class="cal-events-empty-icon">📅</span><span>यस हप्तामा कुनै चाडपर्व छैन</span></div>`;
+        return;
+      }
+
+      renderEventsGrouped(weekEvents);
+    }
+
+    function renderUpcomingEvents() {
+      const events = dedupEvents(DATA.upcomingEvents || []);
+
+      if (events.length === 0) {
+        eventsListEl.innerHTML = `<div class="cal-events-empty"><span class="cal-events-empty-icon">📅</span><span>आगामी चाडपर्व उपलब्ध छैन</span></div>`;
+        return;
+      }
+
+      renderEventsGrouped(events);
+    }
+
+    // ── Month Picker ──
+    function renderPicker() {
+      pickerYearEl.textContent = toNp(pickerYear);
+      pickerGrid.innerHTML = '';
+      for (let m = 1; m <= 12; m++) {
+        const btn = document.createElement('button');
+        btn.className = 'cal-picker-month';
+        if (m === viewMonth && pickerYear === viewYear) btn.classList.add('active');
+        btn.textContent = BS_MONTHS_NP[m - 1];
+        btn.addEventListener('click', () => {
+          viewYear = pickerYear;
+          viewMonth = m;
+          selectedMonth = m;
+          selectedYear = pickerYear;
+          selectedDay = 1;
+          monthPicker.classList.add('hidden');
+          renderCalendar();
+          renderEvents();
+        });
+        pickerGrid.appendChild(btn);
+      }
+    }
+
+    // ── Event listeners ──
+    todayBtn.addEventListener('click', () => {
+      viewYear = DATA.today.year;
+      viewMonth = DATA.today.month;
+      selectedDay = DATA.today.day;
+      selectedMonth = DATA.today.month;
+      selectedYear = DATA.today.year;
+      renderCalendar();
+      renderEvents();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      viewMonth--;
+      if (viewMonth < 1) { viewMonth = 12; viewYear--; }
+      selectedDay = 1;
+      selectedMonth = viewMonth;
+      selectedYear = viewYear;
+      renderCalendar();
+      renderEvents();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      viewMonth++;
+      if (viewMonth > 12) { viewMonth = 1; viewYear++; }
+      selectedDay = 1;
+      selectedMonth = viewMonth;
+      selectedYear = viewYear;
+      renderCalendar();
+      renderEvents();
+    });
+
+    dropdownBtn.addEventListener('click', () => {
+      pickerYear = viewYear;
+      renderPicker();
+      monthPicker.classList.toggle('hidden');
+    });
+
+    pickerPrevYear.addEventListener('click', () => { pickerYear--; renderPicker(); });
+    pickerNextYear.addEventListener('click', () => { pickerYear++; renderPicker(); });
+
+    // Close picker on outside click
+    document.addEventListener('click', (e) => {
+      if (!monthPicker.contains(e.target) && e.target !== dropdownBtn && !dropdownBtn.contains(e.target)) {
+        monthPicker.classList.add('hidden');
+      }
+    });
+
+    // Tab switching
+    document.querySelectorAll('.cal-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.cal-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activeTab = tab.dataset.tab;
+        renderEvents();
+      });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.target.closest('.cal-cell')) {
+        if (e.key === 'ArrowLeft') { prevBtn.click(); }
+        else if (e.key === 'ArrowRight') { nextBtn.click(); }
+      }
+    });
+
+    // ── Initial render ──
+    renderCalendar();
+    renderEvents();
+  </script>
+</BaseLayout>
+
+<style is:global>
+  /* ═══════════════════════════════════════════════════════════════
+     Nepali BS Calendar — Clean Modern Redesign
+     Palette: #F7F7F5 bg, #FFF cards, #171717 text, #D92D20 red
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* ── Design Tokens ── */
+  :root {
+    --cal-bg: #F7F7F5;
+    --cal-card: #FFFFFF;
+    --cal-text: #171717;
+    --cal-text-2: #525252;
+    --cal-text-3: #555555;
+    --cal-text-4: #A3A3A3;
+    --cal-border: #D1D5DB;
+    --cal-border-2: #D4D4D4;
+    --cal-red: #D92D20;
+    --cal-red-light: #FEF0EE;
+    --cal-red-border: #FECACA;
+    --cal-blue: #2563EB;
+    --cal-blue-light: #EBF1FE;
+    --cal-orange: #EA8A17;
+    --cal-orange-light: #FEF6E6;
+    --cal-hover: #F5F5F4;
+    --cal-radius: 10px;
+    --cal-radius-sm: 6px;
+    --cal-radius-xs: 2px;
+    --cal-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    --cal-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  [data-theme="dark"] {
+    --cal-bg: #0A0A0A;
+    --cal-card: #171717;
+    --cal-text: #F5F5F5;
+    --cal-text-2: #A3A3A3;
+    --cal-text-3: #737373;
+    --cal-text-4: #525252;
+    --cal-border: #262626;
+    --cal-border-2: #404040;
+    --cal-red: #EF4444;
+    --cal-red-light: rgba(239,68,68,0.12);
+    --cal-red-border: rgba(239,68,68,0.25);
+    --cal-blue: #60A5FA;
+    --cal-blue-light: rgba(96,165,250,0.12);
+    --cal-orange: #FBBF24;
+    --cal-orange-light: rgba(251,191,36,0.12);
+    --cal-hover: #1F1F1F;
+    --cal-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    --cal-shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  /* ── Page Layout ── */
+  .cal-page {
+    max-width: 1320px;
+    margin: 0 auto;
+    width: min(1320px, calc(100vw - 48px));
+    margin-left: 50%;
+    margin-right: 0;
+    transform: translateX(-50%);
+    padding: 20px 24px 48px;
+    background: var(--cal-bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .cal-breadcrumbs {
+    margin-bottom: 20px;
+  }
+  .cal-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* ── Cards ── */
+  .cal-card,
+  .cal-sidebar {
+    background: var(--cal-card);
+    border: 1px solid var(--cal-border);
+    border-radius: var(--cal-radius);
+    box-shadow: var(--cal-shadow);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Calendar Card
+     ═══════════════════════════════════════════════════════════════ */
+  .cal-card {
+    flex: 1 1 0%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Header ── */
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 14px;
+    gap: 12px;
+    border-bottom: 1px solid var(--cal-border);
+  }
+  .cal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .cal-title-area {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+  }
+  .cal-month-title {
+    font-family: var(--font-nepali);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--cal-text);
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .cal-subtitle-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+  }
+  .cal-subtitle {
+    font-size: 12px;
+    color: var(--cal-text-4);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  /* ── Buttons ── */
+  .cal-btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    color: var(--cal-text-2);
+    cursor: pointer;
+    border-radius: var(--cal-radius-sm);
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .cal-btn-icon:hover {
+    background: var(--cal-hover);
+    color: var(--cal-text);
+  }
+  .cal-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--cal-radius-sm);
+    border: 1px solid var(--cal-border);
+    background: var(--cal-card);
+    color: var(--cal-text-2);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .cal-nav-btn:hover {
+    background: var(--cal-hover);
+    color: var(--cal-text);
+    border-color: var(--cal-border-2);
+  }
+  .cal-dropdown-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* ── आज Button ── */
+  /* Same bordered family as .cal-nav-btn — one button look, not a pill outlier */
+  .cal-today-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 14px;
+    border-radius: var(--cal-radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-nepali);
+    border: 1px solid var(--cal-border);
+    background: var(--cal-card);
+    color: var(--cal-text-2);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .cal-today-btn:hover {
+    background: var(--cal-hover);
+    color: var(--cal-text);
+    border-color: var(--cal-border-2);
+  }
+
+  /* ── Month Picker ── */
+  .cal-month-picker {
+    position: absolute;
+    z-index: 20;
+    background: var(--cal-card);
+    border: 1px solid var(--cal-border);
+    border-radius: var(--cal-radius);
+    box-shadow: var(--cal-shadow-md);
+    padding: 14px;
+    top: 60px;
+    left: 56px;
+  }
+  .cal-month-picker.hidden { display: none; }
+  .cal-picker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .cal-picker-year {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cal-text);
+    font-family: var(--font-nepali);
+  }
+  .cal-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+  .cal-picker-month {
+    padding: 8px 8px;
+    border: 1px solid var(--cal-border);
+    border-radius: var(--cal-radius-sm);
+    background: var(--cal-card);
+    color: var(--cal-text);
+    font-size: 12px;
+    font-family: var(--font-nepali);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .cal-picker-month:hover {
+    background: var(--cal-hover);
+    border-color: var(--cal-border-2);
+  }
+  .cal-picker-month.active {
+    background: var(--cal-red);
+    color: #FFFFFF;
+    border-color: var(--cal-red);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Weekday Headers
+     ═══════════════════════════════════════════════════════════════ */
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    border-bottom: 1px solid var(--cal-border);
+  }
+  .cal-weekday {
+    padding: 10px 2px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--cal-text-2);
+    font-family: var(--font-nepali);
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .cal-weekday-sat {
+    color: var(--cal-red);
+  }
+  .cal-weekday-short {
+    display: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Calendar Grid
+     ═══════════════════════════════════════════════════════════════ */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 1px;
+    background: transparent;
+  }
+
+  /* ── Day Cell ── */
+  .cal-cell {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    width: 100%;
+    height: 132px;
+    background: #FFFFFF;
+    padding: 8px 12px 8px;
+    border: 1px solid var(--cal-border);
+    border-radius: var(--cal-radius-sm);
+  }
+  .cal-cell * {
+    box-sizing: border-box;
+  }
+  .cal-cell[role="button"] {
+    cursor: pointer;
+  }
+  .cal-cell[role="button"]:hover {
+    background: var(--cal-hover);
+    z-index: 1;
+  }
+  .cal-cell[role="button"]:focus-visible {
+    outline: 2px solid var(--cal-red);
+    outline-offset: -2px;
+    z-index: 2;
+  }
+  .cal-cell-other {
+    opacity: 0.2;
+    background: var(--cal-card);
+  }
+  .cal-cell-other[role="button"] {
+    cursor: default;
+  }
+  .cal-cell-other[role="button"]:hover {
+    background: var(--cal-card);
+    box-shadow: none;
+  }
+
+  /* ── Cell Top (Gregorian) ── */
+  .cal-cell-top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    flex-shrink: 0;
+    min-height: 16px;
+    overflow: hidden;
+  }
+  .cal-cell-ad {
+    font-size: 10.5px;
+    color: var(--cal-text-3);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    white-space: nowrap;
+    line-height: 1.3;
+  }
+
+  /* ── Cell Center (BS date + Tithi) ── */
+  .cal-cell-center {
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    padding: 2px 0;
+    overflow: hidden;
+    width: 100%;
+    min-width: 0;
+  }
+  .cal-cell-bs {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cal-text);
+    font-family: var(--font-nepali);
+    line-height: 1.1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cal-cell-tithi {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--cal-text-2);
+    font-family: var(--font-nepali);
+    line-height: 1.4;
+    margin-top: 4px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cal-cell-tithi-red {
+    color: #B71C1C;
+    font-weight: 600;
+  }
+
+  /* ── Holiday / Festival ── */
+  .cal-cell-holiday-bg {
+    background: var(--cal-red-light);
+  }
+  .cal-cell-sat .cal-cell-bs {
+    color: var(--cal-red) !important;
+  }
+  .cal-cell-sat {
+    background: transparent !important;
+  }
+
+  /* Holiday badge */
+  .cal-cell-holiday-badge {
+    position: absolute;
+    top: 6px;
+    left: 7px;
+    font-size: 7px;
+    color: var(--cal-red);
+    line-height: 1;
+  }
+
+  /* Holiday event (first event = the holiday name) */
+  .cal-cell-event-holiday {
+    padding: 1px 0;
+  }
+  .cal-cell-event-bar-holiday {
+    width: 6px;
+    height: 6px;
+    background-color: var(--cal-red);
+  }
+  .cal-cell-event-text-holiday {
+    font-size: 12px;
+    font-weight: 700;
+    color: #B71C1C;
+    font-family: var(--font-nepali);
+  }
+
+  /* ── Today ── */
+  .cal-cell-today {
+    background: var(--cal-red-light) !important;
+    border: 1.5px solid var(--cal-red) !important;
+    z-index: 1;
+  }
+  .cal-cell-today .cal-cell-bs {
+    color: var(--cal-red) !important;
+  }
+
+  /* ── Selected ── */
+  .cal-cell-selected {
+    border: 1.5px solid var(--cal-red);
+    z-index: 1;
+  }
+
+  /* ── Events in cell ── */
+  .cal-cell-events-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex-shrink: 0;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 4px;
+    border-top: 1px solid var(--cal-border);
+    overflow: hidden;
+    max-height: 48px;
+  }
+  .cal-cell-event-line {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    line-height: 1.35;
+    padding: 1px 0;
+    border-radius: var(--cal-radius-xs);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .cal-cell-event-bar {
+    width: 5px;
+    height: 5px;
+    background-color: #C62828;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .cal-cell-event-text {
+    /* Keep two event rows balanced; the title attribute retains the full name. */
+    font-size: 12px;
+    font-family: var(--font-nepali);
+    color: #303030;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .cal-cell-more {
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--cal-text-4);
+    font-family: var(--font-nepali);
+    padding: 1px 0 1px 8px;
+    line-height: 1.3;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Legend
+     ═══════════════════════════════════════════════════════════════ */
+  .cal-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--cal-border);
+    font-size: 10px;
+    font-family: var(--font-nepali);
+    color: var(--cal-text-3);
+  }
+  .cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .cal-legend-box {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--cal-radius-xs);
+  }
+  .cal-legend-today {
+    background: var(--cal-red-light);
+    border: 1.5px solid var(--cal-red);
+  }
+  .cal-legend-holiday {
+    background: var(--cal-card);
+    border: 1px solid var(--cal-border);
+  }
+  .cal-legend-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--cal-red);
+  }
+  .cal-legend-sat {
+    color: var(--cal-red);
+    font-weight: 700;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Sidebar
+     ═══════════════════════════════════════════════════════════════ */
+  .cal-sidebar {
+    width: 260px;
+    min-width: 240px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 80px);
+    overflow: hidden;
+  }
+
+  /* ── Tabs ── */
+  .cal-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--cal-border);
+    flex-shrink: 0;
+  }
+  .cal-tab {
+    flex: 1;
+    padding: 11px 6px 9px;
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-nepali);
+    color: var(--cal-text-4);
+    cursor: pointer;
+    transition: color 0.15s ease;
+    text-align: center;
+    position: relative;
+  }
+  .cal-tab:hover {
+    color: var(--cal-text-2);
+  }
+  .cal-tab.active {
+    color: var(--cal-text);
+    font-weight: 600;
+  }
+  .cal-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--cal-text);
+    border-radius: var(--cal-radius-xs);
+  }
+
+  /* ── Event List ── */
+  .cal-events-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px 0;
+  }
+  .cal-events-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+    padding: 20px;
+    text-align: center;
+    color: var(--cal-text-4);
+    font-size: 12px;
+    font-family: var(--font-nepali);
+    gap: 6px;
+  }
+  .cal-events-empty-icon {
+    font-size: 20px;
+    opacity: 0.3;
+  }
+
+  /* ── Date Group ── */
+  .cal-event-date-group {
+    padding: 0 0 0;
+  }
+  .cal-event-date-group + .cal-event-date-group {
+    border-top: 1px solid var(--cal-border);
+    margin-top: 0;
+    padding-top: 12px;
+  }
+  .cal-event-date-group-today {
+    padding-top: 0;
+  }
+  .cal-event-date-group-today + .cal-event-date-group {
+    border-top: 1px solid var(--cal-border);
+    margin-top: 12px;
+  }
+  .cal-event-date-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 14px 8px;
+  }
+  .cal-event-date-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .cal-event-date-header-day {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--cal-text);
+    line-height: 1;
+    min-width: 20px;
+  }
+  .cal-event-date-header-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .cal-event-date-header-ad {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--cal-text-3);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .cal-event-date-header-bs {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--cal-text-2);
+    font-family: var(--font-nepali);
+    line-height: 1.3;
+  }
+  .cal-event-date-relative {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--cal-text-4);
+    font-family: var(--font-nepali);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cal-event-date-relative-today {
+    color: var(--cal-red);
+    font-weight: 600;
+  }
+
+  /* ── Event Item ── */
+  .cal-event-item {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 6px 14px 6px 18px;
+    transition: background-color 0.12s ease;
+  }
+  .cal-event-item:hover {
+    background: var(--cal-hover);
+  }
+  .cal-event-item-last {
+    padding-bottom: 10px;
+  }
+  .cal-event-dot-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 14px;
+    position: relative;
+  }
+  .cal-event-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .cal-event-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .cal-event-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cal-text-2);
+    font-family: var(--font-nepali);
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+  .cal-event-relative {
+    font-size: 10px;
+    color: var(--cal-text-4);
+    font-family: var(--font-nepali);
+    font-weight: 400;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Responsive
+     ═══════════════════════════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .cal-page {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      transform: none;
+    }
+    .cal-layout {
+      flex-direction: column;
+    }
+    .cal-sidebar {
+      width: 100%;
+      min-width: 0;
+      max-height: 360px;
+    }
+    .cal-weekday-full {
+      display: none;
+    }
+    .cal-weekday-short {
+      display: inline;
+    }
+  }
+  @media (min-width: 901px) {
+    .cal-page {
+      width: calc(100vw - 48px);
+      max-width: 1320px;
+    }
+  }
+  @media (max-width: 640px) {
+    .cal-page {
+      padding: 12px 10px 32px;
+      overflow-x: hidden;
+    }
+    .cal-breadcrumbs {
+      margin-bottom: 12px;
+    }
+    .cal-layout {
+      gap: 12px;
+      overflow: hidden;
+    }
+    .cal-card {
+      overflow: hidden;
+    }
+    .cal-header {
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 12px 10px;
+    }
+    .cal-header-left {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .cal-month-title {
+      font-size: 16px;
+    }
+    .cal-grid {
+      gap: 1px;
+    }
+    .cal-cell {
+      padding: 4px 4px 4px;
+      height: 92px;
+      border-radius: var(--cal-radius-xs);
+      border-width: 1px;
+    }
+    .cal-cell-bs {
+      font-size: 20px;
+    }
+    .cal-cell-ad {
+      font-size: 8px;
+    }
+    .cal-cell-holiday-bg {
+      background: transparent;
+    }
+    .cal-cell-holiday-badge {
+      display: none;
+    }
+    .cal-cell-tithi {
+      font-size: 8.5px;
+      margin-top: 1px;
+    }
+    .cal-weekday {
+      font-size: 9px;
+      padding: 8px 1px;
+    }
+    .cal-sidebar {
+      max-height: 300px;
+    }
+    .cal-event-item {
+      padding: 5px 12px 5px 16px;
+    }
+    .cal-event-item-last {
+      padding-bottom: 8px;
+    }
+    .cal-event-name {
+      font-size: 11px;
+    }
+    .cal-event-date-header {
+      padding: 4px 12px 6px;
+    }
+    .cal-event-date-header-day {
+      font-size: 16px;
+    }
+    .cal-today-btn {
+      padding: 5px 12px;
+      font-size: 12px;
+    }
+    .cal-nav-btn {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  @media (max-width: 420px) {
+    .cal-page {
+      padding: 8px 6px 24px;
+    }
+    .cal-layout {
+      gap: 8px;
+    }
+    .cal-header {
+      padding: 10px 10px 8px;
+      gap: 6px;
+    }
+    .cal-month-title {
+      font-size: 15px;
+    }
+    .cal-cell {
+      height: 72px;
+      padding: 3px 3px 3px;
+      border-radius: 2px;
+      border-width: 1px;
+    }
+    .cal-cell-bs {
+      font-size: 18px;
+    }
+    .cal-cell-tithi {
+      font-size: 8px;
+      margin-top: 0;
+    }
+    .cal-cell-top {
+      min-height: 10px;
+    }
+    .cal-cell-ad {
+      font-size: 7px;
+    }
+    .cal-cell-event-text {
+      font-size: 8px;
+      -webkit-line-clamp: 1;
+    }
+    .cal-cell-more {
+      font-size: 6px;
+      padding-left: 5px;
+    }
+    .cal-cell-events-container {
+      max-height: 24px;
+      padding-top: 1px;
+      border-top-width: 0.5px;
+    }
+    .cal-cell-event-bar {
+      width: 3px;
+      height: 3px;
+    }
+    .cal-weekday {
+      font-size: 8px;
+      padding: 6px 1px;
+    }
+    .cal-nav-btn {
+      width: 28px;
+      height: 28px;
+    }
+    .cal-today-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+    }
+  }
+
+</style>

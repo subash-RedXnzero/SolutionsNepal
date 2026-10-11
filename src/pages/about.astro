@@ -1,0 +1,401 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import { tools } from '../data/tools.js';
+import { getActiveCategories } from '../data/categories.js';
+
+const TOOL_COUNT = tools.length;
+const CAT_COUNT = getActiveCategories().length;
+
+const PRINCIPLES = [
+  {
+    icon: '<path d="M20 6 9 17l-5-5"/>',
+    title: 'One place that works',
+    body: 'Nepal-specific calculators used to live on scattered, outdated sites full of ads and broken forms. SolutionsNepal is the opposite. Clean, fast and free, with no sign-ups, no tracking and no nonsense.',
+  },
+  {
+    icon: '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+    title: 'Private by design',
+    body: 'Every calculation happens right in your browser. Your data never leaves your device. No servers collect your information, no accounts to create, no ads to sit through.',
+  },
+  {
+    icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+    title: 'Honest numbers',
+    body: 'Rates, tax slabs and fee schedules change with new notices and fiscal years. Pages show their source and last-checked time, estimates are labelled as estimates, and the official source is always final.',
+  },
+];
+
+const EXPLORE = [
+  { name: 'Finance', desc: 'Salary, tax, EMI and SIP planners', href: '/nepal/finance' },
+  { name: 'Date & Calendar', desc: 'BS/AD converters and calendar tools', href: '/nepal/date' },
+  { name: 'Gold & Silver', desc: 'Live rates per tola and gram', href: '/nepal/gold' },
+  { name: 'Utilities', desc: 'Electricity, water and fuel estimators', href: '/nepal/utilities' },
+  { name: 'Language & Text', desc: 'Unicode and translation helpers', href: '/nepal/tools' },
+  { name: 'Documents', desc: 'Photos, PDFs and QR codes', href: '/tools/pdf' },
+];
+
+const SOURCES = ['Nepal Rastra Bank', 'FENEGOSIDA', 'Nepal Oil Corporation', 'Open-Meteo'];
+
+const FAQS = [
+  {
+    q: 'Is SolutionsNepal really free?',
+    a: 'Yes. Every tool is free, with no fees, no subscriptions and no ads.',
+  },
+  {
+    q: 'Do I need an account to use it?',
+    a: 'No. Open any tool and use it instantly. There are no accounts to create, ever.',
+  },
+  {
+    q: 'Is my data private?',
+    a: 'Yes. Every calculation happens locally in your browser, so your numbers never leave your device. Nothing is collected, leaked or sold.',
+  },
+  {
+    q: 'How accurate are the numbers?',
+    a: 'Live pages refresh from official public sources and show their source and last-checked time. Calculators are estimation tools, so always confirm final figures with the relevant office, bank or notice before acting on them.',
+  },
+  {
+    q: 'How do I report a problem or request a tool?',
+    a: 'Use the contact page to send a wrong rate, a broken tool or an idea for a new calculator. Reports with the page URL and a screenshot get fixed fastest.',
+  },
+];
+---
+
+<BaseLayout
+  title="About SolutionsNepal"
+  description="SolutionsNepal builds free, fast, and simple tools for everyday life in Nepal."
+>
+  <div class="about-wrap">
+    <Breadcrumbs items={[{ label: 'About' }]} />
+
+    <header class="about-hero">
+      <h1 class="about-title">Free tools for everyday <span class="about-accent">Nepal</span>.</h1>
+      <p class="about-lede">From salary calculators to date converters, every tool is designed to work instantly in your browser. No sign-ups. No tracking. No nonsense.</p>
+      <p class="about-np" lang="ne">नेपालका लागि निःशुल्क उपकरणहरू</p>
+      <p class="about-facts"><strong>{TOOL_COUNT}+ free tools</strong> across <strong>{CAT_COUNT} categories</strong>. Rs 0, forever. 100% private.</p>
+    </header>
+
+    <section class="about-section" aria-label="Why SolutionsNepal exists">
+      <h2 class="about-h2">Why we built this</h2>
+      <div class="about-prose">
+        <p>Most Nepal-specific calculators were scattered across outdated websites filled with ads and broken forms. Finding a simple answer meant wading through pop-ups, stale figures and sign-up walls.</p>
+        <p>We wanted one place that works. A toolkit that opens fast, shows its sources, and respects the person using it. That is what SolutionsNepal is: clean pages, honest numbers, and tools that run entirely on your device.</p>
+      </div>
+    </section>
+
+    <section class="about-section" aria-label="What we stand for">
+      <h2 class="about-h2">What we stand for</h2>
+      <div class="about-tenets">
+        {PRINCIPLES.map(p => (
+          <div class="about-tenet">
+            <span class="about-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={p.icon} />
+            </span>
+            <div>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="about-section" aria-label="What you will find here">
+      <h2 class="about-h2">What you will find here</h2>
+      <p class="about-standfirst">The calculations Nepali users look up most often, each one a free tool.</p>
+      <div class="about-grid">
+        {EXPLORE.map(c => (
+          <a href={c.href} class="about-tile">
+            <span class="about-tile-name">{c.name}</span>
+            <span class="about-tile-desc">{c.desc}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="about-section" aria-label="Where our numbers come from">
+      <h2 class="about-h2">Where our numbers come from</h2>
+      <p class="about-standfirst">Price and rate pages refresh from official public sources. Calculators are estimation tools, so always confirm final figures with the relevant office, bank or notice before acting on them.</p>
+      <ul class="about-sources">
+        {SOURCES.map(s => (
+          <li>{s}</li>
+        ))}
+      </ul>
+      <p class="about-licence">All tool logic, guides, and UI are <strong>original SolutionsNepal content</strong> (© {new Date().getFullYear()} SolutionsNepal). Factual facts (fees, slabs, rates) are compiled from public official sources above and rewritten in original prose — no article text is copy-pasted. See <a href="/about#copyright">Copyright &amp; attribution</a> below.</p>
+    </section>
+
+    <section class="about-section" aria-label="Copyright and attribution" id="copyright">
+      <h2 class="about-h2">Copyright &amp; attribution</h2>
+      <div class="about-prose">
+        <p>Every calculator, converter, and guide on SolutionsNepal is <strong>original writing and code by the SolutionsNepal Team</strong>. We do not copy-paste articles, and we do not claim third-party images or data as our own.</p>
+        <p>What we do cite — with a link on the page itself:</p>
+        <ul>
+          <li><strong>Official rates &amp; fees:</strong> Nepal Rastra Bank (nrb.org.np), Inland Revenue Department (ird.gov.np), Dept. of Transport Management (dotm.gov.np), Office of the Company Registrar (ocr.gov.np), FENEGOSIDA, Nepal Oil Corporation, Open-Meteo. Only the <em>facts</em> (numbers, dates, slabs) are taken; the explanatory prose is our own.</li>
+          <li><strong>Blog cover images:</strong> Unsplash (<a href="https://unsplash.com/license" target="_blank" rel="noopener">Unsplash License</a> — free to use, no attribution required but we credit “Photo via Unsplash” under each image). Not hosted as our own.</li>
+          <li><strong>Icons:</strong> Lucide (<a href="https://lucide.dev/license" target="_blank" rel="noopener">ISC</a>) via <code>@lucide/astro</code>.</li>
+          <li><strong>Fonts:</strong> Caveat (OFL) in <code>public/fonts/caveat.ttf</code>; Inter &amp; Noto Sans Devanagari via Google Fonts (OFL).</li>
+          <li><strong>Code libs:</strong> pdfjs-dist (Apache-2.0), pdf-lib (MIT), qrcode, jszip, sharp — see <code>package.json</code>.</li>
+        </ul>
+        <p>If you believe any page unintentionally resembles copyrighted phrasing, contact <a href="mailto:hello@solutionsnepal.com">hello@solutionsnepal.com</a> with the URL and source — we rewrite promptly.</p>
+      </div>
+    </section>
+
+    <section class="about-section" aria-label="Frequently asked questions">
+      <h2 class="about-h2">Good to know</h2>
+      <div class="about-faq">
+        {FAQS.map(item => (
+          <details class="about-faq-item" name="about-faq">
+            <summary class="about-faq-q"><span>{item.q}</span></summary>
+            <div class="about-faq-a"><p>{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="about-cta" aria-label="Contact SolutionsNepal">
+      <h2 class="about-h2">Found something wrong?</h2>
+      <p class="about-standfirst about-standfirst-center">A wrong rate, a broken tool, or a calculator you would like to see. Reports with the page URL and a screenshot get fixed fastest. You can also reach us directly at <a href="mailto:hello@solutionsnepal.com">hello@solutionsnepal.com</a>.</p>
+      <div class="about-cta-row">
+        <a href="/contact" class="about-btn">Send a message</a>
+        <a href="/nepal" class="about-btn-ghost">Explore all tools</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 28px clamp(20px, 3.5vw, 44px) 88px;
+  }
+  .about-hero { text-align: left; max-width: 760px; }
+  .about-title {
+    margin: 8px 0 18px;
+    font-size: clamp(34px, 4.6vw, 54px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--nk-text);
+    text-wrap: balance;
+  }
+  .about-accent {
+    color: var(--nk-accent);
+    text-decoration: underline;
+    text-decoration-color: var(--nk-accent);
+    text-decoration-thickness: 4px;
+    text-underline-offset: 8px;
+  }
+  .about-lede {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--nk-text-secondary);
+    max-width: 65ch;
+  }
+  .about-np { margin: 10px 0 0; font-size: 15px; color: var(--nk-text-tertiary); }
+  .about-facts {
+    margin: 26px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--nk-border);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--nk-text-secondary);
+    max-width: 65ch;
+  }
+  .about-facts strong { color: var(--nk-text); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .about-section { padding: 64px 0 0; }
+  .about-h2 {
+    margin: 0 0 12px;
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--nk-text);
+  }
+  .about-standfirst {
+    margin: 0 0 28px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--nk-text-secondary);
+    max-width: 65ch;
+  }
+  .about-standfirst-center { margin-left: auto; margin-right: auto; }
+  .about-prose { max-width: 65ch; }
+  .about-prose p {
+    margin: 0 0 18px;
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--nk-text-secondary);
+  }
+  .about-prose p:last-child { margin-bottom: 0; }
+  .about-tenets { border-top: 1px solid var(--nk-border); }
+  .about-tenet {
+    display: flex;
+    gap: 18px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--nk-border);
+  }
+  .about-icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 13px;
+    background: var(--nk-accent-subtle);
+    border: 1px solid var(--nk-border);
+    color: var(--nk-accent);
+  }
+  .about-icon svg { width: 22px; height: 22px; }
+  .about-tenet h3 { margin: 2px 0 8px; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--nk-text); }
+  .about-tenet p { margin: 0; font-size: 15px; line-height: 1.65; color: var(--nk-text-secondary); max-width: 65ch; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .about-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 22px 20px;
+    border: 1px solid var(--nk-border);
+    border-radius: 16px;
+    background: var(--nk-card-bg);
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .about-tile:hover { transform: translateY(-2px); border-color: var(--nk-accent); }
+  .about-tile:active { transform: scale(0.98); }
+  .about-tile-name { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--nk-text); }
+  .about-tile-desc { font-size: 13.5px; color: var(--nk-text-secondary); }
+  .about-sources {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+  }
+  .about-sources li {
+    padding: 9px 18px;
+    border-radius: 9999px;
+    border: 1px solid var(--nk-border);
+    background: var(--nk-card-bg);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--nk-text-secondary);
+  }
+  .about-licence {
+    margin: 18px 0 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--nk-text-tertiary);
+    max-width: 70ch;
+  }
+  .about-licence a { color: var(--nk-accent); text-decoration: underline; text-underline-offset: 3px; }
+  .about-prose ul { margin: 12px 0 0; padding-left: 18px; }
+  .about-prose li { margin: 0 0 8px; font-size: 14px; line-height: 1.65; color: var(--nk-text-secondary); }
+  .about-prose a { color: var(--nk-accent); text-decoration: underline; text-underline-offset: 3px; }
+  .about-faq { border-top: 1px solid var(--nk-border); max-width: 800px; }
+  .about-faq-item { border-bottom: 1px solid var(--nk-border); }
+  .about-faq-q {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--nk-text);
+    cursor: pointer;
+    list-style: none;
+  }
+  .about-faq-q::-webkit-details-marker { display: none; }
+  .about-faq-q::after {
+    content: '+';
+    flex-shrink: 0;
+    margin-left: auto;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--nk-text-tertiary);
+  }
+  .about-faq-item[open] .about-faq-q::after { content: '\2212'; color: var(--nk-text); }
+  .about-faq-a {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .about-faq-item[open] .about-faq-a { grid-template-rows: 1fr; }
+  .about-faq-a > p {
+    overflow: hidden;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--nk-text-secondary);
+    max-width: 65ch;
+  }
+  .about-faq-item[open] .about-faq-a > p { padding-bottom: 22px; }
+  .about-cta {
+    margin-top: 64px;
+    border: 1px solid var(--nk-border);
+    border-radius: 24px;
+    background: var(--nk-hover);
+    padding: clamp(32px, 5vw, 56px) clamp(24px, 5vw, 56px);
+    text-align: center;
+  }
+  .about-cta .about-h2 { text-align: center; }
+  .about-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 26px;
+  }
+  .about-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 30px;
+    border-radius: 9999px;
+    background: var(--nk-accent);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .about-btn:hover { background: var(--nk-accent-hover); transform: translateY(-2px); }
+  .about-btn:active { transform: scale(0.98); }
+  .about-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 28px;
+    border-radius: 9999px;
+    border: 1px solid var(--nk-border);
+    background: var(--nk-card-bg);
+    color: var(--nk-text);
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .about-btn-ghost:hover { border-color: var(--nk-accent); color: var(--nk-accent); transform: translateY(-2px); }
+  .about-btn-ghost:active { transform: scale(0.98); }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .about-wrap { padding-bottom: 64px; }
+    .about-section { padding-top: 48px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-tenet { gap: 14px; padding: 20px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .about-faq-a { transition: none; }
+    .about-tile, .about-btn, .about-btn-ghost { transition: none; }
+  }
+</style>
