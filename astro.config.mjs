@@ -47,6 +47,14 @@ export default defineConfig({
 
   redirects,
 
+  build: {
+    // Inline all CSS into <style> tags: removes the 1–2 render-blocking
+    // stylesheet requests PageSpeed flags on every page (~440ms est. savings
+    // on the homepage). Trade-off is larger HTML, but HTML is edge-cached
+    // (CF-Cache-Status: HIT) so first-visit LCP wins with no visual change.
+    inlineStylesheets: 'always',
+  },
+
   integrations: [
     sitemap({
       entryLimit: 45_000,

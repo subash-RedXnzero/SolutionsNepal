@@ -661,7 +661,9 @@ const STRIP = [
   }
   .hp-today-links a:hover { border-color: var(--hp-crimson); color: var(--hp-crimson); }
   .hp-today-links strong { font-weight: 700; color: var(--hp-text); font-variant-numeric: tabular-nums; }
-  .hp-today-links .hp-today-more { border: none; background: none; color: var(--hp-crimson); font-weight: 600; padding: 8px 4px; }
+  .hp-today-links .hp-today-more { border: none; background: none; color: var(--hp-crimson-dark); font-weight: 600; padding: 8px 4px; }
+  /* Dark theme: light salmon keeps 4.5:1 on the dark card */
+  :global([data-theme="dark"]) .hp-today-links .hp-today-more { color: #FF7A6E; }
   .hp-today-more span { transition: transform 0.2s ease; }
   .hp-today-more:hover span { transform: translateX(3px); }
   @media (max-width: 420px) {
@@ -717,7 +719,8 @@ const STRIP = [
     margin-top: 26px;
     padding: 14px 30px;
     border-radius: var(--radius-full);
-    background: var(--hp-crimson);
+    /* Fixed dark red (not var): white text needs 4.5:1 — brand #E62B1E is 4.44 */
+    background: #B42318;
     color: #fff;
     font-size: var(--fs-md);
     font-weight: 600;
@@ -727,7 +730,7 @@ const STRIP = [
     transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.2s ease;
   }
   .hp-hero-cta:hover {
-    background: var(--hp-crimson-dark);
+    background: #8F1B13; /* darker step keeps white text at 9.0:1 */
     transform: translateY(-2px);
     box-shadow: 0 18px 36px -12px color-mix(in srgb, var(--hp-crimson) 60%, transparent);
   }
@@ -869,8 +872,8 @@ const STRIP = [
     --npb-surface: #FFFFFF;
     --npb-text: #17212B;
     --npb-muted: #5D646C;
-    --npb-pos: #16A05D;
-    --npb-neg: #D95757;
+    --npb-pos: #0E7A44; /* darkened for 4.5:1 text contrast on tinted badge bg */
+    --npb-neg: #B42318; /* darkened for 4.5:1 text contrast on tinted badge bg */
     --npb-border: #EAE7E2;
     max-width: 1200px;
     margin: 0 auto;
@@ -1493,7 +1496,7 @@ const STRIP = [
     padding: 3px 9px;
     border-radius: var(--radius-full);
   }
-  .hp-upd-badge.is-new { background: var(--hp-crimson); color: #fff; }
+  .hp-upd-badge.is-new { background: #B42318; color: #fff; } /* 6.57:1, matches CTA fix */
   .hp-upd-badge.is-upd {
     border: 1px solid var(--hp-border);
     color: var(--hp-text-2);
@@ -1778,7 +1781,8 @@ const STRIP = [
     gap: 10px;
     padding: 16px 36px;
     border-radius: var(--radius-full);
-    background: var(--hp-crimson);
+    /* Fixed dark red (not var): white text needs 4.5:1 — brand #E62B1E is 4.44 */
+    background: #B42318;
     color: #fff;
     font-size: var(--fs-md);
     font-weight: 600;
@@ -1789,7 +1793,7 @@ const STRIP = [
   }
   .hp-cta-btn:hover {
     transform: translateY(-2px);
-    background: var(--hp-crimson-dark);
+    background: #8F1B13;
     box-shadow: 0 18px 36px -14px color-mix(in srgb, var(--hp-crimson) 60%, transparent);
   }
   .hp-cta-btn:active { transform: translateY(0); }

@@ -147,7 +147,8 @@
   .nk-footer-disclaimer-inner p {
     font-size: 11px;
     line-height: 1.65;
-    color: var(--nk-text-tertiary);
+    /* secondary (not tertiary): 11px text needs 4.5:1 — tertiary #767676 is 4.28 */
+    color: var(--nk-text-secondary);
     margin: 0;
   }
   .nk-footer-disclaimer-inner strong {
@@ -170,7 +171,9 @@
     color: var(--nk-text-tertiary);
     flex-wrap: wrap;
   }
-  .nk-footer-bottom-link { color: var(--nk-text-secondary); text-decoration: none; }
+  /* Underlined by default (not just on hover): links inside a text block must
+     be distinguishable by more than color (a11y: link-in-text-block). */
+  .nk-footer-bottom-link { color: var(--nk-text-secondary); text-decoration: underline; text-underline-offset: 3px; }
   .nk-footer-bottom-link:hover { color: var(--nk-accent); text-decoration: underline; text-underline-offset: 3px; }
   .nk-footer-copy {
     max-width: 1100px;
