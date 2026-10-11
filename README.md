@@ -1,0 +1,68 @@
+# SolutionsNepal — Free Tools for Everyday Nepal
+
+SolutionsNepal is a free, fast, and privacy-focused web platform with 80+ calculators, converters, and everyday utilities built specifically for Nepal.
+
+**Live site:** https://solutionsnepal.com
+
+## What’s inside
+
+- **Finance:** Salary & SSF, EMI, VAT 13%, SIP, remittance (NRB rates), house rent tax
+- **Date & Calendar:** BS ↔ AD converter, Nepali Calendar 2082–2084, age calculator
+- **Land & Property:** Ropani ↔ Aana, land registration cost
+- **Gold & Silver:** Live per-tola/gram prices, Tola ↔ Gram converter
+- **Education:** SEE GPA, NEB GPA, CGPA, gpa ↔ percentage
+- **Utilities:** NEA electricity bill, KUKL water bill, fuel prices, vehicle tax & ownership cost
+- **Language & Text:** Nepali Unicode, translator, number-to-words
+- **Documents & Photo:** JPG/PNG/WebP converters, PDF tools, passport/visa/DV photo resizer, QR generators
+
+All calculators run entirely in the browser — no signup, no tracking, no data leaves the device.
+
+## Original content
+
+All tool logic, calculations, guides, and UI in this repository are **original work by the SolutionsNepal Team** (© 2025–2026 SolutionsNepal). 
+
+Factual information (tax slabs, fees, exchange rates) is compiled from official public sources — Nepal Rastra Bank (nrb.org.np), Inland Revenue Department (ird.gov.np), Department of Transport Management (dotm.gov.np), Office of the Company Registrar (ocr.gov.np), etc. — and rewritten in original prose with citations. No article text is copy-pasted from third-party sites.
+
+Public assets:
+- **Images:** Blog cover images are from Unsplash (https://unsplash.com/license) — free to use without attribution, hotlinked via Unsplash CDN. Replace with your own if you prefer local hosting.
+- **Icons:** Lucide (https://lucide.dev/license — ISC) via `@lucide/astro`
+- **Fonts:** Caveat (OFL) locally in `public/fonts/caveat.ttf`, Inter & Noto Sans Devanagari via Google Fonts
+- **PDF worker:** `pdfjs-dist` (Apache-2.0) in `public/pdf.worker.mjs`
+
+If you reuse this codebase, keep third-party license notices and replace API keys / live data fetches with your own.
+
+## Project structure
+
+```
+/
+├── public/             # static assets (favicon, og image, calendar JSON, fonts)
+├── src/
+│   ├── components/     # Astro components
+│   ├── data/           # tools registry, categories, calculators, blog posts
+│   ├── layouts/        # BaseLayout
+│   ├── lib/            # calculators, Nepal date/price/forex libs
+│   ├── pages/          # routes — /nepal/*, /tools/*, /blog/*
+│   └── styles/         # global.css + design tokens
+└── scripts/            # fetch-live-data.mjs
+```
+
+## Commands
+
+| Command           | Action                                      |
+| :---------------- | :------------------------------------------ |
+| `npm install`     | Install dependencies (Node >= 22.12)        |
+| `npm run dev`     | Dev server at `localhost:4321`              |
+| `npm run build`   | Production build to `./dist/`               |
+| `npm run preview` | Preview build locally                       |
+
+## License for this codebase
+
+Original code & content © SolutionsNepal. You may not copy-publish SolutionsNepal articles verbatim. Reuse logic with attribution; respect third-party licenses listed above.
+
+## Sources & accuracy
+
+Live prices/rates show source + last-updated time (NRB, FENEGOSIDA, NOC, Open-Meteo). Calculators are estimates — always confirm with the relevant office/bank before acting.
+
+## Contributing
+
+Found a wrong slab or broken tool? Open an issue or PR with the page URL + screenshot.
