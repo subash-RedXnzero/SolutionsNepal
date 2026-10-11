@@ -1,12 +1,7 @@
 {
   "meta": {
-<<<<<<< HEAD
-    "fetchedAt": "2026-10-11T19:38:56.877Z",
-    "fetchedAtNPT": "1:23 AM",
-=======
-    "fetchedAt": "2026-10-11T20:04:11.428Z",
-    "fetchedAtNPT": "1:49 AM",
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+    "fetchedAt": "2026-10-11T23:27:51.935Z",
+    "fetchedAtNPT": "5:12 AM",
     "sources": {
       "forex": "Nepal Rastra Bank (nrb.org.np)",
       "gold": "FENEGOSIDA (fenegosida.org)",
@@ -200,27 +195,15 @@
     "cities": {
       "kathmandu": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 17.3,
-          "relative_humidity_2m": 81,
-          "apparent_temperature": 18.4,
+          "temperature_2m": 16.9,
+          "relative_humidity_2m": 76,
+          "apparent_temperature": 17.4,
           "weather_code": 0,
           "cloud_cover": 2,
-          "wind_speed_10m": 1.3,
-          "wind_direction_10m": 180,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 17.3,
-          "relative_humidity_2m": 80,
-          "apparent_temperature": 18.3,
-          "weather_code": 0,
-          "cloud_cover": 2,
-          "wind_speed_10m": 1.5,
-          "wind_direction_10m": 173,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+          "wind_speed_10m": 2,
+          "wind_direction_10m": 153,
           "precipitation": 0
         },
         "hourly": {
@@ -466,27 +449,15 @@
       },
       "pokhara": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 18.4,
-          "relative_humidity_2m": 83,
-          "apparent_temperature": 20,
+          "temperature_2m": 15.9,
+          "relative_humidity_2m": 84,
+          "apparent_temperature": 16.3,
           "weather_code": 0,
-          "cloud_cover": 2,
-          "wind_speed_10m": 1.4,
+          "cloud_cover": 16,
+          "wind_speed_10m": 3.7,
           "wind_direction_10m": 293,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 18.1,
-          "relative_humidity_2m": 83,
-          "apparent_temperature": 19.5,
-          "weather_code": 0,
-          "cloud_cover": 2,
-          "wind_speed_10m": 1.9,
-          "wind_direction_10m": 292,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
           "precipitation": 0
         },
         "hourly": {
@@ -732,27 +703,15 @@
       },
       "lalitpur": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 17.6,
-          "relative_humidity_2m": 79,
-          "apparent_temperature": 18.7,
+          "temperature_2m": 17.2,
+          "relative_humidity_2m": 74,
+          "apparent_temperature": 18,
           "weather_code": 0,
-          "cloud_cover": 8,
-          "wind_speed_10m": 0.7,
-          "wind_direction_10m": 256,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 17.6,
-          "relative_humidity_2m": 77,
-          "apparent_temperature": 18.7,
-          "weather_code": 0,
-          "cloud_cover": 9,
-          "wind_speed_10m": 0.5,
-          "wind_direction_10m": 225,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+          "cloud_cover": 2,
+          "wind_speed_10m": 0.2,
+          "wind_direction_10m": 180,
           "precipitation": 0
         },
         "hourly": {
@@ -998,27 +957,15 @@
       },
       "bhaktapur": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 17,
-          "relative_humidity_2m": 79,
-          "apparent_temperature": 17.6,
+          "temperature_2m": 16.4,
+          "relative_humidity_2m": 75,
+          "apparent_temperature": 17,
           "weather_code": 0,
-          "cloud_cover": 8,
-          "wind_speed_10m": 3.1,
-          "wind_direction_10m": 277,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 17.2,
-          "relative_humidity_2m": 77,
-          "apparent_temperature": 17.9,
-          "weather_code": 0,
-          "cloud_cover": 9,
-          "wind_speed_10m": 1.8,
-          "wind_direction_10m": 270,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+          "cloud_cover": 1,
+          "wind_speed_10m": 0.3,
+          "wind_direction_10m": 225,
           "precipitation": 0
         },
         "hourly": {
@@ -1264,27 +1211,15 @@
       },
       "biratnagar": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 23.2,
-          "relative_humidity_2m": 89,
-          "apparent_temperature": 26.9,
+          "temperature_2m": 22.5,
+          "relative_humidity_2m": 87,
+          "apparent_temperature": 25.7,
           "weather_code": 0,
           "cloud_cover": 0,
-          "wind_speed_10m": 5.1,
-          "wind_direction_10m": 32,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 23.1,
-          "relative_humidity_2m": 88,
-          "apparent_temperature": 26.6,
-          "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 5.4,
-          "wind_direction_10m": 37,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+          "wind_speed_10m": 5.3,
+          "wind_direction_10m": 8,
           "precipitation": 0
         },
         "hourly": {
@@ -1530,27 +1465,15 @@
       },
       "bharatpur": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 20.6,
-          "relative_humidity_2m": 94,
-          "apparent_temperature": 23.9,
+          "temperature_2m": 19.7,
+          "relative_humidity_2m": 93,
+          "apparent_temperature": 22.3,
           "weather_code": 0,
           "cloud_cover": 1,
-          "wind_speed_10m": 2.1,
-          "wind_direction_10m": 20,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 20.4,
-          "relative_humidity_2m": 94,
-          "apparent_temperature": 23.6,
-          "weather_code": 0,
-          "cloud_cover": 1,
-          "wind_speed_10m": 1.9,
+          "wind_speed_10m": 3.3,
           "wind_direction_10m": 22,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
           "precipitation": 0
         },
         "hourly": {
@@ -1796,26 +1719,15 @@
       },
       "butwal": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 20.7,
-          "relative_humidity_2m": 78,
-          "apparent_temperature": 22.4,
+          "temperature_2m": 20,
+          "relative_humidity_2m": 74,
+          "apparent_temperature": 21.2,
           "weather_code": 0,
-          "cloud_cover": 1,
-          "wind_speed_10m": 4,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 20.7,
-          "relative_humidity_2m": 77,
-          "apparent_temperature": 22.5,
-          "weather_code": 0,
-          "cloud_cover": 1,
-          "wind_speed_10m": 3.4,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
-          "wind_direction_10m": 18,
+          "cloud_cover": 2,
+          "wind_speed_10m": 3.9,
+          "wind_direction_10m": 13,
           "precipitation": 0
         },
         "hourly": {
@@ -2061,27 +1973,15 @@
       },
       "dharan": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 22.9,
+          "temperature_2m": 20.7,
           "relative_humidity_2m": 72,
-          "apparent_temperature": 25.5,
+          "apparent_temperature": 22.1,
           "weather_code": 0,
           "cloud_cover": 0,
-          "wind_speed_10m": 0.7,
-          "wind_direction_10m": 14,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 22.9,
-          "relative_humidity_2m": 71,
-          "apparent_temperature": 25.4,
-          "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 0.9,
-          "wind_direction_10m": 11,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+          "wind_speed_10m": 3.2,
+          "wind_direction_10m": 16,
           "precipitation": 0
         },
         "hourly": {
@@ -2327,27 +2227,15 @@
       },
       "nepalgunj": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 21.1,
-          "relative_humidity_2m": 94,
-          "apparent_temperature": 24.8,
+          "temperature_2m": 20.1,
+          "relative_humidity_2m": 96,
+          "apparent_temperature": 23.4,
           "weather_code": 0,
           "cloud_cover": 0,
           "wind_speed_10m": 1.7,
-          "wind_direction_10m": 342,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 20.8,
-          "relative_humidity_2m": 96,
-          "apparent_temperature": 24.4,
-          "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 1.6,
-          "wind_direction_10m": 333,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+          "wind_direction_10m": 148,
           "precipitation": 0
         },
         "hourly": {
@@ -2593,27 +2481,15 @@
       },
       "dhangadhi": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-12T01:15",
+          "time": "2026-10-12T05:00",
           "interval": 900,
-          "temperature_2m": 21.5,
-          "relative_humidity_2m": 87,
-          "apparent_temperature": 24.7,
-          "weather_code": 1,
-          "cloud_cover": 25,
+          "temperature_2m": 22.2,
+          "relative_humidity_2m": 83,
+          "apparent_temperature": 25.2,
+          "weather_code": 3,
+          "cloud_cover": 98,
           "wind_speed_10m": 2.3,
-          "wind_direction_10m": 356,
-=======
-          "time": "2026-10-12T01:45",
-          "interval": 900,
-          "temperature_2m": 21.4,
-          "relative_humidity_2m": 86,
-          "apparent_temperature": 24.5,
-          "weather_code": 0,
-          "cloud_cover": 2,
-          "wind_speed_10m": 1.8,
-          "wind_direction_10m": 24,
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+          "wind_direction_10m": 331,
           "precipitation": 0
         },
         "hourly": {
@@ -2860,125 +2736,64 @@
     },
     "aqi": {
       "kathmandu": {
-<<<<<<< HEAD
-        "value": 81,
-        "pm25": 40.6,
-        "pm10": 41.1,
-        "time": "2026-10-12T00:45"
+        "value": 83,
+        "pm25": 39.3,
+        "pm10": 43,
+        "time": "2026-10-12T04:45"
       },
       "pokhara": {
-        "value": 51,
-        "pm25": 9.7,
-        "pm10": 10.5,
-        "time": "2026-10-12T00:45"
+        "value": 47,
+        "pm25": 8.3,
+        "pm10": 13,
+        "time": "2026-10-12T04:45"
       },
       "lalitpur": {
-        "value": 81,
+        "value": 83,
+        "pm25": 39.3,
+        "pm10": 43,
+        "time": "2026-10-12T04:45"
+      },
+      "bhaktapur": {
+        "value": 82,
+        "pm25": 36.6,
+        "pm10": 40,
+        "time": "2026-10-12T04:45"
+      },
+      "biratnagar": {
+        "value": 160,
+        "pm25": 79.6,
+        "pm10": 81,
+        "time": "2026-10-12T04:45"
+      },
+      "bharatpur": {
+        "value": 83,
+        "pm25": 41.2,
+        "pm10": 45.3,
+        "time": "2026-10-12T04:45"
+      },
+      "butwal": {
+        "value": 91,
         "pm25": 40.6,
-        "pm10": 41.1,
-        "time": "2026-10-12T00:45"
-      },
-      "bhaktapur": {
-        "value": 78,
-        "pm25": 42.5,
-        "pm10": 42.8,
-        "time": "2026-10-12T00:45"
-      },
-      "biratnagar": {
-        "value": 168,
-        "pm25": 122.5,
-        "pm10": 124.8,
-        "time": "2026-10-12T00:45"
-      },
-      "bharatpur": {
-        "value": 81,
-        "pm25": 47.6,
-        "pm10": 49.7,
-        "time": "2026-10-12T00:45"
-      },
-      "butwal": {
-        "value": 94,
-        "pm25": 56,
-        "pm10": 57,
-        "time": "2026-10-12T00:45"
-      },
-      "dharan": {
-        "value": 104,
-        "pm25": 53.1,
-        "pm10": 54.2,
-        "time": "2026-10-12T00:45"
-      },
-      "nepalgunj": {
-        "value": 108,
-        "pm25": 46.9,
-        "pm10": 49,
-        "time": "2026-10-12T00:45"
-      },
-      "dhangadhi": {
-        "value": 89,
-        "pm25": 23.5,
-        "pm10": 25.9,
-        "time": "2026-10-12T00:45"
-=======
-        "value": 80,
-        "pm25": 38,
-        "pm10": 38.3,
-        "time": "2026-10-12T01:45"
-      },
-      "pokhara": {
-        "value": 48,
-        "pm25": 7.9,
-        "pm10": 8.8,
-        "time": "2026-10-12T01:45"
-      },
-      "lalitpur": {
-        "value": 80,
-        "pm25": 38,
-        "pm10": 38.3,
-        "time": "2026-10-12T01:45"
-      },
-      "bhaktapur": {
-        "value": 77,
-        "pm25": 39.5,
-        "pm10": 39.8,
-        "time": "2026-10-12T01:45"
-      },
-      "biratnagar": {
-        "value": 167,
-        "pm25": 109.2,
-        "pm10": 111.1,
-        "time": "2026-10-12T01:45"
-      },
-      "bharatpur": {
-        "value": 81,
-        "pm25": 44.5,
-        "pm10": 46.4,
-        "time": "2026-10-12T01:45"
-      },
-      "butwal": {
-        "value": 94,
-        "pm25": 52.4,
-        "pm10": 53.1,
-        "time": "2026-10-12T01:45"
+        "pm10": 42.5,
+        "time": "2026-10-12T04:45"
       },
       "dharan": {
         "value": 103,
-        "pm25": 45.2,
-        "pm10": 45.9,
-        "time": "2026-10-12T01:45"
+        "pm25": 33.2,
+        "pm10": 33.8,
+        "time": "2026-10-12T04:45"
       },
       "nepalgunj": {
-        "value": 106,
-        "pm25": 43.3,
-        "pm10": 45.5,
-        "time": "2026-10-12T01:45"
+        "value": 92,
+        "pm25": 35.5,
+        "pm10": 36.2,
+        "time": "2026-10-12T04:45"
       },
       "dhangadhi": {
-        "value": 87,
-        "pm25": 21.8,
-        "pm10": 24.2,
-        "time": "2026-10-12T01:45"
->>>>>>> 4be5513 (Fix DNS and website indexing issues)
+        "value": 77,
+        "pm25": 13.5,
+        "pm10": 14.5,
+        "time": "2026-10-12T04:45"
       }
     },
     "isLive": true
