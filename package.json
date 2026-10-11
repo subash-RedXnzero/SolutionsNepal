@@ -16,7 +16,6 @@
     "og": "node scripts/generate-og-image.mjs"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.4",
     "@lucide/astro": "^1.32.0",
     "@sbmdkl/nepali-date-converter": "^2.0.5",
     "@tailwindcss/vite": "^4.3.3",

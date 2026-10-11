@@ -227,7 +227,7 @@ async function fetchWeather() {
   };
 }
 
-/* ── Run ──────────────────────────────────────────────────── */
+/* ── Run (all sources in parallel — was sequential, ~4x faster) ── */
 const results = {};
 const jobs = [
   ['forex', fetchForex],
@@ -236,15 +236,17 @@ const jobs = [
   ['weather', fetchWeather],
 ];
 
-for (const [key, fn] of jobs) {
+const outcomes = await Promise.all(jobs.map(async ([key, fn]) => {
   try {
-    results[key] = await fn();
+    const value = await fn();
     console.log(`[live-data] ${key}: OK`);
+    return [key, value];
   } catch (err) {
-    results[key] = { isLive: false, error: String(err?.message || err).slice(0, 160) };
     console.warn(`[live-data] ${key}: FAILED — ${err?.message || err}`);
+    return [key, { isLive: false, error: String(err?.message || err).slice(0, 160) }];
   }
-}
+}));
+for (const [key, value] of outcomes) results[key] = value;
 
 const prev = existsSync(OUT) ? (() => { try { return JSON.parse(readFileSync(OUT, 'utf8')); } catch { return null; } })() : null;
 

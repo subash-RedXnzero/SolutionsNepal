@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal finance and cost-of-living researchers
 date: September 10, 2026
 readTime: 15 min read
-image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1658437711216-1b55fd9ae096?w=1200&h=630&fit=crop"
 tags: [Cost of Living, Kathmandu, Pokhara, Chitwan, Butwal, Nepal]
 relatedTools: [salary-checker, cost-of-living, emi-calculator, electricity-bill, sip-calculator]
 headings:

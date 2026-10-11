@@ -343,10 +343,12 @@ const faqJsonLd = faqs.length > 0 ? [{
 </BaseLayout>
 
 <script>
-  // Reading progress bar
+  // Reading progress bar (rAF-throttled: one layout read per frame max)
   const progressBar = document.getElementById('reading-progress');
   const article = document.querySelector('.post-article');
+  let progressQueued = false;
   function updateProgress() {
+    progressQueued = false;
     if (!progressBar || !article) return;
     const rect = article.getBoundingClientRect();
     const total = article.offsetHeight - window.innerHeight;
@@ -354,21 +356,34 @@ const faqJsonLd = faqs.length > 0 ? [{
     const pct = Math.min(Math.max(scrolled / total * 100, 0), 100);
     progressBar.style.width = `${pct}%`;
   }
-  window.addEventListener('scroll', updateProgress, { passive: true });
+  function queueProgress() {
+    if (progressQueued) return;
+    progressQueued = true;
+    requestAnimationFrame(updateProgress);
+  }
+  window.addEventListener('scroll', queueProgress, { passive: true });
   updateProgress();
 
-  // TOC active state
+  // TOC active state (rAF-throttled, section list cached once)
   const tocLinks = document.querySelectorAll('.toc-link');
-  const sections = document.querySelectorAll('[id]');
+  const sections = Array.from(document.querySelectorAll('[id]'));
+  let tocQueued = false;
   function updateToc() {
+    tocQueued = false;
     let current = '';
-    sections.forEach(s => {
-      const el = s as HTMLElement;
-      if (el.getBoundingClientRect().top <= 120) current = el.id;
-    });
+    for (const s of sections) {
+      if ((s as HTMLElement).getBoundingClientRect().top <= 120) current = (s as HTMLElement).id;
+    }
     tocLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${current}`));
   }
-  window.addEventListener('scroll', updateToc, { passive: true });
+  function queueToc() {
+    if (tocQueued) return;
+    tocQueued = true;
+    requestAnimationFrame(updateToc);
+  }
+  function onScroll() { queueProgress(); queueToc(); }
+  window.removeEventListener('scroll', queueProgress);
+  window.addEventListener('scroll', onScroll, { passive: true });
   updateToc();
 
   // Copy link button

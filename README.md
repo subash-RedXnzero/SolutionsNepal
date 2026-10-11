@@ -26,8 +26,8 @@ Factual information (tax slabs, fees, exchange rates) is compiled from official 
 Public assets:
 - **Images:** Blog cover images are from Unsplash (https://unsplash.com/license) — free to use without attribution, hotlinked via Unsplash CDN. Replace with your own if you prefer local hosting.
 - **Icons:** Lucide (https://lucide.dev/license — ISC) via `@lucide/astro`
-- **Fonts:** Caveat (OFL) locally in `public/fonts/caveat.ttf`, Inter & Noto Sans Devanagari via Google Fonts
-- **PDF worker:** `pdfjs-dist` (Apache-2.0) in `public/pdf.worker.mjs`
+- **Fonts:** Inter & Noto Sans Devanagari via Google Fonts (OFL)
+- **PDF worker:** `pdfjs-dist` (Apache-2.0), bundled from `node_modules` via Vite (no public copy needed)
 
 If you reuse this codebase, keep third-party license notices and replace API keys / live data fetches with your own.
 
@@ -35,7 +35,7 @@ If you reuse this codebase, keep third-party license notices and replace API key
 
 ```
 /
-├── public/             # static assets (favicon, og image, calendar JSON, fonts)
+├── public/             # static assets (favicon, og image, calendar JSON)
 ├── src/
 │   ├── components/     # Astro components
 │   ├── data/           # tools registry, categories, calculators, blog posts

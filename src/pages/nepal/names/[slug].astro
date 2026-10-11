@@ -24,22 +24,28 @@ const originNamesHref = NAMES_CATEGORY_PAGES.includes(name.origin.toLowerCase())
   ? `/nepal/names/${name.origin.toLowerCase()}`
   : `/nepal/names/all?origin=${encodeURIComponent(name.origin)}`;
 
-// Safely resolve similar names — skip broken references
+// Related names — single O(N) pass with a name lookup map.
+// (Was: 3 full-array filters + a find() per similar name ≈ 4N per page × 931 pages.)
+const byName = new Map(nepaliNames.map(n => [n.name, n]));
 const similarNames = (name.similarNames || [])
-  .map(s => nepaliNames.find(n => n.name === s))
+  .map(s => byName.get(s))
   .filter(Boolean);
 
-const sameMeaning = nepaliNames
-  .filter(n => n.slug !== name.slug && n.meaningKeywords.some(k => name.meaningKeywords.includes(k)))
-  .slice(0, 6);
-
-const moreByGender = nepaliNames
-  .filter(n => n.slug !== name.slug && n.gender === name.gender)
-  .slice(0, 6);
-
-const moreByOrigin = nepaliNames
-  .filter(n => n.slug !== name.slug && n.origin === name.origin && n.gender === name.gender)
-  .slice(0, 6);
+const meaningKeys = new Set(name.meaningKeywords || []);
+const sameMeaning = [];
+const moreByGender = [];
+const moreByOrigin = [];
+for (const n of nepaliNames) {
+  if (n.slug === name.slug) continue;
+  if (sameMeaning.length < 6 && (n.meaningKeywords || []).some(k => meaningKeys.has(k))) {
+    sameMeaning.push(n);
+  }
+  if (n.gender === name.gender) {
+    if (moreByGender.length < 6) moreByGender.push(n);
+    if (moreByOrigin.length < 6 && n.origin === name.origin) moreByOrigin.push(n);
+  }
+  if (sameMeaning.length >= 6 && moreByGender.length >= 6 && moreByOrigin.length >= 6) break;
+}
 ---
 
 <BaseLayout

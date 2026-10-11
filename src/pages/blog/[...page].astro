@@ -103,7 +103,7 @@ function getPageUrl(p: number) {
         {sidebarPosts.map(post => (
           <a href={`/blog/${post.slug}`} class="sidebar-item">
             <div class="sidebar-thumb">
-              <Image src={post.image} alt={post.title} width={120} height={80} loading="eager" wrapper={false} />
+              <Image src={post.image} alt={post.title} width={120} height={80} loading="lazy" wrapper={false} />
             </div>
             <span class="sidebar-title">{post.title}</span>
           </a>

@@ -37,7 +37,7 @@ if (!guideFiles.length && !blogFiles.length) {
 
 function parsePost(dir, file) {
   const slug = file.replace(/\.md$/, '');
-  const raw = fs.readFileSync(path.join(dir, file), 'utf8');
+  const raw = fs.readFileSync(path.join(dir, file), 'utf8').replace(/\r\n?/g, '\n');
   const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!fmMatch) throw new Error(`Bad frontmatter: ${file}`);
   const fm = parseFrontmatter(fmMatch[1]);
@@ -55,9 +55,11 @@ const posts = [
   ...blogFiles.map((f) => parsePost(BLOG_DIR, f)),
 ];
 
-// 1. Generate src/data/blog/<slug>.js
+// 1. Generate src/data/blog/<slug>.js (diff-before-write: untouched files keep
+// their mtime so Vite/Astro HMR doesn't rebuild on no-op syncs).
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const seen = new Set();
+let written = 0;
 for (const { slug, fm, headings, sections } of posts) {
   if (seen.has(slug)) throw new Error(`Duplicate slug in edit folders: ${slug}`);
   seen.add(slug);
@@ -85,13 +87,29 @@ for (const { slug, fm, headings, sections } of posts) {
     L.push('  ],');
   }
   L.push('  sections: [', ...sections, '  ],', '};', '');
-  fs.writeFileSync(path.join(OUT_DIR, `${slug}.js`), L.join('\n'));
+  const dest = path.join(OUT_DIR, `${slug}.js`);
+  const next = L.join('\n');
+  let prev = null;
+  try { prev = fs.readFileSync(dest, 'utf8'); } catch { /* new file */ }
+  if (prev !== next) {
+    fs.writeFileSync(dest, next);
+    written++;
+  }
 }
 // Remove orphaned generated files (never touches hand-written files).
+// Reads only a short prefix instead of the whole file to test the marker.
+const MARKER = '// AUTO-GENERATED from Guideedit/';
 for (const f of fs.readdirSync(OUT_DIR).filter((f) => f.endsWith('.js'))) {
   const full = path.join(OUT_DIR, f);
-  const head = fs.readFileSync(full, 'utf8');
-  const isGenerated = head.startsWith('// AUTO-GENERATED from Guideedit/');
+  let head = '';
+  try {
+    const fd = fs.openSync(full, 'r');
+    const buf = Buffer.alloc(MARKER.length);
+    fs.readSync(fd, buf, 0, MARKER.length, 0);
+    fs.closeSync(fd);
+    head = buf.toString('utf8');
+  } catch { continue; }
+  const isGenerated = head.startsWith(MARKER);
   if (isGenerated && !seen.has(f.replace(/\.js$/, ''))) {
     fs.unlinkSync(full);
     console.log(`sync-content: removed deleted post ${f}`);
@@ -120,7 +138,11 @@ B.push('', 'export const blogPosts = [', ...[...kept, ...added].map((e) => `  ${
   'export function getPostBySlug(slug) {', '  return blogPosts.find(p => p.slug === slug);', '}', '',
   'export function getRelatedPosts(currentSlug, category, limit = 3) {', '  return blogPosts',
   '    .filter(p => p.slug !== currentSlug && p.category === category)', '    .slice(0, limit);', '}', '');
-fs.writeFileSync(REG, B.join('\n'));
+const nextReg = B.join('\n');
+if (nextReg !== oldReg) {
+  fs.writeFileSync(REG, nextReg);
+  written++;
+}
 
 // 3. Sync JOURNAL_SLUGS from Blogedit/ membership.
 const GUIDES = path.join(ROOT, 'src/data/guides.js');
@@ -143,11 +165,18 @@ for (const dir of [GUIDE_DIR, BLOG_DIR]) {
     const src = path.join(imgDir, f);
     if (!fs.statSync(src).isFile()) continue;
     const dst = path.join(PUB_IMG, f);
-    if (!fs.existsSync(dst) || fs.statSync(dst).size !== fs.statSync(src).size) {
+    let skip = false;
+    try {
+      const sStat = fs.statSync(src);
+      const dStat = fs.statSync(dst);
+      // Same size and dst at least as new as src → already in sync.
+      if (dStat.size === sStat.size && dStat.mtimeMs >= sStat.mtimeMs) skip = true;
+    } catch { /* dst missing → copy */ }
+    if (!skip) {
       fs.copyFileSync(src, dst);
       copied++;
     }
   }
 }
 
-console.log(`sync-content: ${posts.length} posts (${guideFiles.length} guides, ${blogFiles.length} blog), ${added.length} new, ${copied} images copied.`);
+console.log(`sync-content: ${posts.length} posts (${guideFiles.length} guides, ${blogFiles.length} blog), ${added.length} new, ${written} files written, ${copied} images copied.`);

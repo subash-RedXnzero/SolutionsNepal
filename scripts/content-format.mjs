@@ -27,7 +27,7 @@ export function parseFrontmatter(text) {
   const data = { headings: [], faqs: [] };
   let mode = null;
   let cur = null;
-  for (const line of text.split('\n')) {
+  for (const line of String(text).replace(/\r\n?/g, '\n').split('\n')) {
     if (mode === 'headings') {
       let m = line.match(/^  - id: (.*)$/);
       if (m) {
@@ -96,7 +96,7 @@ export function jsStr(s) {
 
 export function bodyToSections(body) {
   const sections = [];
-  for (const raw of body.split(/\n{2,}/)) {
+  for (const raw of String(body).replace(/\r\n?/g, '\n').split(/\n{2,}/)) {
     const block = raw.trim();
     if (!block) continue;
     const lines = block.split('\n');

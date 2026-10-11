@@ -26,6 +26,7 @@ const iconPaths: Record<string, string> = {
   camera: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
   image: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
   baby: '<circle cx="12" cy="8" r="4"/><path d="M12 4c.6 1.2.6 2.8 0 4M9 13c-2 1-3 3-3 6h12c0-3-1-5-3-6"/>',
+  briefcase: '<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
   car: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
   'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
   wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/>',
@@ -108,6 +109,15 @@ function isActive(href: string) {
   }
   .tools-layout-sidebar { min-width: 0; }
   .tools-layout-sidebar-sticky { position: sticky; top: 84px; }
+  /* Same left offsets as .tl-side on /nepal so the sidebar sits at the
+     identical viewport position on every page (desktop only — the sidebar
+     is hidden at tablet widths and below). */
+  @media (min-width: 1024px) {
+    .tools-layout-sidebar { margin-left: -48px; }
+  }
+  @media (min-width: 1600px) {
+    .tools-layout-sidebar { margin-left: -68px; }
+  }
   /* Single-column mode (individual tools, weather): STRUCTURAL, not an override —
      display:block removes the grid entirely, so no sidebar track can ever exist.
      The outer element itself becomes the centered content container, so Back,
@@ -145,7 +155,7 @@ function isActive(href: string) {
     content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px;
     border-radius: 0 2px 2px 0; background: var(--nk-accent);
   }
-  .tools-layout-dot { width: 7px; height: 7px; margin: 0 4px; border-radius: 50%; background: var(--nk-accent); flex-shrink: 0; }
+  .tools-layout-dot { width: 7px; height: 7px; margin: 0 6.5px; border-radius: 50%; background: var(--nk-accent); flex-shrink: 0; } /* 20px slot: aligns labels with .tools-layout-icon rows */
   .tools-layout-icon { display: flex; width: 20px; height: 20px; align-items: center; justify-content: center; color: var(--nk-text-tertiary); flex-shrink: 0; }
   .tools-layout-item.active .tools-layout-icon { color: var(--nk-accent); }
   .tools-layout-name { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

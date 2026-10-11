@@ -340,9 +340,11 @@ const activeType = VALID_IDS.includes(initialType as any) ? initialType : 'text'
 </style>
 
 <script>
-  import QRCode from 'qrcode';
   import { buildPayload } from '../../lib/qr/payloads.js';
   import { saveFileAs } from '../../lib/utils/save-file.js';
+
+  // QR lib (~100KB) loads on first Generate click, not with page JS —
+  // keeps the 6 QR pages' initial bundle light (same pattern as PdfTool).
 
   const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -415,7 +417,13 @@ const activeType = VALID_IDS.includes(initialType as any) ? initialType : 'text'
   }
 
   // ── Render pipeline (manual — triggered by Generate QR Code) ──
+  let qrLib = null;
+  async function getQrLib() {
+    if (!qrLib) qrLib = (await import('qrcode')).default;
+    return qrLib;
+  }
   async function encode(payload: string) {
+    const QRCode = await getQrLib();
     await QRCode.toCanvas(canvas, payload, { ...RENDER_OPTS, width: 720 });
     // qrcode's renderer injects inline width/height px styles on the canvas;
     // remove them so the scoped stylesheet controls responsive preview sizing.

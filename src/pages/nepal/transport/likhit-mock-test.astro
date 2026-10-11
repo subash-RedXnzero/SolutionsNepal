@@ -3,8 +3,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
 import RelatedTools from '../../../components/ui/RelatedTools.astro';
 
-const title = 'ड्राइभिङ लिखित मक टेस्ट नेपाल — अभ्यास प्रश्नहरू | SolutionsNepal';
-const description = 'नेपालका लागि निःशुल्क ड्राइभिङ लिखित मक टेस्ट: संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — तत्काल उत्तर, टाइमर र स्कोरसहित।';
+const title = 'Driving Likhit Mock Test नेपाल — अभ्यास प्रश्नहरू | SolutionsNepal';
+const description = 'नेपालका लागि निःशुल्क Driving Likhit Mock Test: संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — तत्काल उत्तर, टाइमर र स्कोरसहित।';
 
 const faqItems = [
   {
@@ -37,7 +37,7 @@ const faqItems = [
     {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
-      name: 'ड्राइभिङ लिखित मक टेस्ट नेपाल',
+      name: 'Driving Likhit Mock Test नेपाल',
       description: 'नेपालको ड्राइभिङ लिखित परीक्षाको अभ्यास — २० वटा अनियमित प्रश्न, टाइमर, तत्काल व्याख्या र स्कोरसहित।',
       url: 'https://solutionsnepal.com/nepal/transport/likhit-mock-test',
       applicationCategory: 'EducationalApplication',
@@ -63,7 +63,7 @@ const faqItems = [
     ]} />
 
     <div class="mb-5">
-      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">ड्राइभिङ लिखित मक टेस्ट</h1>
+      <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color:var(--nk-text);">Driving Likhit Mock Test</h1>
       <p class="text-[13px] leading-relaxed" style="color:var(--nk-text-secondary);">संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — तत्काल उत्तर, २०-मिनेट टाइमर र पूर्ण स्कोर समीक्षासहित।</p>
     </div>
 
@@ -126,15 +126,6 @@ const faqItems = [
             </symbol>
           </defs>
         </svg>
-
-        <!-- LANGUAGE TOGGLE -->
-        <div class="flex items-center justify-between gap-3 mb-4">
-          <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">प्रश्नको भाषा / Language</p>
-          <div class="flex rounded-full border overflow-hidden" style="border-color:var(--nk-border);">
-            <button id="lq-lang-ne" type="button" class="lq-lang is-active">नेपाली</button>
-            <button id="lq-lang-en" type="button" class="lq-lang">English</button>
-          </div>
-        </div>
 
         <!-- START SCREEN -->
         <div id="lq-start-screen">
@@ -305,13 +296,6 @@ const faqItems = [
   :global(.lq-sign-svg) { width: 96px; height: 96px; display: block; margin: 0 auto 8px; }
   :global(.lq-sign-cap) { margin: 0; font-size: 11.5px; color: var(--nk-text-tertiary); }
   :global(.lq-rev-sign) { width: 34px; height: 34px; flex-shrink: 0; vertical-align: -9px; margin-right: 6px; }
-  /* Language toggle */
-  :global(.lq-lang) {
-    padding: 6px 14px; font-size: 12.5px; font-weight: 600;
-    color: var(--nk-text-secondary); background: transparent;
-    cursor: pointer; border: none;
-  }
-  :global(.lq-lang.is-active) { color: #fff; background: var(--nk-accent); border-radius: 999px; }
 </style>
 
 <script>
@@ -323,8 +307,8 @@ const faqItems = [
 
   const $ = (id) => document.getElementById(id);
   const KEYS = ['A', 'B', 'C', 'D'];
-  // Default to Nepali; English available via toggle.
-  let LANG = 'ne';
+  // Quiz runs in Nepali only.
+  const LANG = 'ne';
 
   const STR = {
     ne: {
@@ -509,7 +493,7 @@ const faqItems = [
       b.addEventListener('click', () => answer(i));
       box.append(b);
     });
-    // If language was toggled after answering, repaint the answered state.
+    // Repaint the answered state when re-rendering.
     if (picked[idx] !== -1) paintAnswered(picked[idx], false);
   }
 
@@ -589,19 +573,6 @@ const faqItems = [
     $('lq-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function setLang(next) {
-    if (LANG === next) return;
-    LANG = next;
-    $('lq-lang-ne').classList.toggle('is-active', LANG === 'ne');
-    $('lq-lang-en').classList.toggle('is-active', LANG === 'en');
-    if (!paper.length) return;
-    if (finished) {
-      renderResult();
-    } else if ($('lq-quiz-screen').style.display !== 'none') {
-      renderQ();
-    }
-  }
-
   function escapeHtml(s) {
     return String(s ?? '')
       .replace(/&/g, '&amp;')
@@ -611,8 +582,6 @@ const faqItems = [
   }
 
   $('lq-start-btn').addEventListener('click', start);
-  $('lq-lang-ne').addEventListener('click', () => setLang('ne'));
-  $('lq-lang-en').addEventListener('click', () => setLang('en'));
   $('lq-next-btn').addEventListener('click', () => {
     if (idx < paper.length - 1) {
       idx += 1;

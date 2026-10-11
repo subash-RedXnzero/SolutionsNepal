@@ -18,6 +18,14 @@ export const categories = [
     color: '#059669',
   },
   {
+    id: 'business',
+    name: 'Business',
+    description: 'Break-even, registration costs & business calculators',
+    icon: 'briefcase',
+    href: '/nepal/business',
+    color: '#475569',
+  },
+  {
     id: 'nepse',
     name: 'NEPSE',
     description: 'Nepal stock exchange tools and calculators',
@@ -127,6 +135,7 @@ export const categories = [
 export const CATEGORY_ORDER = [
   'date',
   'finance',
+  'business',
   'nepse',
   'land',
   'gold',

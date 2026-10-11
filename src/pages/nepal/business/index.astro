@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import ToolsLayout from '../../../components/layout/ToolsLayout.astro';
+import CategoryChips from '../../../components/navigation/CategoryChips.astro';
+import { getToolsByCategory } from '../../../data/tools.js';
+
+const tools = getToolsByCategory('business');
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout
+  title="Nepal Business Tools — Break-Even & Registration Cost"
+  description="Free Nepal business tools: break-even calculator, business registration cost estimator, and more."
+>
+  <ToolsLayout currentPath={currentPath} categoryPage={true}>
+    <Breadcrumbs items={[
+      { label: 'Nepal', href: '/nepal' },
+      { label: 'Business' },
+    ]} />
+
+    <div class="page-header">
+      <h1>Business</h1>
+      <p>Free Nepal business tools: break-even calculator, registration cost estimator, and more.</p>
+    </div>
+
+    <CategoryChips currentId="business" />
+
+    <div class="tool-grid">
+      {tools.map(tool => (
+        <a href={tool.href} class="tool-card">
+          <div class="tool-info">
+            <div class="tool-title">{tool.title}</div>
+            <div class="tool-desc">{tool.description}</div>
+          </div>
+          <svg class="tool-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      ))}
+    </div>
+  </ToolsLayout>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: 28px;
+  }
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 4px;
+  }
+  .page-header p {
+    font-size: 13px;
+    color: var(--nk-text-secondary);
+  }
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  /* Odd-count groups: last card spans the row — no empty holes (matches /nepal) */
+  .tool-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .tool-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .tool-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--nk-text);
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tool-desc {
+    font-size: 12px;
+    color: var(--nk-text-tertiary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .tool-grid { grid-template-columns: 1fr; }
+    .tool-card { min-height: 44px; }
+  }
+</style>

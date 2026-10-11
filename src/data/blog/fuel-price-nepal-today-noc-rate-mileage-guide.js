@@ -10,7 +10,7 @@ export const fuelPriceNepalTodayNocRateMileageGuidePost = {
   authorCredential: 'Nepal utilities researchers',
   date: 'September 27, 2026',
   readTime: '8 min read',
-  image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1748761751275-e55a2a29e1bf?w=1200&h=630&fit=crop',
   tags: ['Fuel Price Nepal', 'NOC Petrol Price', 'Diesel Price Nepal', 'Mileage', 'Utilities'],
   relatedTools: ['fuel-price', 'fuel-cost', 'ownership-cost'],
   faqs: [

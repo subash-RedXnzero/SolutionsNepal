@@ -279,13 +279,13 @@ const pages = {
   },
 
   '/nepal/transport/likhit-mock-test': {
-    title: 'ड्राइभिङ लिखित मक टेस्ट नेपाल — अभ्यास प्रश्नहरू | SolutionsNepal',
+    title: 'Driving Likhit Mock Test नेपाल — अभ्यास प्रश्नहरू | SolutionsNepal',
     description:
-      'नेपालका लागि निःशुल्क ड्राइभिङ लिखित मक टेस्ट: संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — तत्काल उत्तर, टाइमर र स्कोरसहित।',
+      'नेपालका लागि निःशुल्क Driving Likhit Mock Test: संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — तत्काल उत्तर, टाइमर र स्कोरसहित।',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
-      name: 'ड्राइभिङ लिखित मक टेस्ट नेपाल',
+      name: 'Driving Likhit Mock Test नेपाल',
       description: 'नेपालको ड्राइभिङ लिखित परीक्षाको अभ्यास — २० वटा अनियमित प्रश्न, टाइमर, तत्काल व्याख्या र स्कोरसहित।',
       url: `${SITE_URL}/nepal/transport/likhit-mock-test`,
       applicationCategory: 'EducationalApplication',
@@ -1354,7 +1354,7 @@ const SEO_FIXES = {
   '/nepal/finance/sip-calculator': { title: 'SIP Calculator Nepal — Returns & Growth | SolutionsNepal', description: 'Project SIP growth in Nepal: monthly, annual and step-up SIPs with invested amount, gains and final value. Includes SIP vs FD compare.' },
   '/nepal/finance/fd-calculator': { title: 'FD Calculator Nepal — Fixed Deposit Maturity | SolutionsNepal', description: 'Calculate FD returns in Nepal: maturity value, interest and after-tax payout with quarterly, monthly or annual compounding. Free.' },
   '/nepal/finance/rent-vs-buy': { title: 'Rent vs Buy Calculator Nepal — Rent or Buy? | SolutionsNepal', description: 'Should you rent or buy in Nepal? Compare total rent, EMI, maintenance, appreciation and breakeven year. Free calculator.' },
-  '/nepal/transport/likhit-mock-test': { title: 'ड्राइभिङ लिखित मक टेस्ट नेपाल — अभ्यास | SolutionsNepal', description: 'निःशुल्क लिखित मक टेस्ट: संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — टाइमर, व्याख्या र स्कोरसहित।' },
+  '/nepal/transport/likhit-mock-test': { title: 'Driving Likhit Mock Test नेपाल — अभ्यास | SolutionsNepal', description: 'निःशुल्क लिखित मक टेस्ट: संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — टाइमर, व्याख्या र स्कोरसहित।' },
   '/nepal/nepse/profit-loss': { title: 'NEPSE Profit Calculator — After Fees | SolutionsNepal', description: 'Calculate NEPSE stock profit or loss after broker commission, SEBON fee and DP charges. Free Nepal share-trading calculator.' },
   '/nepal/property/land-registration': { title: 'Land Registration Fee Calculator Nepal | SolutionsNepal', description: 'Estimate land registration fees, surcharges and transfer costs in Nepal. Free jagga-pass cost calculator with location factors.' },
   '/nepal/tools/cheque-amount-in-words': { title: 'Cheque Amount in Words Nepal — Guide | SolutionsNepal', description: 'Cheque amounts in words done right: रुपैयाँ … मात्र plus Rupees … Only with paisa, auto-generated for any amount. Avoid bounces.' },
