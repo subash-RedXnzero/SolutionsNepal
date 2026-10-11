@@ -10,7 +10,7 @@ export const embossedNumberPlateOnlineApplicationNepalGuidePost = {
   authorCredential: 'Nepal transport-administration researchers',
   date: 'September 16, 2026',
   readTime: '15 min read',
-  image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=630&fit=crop&auto=format',
   tags: ['Embossed Number Plate Online Application Nepal 2026', 'Embossed Number Plate', 'EVNP', 'HSNP', 'DoTM', 'RFID', 'Bluebook', 'Vehicles'],
   relatedTools: ['vehicle-tax-new', 'government-service-cost', 'nepali-calendar', 'vehicle-resale'],
   faqs: [

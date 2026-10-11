@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal business-registration researchers
 date: September 16, 2026
 readTime: 19 min read
-image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=630&fit=crop&auto=format"
 tags: [Company Registration Nepal Online 2026, Private Limited Company, OCR CAMIS, MOA, AOA, PAN, VAT, Business]
 relatedTools: [business-registration-cost, vat-calculator, break-even, online-selling-profit]
 headings:

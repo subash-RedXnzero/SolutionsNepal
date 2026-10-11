@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax and documentation researchers
 date: September 14, 2026
 readTime: 13 min read
-image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=630&fit=crop&auto=format"
 tags: [Personal PAN Nepal, PAN Registration, e-PAN, IRD Nepal, Nagarik App, Documents]
 relatedTools: [salary-checker, freelancer-take-home]
 headings:

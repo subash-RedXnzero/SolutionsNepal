@@ -10,7 +10,7 @@ export const companyRegistrationOnlineNepalGuidePost = {
   authorCredential: 'Nepal business-registration researchers',
   date: 'September 16, 2026',
   readTime: '25 min read',
-  image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=630&fit=crop&auto=format',
   tags: ['Company Registration Nepal', 'CAMIS', 'OCR', 'Private Limited Company', 'MOA', 'AOA', 'Business'],
   relatedTools: ['business-registration-cost', 'break-even', 'online-selling-profit', 'freelancer-take-home'],
   faqs: [

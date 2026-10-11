@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 3, 2026
 readTime: 7 min read
-image: "https://images.unsplash.com/photo-1768059279306-98b49f47be92?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1768059279306-98b49f47be92?w=1200&h=630&fit=crop&auto=format"
 tags: [Traffic, Fines, Vehicles, Nepal]
 relatedTools: [vehicle-tax-new, fuel-price]
 headings:

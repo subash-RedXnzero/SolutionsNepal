@@ -10,7 +10,7 @@ export const calculateAgePost = {
   authorCredential: 'Financial analysts and Nepal tax experts',
   date: 'August 2, 2026',
   readTime: '2 min read',
-  image: 'https://images.unsplash.com/photo-1544126592-807ade215a0b?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1544126592-807ade215a0b?w=1200&h=630&fit=crop&auto=format',
   tags: ['Calculators', 'Age', 'Date'],
   headings: [
     { id: 'introduction', text: 'Introduction', level: 2 },

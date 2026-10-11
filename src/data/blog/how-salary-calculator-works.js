@@ -10,7 +10,7 @@ export const howSalaryCalculatorWorksPost = {
   authorCredential: 'Financial analysts and Nepal tax experts',
   date: 'August 10, 2026',
   readTime: '3 min read',
-  image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&h=630&fit=crop&auto=format',
   tags: ['Finance', 'Salary', 'Tax', 'SSF'],
   headings: [
     { id: 'introduction', text: 'Introduction', level: 2 },

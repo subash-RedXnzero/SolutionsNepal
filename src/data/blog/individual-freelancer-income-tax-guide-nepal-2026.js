@@ -10,7 +10,7 @@ export const individualFreelancerIncomeTaxGuideNepal2026Post = {
   authorCredential: 'Nepal tax and personal-finance researchers',
   date: 'September 14, 2026',
   readTime: '17 min read',
-  image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1200&h=630&fit=crop&auto=format',
   tags: ['Income Tax Nepal', 'Freelancer Tax Nepal', 'Foreign Freelance Tax', 'PAN Nepal', 'IRD', 'Finance'],
   relatedTools: ['freelancer-take-home', 'salary-checker'],
   faqs: [

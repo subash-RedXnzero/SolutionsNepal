@@ -440,8 +440,16 @@
       chip.style.background = 'var(--nk-surface)';
       chip.style.color = 'var(--nk-text)';
       chip.style.border = '1px solid var(--nk-border)';
-      chip.innerHTML = `${ch.name} <button class="ml-0.5 text-[13px] leading-none font-bold transition-opacity hover:opacity-60" style="color:var(--nk-text-tertiary);">×</button>`;
-      chip.querySelector('button')!.addEventListener('click', () => { customHolidays.splice(i, 1); renderCustomHolidays(); });
+      // NOTE: ch.name is raw user input — render via textContent, never innerHTML.
+      const label = document.createElement('span');
+      label.textContent = ch.name;
+      const remove = document.createElement('button');
+      remove.className = 'ml-0.5 text-[13px] leading-none font-bold transition-opacity hover:opacity-60';
+      remove.style.color = 'var(--nk-text-tertiary)';
+      remove.textContent = '×';
+      remove.setAttribute('aria-label', 'Remove custom holiday');
+      remove.addEventListener('click', () => { customHolidays.splice(i, 1); renderCustomHolidays(); });
+      chip.append(label, remove);
       customListEl.appendChild(chip);
     });
   }

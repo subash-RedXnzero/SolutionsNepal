@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal government-services researchers
 date: September 14, 2026
 readTime: 15 min read
-image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=1200&h=630&fit=crop&auto=format"
 tags: [Social Security Allowance Nepal, Senior Citizen Allowance, DONIDCR, NID, Government Services]
 relatedTools: [government-service-cost, nepali-age-calculator]
 headings:

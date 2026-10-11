@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal digital-government researchers
 date: September 16, 2026
 readTime: 14 min read
-image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=630&fit=crop&auto=format"
 tags: [Nagarik App Nepal Registration Guide 2026, Nagarik App, Digital Driving License, National ID, PAN, Vehicle Bluebook, Voter ID, e-KYC, Documents]
 relatedTools: [government-service-cost, passport-size-photo]
 headings:

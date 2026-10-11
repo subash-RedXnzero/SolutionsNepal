@@ -195,7 +195,16 @@ const { mode } = Astro.props;
 
         const info = document.createElement('div');
         info.className = 'min-w-0 flex-1';
-        info.innerHTML = `<p class="truncate text-sm font-medium" style="color:var(--nk-text)">${file.name}</p><p class="meta text-xs" style="color:var(--nk-text-secondary)">${fmt(file.size)}</p>`;
+        // NOTE: file.name is attacker-controlled — never interpolate into HTML.
+        const nameP = document.createElement('p');
+        nameP.className = 'truncate text-sm font-medium';
+        nameP.style.color = 'var(--nk-text)';
+        nameP.textContent = file.name;
+        const sizeP = document.createElement('p');
+        sizeP.className = 'meta text-xs';
+        sizeP.style.color = 'var(--nk-text-secondary)';
+        sizeP.textContent = fmt(file.size);
+        info.append(nameP, sizeP);
         row.append(info);
 
         /* load page count for PDFs */

@@ -10,7 +10,7 @@ export const housePropertyValuationLandTaxBhumiKarNepalGuidePost = {
   authorCredential: 'Nepal property and local-government researchers',
   date: 'September 14, 2026',
   readTime: '16 min read',
-  image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop&auto=format',
   tags: ['Sarkari Mulyankan', 'Bhumi Kar Nepal', 'House Tax Nepal', 'Property Valuation', 'Malpot', 'Nepal'],
   relatedTools: ['land-registration', 'ropani-to-aana'],
   faqs: [

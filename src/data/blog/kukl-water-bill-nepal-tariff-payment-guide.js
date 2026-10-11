@@ -10,7 +10,7 @@ export const kuklWaterBillNepalTariffPaymentGuidePost = {
   authorCredential: 'Nepal utilities researchers',
   date: 'September 27, 2026',
   readTime: '9 min read',
-  image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop&auto=format',
   tags: ['KUKL Water Bill', 'KUKL Nepal', 'Water Bill Nepal', 'Utilities'],
   relatedTools: ['kukl-water-bill', 'electricity-bill', 'cost-of-living'],
   faqs: [

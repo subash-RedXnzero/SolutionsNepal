@@ -10,7 +10,7 @@ export const landMeasurementNepalPost = {
   authorCredential: 'Financial analysts and Nepal tax experts',
   date: 'August 12, 2026',
   readTime: '5 min read',
-  image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&h=630&fit=crop&auto=format',
   tags: ['Nepal', 'Land', 'Measurement', 'Converter'],
   headings: [
     { id: 'introduction', text: 'Introduction', level: 2 },

@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 27, 2026
 readTime: 9 min read
-image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop&auto=format"
 tags: [Nata Pramanit, Relationship Certificate Nepal, Ward Office, Citizenship, Documents]
 relatedTools: [government-service-cost, passport-size-photo, nepali-calendar]
 headings:

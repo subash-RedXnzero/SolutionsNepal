@@ -10,7 +10,7 @@ export const internationalDrivingPermitIdpNepalGuidePost = {
   authorCredential: 'Nepal documentation researchers',
   date: 'September 10, 2026',
   readTime: '8 min read',
-  image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1200&h=630&fit=crop&auto=format',
   tags: ['IDP', 'Driving Abroad', 'Driving License', 'Vehicles', 'Nepal'],
   relatedTools: ['vehicle-tax-new', 'fuel-cost'],
   faqs: [

@@ -10,7 +10,7 @@ export const openNepaliBankAccountOnlineEkycVkycGuidePost = {
   authorCredential: 'Nepal banking and personal-finance researchers',
   date: 'September 14, 2026',
   readTime: '15 min read',
-  image: 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200&h=630&fit=crop&auto=format',
   tags: ['Open Bank Account Online Nepal', 'eKYC Nepal', 'Video KYC Nepal', 'NRN Banking', 'Remittance Account', 'Finance'],
   relatedTools: ['foreign-exchange', 'salary-checker'],
   faqs: [

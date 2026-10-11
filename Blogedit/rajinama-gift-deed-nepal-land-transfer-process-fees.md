@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and land researchers
 date: September 27, 2026
 readTime: 12 min read
-image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop&auto=format"
 tags: [Rajinama Nepal, Gift Deed Nepal, Bakaspapatra, Lalpurja Transfer, Malpot, Property Nepal]
 relatedTools: [land-registration, property-registration-cost, ropani-to-aana]
 headings:

@@ -21,6 +21,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.2",
     "docx": "^9.7.1",
+    "esbuild": "^0.28.2",
     "jszip": "^3.10.1",
     "nepali-date-engine": "^1.0.0",
     "pako": "^3.0.1",

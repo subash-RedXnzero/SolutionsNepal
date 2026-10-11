@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and municipal researchers
 date: September 27, 2026
 readTime: 14 min read
-image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&h=630&fit=crop&auto=format"
 tags: [Ghar Naksa Pass, Building Permit Nepal, Naksa Pass, EBPS, Property Nepal]
 relatedTools: [house-construction-cost, construction-material, land-affordability, ropani-to-aana]
 headings:

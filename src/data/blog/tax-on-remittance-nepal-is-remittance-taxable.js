@@ -10,7 +10,7 @@ export const taxOnRemittanceNepalIsRemittanceTaxablePost = {
   authorCredential: 'Nepal tax and personal-finance researchers',
   date: 'September 14, 2026',
   readTime: '12 min read',
-  image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop&auto=format',
   tags: ['Remittance Tax Nepal', 'Foreign Income Nepal', 'Tax Residency Nepal', 'Bank Interest Tax', 'Finance'],
   relatedTools: ['foreign-exchange', 'salary-checker'],
   faqs: [

@@ -10,7 +10,7 @@ export const nebGpaCalculatorNepalClass1112PercentageGuidePost = {
   authorCredential: 'Nepal education researchers',
   date: 'September 26, 2026',
   readTime: '12 min read',
-  image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=630&fit=crop&auto=format',
   tags: ['NEB GPA Calculator', 'NEB Grading System', 'Class 12 GPA', 'SEE GPA', 'NEB Percentage', 'Education Nepal'],
   relatedTools: ['neb-gpa', 'see-gpa', 'gpa-percentage', 'cgpa-calculator'],
   faqs: [

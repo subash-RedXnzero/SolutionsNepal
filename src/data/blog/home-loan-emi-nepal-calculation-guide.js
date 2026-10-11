@@ -10,7 +10,7 @@ export const homeLoanEmiNepalCalculationGuidePost = {
   authorCredential: 'Nepal finance researchers',
   date: 'September 10, 2026',
   readTime: '14 min read',
-  image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&h=630&fit=crop&auto=format',
   tags: ['Home Loan', 'EMI', 'Base Rate', 'NRB', 'Finance', 'Nepal'],
   relatedTools: ['emi-calculator', 'salary-checker', 'home-loan-down-payment', 'sip-calculator'],
   faqs: [

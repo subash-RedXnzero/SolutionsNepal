@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation and election researchers
 date: September 25, 2026
 readTime: 16 min read
-image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1200&h=630&fit=crop&auto=format"
 tags: [Voter ID Nepal, Matadata Namawali, Election Commission Nepal, Voter Registration 2026, NIN, Documents]
 relatedTools: [government-service-cost, nepali-calendar, passport-size-photo]
 headings:

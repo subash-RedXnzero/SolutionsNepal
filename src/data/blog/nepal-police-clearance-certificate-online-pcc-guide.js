@@ -10,7 +10,7 @@ export const nepalPoliceClearanceCertificateOnlinePccGuidePost = {
   authorCredential: 'Nepal documentation researchers',
   date: 'September 14, 2026',
   readTime: '14 min read',
-  image: 'https://images.unsplash.com/photo-1453873531674-2151bcd01707?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1453873531674-2151bcd01707?w=1200&h=630&fit=crop&auto=format',
   tags: ['Police Clearance Nepal', 'PCC Nepal', 'OPCR', 'Nagarik App', 'MOFA Attestation', 'Documents'],
   relatedTools: ['passport-size-photo'],
   faqs: [

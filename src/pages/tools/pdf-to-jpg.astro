@@ -492,7 +492,16 @@ const faqItems = [
         row.append(icon);
         const info = document.createElement('div');
         info.className = 'min-w-0 flex-1';
-        info.innerHTML = `<p class="truncate text-sm font-medium" style="color:#171717">${file.name}</p><p class="meta text-xs" style="color:#6B6B6B">${fmt(file.size)}</p>`;
+        // NOTE: file.name is attacker-controlled — never interpolate into HTML.
+        const nameP = document.createElement('p');
+        nameP.className = 'truncate text-sm font-medium';
+        nameP.style.color = '#171717';
+        nameP.textContent = file.name;
+        const sizeP = document.createElement('p');
+        sizeP.className = 'meta text-xs';
+        sizeP.style.color = '#6B6B6B';
+        sizeP.textContent = fmt(file.size);
+        info.append(nameP, sizeP);
         row.append(info);
         if (file) {
           (async () => {

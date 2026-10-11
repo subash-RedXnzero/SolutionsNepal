@@ -1,7 +1,6 @@
-# Cloudflare Pages redirects — mirrors `redirects` in astro.config.mjs
-# (Vercel reads vercel.json; Cloudflare needs this file instead).
-# Used only if/when hosting moves to Cloudflare Pages. Keep in sync
-# with astro.config.mjs. Format: <from> <to> <status>
+# Cloudflare Pages redirects.
+# <from> <to> <status> - keep in sync with astro.config.mjs redirects.
+
 /tools /nepal 301
 /best-remittance-exchange-rate-nepal-guide /blog/best-remittance-exchange-rate-nepal-guide 301
 /nepal/foreign-job-salary-savings /nepal/finance/foreign-job-salary-savings 301
@@ -13,3 +12,52 @@
 /tools/dv-lottery-photo /tools/passport-photo-resizer 301
 /tools/citizenship-photo /tools/passport-photo-resizer 301
 /tools/convert /tools/image-compressor 301
+/nepal/tools/dashain-bonus-calculator /nepal/finance/dashain-bonus-calculator 301
+
+# Legacy /blog/* guides moved to /guides/* (ported from vercel.json).
+/tools/logo-size-resizer /tools/photo/logo-size-resizer 301
+/blog/best-remittance-exchange-rate-nepal-guide /guides/best-remittance-exchange-rate-nepal-guide 301
+/blog/bs-to-ad-conversion /guides/bs-to-ad-conversion 301
+/blog/buying-gold-nepal-hallmark-tola-purity-guide /guides/buying-gold-nepal-hallmark-tola-purity-guide 301
+/blog/calculate-age /guides/calculate-age 301
+/blog/calculate-bmi /guides/calculate-bmi 301
+/blog/calculate-percentage /guides/calculate-percentage 301
+/blog/company-registration-online-nepal-guide /guides/company-registration-online-nepal-guide 301
+/blog/e-passport-online-application-nepal-guide /guides/e-passport-online-application-nepal-guide 301
+/blog/embossed-number-plate-online-application-nepal-guide /guides/embossed-number-plate-online-application-nepal-guide 301
+/blog/gold-weight-calculation /guides/gold-weight-calculation 301
+/blog/home-loan-emi-nepal-calculation-guide /guides/home-loan-emi-nepal-calculation-guide 301
+/blog/house-property-valuation-land-tax-bhumi-kar-nepal-guide /guides/house-property-valuation-land-tax-bhumi-kar-nepal-guide 301
+/blog/how-salary-calculator-works /guides/how-salary-calculator-works 301
+/blog/how-to-calculate-emi-nepal /guides/how-to-calculate-emi-nepal 301
+/blog/individual-freelancer-income-tax-guide-nepal-2026 /guides/individual-freelancer-income-tax-guide-nepal-2026 301
+/blog/international-driving-permit-idp-nepal-guide /guides/international-driving-permit-idp-nepal-guide 301
+/blog/ipo-result-meroshare-nepse-allotment-guide /guides/ipo-result-meroshare-nepse-allotment-guide 301
+/blog/labour-permit-nepal-first-time-walkthrough /guides/labour-permit-nepal-first-time-walkthrough 301
+/blog/land-measurement-nepal /guides/land-measurement-nepal 301
+/blog/land-registration-fees-malpot-nepal-guide /guides/land-registration-fees-malpot-nepal-guide 301
+/blog/mofa-document-attestation-nepal-online-guide /guides/mofa-document-attestation-nepal-online-guide 301
+/blog/nagarik-app-nepal-registration-digital-id-guide /guides/nagarik-app-nepal-registration-digital-id-guide 301
+/blog/nagarik-app-nepal-registration-digital-services-guide /guides/nagarik-app-nepal-registration-digital-services-guide 301
+/blog/national-id-card-nepal-status-check-guide /guides/national-id-card-nepal-status-check-guide 301
+/blog/national-id-card-nepal-who-needs-one-now /guides/national-id-card-nepal-who-needs-one-now 301
+/blog/national-id-card-online-registration-nepal-guide /guides/national-id-card-online-registration-nepal-guide 301
+/blog/nepal-citizenship-certificate-documents-by-case /guides/nepal-citizenship-certificate-documents-by-case 301
+/blog/nepal-driving-license-trial-date-route-guide /guides/nepal-driving-license-trial-date-route-guide 301
+/blog/nepal-driving-license-trial-fees-rejections /guides/nepal-driving-license-trial-fees-rejections 301
+/blog/nepal-online-driving-license-edlvrs-portal-guide /guides/nepal-online-driving-license-edlvrs-portal-guide 301
+/blog/nepal-police-clearance-certificate-online-pcc-guide /guides/nepal-police-clearance-certificate-online-pcc-guide 301
+/blog/nepali-passport-renewal-process-documents-fees /guides/nepali-passport-renewal-process-documents-fees 301
+/blog/noc-nepal-when-you-need-one-and-how-long-it-takes /guides/noc-nepal-when-you-need-one-and-how-long-it-takes 301
+/blog/open-demat-account-mero-share-nepal-2026 /guides/open-demat-account-mero-share-nepal-2026 301
+/blog/open-nepali-bank-account-online-ekyc-vkyc-guide /guides/open-nepali-bank-account-online-ekyc-vkyc-guide 301
+/blog/pan-vat-online-registration-nepal-guide /guides/pan-vat-online-registration-nepal-guide 301
+/blog/personal-pan-card-online-nepal-registration-guide /guides/personal-pan-card-online-nepal-registration-guide 301
+/blog/register-company-in-nepal-online-camis-guide /guides/register-company-in-nepal-online-camis-guide 301
+/blog/register-private-limited-company-online-nepal-guide /guides/register-private-limited-company-online-nepal-guide 301
+/blog/social-security-allowance-senior-citizen-rates-nepal /guides/social-security-allowance-senior-citizen-rates-nepal 301
+/blog/social-security-fund-nepal-checking-balance /guides/social-security-fund-nepal-checking-balance 301
+/blog/ssf-balance-check-nepal-online-portal-guide /guides/ssf-balance-check-nepal-online-portal-guide 301
+/blog/tax-on-remittance-nepal-is-remittance-taxable /guides/tax-on-remittance-nepal-is-remittance-taxable 301
+/blog/transferring-vehicle-ownership-nepal-namsari /guides/transferring-vehicle-ownership-nepal-namsari 301
+/blog/understanding-loan-interest /guides/understanding-loan-interest 301

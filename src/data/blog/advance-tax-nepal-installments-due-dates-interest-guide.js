@@ -10,7 +10,7 @@ export const advanceTaxNepalInstallmentsDueDatesInterestGuidePost = {
   authorCredential: 'Nepal tax researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop&auto=format',
   tags: ['Advance Tax Nepal', 'Income Tax Act 2058', 'IRD Nepal', 'Installment Tax', 'Finance'],
   relatedTools: ['overtime-calculator', 'salary-checker', 'vat-calculator', 'freelancer-take-home'],
   faqs: [

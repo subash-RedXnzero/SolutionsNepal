@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax and property researchers
 date: September 27, 2026
 readTime: 12 min read
-image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop&auto=format"
 tags: [House Rent Tax Nepal, Ghar Bahal Kar, Rent TDS Nepal, IRD Nepal, Finance]
 relatedTools: [house-rent-tax, rent-tax, vat-calculator, salary-checker]
 headings:

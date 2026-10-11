@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal capital-market researchers
 date: September 27, 2026
 readTime: 10 min read
-image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop&auto=format"
 tags: [NEPSE, TMS Nepal, Share Market, Meroshare, DEMAT, Broker]
 relatedTools: [nepse-profit-loss, sip-calculator, emi-calculator]
 headings:

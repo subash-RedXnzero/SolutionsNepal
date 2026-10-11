@@ -10,7 +10,7 @@ export const whatHappensChequeBouncesNepalLawGuidePost = {
   authorCredential: 'Nepal legal and finance researchers',
   date: 'September 10, 2026',
   readTime: '14 min read',
-  image: 'https://images.unsplash.com/photo-1763872867598-b1b5f769d7e3?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1763872867598-b1b5f769d7e3?w=1200&h=630&fit=crop&auto=format',
   tags: ['Cheque Bounce', 'Banking Law', 'Legal Remedies', 'Finance', 'Nepal'],
   relatedTools: ['nepali-number-to-words', 'emi-calculator'],
   faqs: [

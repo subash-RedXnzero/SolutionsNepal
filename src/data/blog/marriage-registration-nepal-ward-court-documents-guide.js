@@ -10,7 +10,7 @@ export const marriageRegistrationNepalWardCourtDocumentsGuidePost = {
   authorCredential: 'Nepal documentation and civil-registration researchers',
   date: 'September 27, 2026',
   readTime: '13 min read',
-  image: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=1200&h=630&fit=crop&auto=format',
   tags: ['Marriage Registration Nepal', 'Court Marriage Nepal', 'Ward Marriage', 'DONIDCR', 'Documents'],
   relatedTools: ['government-service-cost', 'nepali-calendar', 'passport-size-photo'],
   faqs: [

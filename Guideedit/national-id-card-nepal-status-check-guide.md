@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 10, 2026
 readTime: 13 min read
-image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=630&fit=crop&auto=format"
 tags: [National ID, NIN, Rastriya Parichayapatra, Documents, Nepal]
 relatedTools: [passport-size-photo, nepali-age-calculator]
 headings:

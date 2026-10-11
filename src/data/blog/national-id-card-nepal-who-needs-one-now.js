@@ -10,7 +10,7 @@ export const nationalIdCardNepalWhoNeedsOneNowPost = {
   authorCredential: 'Nepal documentation researchers',
   date: 'September 2, 2026',
   readTime: '6 min read',
-  image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1200&h=630&fit=crop&auto=format',
   tags: ['National ID', 'NID', 'Documents', 'Nepal'],
   relatedTools: ['passport-size-photo', 'nepali-age-calculator'],
   faqs: [

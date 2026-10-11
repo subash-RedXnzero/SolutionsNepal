@@ -10,7 +10,7 @@ export const understandingLoanInterestPost = {
   authorCredential: 'Financial analysts and Nepal tax experts',
   date: 'July 20, 2026',
   readTime: '5 min read',
-  image: 'https://images.unsplash.com/photo-1568667256549-094345857637?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1568667256549-094345857637?w=1200&h=630&fit=crop&auto=format',
   tags: ['Finance', 'Loan', 'Interest', 'Banking'],
   headings: [
     { id: 'introduction', text: 'Introduction', level: 2 },

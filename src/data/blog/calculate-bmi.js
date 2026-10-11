@@ -10,7 +10,7 @@ export const calculateBmiPost = {
   authorCredential: 'Financial analysts and Nepal tax experts',
   date: 'July 25, 2026',
   readTime: '3 min read',
-  image: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1200&h=630&fit=crop&auto=format',
   tags: ['Health', 'BMI', 'Calculator'],
   headings: [
     { id: 'introduction', text: 'Introduction', level: 2 },

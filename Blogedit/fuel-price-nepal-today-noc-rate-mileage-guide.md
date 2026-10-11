@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal utilities researchers
 date: September 27, 2026
 readTime: 8 min read
-image: "https://images.unsplash.com/photo-1748761751275-e55a2a29e1bf?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1748761751275-e55a2a29e1bf?w=1200&h=630&fit=crop&auto=format"
 tags: [Fuel Price Nepal, NOC Petrol Price, Diesel Price Nepal, Mileage, Utilities]
 relatedTools: [fuel-price, fuel-cost, ownership-cost]
 headings:

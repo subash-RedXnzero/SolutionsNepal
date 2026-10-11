@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 1, 2026
 readTime: 8 min read
-image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=630&fit=crop&auto=format"
 tags: [Driving License, Vehicles, Transport, Nepal]
 relatedTools: [vehicle-tax-new, fuel-price]
 headings:

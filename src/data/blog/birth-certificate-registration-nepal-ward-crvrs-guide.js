@@ -10,7 +10,7 @@ export const birthCertificateRegistrationNepalWardCrvrsGuidePost = {
   authorCredential: 'Nepal documentation and civil-registration researchers',
   date: 'September 26, 2026',
   readTime: '14 min read',
-  image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop&auto=format',
   tags: ['Birth Certificate Nepal', 'Janma Darta', 'CRVS Nepal', 'DONIDCR', 'Ward Office', 'Documents'],
   relatedTools: ['government-service-cost', 'nepali-calendar', 'passport-size-photo'],
   faqs: [

@@ -10,7 +10,7 @@ export const ssfContributionNepal1120PercentBenefitsGuidePost = {
   authorCredential: 'Nepal finance & labor researchers',
   date: 'September 27, 2026',
   readTime: '9 min read',
-  image: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&h=630&fit=crop&auto=format',
   tags: ['SSF Nepal', 'Social Security Fund', 'Provident Fund', 'Gratuity', 'Salary'],
   relatedTools: ['ssf-calculator', 'salary-checker', 'sip-calculator'],
   faqs: [

@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Financial analysts and Nepal tax experts
 date: August 8, 2026
 readTime: 3 min read
-image: "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?w=1200&h=630&fit=crop"
+image: "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?w=1200&h=630&fit=crop&auto=format"
 tags: [Math, Percentage, Calculator]
 headings:
   - id: introduction

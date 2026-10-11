@@ -10,7 +10,7 @@ export const incomeTaxSlabsNepalFy208384IndividualCoupleGuidePost = {
   authorCredential: 'Nepal tax researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop&auto=format',
   tags: ['Income Tax Nepal', 'Salary Tax', 'IRD', 'FY 2083/84', 'Tax Slabs'],
   relatedTools: ['overtime-calculator', 'salary-checker', 'ssf-calculator'],
   faqs: [

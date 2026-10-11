@@ -10,7 +10,7 @@ export const goldWeightCalculationPost = {
   authorCredential: 'Financial analysts and Nepal tax experts',
   date: 'July 22, 2026',
   readTime: '4 min read',
-  image: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?w=1200&h=630&fit=crop',
+  image: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?w=1200&h=630&fit=crop&auto=format',
   tags: ['Gold', 'Converter', 'Nepal', 'Price'],
   headings: [
     { id: 'introduction', text: 'Introduction', level: 2 },
