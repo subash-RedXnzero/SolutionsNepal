@@ -1,0 +1,17 @@
+{
+  // Cloudflare Workers — serves ./dist as static assets (no adapter needed:
+  // this site is fully pre-rendered, no SSR).
+  "name": "solutionsnepal",
+  "compatibility_date": "2026-10-11",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "solutionsnepal.com",
+      "custom_domain": true
+    }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

@@ -5,11 +5,13 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://solutionsnepal.com',
+
   image: {
     // sharp enables responsive/WebP via astro:assets
     service: { entrypoint: 'astro/assets/services/sharp' },
     domains: ['images.unsplash.com'],
   },
+
   redirects: {
     '/tools': '/nepal',
     '/best-remittance-exchange-rate-nepal-guide': '/blog/best-remittance-exchange-rate-nepal-guide',
@@ -24,15 +26,18 @@ export default defineConfig({
     '/tools/convert': '/tools/image-compressor',
     '/nepal/tools/dashain-bonus-calculator': '/nepal/finance/dashain-bonus-calculator',
   },
+
   // Single source of truth for sitemap: src/pages/sitemap.xml.js
   // (removed @astrojs/sitemap to avoid duplicate /sitemap.xml output)
   integrations: [],
+
   // Viewport prefetch is cheaper than hover+All for 1000+ pages.
   // Previously prefetchAll:true + hover generated huge speculation-rules.
   prefetch: {
     prefetchAll: false,
     defaultStrategy: 'viewport',
   },
+
   vite: {
     plugins: [tailwindcss()],
     // pdf.js / pdf-lib are huge single-file ESM bundles: the dev optimizer

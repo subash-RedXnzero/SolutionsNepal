@@ -54,6 +54,7 @@ If you reuse this codebase, keep third-party license notices and replace API key
 | `npm run dev`     | Dev server at `localhost:4321`              |
 | `npm run build`   | Production build to `./dist/`               |
 | `npm run preview` | Preview build locally                       |
+| `npm run deploy`  | Build and deploy to Cloudflare Workers      |
 
 ## License for this codebase
 
