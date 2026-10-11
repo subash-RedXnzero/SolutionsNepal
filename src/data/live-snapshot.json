@@ -1,7 +1,12 @@
 {
   "meta": {
+<<<<<<< HEAD
     "fetchedAt": "2026-10-11T15:43:18.603Z",
     "fetchedAtNPT": "9:28 PM",
+=======
+    "fetchedAt": "2026-10-11T15:21:07.685Z",
+    "fetchedAtNPT": "9:06 PM",
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
     "sources": {
       "forex": "Nepal Rastra Bank (nrb.org.np)",
       "gold": "FENEGOSIDA (fenegosida.org)",
@@ -188,70 +193,36 @@
     "isLive": true
   },
   "fuel": {
-    "byCity": {
-      "surkhet": {
-        "petrol": 199,
-        "diesel": 199,
-        "kerosene": 199
-      },
-      "dang": {
-        "petrol": 199,
-        "diesel": 199,
-        "kerosene": 199
-      },
-      "kathmandu": {
-        "petrol": 200,
-        "diesel": 200,
-        "kerosene": 200
-      },
-      "pokhara": {
-        "petrol": 200,
-        "diesel": 200,
-        "kerosene": 200
-      }
-    },
-    "lpg": 2060,
-    "cities": [
-      {
-        "id": "surkhet",
-        "petrol": 199,
-        "diesel": 199,
-        "kerosene": 199
-      },
-      {
-        "id": "dang",
-        "petrol": 199,
-        "diesel": 199,
-        "kerosene": 199
-      },
-      {
-        "id": "kathmandu",
-        "petrol": 200,
-        "diesel": 200,
-        "kerosene": 200
-      },
-      {
-        "id": "pokhara",
-        "petrol": 200,
-        "diesel": 200,
-        "kerosene": 200
-      }
-    ],
     "isLive": false,
+<<<<<<< HEAD
     "carriedFrom": "8:57 PM"
+=======
+    "error": "HTTP 403 for https://noc.org.np/"
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
   },
   "weather": {
     "cities": {
       "kathmandu": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
+=======
+          "time": "2026-10-11T21:00",
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "interval": 900,
           "temperature_2m": 17.7,
           "relative_humidity_2m": 84,
+<<<<<<< HEAD
           "apparent_temperature": 19.2,
           "weather_code": 0,
           "cloud_cover": 3,
           "wind_speed_10m": 1.1,
+=======
+          "apparent_temperature": 19.3,
+          "weather_code": 0,
+          "cloud_cover": 4,
+          "wind_speed_10m": 0.9,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "wind_direction_10m": 180,
           "precipitation": 0
         },
@@ -498,6 +469,7 @@
       },
       "pokhara": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 18.8,
@@ -507,6 +479,17 @@
           "cloud_cover": 6,
           "wind_speed_10m": 2.9,
           "wind_direction_10m": 259,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 19,
+          "relative_humidity_2m": 90,
+          "apparent_temperature": 21.2,
+          "weather_code": 0,
+          "cloud_cover": 5,
+          "wind_speed_10m": 3.1,
+          "wind_direction_10m": 257,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "precipitation": 0
         },
         "hourly": {
@@ -752,6 +735,7 @@
       },
       "lalitpur": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 17.9,
@@ -761,6 +745,17 @@
           "cloud_cover": 3,
           "wind_speed_10m": 0.4,
           "wind_direction_10m": 243,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 17.9,
+          "relative_humidity_2m": 82,
+          "apparent_temperature": 19.4,
+          "weather_code": 0,
+          "cloud_cover": 4,
+          "wind_speed_10m": 0.6,
+          "wind_direction_10m": 252,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "precipitation": 0
         },
         "hourly": {
@@ -1006,6 +1001,7 @@
       },
       "bhaktapur": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 16.7,
@@ -1015,6 +1011,17 @@
           "cloud_cover": 5,
           "wind_speed_10m": 3,
           "wind_direction_10m": 253,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 16.6,
+          "relative_humidity_2m": 87,
+          "apparent_temperature": 17.7,
+          "weather_code": 0,
+          "cloud_cover": 5,
+          "wind_speed_10m": 3.1,
+          "wind_direction_10m": 257,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "precipitation": 0
         },
         "hourly": {
@@ -1260,6 +1267,7 @@
       },
       "biratnagar": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 24.4,
@@ -1269,6 +1277,17 @@
           "cloud_cover": 2,
           "wind_speed_10m": 4.3,
           "wind_direction_10m": 15,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 24.6,
+          "relative_humidity_2m": 87,
+          "apparent_temperature": 29,
+          "weather_code": 0,
+          "cloud_cover": 2,
+          "wind_speed_10m": 4.5,
+          "wind_direction_10m": 14,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "precipitation": 0
         },
         "hourly": {
@@ -1514,11 +1533,19 @@
       },
       "bharatpur": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 22,
           "relative_humidity_2m": 91,
           "apparent_temperature": 25.9,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 22.2,
+          "relative_humidity_2m": 91,
+          "apparent_temperature": 26,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "weather_code": 0,
           "cloud_cover": 2,
           "wind_speed_10m": 1.9,
@@ -1768,11 +1795,19 @@
       },
       "butwal": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 21.9,
           "relative_humidity_2m": 77,
           "apparent_temperature": 23.9,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 22.1,
+          "relative_humidity_2m": 76,
+          "apparent_temperature": 24.2,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "weather_code": 0,
           "cloud_cover": 2,
           "wind_speed_10m": 5,
@@ -2022,6 +2057,7 @@
       },
       "dharan": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 22.6,
@@ -2031,6 +2067,17 @@
           "cloud_cover": 2,
           "wind_speed_10m": 1.5,
           "wind_direction_10m": 21,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 22.6,
+          "relative_humidity_2m": 75,
+          "apparent_temperature": 25.3,
+          "weather_code": 0,
+          "cloud_cover": 2,
+          "wind_speed_10m": 1.8,
+          "wind_direction_10m": 24,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "precipitation": 0
         },
         "hourly": {
@@ -2276,6 +2323,7 @@
       },
       "nepalgunj": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 23.1,
@@ -2285,6 +2333,17 @@
           "cloud_cover": 1,
           "wind_speed_10m": 1.9,
           "wind_direction_10m": 304,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 23.2,
+          "relative_humidity_2m": 90,
+          "apparent_temperature": 27.5,
+          "weather_code": 0,
+          "cloud_cover": 1,
+          "wind_speed_10m": 2.3,
+          "wind_direction_10m": 302,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "precipitation": 0
         },
         "hourly": {
@@ -2530,6 +2589,7 @@
       },
       "dhangadhi": {
         "current": {
+<<<<<<< HEAD
           "time": "2026-10-11T21:15",
           "interval": 900,
           "temperature_2m": 23.3,
@@ -2538,6 +2598,16 @@
           "weather_code": 3,
           "cloud_cover": 95,
           "wind_speed_10m": 1.6,
+=======
+          "time": "2026-10-11T21:00",
+          "interval": 900,
+          "temperature_2m": 23.3,
+          "relative_humidity_2m": 84,
+          "apparent_temperature": 27.1,
+          "weather_code": 3,
+          "cloud_cover": 95,
+          "wind_speed_10m": 2,
+>>>>>>> f29660426c15864dd563981a03a4e6389490e6f4
           "wind_direction_10m": 63,
           "precipitation": 0
         },
