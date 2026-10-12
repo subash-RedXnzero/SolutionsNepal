@@ -23,6 +23,15 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'src', 'data', 'live-snapshot.json');
 const TTL_MS = 30 * 60 * 1000; // refetch if snapshot older than 30 min
 
+// Skip the network fetch entirely and reuse the existing snapshot.
+// Use for fast dev restarts: `SKIP_LIVE_FETCH=1 npm run dev`
+// (or `node scripts/fetch-live-data.mjs --skip`). Falls through to a
+// normal fetch when no snapshot exists yet.
+if ((process.argv.includes('--skip') || process.env.SKIP_LIVE_FETCH === '1') && existsSync(OUT)) {
+  console.log('[live-data] SKIP_LIVE_FETCH — reusing existing snapshot, no fetch');
+  process.exit(0);
+}
+
 // Reuse an existing snapshot if it's fresh enough (so frequent dev restarts
 // don't hammer the APIs). Pass --force to refetch regardless.
 if (!process.argv.includes('--force') && existsSync(OUT)) {

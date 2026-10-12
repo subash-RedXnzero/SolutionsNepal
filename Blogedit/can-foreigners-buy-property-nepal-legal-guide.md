@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and documentation researchers
 date: September 10, 2026
 readTime: 14 min read
-image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1513475382585-d06e58bcb0e0.jpg"
 tags: [Property, Foreign Investment, NRN, FITTA, Nepal]
 relatedTools: [emi-calculator, salary-checker]
 headings:

@@ -1,9 +1,10 @@
 ---
 /**
  * Central Image component - use everywhere instead of raw <img>.
+ * - Plain <img> passthrough (no remote optimizer): all assets are local
+ *   (public/fonts, public/blog), so there are no third-party image requests
  * - Preserves aspect ratio, lazy/eager handled via props
- * - Supports Astro sharp optimization for remote domains (images.unsplash.com)
- * - Referrer policy defaults to no-referrer for external CDN stability
+ * - Referrer policy defaults to no-referrer for external link stability
  * - Wrapper can be disabled for custom containers (e.g. .sidebar-thumb, .post-thumb)
  */
 const {

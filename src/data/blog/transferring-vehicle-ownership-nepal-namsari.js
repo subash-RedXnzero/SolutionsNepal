@@ -10,7 +10,7 @@ export const transferringVehicleOwnershipNepalNamsariPost = {
   authorCredential: 'Nepal documentation researchers',
   date: 'September 10, 2026',
   readTime: '12 min read',
-  image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1449965408869-eaa3f722e40d.jpg',
   tags: ['Vehicles', 'Namsari', 'Transport', 'Nepal', 'Bluebook'],
   relatedTools: ['vehicle-tax-new', 'fuel-cost'],
   faqs: [

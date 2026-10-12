@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax and business researchers
 date: September 16, 2026
 readTime: 24 min read
-image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1434030216411-0b793f4b4173.jpg"
 tags: [PAN Registration Nepal, VAT Registration Nepal, IRD Taxpayer Portal, VAT Threshold Nepal, TDS, Freelancing Nepal, Finance]
 relatedTools: [vat-calculator, salary-checker, freelancer-take-home, break-even]
 headings:

@@ -22,7 +22,6 @@ export const SMART_ROUTES = [
   { re: /(unicode|प्रीति|preeti|type\s*nepali|नेपाली\s*टाइप|nepali\s*typing)/i, href: '/nepal/tools/nepali-unicode', label: 'Nepali Unicode', why: 'Type Nepali from Roman / Preeti', param: null },
   { re: /(translate|अनुवाद|अनुबाद)/i, href: '/nepal/tools/english-to-nepali-translator', label: 'English → Nepali Translator', why: 'Translate sentences instantly', param: null },
   { re: /(forex|exchange\s*rate|विनिमय|dollar|डलर|usd|remit|रेमिट)/i, href: '/nepal/finance/remittance-calculator', label: 'Remittance / Forex Calculator', why: 'NRB rates for foreign currency', param: null },
-  { re: /(weather|forecast|मौसम|हावापानी|temperature|barsha|पानी\s*पर्ने|goro|घाम)/i, href: '/weather', label: "Today's Weather", why: "Live forecast & air quality across Nepal", param: null },
   { re: /(fuel|petrol|diesel|पेट्रोल|डिजेल)/i, href: '/nepal/fuel-price-nepal', label: 'Fuel Price Nepal', why: "Today's petrol & diesel prices", param: null },
   { re: /(vehicle\s*tax|गाडी\s*कर|gadi\s*kar|bike\s*tax|renewal)/i, href: '/nepal/transport/vehicle-tax', label: 'Vehicle Tax Calculator', why: 'Tax, fines & renewal costs', param: null },
   { re: /(bijuli|बिजुली|electricity|light\s*bill|nea)/i, href: '/nepal/utilities/electricity-bill', label: 'NEA Electricity Bill', why: 'Estimate your NEA bill', param: null },

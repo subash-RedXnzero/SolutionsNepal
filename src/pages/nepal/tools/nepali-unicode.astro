@@ -42,6 +42,15 @@ const examples = [
       <p class="uc-sub">Romanized Nepali → नेपाली Unicode</p>
     </header>
 
+    <!-- Status -->
+    <div class="uc-status uc-status--top">
+      <p class="uc-live">
+        <span class="uc-dot" aria-hidden="true"></span>
+        <span>Live conversion<span class="uc-vh"> is active</span></span>
+      </p>
+      <button id="clear-btn" type="button" class="uc-clear">Clear</button>
+    </div>
+
     <!-- Converter -->
     <div class="uc-grid">
       <!-- Input -->
@@ -59,7 +68,7 @@ const examples = [
           autocomplete="off"
           autocapitalize="off"
           aria-describedby="uc-input-count"
-        >namaste tapailai&#10;swagat xa</textarea>
+        ></textarea>
       </section>
 
       <!-- Output -->
@@ -90,15 +99,6 @@ const examples = [
           <button type="button" class="uc-chip example-btn" data-text={ex.text}>{ex.label}</button>
         ))}
       </div>
-    </div>
-
-    <!-- Status -->
-    <div class="uc-status">
-      <p class="uc-live">
-        <span class="uc-dot" aria-hidden="true"></span>
-        <span>Live conversion<span class="uc-vh"> is active</span></span>
-      </p>
-      <button id="clear-btn" type="button" class="uc-clear">Clear</button>
     </div>
 
     <!-- Nepali digits -->
@@ -333,6 +333,12 @@ const examples = [
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     margin-top: 20px; padding-top: 14px;
     border-top: 1px solid #E7E3DC;
+  }
+  .uc-status--top {
+    margin-top: 0;
+    margin-bottom: 14px;
+    padding-top: 0;
+    border-top: none;
   }
   .uc-live { display: flex; align-items: center; gap: 9px; margin: 0; font-size: 13px; font-weight: 500; color: #64748B; }
   .uc-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #16A34A; flex-shrink: 0; }

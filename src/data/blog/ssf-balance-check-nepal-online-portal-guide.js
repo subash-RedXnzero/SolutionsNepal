@@ -10,7 +10,7 @@ export const ssfBalanceCheckNepalOnlinePortalGuidePost = {
   authorCredential: 'Nepal finance researchers',
   date: 'September 10, 2026',
   readTime: '12 min read',
-  image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1579621970563-ebec7560ff3e.jpg',
   tags: ['SSF', 'Social Security Fund', 'Balance Check', 'Finance', 'Nepal'],
   relatedTools: ['salary-checker'],
   faqs: [

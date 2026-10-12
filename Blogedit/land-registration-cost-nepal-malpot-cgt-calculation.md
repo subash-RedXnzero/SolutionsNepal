@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and tax researchers
 date: September 26, 2026
 readTime: 15 min read
-image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1500382017468-9049fed747ef.jpg"
 tags: [Land Registration Nepal, Malpot Fee Nepal, CGT Nepal, Property Registration Cost, Bagmati Province, Real Estate Nepal]
 relatedTools: [land-registration, property-registration-cost, ropani-to-aana, land-affordability]
 headings:

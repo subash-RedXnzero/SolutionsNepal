@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal utilities researchers
 date: September 27, 2026
 readTime: 8 min read
-image: "https://images.unsplash.com/photo-1748761751275-e55a2a29e1bf?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1748761751275-e55a2a29e1bf.jpg"
 tags: [Fuel Price Nepal, NOC Petrol Price, Diesel Price Nepal, Mileage, Utilities]
 relatedTools: [fuel-price, fuel-cost, ownership-cost]
 headings:
@@ -67,7 +67,7 @@ Monthly fuel cost = Distance per day (km) × Days × Cost/km
 - **Bike 40 km/L at ~Rs 198/L (illustrative, October 2026)** — ~Rs 4.95/km → 30 km/day ×26 days ≈ Rs 3,861/month
 - **Car 12 km/L at ~Rs 198/L (illustrative, October 2026)** — ~Rs 16.50/km → 30 km/day ×26 ≈ Rs 12,870/month (AC adds ~10–15%)
 
-Try SolutionsNepal’s <a href="/nepal/vehicle/fuel-cost">Fuel Cost Calculator</a> (enter price + mileage + distance + AC) or <a href="/nepal/vehicle/ownership-cost-calculator">Vehicle Ownership Cost</a> for the full ownership picture.
+Try SolutionsNepal’s <a href="/nepal/vehicle/fuel-cost">Trip Fuel Cost Calculator</a> (enter price + mileage + distance + AC) or <a href="/nepal/vehicle/ownership-cost-calculator">Vehicle Ownership Cost</a> for the full ownership picture.
 
 <h2 id="tips">Save Fuel — 5 Tips</h2>
 

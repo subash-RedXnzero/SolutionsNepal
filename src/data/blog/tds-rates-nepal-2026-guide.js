@@ -10,7 +10,7 @@ export const tdsRatesNepal2026GuidePost = {
   authorCredential: 'Nepal tax and finance researchers',
   date: 'September 26, 2026',
   readTime: '14 min read',
-  image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1554224155-6726b3ff858f.jpg',
   tags: ['TDS Nepal', 'TDS Rates Nepal', 'Withholding Tax Nepal', 'IRD Nepal', 'Income Tax Act 2058', 'Finance'],
   relatedTools: ['overtime-calculator', 'salary-checker', 'vat-calculator', 'freelancer-take-home'],
   faqs: [

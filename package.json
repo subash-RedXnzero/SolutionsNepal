@@ -12,7 +12,7 @@
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
     "test": "node --test \"tests/*.test.mjs\"",
-    "astro": "astro",
+    "smoke": "node scripts/smoke-check.mjs",    "astro": "astro",
     "og": "node scripts/generate-og-image.mjs",
     "generate-types": "wrangler types",
     "deploy": "npm run build && wrangler deploy --config wrangler.jsonc"

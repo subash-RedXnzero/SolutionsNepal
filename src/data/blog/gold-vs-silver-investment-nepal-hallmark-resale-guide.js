@@ -10,7 +10,7 @@ export const goldVsSilverInvestmentNepalHallmarkResaleGuidePost = {
   authorCredential: 'Nepal gold-market researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: 'https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1579621970795-87facc2f976d.jpg',
   tags: ['Gold Price Nepal', 'Silver Price Nepal', 'Hallmark', 'Tola', 'FENEGOSIDA', 'Investment'],
   relatedTools: ['gold-price', 'silver-price', 'tola-to-gram'],
   faqs: [

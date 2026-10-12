@@ -1,8 +1,4 @@
----
-import { tools } from '../../data/tools.js';
----
-
-<div id="search-modal" class="search-backdrop" data-tools={JSON.stringify(tools)}>
+<div id="search-modal" class="search-backdrop">
   <div class="search-panel" role="dialog" aria-label="Search tools">
     <div class="search-input-wrap">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -32,12 +28,43 @@ import { tools } from '../../data/tools.js';
     const modal = document.getElementById('search-modal');
     const input = document.getElementById('search-input');
     const results = document.getElementById('search-results');
-    const allTools = JSON.parse(modal.dataset.tools || '[]');
-    // Pre-lowercased search index: avoids 3x toLowerCase() per tool per keystroke.
-    const searchIndex = allTools.map(t => ({
-      tool: t,
-      hay: `${t.title} ${t.description} ${t.category}`.toLowerCase(),
-    }));
+
+    // ─── LAZY TOOL INDEX ────────────────────────────────────
+    // The registry (~27KB) is NOT embedded in page HTML. It loads once
+    // from /data/tools.json on first search use, then stays in memory.
+    let allTools = null;
+    let searchIndex = null;
+    let toolsPromise = null;
+
+    function ensureTools() {
+      if (allTools) return Promise.resolve(allTools);
+      if (!toolsPromise) {
+        toolsPromise = fetch('/data/tools.json')
+          .then((r) => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+          })
+          .then((list) => {
+            allTools = Array.isArray(list) ? list : [];
+            // Pre-lowercased search index: avoids 3x toLowerCase() per tool per keystroke.
+            searchIndex = allTools.map(t => ({
+              tool: t,
+              hay: `${t.title} ${t.description} ${t.category}`.toLowerCase(),
+            }));
+            return allTools;
+          })
+          .catch((err) => { toolsPromise = null; throw err; });
+      }
+      return toolsPromise;
+    }
+
+    function renderLoading() {
+      results.innerHTML = `<div class="search-empty">Loading tools…</div>`;
+    }
+
+    function renderError() {
+      results.innerHTML = `<div class="search-empty">Could not load the search index.<br><button type="button" class="search-retry" data-retry>Try again</button></div>`;
+    }
 
     // ─── RESULT RENDERING ───────────────────────────────────────
     const ARROW = `<svg class="search-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`;
@@ -56,7 +83,7 @@ import { tools } from '../../data/tools.js';
 
     function searchText(query) {
       const q = query.toLowerCase().trim();
-      if (!q) return [];
+      if (!q || !searchIndex) return [];
       const out = [];
       for (const entry of searchIndex) {
         if (entry.hay.includes(q)) {
@@ -91,7 +118,19 @@ import { tools } from '../../data/tools.js';
     }
 
     function renderPopularList() {
+      if (!allTools) return '';
       return allTools.filter(t => t.popular).slice(0, 6).map(toolItem).join('');
+    }
+
+    // Load-on-demand entry: shows a loading state, fetches the index once,
+    // then runs the search against the freshest input value.
+    function runSearch(query) {
+      if (allTools) { search(query); return; }
+      renderLoading();
+      ensureTools().then(
+        () => search(input.value),
+        () => renderError(),
+      );
     }
 
     function search(query) {
@@ -118,14 +157,26 @@ import { tools } from '../../data/tools.js';
     // ─── OPEN / CLOSE ───────────────────────────────────────────
     window.openSearch = function() {
       modal.classList.add('open');
+      runSearch(input.value);
       setTimeout(() => input.focus(), 100);
     };
 
     window.closeSearch = function() {
       modal.classList.remove('open');
       input.value = '';
-      search('');
+      if (allTools) search('');
     };
+
+    // Navbar + homepage fallback open the modal directly without calling
+    // openSearch() — catch every open and make sure the index is loading.
+    new MutationObserver(() => {
+      if (modal.classList.contains('open')) runSearch(input.value);
+    }).observe(modal, { attributes: true, attributeFilter: ['class'] });
+
+    // Error-state retry button (rendered by renderError).
+    results.addEventListener('click', (e) => {
+      if (e.target.closest('[data-retry]')) runSearch(input.value);
+    });
 
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeSearch();
@@ -136,7 +187,7 @@ import { tools } from '../../data/tools.js';
     input.addEventListener('input', (e) => {
       clearTimeout(searchTimer);
       const value = e.target.value;
-      searchTimer = setTimeout(() => search(value), 120);
+      searchTimer = setTimeout(() => runSearch(value), 120);
     });
 
     document.addEventListener('keydown', (e) => {
@@ -149,7 +200,8 @@ import { tools } from '../../data/tools.js';
       }
     });
 
-    search('');
+    // NOTE: no initial search('') here — the index loads on first open
+    // (see runSearch) so page HTML stays free of the ~27KB registry.
   })();
 </script>
 
@@ -254,6 +306,19 @@ import { tools } from '../../data/tools.js';
     font-size: var(--fs-body);
     color: var(--nk-text-tertiary);
   }
+  .search-retry {
+    margin-top: 12px;
+    padding: 8px 18px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--nk-border);
+    background: var(--nk-surface);
+    color: var(--nk-accent);
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .search-retry:hover { border-color: var(--nk-accent); }
 
   @keyframes command-open {
     from { opacity: 0; transform: scale(0.97) translateY(-4px); }

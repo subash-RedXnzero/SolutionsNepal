@@ -13,12 +13,20 @@ const alphabetJSON = JSON.stringify(ALL_ALPHABET);
   description="Browse every Nepali, Sanskrit, Hindu, modern, and traditional baby name with meanings, origins, and pronunciations — filter by letter, gender, and category."
 >
 <div class="pn-page">
-  <div style="max-width:1100px;margin:0 auto;padding:16px 32px 0;">
+  <div style="max-width:1100px;margin:0 auto;padding:8px 32px 0;">
+    <div class="pn-toprow">
+      <button type="button" id="pn-back-btn" class="pn-back" aria-label="Go back to the previous page">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Back</span>
+      </button>
+      <div class="pn-crumbs">
     <Breadcrumbs items={[
       { label: 'Nepal', href: '/nepal' },
       { label: 'Names', href: '/nepal/names' },
       { label: 'All Names A–Z' },
     ]} />
+      </div>
+    </div>
   </div>
 
   <!-- HERO -->
@@ -340,6 +348,10 @@ function updateClearBtn() {
   document.getElementById('pn-search-clear').style.display = v.length > 0 ? '' : 'none';
 }
 document.getElementById('pn-search-btn').addEventListener('click', doSearch);
+document.getElementById('pn-back-btn')?.addEventListener('click', function() {
+  if (!document.referrer) { window.location.assign('/nepal'); return; }
+  history.back();
+});
 document.getElementById('pn-search-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
 });
@@ -404,12 +416,26 @@ render();
 }
 
 /* ═══ HERO ═══ */
+.pn-toprow { display: flex; align-items: center; gap: 12px; }
+.pn-crumbs { min-width: 0; overflow: hidden; }
+.pn-toprow .breadcrumb-nav { margin-bottom: 0; }
+.pn-toprow .breadcrumb-list { flex-wrap: wrap; row-gap: 2px; }
+.pn-back {
+  display: inline-flex; align-items: center; gap: 5px;
+  min-height: 36px; padding: 7px 14px 7px 11px; margin: 0; flex-shrink: 0;
+  font-size: 13.5px; font-weight: 600; color: #1F2937;
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  cursor: pointer; transition: all 140ms ease;
+  box-shadow: 0 1px 3px rgba(23,33,43,.10); font-family: inherit;
+}
+.pn-back:hover { color: #111827; border-color: var(--nk-border-strong, #D6D3CB); box-shadow: 0 2px 8px rgba(23,33,43,.14); }
+.pn-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .pn-hero { background: var(--surface); border-bottom: 1px solid var(--border); }
-.pn-hero-inner { max-width: 580px; margin: 0 auto; text-align: center; padding: 64px 24px 48px; }
-.pn-title { font-size: 42px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margin-bottom: 10px; color: var(--text); }
-.pn-sub { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-.pn-desc { font-size: 15px; color: var(--text2); line-height: 1.6; margin-bottom: 32px; }
-.pn-search { display: flex; align-items: center; max-width: 520px; margin: 0 auto; height: 52px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 0 5px 0 16px; transition: border-color 0.15s; }
+.pn-hero-inner { max-width: 580px; margin: 0 auto; text-align: center; padding: 26px 24px 22px; }
+.pn-title { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 6px; color: var(--text); }
+.pn-sub { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.pn-desc { font-size: 13.5px; color: var(--text2); line-height: 1.55; margin-bottom: 18px; }
+.pn-search { display: flex; align-items: center; max-width: 520px; margin: 0 auto; height: 46px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 0 5px 0 16px; transition: border-color 0.15s; }
 .pn-search:focus-within { border-color: var(--accent); }
 .pn-search-ico { color: var(--text3); flex-shrink: 0; }
 .pn-search-input { flex: 1; border: none; background: transparent; padding: 0 12px; font-size: 15px; color: var(--text); outline: none; font-family: inherit; min-width: 0; height: 100%; }
@@ -504,11 +530,11 @@ render();
   .pn-letter-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
-  .pn-hero-inner { padding: 44px 20px 36px; }
-  .pn-title { font-size: 32px; }
-  .pn-sub { font-size: 16px; }
-  .pn-desc { font-size: 14px; margin-bottom: 28px; }
-  .pn-search { height: 48px; }
+  .pn-hero-inner { padding: 22px 20px 18px; }
+  .pn-title { font-size: 25px; }
+  .pn-sub { font-size: 14px; }
+  .pn-desc { font-size: 13px; margin-bottom: 16px; }
+  .pn-search { height: 44px; }
   .pn-search-input { font-size: 14px; }
   .pn-search-btn { width: 36px; height: 36px; }
   .pn-nav-inner { padding: 0 20px; height: 48px; }

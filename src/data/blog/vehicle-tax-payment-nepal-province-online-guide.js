@@ -10,7 +10,7 @@ export const vehicleTaxPaymentNepalProvinceOnlineGuidePost = {
   authorCredential: 'Nepal transport & tax researchers',
   date: 'September 27, 2026',
   readTime: '9 min read',
-  image: 'https://images.unsplash.com/photo-1740937560703-fd059680eb7d?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1740937560703-fd059680eb7d.jpg',
   tags: ['Vehicle Tax Nepal', 'Bluebook Tax', 'Savari', 'Bagmati Vehicle Tax', 'DOTM'],
   relatedTools: ['vehicle-tax-new', 'ownership-cost', 'fuel-cost'],
   faqs: [

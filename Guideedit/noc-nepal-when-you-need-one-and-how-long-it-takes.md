@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 10, 2026
 readTime: 11 min read
-image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1568992687947-868a62a9f521.jpg"
 tags: [NOC, Study Abroad, Documents, Nepal, Status]
 relatedTools: [bs-to-ad, ad-to-bs, date-difference]
 headings:

@@ -10,7 +10,7 @@ export const ePassportOnlineApplicationNepalGuidePost = {
   authorCredential: 'Nepal digital-government researchers',
   date: 'September 16, 2026',
   readTime: '17 min read',
-  image: 'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1578894381163-e72c17f2d45f.jpg',
   tags: ['e Passport Online Application Nepal 2026', 'e-Passport', 'Department of Passports', 'NIN', 'Passport Appointment', 'MRP', 'Documents'],
   relatedTools: ['government-service-cost', 'passport-size-photo', 'nepali-calendar'],
   faqs: [

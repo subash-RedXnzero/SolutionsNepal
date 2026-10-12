@@ -10,7 +10,7 @@ export const landRegistrationFeesMalpotNepalGuidePost = {
   authorCredential: 'Nepal property and documentation researchers',
   date: 'September 14, 2026',
   readTime: '18 min read',
-  image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1500382017468-9049fed747ef.jpg',
   tags: ['Land', 'Malpot', 'Property Valuation', 'Registration Fees', 'Capital Gains Tax', 'Nepal'],
   relatedTools: ['emi-calculator', 'salary-checker'],
   faqs: [

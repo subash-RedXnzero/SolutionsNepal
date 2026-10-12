@@ -10,7 +10,7 @@ export const salarySlipNepalComponentsGrossNetExplainedPost = {
   authorCredential: 'Nepal payroll and tax researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1551836022-deb4988cc6c0.jpg',
   tags: ['Salary Slip Nepal', 'Gross Salary', 'Net Salary Nepal', 'SSF', 'TDS Nepal', 'Finance'],
   relatedTools: ['salary-checker', 'sip-calculator', 'ssf-calculator', 'overtime-calculator'],
   faqs: [

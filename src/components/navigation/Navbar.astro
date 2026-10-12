@@ -1,7 +1,7 @@
 ---
   const NAV_LINKS = [
   { label: 'Tools', href: '/nepal' },
-  { label: 'Weather', href: '/weather' },
+  { label: 'Calendar', href: '/nepal/calendar' },
   { label: 'Guides', href: '/guides' },
   { label: 'Blog', href: '/blog' },
   { label: 'About', href: '/about' },
@@ -14,7 +14,7 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
   <div class="nk-header-inner">
     <!-- Logo -->
     <a href="/" class="nk-logo" aria-label="SolutionsNepal Home">
-      <img src="/navbar.webp" alt="" width="46" height="46" class="nk-logo-mark" fetchpriority="high" />
+      <img src="/navbar.webp" alt="" width="38" height="38" class="nk-logo-mark" fetchpriority="high" />
       <span class="nk-logo-text">SolutionsNepal</span>
     </a>
 
@@ -63,28 +63,28 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
   .nk-header-inner {
     max-width: 1160px;
     margin: 0 auto;
-    padding: 0 32px 0 8px;
-    height: 66px;
+    padding: 0 24px;
+    height: 64px;
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 36px;
   }
 
   /* Logo */
   .nk-logo {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 10px;
     text-decoration: none;
     color: var(--nk-text);
     flex-shrink: 0;
-    margin-left: -24px;
+    transform: translateX(-36px);
   }
   .nk-logo:hover { color: var(--nk-text); }
   .nk-logo-mark {
-    width: 46px;
-    height: 46px;
-    border-radius: var(--radius-md);
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
     display: block;
     flex-shrink: 0;
     object-fit: cover;
@@ -92,8 +92,10 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
   }
   .nk-logo-text {
     font-size: 26px;
-    font-weight: 750;
-    letter-spacing: -0.03em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    white-space: nowrap;
   }
 
   /* Desktop Nav */
@@ -180,9 +182,9 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
 
   @media (max-width: 768px) {
     .nk-header-inner { padding: 0 16px; gap: 16px; height: 60px; }
-    .nk-logo { margin-left: 0; gap: 6px; }
-    .nk-logo-mark { width: 36px; height: 36px; }
-    .nk-logo-text { font-size: 20px; }
+    .nk-logo { margin-left: 0; gap: 6px; transform: none; }
+    .nk-logo-mark { width: 24px; height: 24px; }
+    .nk-logo-text { font-size: 24px; }
     .nk-nav-desktop { display: none; }
     .nk-mobile-only { display: inline-flex; }
     .nk-mobile-link { min-height: 44px; display: flex; align-items: center; }

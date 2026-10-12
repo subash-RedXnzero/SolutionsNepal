@@ -10,7 +10,7 @@ export const drivingLicenseTrialNepalWrittenTestTipsGuidePost = {
   authorCredential: 'Nepal transport researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1449965408869-eaa3f722e40d.jpg',
   tags: ['Driving License Nepal', 'EDLVRS', 'DOTM Trial', 'Written Test', 'Nepal'],
   relatedTools: ['government-service-cost', 'vehicle-tax-new', 'fuel-cost'],
   faqs: [

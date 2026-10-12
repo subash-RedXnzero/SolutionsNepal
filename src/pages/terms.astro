@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+
+const UPDATED = 'October 12, 2026';
+---
+
+<BaseLayout
+  title="Terms of Use — Free Tools, Honest Limits | SolutionsNepal"
+  description="The rules for using SolutionsNepal: free tools provided as-is, estimates not professional advice, original content, and contact details for issues."
+>
+  <div class="legal-wrap">
+    <Breadcrumbs items={[{ label: 'Terms of Use' }]} />
+
+    <header class="legal-hero">
+      <h1 class="legal-title">Terms of Use</h1>
+      <p class="legal-lede">Free tools, honest limits. By using SolutionsNepal you agree to these terms.</p>
+      <p class="legal-updated">Last updated: {UPDATED}</p>
+    </header>
+
+    <section class="legal-section" aria-label="The service">
+      <h2 class="legal-h2">1. The service</h2>
+      <div class="legal-prose">
+        <p>SolutionsNepal provides free calculators, converters, price pages, and guides for everyday life in Nepal. There are no accounts, no subscriptions, and no fees. We may change, add, or remove tools at any time as rates, rules, and sources evolve.</p>
+        <p>The service is provided <strong>"as is"</strong>, without warranties of any kind — including accuracy, availability, or fitness for a particular purpose. We work hard to keep figures current, but official notices change, and mistakes are possible.</p>
+      </div>
+    </section>
+
+    <section class="legal-section" aria-label="Estimates, not advice">
+      <h2 class="legal-h2">2. Estimates — not professional advice</h2>
+      <div class="legal-prose">
+        <p>Calculator results are <strong>estimates for planning</strong>, not professional tax, legal, financial, or investment advice. Tax slabs, fees, and rates follow official publications (IRD, NRB, DoTM, OCR, FENEGOSIDA, NOC) that are revised periodically — always confirm final figures with the relevant office, bank, or current notice before acting on them.</p>
+        <p>Nothing on this site creates a professional-client relationship between you and SolutionsNepal.</p>
+      </div>
+    </section>
+
+    <section class="legal-section" aria-label="Acceptable use">
+      <h2 class="legal-h2">3. Acceptable use</h2>
+      <ul class="legal-list">
+        <li>Use the tools for lawful, personal purposes.</li>
+        <li>Do not attempt to disrupt the site, misrepresent its output as an official document, or use it to mislead others.</li>
+        <li>Automated access is fine at a reasonable rate; if your use degrades the service for others, we may restrict it.</li>
+        <li>Do not submit sensitive personal data (citizenship numbers, passwords, bank credentials) through the <a href="/contact">contact form</a>.</li>
+      </ul>
+    </section>
+
+    <section class="legal-section" aria-label="Content and ownership">
+      <h2 class="legal-h2">4. Content &amp; ownership</h2>
+      <div class="legal-prose">
+        <p>Tool logic, guides, and interface design are original SolutionsNepal content (© {new Date().getFullYear()} SolutionsNepal). Factual material — fee amounts, tax slabs, published rates — is compiled from public official sources and rewritten in original prose; facts themselves belong to no one.</p>
+        <p>Third-party components keep their own licences: cover photos are Unsplash-sourced under the <a href="https://unsplash.com/license" target="_blank" rel="noopener">Unsplash License</a>, icons are Lucide (ISC), fonts are OFL-licensed and self-hosted, and code libraries (pdf-lib, pdf.js, qrcode, jszip, sharp) follow their published licences. See <a href="/about#copyright">About → Copyright &amp; attribution</a> for details.</p>
+        <p>You may link to and quote our pages with attribution. Republishing full guides verbatim as your own is not permitted.</p>
+      </div>
+    </section>
+
+    <section class="legal-section" aria-label="External links and liability">
+      <h2 class="legal-h2">5. External links &amp; liability</h2>
+      <div class="legal-prose">
+        <p>Pages link to official government and public sites for verification. We do not control those sites and are not responsible for their content, availability, or policies.</p>
+        <p>To the maximum extent permitted by law, SolutionsNepal is not liable for any loss or damage arising from your use of — or reliance on — the tools, figures, or guides on this site.</p>
+      </div>
+    </section>
+
+    <section class="legal-section" aria-label="Changes and contact">
+      <h2 class="legal-h2">6. Changes &amp; contact</h2>
+      <div class="legal-prose">
+        <p>We may update these terms as the site evolves; the current version always lives on this page with its revision date. Continued use after a change means you accept the updated terms.</p>
+        <p>Questions, corrections, or reports of misuse: <a href="mailto:hello@solutionsnepal.com">hello@solutionsnepal.com</a> or the <a href="/contact">contact page</a>. These terms are governed by the laws of Nepal.</p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .legal-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 28px 24px 96px;
+  }
+  .legal-hero { margin: 6px 0 30px; }
+  .legal-title {
+    margin: 0 0 8px;
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--nk-text);
+  }
+  .legal-lede {
+    margin: 0 0 10px;
+    font-size: var(--fs-md);
+    color: var(--nk-text-secondary);
+  }
+  .legal-updated {
+    display: inline-block;
+    margin: 0;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--nk-accent);
+    background: var(--nk-accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--nk-accent) 25%, transparent);
+    padding: 5px 12px;
+    border-radius: 9999px;
+  }
+  .legal-section { margin-bottom: 32px; }
+  .legal-section:last-child { margin-bottom: 0; }
+  .legal-h2 {
+    margin: 0 0 12px;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--nk-text);
+  }
+  .legal-prose p {
+    margin: 0 0 12px;
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    color: var(--nk-text-secondary);
+  }
+  .legal-prose p:last-child { margin-bottom: 0; }
+  .legal-prose a { color: var(--nk-accent); }
+  .legal-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .legal-list li {
+    position: relative;
+    padding-left: 22px;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    color: var(--nk-text-secondary);
+  }
+  .legal-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--nk-accent);
+    font-weight: 700;
+  }
+  .legal-list strong { color: var(--nk-text); }
+  @media (max-width: 767px) {
+    .legal-wrap { padding: 20px 20px 64px; }
+  }
+</style>

@@ -1,6 +1,6 @@
 # SolutionsNepal — Free Tools for Everyday Nepal
 
-SolutionsNepal is a free, fast, and privacy-focused web platform with 80+ calculators, converters, and everyday utilities built specifically for Nepal.
+SolutionsNepal is a free, fast, and privacy-focused web platform with 85 calculators, converters, and everyday utilities built specifically for Nepal.
 
 **Live site:** https://solutionsnepal.com
 
@@ -23,10 +23,10 @@ All tool logic, calculations, guides, and UI in this repository are **original w
 
 Factual information (tax slabs, fees, exchange rates) is compiled from official public sources — Nepal Rastra Bank (nrb.org.np), Inland Revenue Department (ird.gov.np), Department of Transport Management (dotm.gov.np), Office of the Company Registrar (ocr.gov.np), etc. — and rewritten in original prose with citations. No article text is copy-pasted from third-party sites.
 
-Public assets:
-- **Images:** Blog cover images are from Unsplash (https://unsplash.com/license) — free to use without attribution, hotlinked via Unsplash CDN. Replace with your own if you prefer local hosting.
+Public assets (all self-hosted — no third-party requests for these):
+- **Images:** Blog cover images are Unsplash-sourced (https://unsplash.com/license) and hosted locally in `public/blog/` (synced from `Guideedit/images/` + `Blogedit/images/`).
 - **Icons:** Lucide (https://lucide.dev/license — ISC) via `@lucide/astro`
-- **Fonts:** Inter & Noto Sans Devanagari via Google Fonts (OFL)
+- **Fonts:** Inter, Noto Sans Devanagari & JetBrains Mono (OFL), self-hosted in `public/fonts/`
 - **PDF worker:** `pdfjs-dist` (Apache-2.0), bundled from `node_modules` via Vite (no public copy needed)
 
 If you reuse this codebase, keep third-party license notices and replace API keys / live data fetches with your own.
@@ -35,16 +35,22 @@ If you reuse this codebase, keep third-party license notices and replace API key
 
 ```
 /
-├── public/             # static assets (favicon, og image, calendar JSON)
+├── public/             # static assets (favicon, og image, fonts, blog covers)
+├── Guideedit/ + Blogedit/  # EDIT HERE: post .md files (auto-synced to src/data/blog/)
 ├── src/
 │   ├── components/     # Astro components
-│   ├── data/           # tools registry, categories, calculators, blog posts
+│   ├── data/           # tools registry, categories, calculators, blog posts, live-snapshot.json
 │   ├── layouts/        # BaseLayout
 │   ├── lib/            # calculators, Nepal date/price/forex libs
-│   ├── pages/          # routes — /nepal/*, /tools/*, /blog/*
+│   ├── pages/          # routes — /nepal/*, /tools/*, /blog/*, /guides/*
 │   └── styles/         # global.css + design tokens
-└── scripts/            # fetch-live-data.mjs
+├── scripts/            # sync-content.mjs, fetch-live-data.mjs
+└── tests/              # 480 tests (node --test)
 ```
+
+To add/edit a post: copy `Guideedit/_TEMPLATE.md` (or `Blogedit/_TEMPLATE.md`) to a new
+`slug-name.md`, fill it in, rebuild — `sync-content.mjs` regenerates the registry on
+every `npm run dev` / `npm run build`.
 
 ## Commands
 
@@ -52,9 +58,11 @@ If you reuse this codebase, keep third-party license notices and replace API key
 | :---------------- | :------------------------------------------ |
 | `npm install`     | Install dependencies (Node >= 22.12)        |
 | `npm run dev`     | Dev server at `localhost:4321`              |
+| `SKIP_LIVE_FETCH=1 npm run dev` | Fast restart: skip live-data API fetch |
 | `npm run build`   | Production build to `./dist/`               |
 | `npm run preview` | Preview build locally                       |
 | `npm run deploy`  | Build and deploy to Cloudflare Workers      |
+| `npm test`        | Run 480 tests                               |
 
 ## License for this codebase
 

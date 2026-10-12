@@ -52,6 +52,14 @@ const faqItems = [
       <p class="tr-sub">Translate English words, sentences, and paragraphs into Nepali.</p>
     </header>
 
+    <!-- Status -->
+    <div class="tr-status tr-status--top">
+      <p class="tr-live" role="status">
+        <span class="tr-dot" aria-hidden="true"></span>
+        <span id="tr-status-text">Live translation<span class="tr-vh"> is active</span></span>
+      </p>
+    </div>
+
     <!-- Translator -->
     <div class="tr-grid">
       <!-- English Input -->
@@ -96,14 +104,6 @@ const faqItems = [
         <button type="button" class="tr-chip example-btn" data-text="I want to learn Nepali.">I want to learn Nepali.</button>
         <button type="button" class="tr-chip example-btn" data-text="Please submit the document tomorrow.">Please submit the document tomorrow.</button>
       </div>
-    </div>
-
-    <!-- Status -->
-    <div class="tr-status">
-      <p class="tr-live" role="status">
-        <span class="tr-dot" aria-hidden="true"></span>
-        <span id="tr-status-text">Live translation<span class="tr-vh"> is active</span></span>
-      </p>
     </div>
 
     <p class="tr-privacy">Text is sent to a translation service. Not stored.</p>
@@ -523,6 +523,12 @@ const faqItems = [
     border-top: 1px solid #E7E3DC;
   }
   .tr-live { display: flex; align-items: center; gap: 9px; margin: 0; font-size: 13px; font-weight: 500; color: #64748B; }
+  .tr-status--top {
+    margin-top: 0;
+    margin-bottom: 14px;
+    padding-top: 0;
+    border-top: none;
+  }
   .tr-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #16A34A; flex-shrink: 0; }
   .tr-dot::after {
     content: ''; position: absolute; inset: -4px; border-radius: 50%;

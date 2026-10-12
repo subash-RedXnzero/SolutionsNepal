@@ -42,6 +42,14 @@ const normCanonical = canonical !== defaultCanonical && canonical.startsWith(SIT
 // Global structured data for all pages (except homepage which defines its own)
 const isHomepage = Astro.url.pathname === '/';
 const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+/* Pages with their own in-card back button hide the global ToolsLayout row
+   to avoid double navigation eating vertical space. */
+const hideBackPaths = new Set([
+  '/nepal/calendar',
+  '/nepal/vehicles/vehicle-resale-value-calculator-nepal',
+  '/nepal/transport/vehicle-tax',
+  '/nepal/names/all',
+]);
 const registeredToolPaths = new Set(tools.map(tool => tool.href.replace(/\/+$/, '') || '/'));
 const toolAreaPrefixes = [
   '/nepal/date/',
@@ -176,32 +184,33 @@ const globalJsonLd = (isHomepage || noindex) ? null : [
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script async is:inline src="https://www.googletagmanager.com/gtag/js?id=G-100NPWW5SN"></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-100NPWW5SN');
+  </script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Fonts: variable woff2 files are declared in global.css; preloading the two
-       first-paint faces removes the render-blocking Google Fonts CSS request and
-       the duplicate static-weight downloads it triggered. -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <!-- Blog covers hotlink images.unsplash.com (Imgix CDN) — pre-connect once
-       here so the first cover image skips DNS+TLS+TCP setup (~1 RTT saved).
-       dns-prefetch is the fallback for older browsers. -->
-  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
-  <link rel="dns-prefetch" href="https://images.unsplash.com" />
+  <!-- Fonts are self-hosted in /fonts/ (no Google Fonts request, no
+       third-party DNS/TLS on first paint). Preload the two first-paint
+       faces from the same origin. -->
   <link
     rel="preload"
     as="font"
     type="font/woff2"
     crossorigin
-    href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+    href="/fonts/inter-latin.woff2"
   />
   <link
     rel="preload"
     as="font"
     type="font/woff2"
     crossorigin
-    href="https://fonts.gstatic.com/s/notosansdevanagari/v30/TuG7UUFzXI5FBtUq5a8bjKYTZjtRU6Sgv3NaV_SNmI0b8QQCQmHN5TV_9qo.woff2"
+    href="/fonts/noto-devanagari.woff2"
   />
 
   <!-- Theme color -->
@@ -238,7 +247,7 @@ const globalJsonLd = (isHomepage || noindex) ? null : [
   <meta name="twitter:image:alt" content={title} />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
 
   {jsonLd && (
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
@@ -261,8 +270,9 @@ const globalJsonLd = (isHomepage || noindex) ? null : [
   <Navbar />
   <SearchModal />
   <main class="flex-1">
+    <!-- Pages with their own in-card back button hide the global row to avoid double navigation -->
     {useToolsLayout ? (
-      <ToolsLayout currentPath={pathname} categoryPage={isCategoryPage} showSidebar={showSidebar}>
+      <ToolsLayout currentPath={pathname} categoryPage={isCategoryPage} showSidebar={showSidebar} hideBack={hideBackPaths.has(pathname)}>
         <slot />
       </ToolsLayout>
     ) : (

@@ -31,3 +31,13 @@ jobs:
       # The build must never ship without the social share image present.
       - name: Verify OG image exists
         run: test -f dist/og-default.png
+
+      # Serve the production build and run route/content smoke checks
+      # (catches 500s, dead routes, and third-party regressions unit tests miss).
+      - name: Smoke test production build
+        run: |
+          python3 -m http.server 8788 --directory dist >/tmp/http.log 2>&1 &
+          SRV_PID=$!
+          trap "kill $SRV_PID" EXIT
+          for i in $(seq 1 30); do curl -sf http://localhost:8788/ >/dev/null && break; sleep 2; done
+          npm run smoke -- http://localhost:8788

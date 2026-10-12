@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Gold market analysts and Nepal finance experts
 date: September 14, 2026
 readTime: 12 min read
-image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1200&h=630&fit=crop&auto=format&q=80&auto=format"
+image: "/blog/photo-1596422846543-75c6fc197f07.jpg"
 tags: [Gold, Hallmark, Tola, Purity, Nepal, Finance]
 headings:
   - id: introduction

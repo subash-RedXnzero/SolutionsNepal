@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal transport and vehicle researchers
 date: September 27, 2026
 readTime: 12 min read
-image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1449965408869-eaa3f722e40d.jpg"
 tags: [Vehicle Ownership Transfer Nepal, Namsari, Bluebook Transfer, DOTM, Vehicles]
 relatedTools: [vehicle-tax-new, government-service-cost]
 headings:

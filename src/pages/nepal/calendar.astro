@@ -67,6 +67,10 @@ const initialData = JSON.stringify({
       <div class="cal-card" id="calendar-card">
         <div class="cal-header">
           <div class="cal-header-left">
+            <button class="cal-back-btn" id="cal-back-btn" type="button" aria-label="Go back to the previous page">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Back</span>
+            </button>
             <button class="cal-nav-btn" id="prev-btn" aria-label="Previous month">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
@@ -279,6 +283,12 @@ const initialData = JSON.stringify({
     const pickerYearEl = document.getElementById('picker-year');
     const pickerPrevYear = document.getElementById('picker-prev-year');
     const pickerNextYear = document.getElementById('picker-next-year');
+
+    // ── Grid back button: history back, or /nepal hub when landed directly ──
+    document.getElementById('cal-back-btn')?.addEventListener('click', () => {
+      if (!document.referrer) { window.location.assign('/nepal'); return; }
+      history.back();
+    });
 
     // ── Ensure month data exists ──
     function ensureMonthData(y, m) {
@@ -773,6 +783,7 @@ const initialData = JSON.stringify({
     --cal-border-2: #D4D4D4;
     --cal-red: #D92D20;
     --cal-red-light: #FEF0EE;
+    --cal-red-med: #F6C9C2;
     --cal-red-border: #FECACA;
     --cal-blue: #2563EB;
     --cal-blue-light: #EBF1FE;
@@ -796,6 +807,7 @@ const initialData = JSON.stringify({
     --cal-border-2: #404040;
     --cal-red: #EF4444;
     --cal-red-light: rgba(239,68,68,0.12);
+    --cal-red-med: rgba(239,68,68,0.30);
     --cal-red-border: rgba(239,68,68,0.25);
     --cal-blue: #60A5FA;
     --cal-blue-light: rgba(96,165,250,0.12);
@@ -814,7 +826,7 @@ const initialData = JSON.stringify({
     margin-left: 50%;
     margin-right: 0;
     transform: translateX(-50%);
-    padding: 20px 24px 48px;
+    padding: 12px 24px 48px;
     background: var(--cal-bg);
     min-height: 100vh;
     overflow-x: hidden;
@@ -822,7 +834,7 @@ const initialData = JSON.stringify({
     box-sizing: border-box;
   }
   .cal-breadcrumbs {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
   .cal-layout {
     display: flex;
@@ -897,6 +909,29 @@ const initialData = JSON.stringify({
   }
 
   /* ── Buttons ── */
+  .cal-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 32px;
+    padding: 5px 10px 5px 8px;
+    margin-right: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--cal-text-2);
+    background: transparent;
+    border: 1px solid var(--cal-border);
+    border-radius: var(--cal-radius-sm);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+  .cal-back-btn:hover {
+    color: var(--cal-text);
+    border-color: var(--cal-text-4);
+    background: var(--cal-hover);
+  }
+  .cal-back-btn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
   .cal-btn-icon {
     display: inline-flex;
     align-items: center;
@@ -1162,6 +1197,9 @@ const initialData = JSON.stringify({
   .cal-cell-sat .cal-cell-bs {
     color: var(--cal-red) !important;
   }
+  .cal-cell-holiday-bg .cal-cell-bs {
+    color: var(--cal-red) !important;
+  }
   .cal-cell-sat {
     background: transparent !important;
   }
@@ -1192,10 +1230,10 @@ const initialData = JSON.stringify({
     font-family: var(--font-nepali);
   }
 
-  /* ── Today ── */
+  /* ── Today: deep-tinted whole cell — darker than holiday tint cells ── */
   .cal-cell-today {
-    background: var(--cal-red-light) !important;
-    border: 1.5px solid var(--cal-red) !important;
+    background: var(--cal-red-med) !important;
+    border: 2px solid var(--cal-red) !important;
     z-index: 1;
   }
   .cal-cell-today .cal-cell-bs {
@@ -1286,7 +1324,7 @@ const initialData = JSON.stringify({
     border-radius: var(--cal-radius-xs);
   }
   .cal-legend-today {
-    background: var(--cal-red-light);
+    background: var(--cal-red-med);
     border: 1.5px solid var(--cal-red);
   }
   .cal-legend-holiday {

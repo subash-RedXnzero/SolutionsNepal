@@ -17,34 +17,35 @@ const fuelTypes = Object.values(FUEL_TYPES);
 
 <BaseLayout
 >
-  <div class="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
+  <div class="mx-auto max-w-4xl px-4 sm:px-6 py-6">
     <Breadcrumbs items={[
       { label: 'Nepal', href: '/nepal' },
       { label: 'Vehicle', href: '/nepal/vehicle' },
-      { label: 'Fuel Cost' },
+      { label: 'Trip Fuel Cost Calculator' },
     ]} />
 
     <!-- Header -->
-    <div class="mb-6">
-      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">Fuel Cost</h1>
-      <p class="mt-1 text-sm" style="color: var(--nk-text-secondary);">Trip Cost & Per KM Calculator</p>
+    <div class="mb-4">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color: var(--nk-text);">Trip Fuel Cost Calculator</h1>
+      <p class="mt-0.5 text-[13px]" style="color: var(--nk-text-secondary);">Trip Cost &amp; Per KM Calculator</p>
     </div>
 
     <CalculatorCard title="" description="">
-      <div class="space-y-5">
+      <div class="grid gap-4 lg:grid-cols-5">
+        <div class="lg:col-span-3 space-y-3">
 
-        <!-- DISTANCE -->
+        <!-- DISTANCE + TRIP TYPE -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label for="distance-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Distance <span class="font-normal" style="color: var(--nk-text-secondary);">— one-way, in km</span></label>
+          <label for="distance-input" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">Distance <span class="font-normal" style="color: var(--nk-text-secondary);">— one-way, km</span></label>
           <div class="relative">
             <input inputmode="decimal"
               id="distance-input"
               type="number"
               min="1"
               step="1"
-              value="250"
-              placeholder="250"
-              class="w-full pl-3 pr-12 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+              placeholder="e.g. 250"
+              class="w-full pl-3 pr-12 py-2 rounded-lg border text-base transition-colors focus:ring-2"
               style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
             />
             <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">km</span>
@@ -53,28 +54,31 @@ const fuelTypes = Object.values(FUEL_TYPES);
 
         <!-- TRIP TYPE -->
         <div>
-          <label for="trip-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Trip Type</label>
+          <label for="trip-type" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">Trip Type</label>
+          <div class="relative">
           <select
             id="trip-type"
-            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
+            class="w-full pl-3 pr-10 py-2 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
             style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
           >
             <option value="one-way">One Way</option>
             <option value="round-trip">Round Trip</option>
           </select>
+          <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
         </div>
-
-        <hr style="border-color: var(--nk-border);" />
+        </div>
 
         <!-- VEHICLE PRESET (optional) -->
         <div>
-          <label for="preset-select" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+          <label for="preset-select" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">
             Vehicle Type
             <span class="text-xs font-normal" style="color: var(--nk-text-secondary);">(optional preset)</span>
           </label>
+          <div class="relative">
           <select
             id="preset-select"
-            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
+            class="w-full pl-3 pr-10 py-2 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
             style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
           >
             <option value="">Custom — enter your own values</option>
@@ -82,36 +86,41 @@ const fuelTypes = Object.values(FUEL_TYPES);
               <option value={p.id}>{p.label} — {p.description}</option>
             ))}
           </select>
+          <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
         </div>
 
         <!-- FUEL TYPE -->
         <div>
-          <label for="fuel-type" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fuel Type</label>
+          <label for="fuel-type" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">Fuel Type</label>
+          <div class="relative">
           <select
             id="fuel-type"
-            class="w-full px-3 py-2.5 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
+            class="w-full pl-3 pr-10 py-2 rounded-lg border text-base transition-colors focus:ring-2 appearance-none"
             style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
           >
             {fuelTypes.map(f => (
               <option value={f.id}>{f.label}</option>
             ))}
           </select>
+          <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--nk-text-secondary);" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
         </div>
 
         <!-- PETROL/DIESEL INPUTS -->
         <div id="ice-inputs">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <!-- Mileage -->
-          <div class="mb-4">
-            <label for="mileage-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Vehicle Mileage <span class="font-normal" style="color: var(--nk-text-secondary);">— km per litre</span></label>
+          <div>
+            <label for="mileage-input" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">Vehicle Mileage <span class="font-normal" style="color: var(--nk-text-secondary);">— km per litre</span></label>
             <div class="relative">
               <input inputmode="decimal"
                 id="mileage-input"
                 type="number"
                 min="1"
                 step="0.1"
-                value="15"
-                placeholder="15"
-                class="w-full pl-3 pr-16 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                placeholder="e.g. 15"
+                class="w-full pl-3 pr-16 py-2 rounded-lg border text-base transition-colors focus:ring-2"
                 style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
               />
               <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">km/L</span>
@@ -121,7 +130,7 @@ const fuelTypes = Object.values(FUEL_TYPES);
 
           <!-- Fuel Price -->
           <div>
-            <label for="fuel-price-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Fuel Price <span class="font-normal" style="color: var(--nk-text-secondary);">— current pump price</span></label>
+            <label for="fuel-price-input" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">Fuel Price <span class="font-normal" style="color: var(--nk-text-secondary);">— current pump price</span></label>
             <div class="relative">
               <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">Rs.</span>
               <input inputmode="decimal"
@@ -129,31 +138,31 @@ const fuelTypes = Object.values(FUEL_TYPES);
                 type="number"
                 min="0"
                 step="0.5"
-                value="156"
-                placeholder="156"
-                class="w-full pl-10 pr-14 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                placeholder="e.g. 156"
+                class="w-full pl-10 pr-14 py-2 rounded-lg border text-base transition-colors focus:ring-2"
                 style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
               />
               <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">/ L</span>
             </div>
             <p id="fuel-price-hint" class="text-xs mt-1" style="color: var(--nk-text-secondary);">Enter current fuel price from pump</p>
           </div>
+          </div>
         </div>
 
         <!-- EV INPUTS (hidden by default) -->
         <div id="ev-inputs" class="hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <!-- Energy Consumption -->
-          <div class="mb-4">
-            <label for="consumption-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Energy Consumption</label>
+          <div>
+            <label for="consumption-input" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">Energy Consumption</label>
             <div class="relative">
               <input inputmode="decimal"
                 id="consumption-input"
                 type="number"
                 min="1"
                 step="0.1"
-                value="18"
-                placeholder="18"
-                class="w-full pl-3 pr-20 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                placeholder="e.g. 18"
+                class="w-full pl-3 pr-20 py-2 rounded-lg border text-base transition-colors focus:ring-2"
                 style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
               />
               <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">kWh/100km</span>
@@ -163,7 +172,7 @@ const fuelTypes = Object.values(FUEL_TYPES);
 
           <!-- Electricity Price -->
           <div>
-            <label for="elec-price-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">Electricity Price</label>
+            <label for="elec-price-input" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">Electricity Price</label>
             <div class="relative">
               <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color: var(--nk-text-secondary);">Rs.</span>
               <input inputmode="decimal"
@@ -171,14 +180,14 @@ const fuelTypes = Object.values(FUEL_TYPES);
                 type="number"
                 min="0"
                 step="0.5"
-                value="12"
-                placeholder="12"
-                class="w-full pl-10 pr-14 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+                placeholder="e.g. 12"
+                class="w-full pl-10 pr-14 py-2 rounded-lg border text-base transition-colors focus:ring-2"
                 style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
               />
               <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">/ kWh</span>
             </div>
             <p class="text-xs mt-1" style="color: var(--nk-text-secondary);">NEA domestic tariff or charging station rate</p>
+          </div>
           </div>
         </div>
 
@@ -186,7 +195,7 @@ const fuelTypes = Object.values(FUEL_TYPES);
 
         <!-- COST SPLITTING -->
         <div>
-          <label for="people-input" class="block text-sm font-medium mb-1.5" style="color: var(--nk-text);">
+          <label for="people-input" class="block text-sm font-medium mb-1" style="color: var(--nk-text);">
             Split Fuel Cost
             <span class="text-xs font-normal" style="color: var(--nk-text-secondary);">(optional)</span>
           </label>
@@ -197,9 +206,8 @@ const fuelTypes = Object.values(FUEL_TYPES);
               min="1"
               max="50"
               step="1"
-              value="1"
-              placeholder="1"
-              class="w-full pl-3 pr-16 py-2.5 rounded-lg border text-base transition-colors focus:ring-2"
+              placeholder="e.g. 1"
+              class="w-full pl-3 pr-16 py-2 rounded-lg border text-base transition-colors focus:ring-2"
               style="background-color: var(--nk-bg); border-color: var(--nk-border); color: var(--nk-text); --tw-ring-color: var(--nk-accent);"
             />
             <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium" style="color: var(--nk-text-secondary);">people</span>
@@ -216,24 +224,23 @@ const fuelTypes = Object.values(FUEL_TYPES);
           Calculate Fuel Cost
         </button>
         <p class="text-center text-[13px]" style="color: var(--nk-text-secondary);">Result updates automatically as you type</p>
-
+        </div>
+        <div class="lg:col-span-2">
         <!-- ============================================ -->
-        <!-- RESULTS                                      -->
+        <!-- RESULTS (sticky summary column)              -->
         <!-- ============================================ -->
-        <div id="result" class="hidden">
-          <hr class="my-2" style="border-color: var(--nk-border);" />
-
+        <div id="result" class="hidden lg:sticky lg:top-24">
           <!-- TOTAL COST HERO -->
-          <div class="text-center py-6">
-            <p class="text-sm font-medium mb-1" style="color: var(--nk-text-secondary);">Estimated Fuel Cost</p>
-            <p id="total-cost" class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
-            <p id="total-subtitle" class="text-xs mt-2" style="color: var(--nk-text-secondary);"></p>
+          <div class="text-center py-4">
+            <p class="text-[13px] font-medium mb-1" style="color: var(--nk-text-secondary);">Estimated Fuel Cost</p>
+            <p id="total-cost" class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-accent);"></p>
+            <p id="total-subtitle" class="text-xs mt-1.5" style="color: var(--nk-text-secondary);"></p>
           </div>
 
           <!-- BREAKDOWN -->
-          <div class="space-y-3 mb-6">
-            <div class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
-              <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--nk-text-secondary);">Breakdown</p>
+          <div class="space-y-2 mb-4">
+            <div class="p-3 rounded-lg" style="background-color: var(--nk-muted);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Breakdown</p>
 
               <!-- ICE breakdown -->
               <div id="bd-ice" class="space-y-2">
@@ -287,7 +294,7 @@ const fuelTypes = Object.values(FUEL_TYPES);
             </div>
 
             <!-- COST SPLIT (if applicable) -->
-            <div id="bd-split-section" class="p-4 rounded-lg hidden" style="background-color: var(--nk-muted);">
+            <div id="bd-split-section" class="p-3 rounded-lg hidden" style="background-color: var(--nk-muted);">
               <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--nk-text-secondary);">Cost Split</p>
               <div class="flex justify-between text-sm">
                 <span style="color: var(--nk-text-secondary);">Total Fuel Cost</span>
@@ -305,7 +312,7 @@ const fuelTypes = Object.values(FUEL_TYPES);
             </div>
 
             <!-- FORMULA (collapsed) -->
-            <details class="p-4 rounded-lg" style="background-color: var(--nk-muted);">
+            <details class="p-3 rounded-lg" style="background-color: var(--nk-muted);">
               <summary class="text-xs font-semibold uppercase tracking-wider cursor-pointer" style="color: var(--nk-text-secondary);">How it's calculated</summary>
               <div id="bd-formula" class="mt-3 space-y-1 text-xs" style="color: var(--nk-text-secondary);"></div>
             </details>
@@ -320,6 +327,7 @@ const fuelTypes = Object.values(FUEL_TYPES);
               Reset
             </button>
           </div>
+        </div>
         </div>
       </div>
     </CalculatorCard>
@@ -554,12 +562,12 @@ const fuelTypes = Object.values(FUEL_TYPES);
 
     // === RESET ===
     resetBtn?.addEventListener('click', () => {
-      if (distanceInput) distanceInput.value = '250';
-      if (mileageInput) mileageInput.value = '15';
-      if (fuelPriceInput) fuelPriceInput.value = '156';
-      if (consumptionInput) consumptionInput.value = '18';
-      if (elecPriceInput) elecPriceInput.value = '12';
-      if (peopleInput) peopleInput.value = '1';
+      if (distanceInput) distanceInput.value = '';
+      if (mileageInput) mileageInput.value = '';
+      if (fuelPriceInput) fuelPriceInput.value = '';
+      if (consumptionInput) consumptionInput.value = '';
+      if (elecPriceInput) elecPriceInput.value = '';
+      if (peopleInput) peopleInput.value = '';
       calculate();
     });
   </script>

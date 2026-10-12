@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Financial analysts and Nepal tax experts
 date: July 25, 2026
 readTime: 3 min read
-image: "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1532938911079-1b06ac7ceec7.jpg"
 tags: [Health, BMI, Calculator]
 headings:
   - id: introduction

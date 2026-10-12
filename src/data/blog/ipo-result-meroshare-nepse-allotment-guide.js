@@ -10,7 +10,7 @@ export const ipoResultMeroshareNepseAllotmentGuidePost = {
   authorCredential: 'Nepal investment and finance researchers',
   date: 'September 10, 2026',
   readTime: '12 min read',
-  image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1551288049-bebda4e38f71.jpg',
   tags: ['IPO', 'MeroShare', 'CDSC', 'NEPSE', 'Investing', 'Nepal'],
   relatedTools: ['sip-calculator', 'emi-calculator'],
   faqs: [

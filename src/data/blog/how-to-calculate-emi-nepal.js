@@ -10,7 +10,7 @@ export const howToCalculateEmiNepalPost = {
   authorCredential: 'Financial analysts and Nepal tax experts',
   date: 'August 20, 2026',
   readTime: '8 min read',
-  image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1450101499163-c8848c66ca85.jpg',
   tags: ['Finance', 'EMI', 'Loans', 'Calculator', 'Nepal', 'Banking'],
   headings: [
     { id: 'introduction', text: 'Introduction', level: 2 },

@@ -101,7 +101,7 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
     },
   ]}
 >
-  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 py-4 sm:py-5 oc-wrap">
+  <div class="mx-auto max-w-[1440px] px-4 sm:px-6 py-4 sm:py-5 oc-wrap">
     <Breadcrumbs items={[
       { label: 'Nepal', href: '/nepal' },
       { label: 'Vehicle', href: '/nepal/vehicle' },
@@ -126,7 +126,7 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
       })}
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-5 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-4 items-start">
 
       <!-- ═══ LEFT: INPUTS ═══ -->
       <div class="nk-card p-4 space-y-3" id="input-card">
@@ -231,9 +231,10 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
           </div>
         </section>
 
-        <!-- Annual + maintenance -->
-        <section>
-          <div class="duo">
+        <!-- Annual + maintenance (collapsed — optional) -->
+        <details class="exp-group">
+          <summary class="exp-summary"><Receipt size={14} /><span>Yearly costs &amp; maintenance <span style="font-weight:400;color:var(--nk-text-tertiary);">— optional</span></span></summary>
+          <div class="exp-body">
             <div>
           <p class="sec-head"><span class="sec-icon"><Receipt size={14} /></span> Yearly costs</p>
           <div class="grid grid-cols-1 min-[500px]:grid-cols-2 gap-2">
@@ -268,11 +269,12 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
           </div>
             </div>
           </div>
-        </section>
+        </details>
 
-        <!-- Monthly + depreciation -->
-        <section>
-          <div class="duo">
+        <!-- Monthly + depreciation (collapsed — optional) -->
+        <details class="exp-group">
+          <summary class="exp-summary"><SquareParking size={14} /><span>Monthly extras &amp; depreciation <span style="font-weight:400;color:var(--nk-text-tertiary);">— optional</span></span></summary>
+          <div class="exp-body">
             <div>
           <p class="sec-head"><span class="sec-icon"><SquareParking size={14} /></span> Monthly extras</p>
           <div class="grid grid-cols-1 min-[500px]:grid-cols-2 gap-2">
@@ -304,7 +306,7 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
           <p class="text-[10.5px] mt-1.5 leading-relaxed" style="color:var(--nk-text-tertiary);">Value loss, not monthly cash spending.</p>
             </div>
           </div>
-        </section>
+        </details>
 
         <button type="button" id="calc-btn" class="nk-btn nk-btn-primary w-full">
           <Calculator size={15} /> Calculate ownership cost
@@ -377,7 +379,7 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
       </div>
 
       <!-- ═══ RIGHT: RESULT ═══ -->
-      <div class="lg:sticky lg:top-4">
+      <div class="lg:sticky lg:top-20">
         <div class="nk-card p-4" aria-live="polite" id="result-card">
           <div class="flex items-center justify-between gap-2 mb-3">
             <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--nk-text-tertiary);">Your cost</p>
@@ -466,7 +468,7 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
       <section>
         <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Related Nepal calculators</h3>
         <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
-          <li>• <a class="underline hover:opacity-80" href="/nepal/vehicle/fuel-cost" style="color:var(--nk-accent);">Fuel Cost Calculator</a> — trip-wise fuel and per-km cost</li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/vehicle/fuel-cost" style="color:var(--nk-accent);">Trip Fuel Cost Calculator</a> — trip-wise fuel and per-km cost</li>
           <li>• <a class="underline hover:opacity-80" href="/nepal/transport/vehicle-tax" style="color:var(--nk-accent);">Vehicle Tax Calculator</a> — official tax, fines and renewal costs</li>
           <li>• <a class="underline hover:opacity-80" href="/nepal/finance/emi-calculator" style="color:var(--nk-accent);">EMI Calculator</a> — standalone loan instalment math</li>
         </ul>
@@ -475,7 +477,7 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
 
     <Disclaimer variant="general" />
     <RelatedTools tools={[
-      { title: 'Fuel Cost', description: 'Trip fuel cost & cost per km', href: '/nepal/vehicle/fuel-cost' },
+      { title: 'Trip Fuel Cost Calculator', description: 'Trip fuel cost & cost per km', href: '/nepal/vehicle/fuel-cost' },
       { title: 'Vehicle Tax, Fine & Renewal', description: 'Official tax & renewal costs', href: '/nepal/transport/vehicle-tax' },
       { title: 'EMI Calculator', description: 'Monthly loan payments', href: '/nepal/finance/emi-calculator' },
     ]} />
@@ -840,6 +842,10 @@ const FUEL_ICONS = { petrol: Fuel, diesel: Fuel, electric: Zap };
     } else {
       box.classList.add('hidden');
     }
+    // Optional sections are collapsed — open any holding a visible error.
+    document.querySelectorAll('#input-card details.exp-group').forEach((d) => {
+      if (d.querySelector('[data-err]:not(.hidden)')) d.open = true;
+    });
     return Object.keys(errors).length === 0;
   }
 

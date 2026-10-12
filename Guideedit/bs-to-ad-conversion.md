@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Financial analysts and Nepal tax experts
 date: August 18, 2026
 readTime: 4 min read
-image: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1506784983877-45594efa4cbe.jpg"
 tags: [Nepal, Calendar, BS, AD, Date]
 headings:
   - id: introduction

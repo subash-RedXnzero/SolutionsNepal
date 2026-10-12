@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal utilities researchers
 date: September 27, 2026
 readTime: 8 min read
-image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1473093295043-cdd812d0e601.jpg"
 tags: [LPG Gas Nepal, NOC Gas, Cylinder Price Nepal, Utilities]
 relatedTools: [lpg-calculator, cost-of-living]
 headings:

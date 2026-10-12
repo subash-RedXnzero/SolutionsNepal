@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal banking and personal-finance researchers
 date: September 16, 2026
 readTime: 16 min read
-image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1551288049-bebda4e38f71.jpg"
 tags: [Demat, Mero Share, BOID, CRN, C-ASBA, IPO, Nepal]
 relatedTools: [nepse-profit-loss, sip-calculator, foreign-exchange, nepali-calendar]
 headings:

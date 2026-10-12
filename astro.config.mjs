@@ -34,6 +34,7 @@ const nonIndexablePaths = new Set([
   '/nepal/electricity',
   '/nepal/electricity/bill-calculator',
   '/silver-price-nepal',
+  '/data/tools.json',
 ]);
 
 export default defineConfig({
@@ -42,7 +43,6 @@ export default defineConfig({
   image: {
     // sharp enables responsive/WebP via astro:assets
     service: { entrypoint: 'astro/assets/services/sharp' },
-    domains: ['images.unsplash.com'],
   },
 
   redirects,
@@ -86,6 +86,9 @@ export default defineConfig({
     // them raw in dev. Production bundling (manualChunks below) is unaffected.
     optimizeDeps: {
       exclude: ['pdfjs-dist', 'pdf-lib'],
+      // qrcode is lazy-loaded on first Generate click: pre-bundle it at dev
+      // startup so the on-demand request never serves a stale 504 chunk.
+      include: ['qrcode'],
     },
     build: {
       cssMinify: 'lightningcss',

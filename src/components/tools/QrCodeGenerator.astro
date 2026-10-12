@@ -423,7 +423,12 @@ const activeType = VALID_IDS.includes(initialType as any) ? initialType : 'text'
     return qrLib;
   }
   async function encode(payload: string) {
-    const QRCode = await getQrLib();
+    let QRCode;
+    try {
+      QRCode = await getQrLib();
+    } catch {
+      throw new Error('qr-engine-load-failed');
+    }
     await QRCode.toCanvas(canvas, payload, { ...RENDER_OPTS, width: 720 });
     // qrcode's renderer injects inline width/height px styles on the canvas;
     // remove them so the scoped stylesheet controls responsive preview sizing.
@@ -499,8 +504,10 @@ const activeType = VALID_IDS.includes(initialType as any) ? initialType : 'text'
     }
     try {
       await encode(result.payload);
-    } catch {
-      showFieldError(null, 'This content is too large for a single QR code.');
+    } catch (err) {
+      showFieldError(null, err instanceof Error && err.message === 'qr-engine-load-failed'
+        ? 'Could not load the QR engine. Please reload the page and try again.'
+        : 'This content is too large for a single QR code.');
       return;
     }
     canvas.style.display = '';
@@ -578,13 +585,19 @@ const activeType = VALID_IDS.includes(initialType as any) ? initialType : 'text'
     await saveFileAs(blob, filename);
   }
 
-  dlPng.addEventListener('click', () => {
+  dlPng.addEventListener('click', async () => {
     if (!currentPayload) return;
-    const c = document.createElement('canvas');
-    QRCode.toCanvas(c, currentPayload, { ...RENDER_OPTS, width: 1024 })
-      .then(() => new Promise<Blob | null>((res) => c.toBlob(res, 'image/png')))
-      .then((b) => b && downloadBlob(b, 'solutionsnepal-qr.png'))
-      .catch(() => {});
+    try {
+      const QRCode = await getQrLib();
+      const c = document.createElement('canvas');
+      await QRCode.toCanvas(c, currentPayload, { ...RENDER_OPTS, width: 1024 });
+      const b = await new Promise<Blob | null>((res) => c.toBlob(res, 'image/png'));
+      if (b) await downloadBlob(b, 'solutionsnepal-qr.png');
+    } catch (err) {
+      showFieldError(null, err instanceof Error && err.message === 'qr-engine-load-failed'
+        ? 'Could not load the QR engine. Please reload the page and try again.'
+        : 'Could not create the PNG. Please try again.');
+    }
   });
 
   dlSvg.addEventListener('click', () => {

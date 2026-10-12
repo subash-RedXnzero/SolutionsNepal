@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 16, 2026
 readTime: 14 min read
-image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1434030216411-0b793f4b4173.jpg"
 tags: [MOFA Document Attestation Nepal Online 2026, MOFA Attestation, NEATS, Department of Consular Services, Embassy Legalization, Documents]
 relatedTools: [government-service-cost, nepali-calendar, passport-size-photo]
 headings:

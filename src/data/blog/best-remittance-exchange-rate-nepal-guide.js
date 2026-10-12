@@ -10,7 +10,7 @@ export const bestRemittanceExchangeRateNepalGuidePost = {
   authorCredential: 'Nepal remittance & foreign-exchange analysts',
   date: 'September 10, 2026',
   readTime: '14 min read',
-  image: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1580519542036-c47de6196ba5.jpg',
   tags: ['best remittance rate Nepal', 'exchange rate comparison Nepal', 'cheapest money transfer to Nepal', 'NRB exchange rate', 'transfer fees Nepal remittance', 'remittance exchange rate Nepal', 'send money to Nepal', 'money transfer Nepal', 'remittance fee Nepal', 'USD to NPR remittance rate', 'foreign currency exchange Nepal', 'Finance'],
   relatedTools: ['foreign-exchange', 'emi-calculator', 'salary-checker'],
   faqs: [

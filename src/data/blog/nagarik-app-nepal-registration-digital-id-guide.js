@@ -10,7 +10,7 @@ export const nagarikAppNepalRegistrationDigitalIdGuidePost = {
   authorCredential: 'Nepal digital-government researchers',
   date: 'September 14, 2026',
   readTime: '15 min read',
-  image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1512941937669-90a1b58e7e9c.jpg',
   tags: ['Nagarik App', 'Digital ID Nepal', 'National ID', 'Citizenship', 'PAN', 'Documents'],
   relatedTools: ['government-service-cost', 'passport-size-photo'],
   faqs: [

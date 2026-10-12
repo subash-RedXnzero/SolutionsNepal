@@ -10,7 +10,7 @@ export const vatFilingNepalMonthlyReturn25thGuidePost = {
   authorCredential: 'Nepal tax researchers',
   date: 'September 27, 2026',
   readTime: '11 min read',
-  image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1434030216411-0b793f4b4173.jpg',
   tags: ['VAT Filing Nepal', 'VAT Return Nepal', 'IRD VAT', 'VAT 2026', 'Finance'],
   relatedTools: ['vat-calculator', 'salary-checker', 'house-rent-tax'],
   faqs: [

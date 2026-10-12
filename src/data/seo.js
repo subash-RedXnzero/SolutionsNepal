@@ -720,13 +720,13 @@ const pages = {
     },
   },
   '/nepal/vehicle/fuel-cost': {
-    title: 'Fuel Cost Calculator Nepal | Trip Cost & Cost per KM | SolutionsNepal',
+    title: 'Trip Fuel Cost Calculator Nepal | Trip Cost & Cost per KM | SolutionsNepal',
     description:
       'Calculate trip fuel cost and cost per kilometer for your journey in Nepal.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
-      name: 'Nepal Fuel Cost Calculator',
+      name: 'Nepal Trip Fuel Cost Calculator',
       description: 'Calculate trip fuel cost in Nepal.',
       url: `${SITE_URL}/nepal/vehicle/fuel-cost`,
       applicationCategory: 'UtilitiesApplication',
@@ -1300,6 +1300,16 @@ const pages = {
     title: 'Contact SolutionsNepal',
     description:
       'Get in touch with the SolutionsNepal team. Feedback, suggestions, and bug reports welcome.',
+  },
+  '/privacy': {
+    title: 'Privacy Policy — What We Collect | SolutionsNepal',
+    description:
+      'SolutionsNepal privacy: calculators run in your browser with no accounts. Analytics measures visits; the contact form sends only what you type.',
+  },
+  '/terms': {
+    title: 'Terms of Use — Free Tools, Honest Limits | SolutionsNepal',
+    description:
+      'The rules for using SolutionsNepal: free tools provided as-is, estimates not professional advice, original content, and contact details for issues.',
   },
   '/blog': {
     title: 'Blog | SolutionsNepal',

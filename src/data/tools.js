@@ -1,13 +1,5 @@
 export const tools = [
   {
-    id: 'weather',
-    title: 'Weather Nepal',
-    description: "Live weather, hourly & 7-day forecast and air quality for 10 Nepali cities",
-    category: 'utilities',
-    href: '/weather',
-    popular: true,
-  },
-  {
     id: 'business-registration-cost',
     title: 'Business Registration Cost',
     description: 'Estimate government registration costs for companies, sole & partnership firms in Nepal',
@@ -201,7 +193,7 @@ export const tools = [
   },
   {
     id: 'fuel-cost',
-    title: 'Fuel Cost',
+    title: 'Trip Fuel Cost Calculator',
     description: 'Calculate trip fuel cost & cost per km',
     category: 'vehicle',
     href: '/nepal/vehicle/fuel-cost',

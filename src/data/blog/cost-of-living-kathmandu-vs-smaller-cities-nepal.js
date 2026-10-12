@@ -10,7 +10,7 @@ export const costOfLivingKathmanduVsSmallerCitiesNepalPost = {
   authorCredential: 'Nepal finance and cost-of-living researchers',
   date: 'September 10, 2026',
   readTime: '15 min read',
-  image: 'https://images.unsplash.com/photo-1658437711216-1b55fd9ae096?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1658437711216-1b55fd9ae096.jpg',
   tags: ['Cost of Living', 'Kathmandu', 'Pokhara', 'Chitwan', 'Butwal', 'Nepal'],
   relatedTools: ['salary-checker', 'cost-of-living', 'emi-calculator', 'electricity-bill', 'sip-calculator'],
   faqs: [

@@ -10,7 +10,7 @@ export const registerCompanyInNepalOnlineCamisGuidePost = {
   authorCredential: 'Nepal business-registration researchers',
   date: 'September 14, 2026',
   readTime: '18 min read',
-  image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=630&fit=crop&auto=format',
+  image: '/blog/photo-1486406146926-c627a92ad1ab.jpg',
   tags: ['Company Registration Nepal', 'OCR CAMIS', 'Private Limited Company', 'Business Registration', 'Nepal', 'Business'],
   relatedTools: ['business-registration-cost', 'vat-calculator'],
   faqs: [

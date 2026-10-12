@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 14, 2026
 readTime: 16 min read
-image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1568992687947-868a62a9f521.jpg"
 tags: [Foreign Employment, Labour Permit, Shram Swikriti, FEIMS, DoFE, Nepal]
 relatedTools: [bs-to-ad, date-difference, foreign-exchange]
 headings:

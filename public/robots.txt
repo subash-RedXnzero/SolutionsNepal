@@ -1,49 +1,53 @@
 # SolutionsNepal — robots.txt
 # https://solutionsnepal.com
 
-# ── Default: allow all crawlers ──
+# Default: allow all crawlers
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /_astro/
 
-# ── AI Search Bots — ALLOW (these cite content in AI answers) ──
-
-# OpenAI — ChatGPT search citations
+# AI search bots (allowed explicitly; optional, since * already allows them)
 User-agent: GPTBot
 Allow: /
 
 User-agent: ChatGPT-User
 Allow: /
 
-# Perplexity — AI search citations
 User-agent: PerplexityBot
 Allow: /
 
-# Anthropic — Claude citations
 User-agent: ClaudeBot
 Allow: /
 
 User-agent: anthropic-ai
 Allow: /
 
-# Google — AI Overviews, Gemini, AI Mode
 User-agent: Google-Extended
+Allow: /
+
+# DuckDuckGo (search + AI Assist)
+User-agent: DuckDuckBot
+Allow: /
+
+# Apple (Search, Siri, Spotlight)
+User-agent: Applebot
+Allow: /
+
+# Apple Intelligence training crawler (honors robots.txt separately from Applebot)
+User-agent: Applebot-Extended
+Allow: /
+
+# ByteDance — crawls for TikTok, CapCut and Doubao AI under this single token
+# (there is no separate official TikTok bot user-agent)
+User-agent: Bytespider
 Allow: /
 
 # Bing — Microsoft Copilot
 User-agent: Bingbot
 Allow: /
 
-# ── Training-Only Crawlers — BLOCK (no search citation benefit) ──
-
-# Common Crawl — training data only
+# Training-only crawler: blocked
 User-agent: CCBot
 Disallow: /
 
-# Facebook/Meta — training only
-User-agent: facebookexternalhit
-Disallow: /
-
-# ── Sitemap ──
 Sitemap: https://solutionsnepal.com/sitemap-index.xml

@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal banking researchers
 date: September 27, 2026
 readTime: 8 min read
-image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1556742049-0cfed4f6a45d.jpg"
 tags: [Dollar Card Nepal, "NRB $500", Prepaid Card, Freelancer Payment, Banks]
 relatedTools: [foreign-exchange, emi-calculator, salary-checker]
 headings:

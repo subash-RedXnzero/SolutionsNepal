@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and family-law researchers
 date: September 27, 2026
 readTime: 13 min read
-image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1513475382585-d06e58bcb0e0.jpg"
 tags: [Ansha Banda, Property Partition Nepal, Ansabanda, Malpot, Civil Code 2074, Property]
 relatedTools: [land-registration, property-registration-cost, ropani-to-aana, house-construction-cost]
 headings:

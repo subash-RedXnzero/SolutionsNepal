@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation and civil-registration researchers
 date: September 26, 2026
 readTime: 14 min read
-image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1200&h=630&fit=crop&auto=format"
+image: "/blog/photo-1568992687947-868a62a9f521.jpg"
 tags: [Birth Certificate Nepal, Janma Darta, CRVS Nepal, DONIDCR, Ward Office, Documents]
 relatedTools: [government-service-cost, nepali-calendar, passport-size-photo]
 headings:

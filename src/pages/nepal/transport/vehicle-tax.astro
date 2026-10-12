@@ -8,7 +8,7 @@ import { LATE_STATUS_OPTIONS } from '../../../lib/calculators/vehicle-tax.js';
 import Disclaimer from '../../../components/ui/Disclaimer.astro';
 
 const relatedTools = [
-  { title: 'Fuel Cost', description: 'Calculate trip fuel cost', href: '/nepal/vehicle/fuel-cost' },
+  { title: 'Trip Fuel Cost Calculator', description: 'Calculate trip fuel cost', href: '/nepal/vehicle/fuel-cost' },
   { title: 'Electricity Bill', description: 'Calculate NEA electricity bill', href: '/nepal/utilities/electricity-bill' },
   { title: 'KUKL Water Bill', description: 'Estimate your KUKL water bill', href: '/nepal/utilities/kukl-water-bill' },
 ];
@@ -73,26 +73,34 @@ const faqItems = [
 ---
 
 <BaseLayout>
-  <div class="vt-wrapper mx-auto max-w-[1280px] px-4 sm:px-6 py-6 sm:py-8">
+  <div class="vt-wrapper mx-auto max-w-[1280px] px-4 sm:px-6 py-2 sm:py-3">
 
-    <!-- BREADCRUMBS -->
+    <!-- BACK + BREADCRUMBS (single row) -->
+    <div class="vt-toprow">
+      <button type="button" id="vt-back-btn" class="vt-back" aria-label="Go back to the previous page">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Back</span>
+      </button>
+      <div class="vt-crumbs">
     <Breadcrumbs items={[
       { label: 'Nepal', href: '/nepal' },
       { label: 'Transport', href: '/nepal/transport' },
       { label: 'Vehicle Tax' },
     ]} />
+      </div>
+    </div>
 
     <!-- HEADER -->
-    <header class="vt-header mt-4 mb-6">
+    <header class="vt-header mt-2 mb-4">
       <h1 class="text-xl sm:text-2xl font-bold tracking-tight" style="color: var(--nk-text);">Vehicle Tax, Fine & Renewal</h1>
       <p class="text-sm mt-1" style="color: var(--nk-text-secondary);">Calculate your complete vehicle renewal cost</p>
     </header>
 
     <!-- ================= 2-COLUMN LAYOUT ================= -->
-    <div class="vt-grid grid grid-cols-1 md:grid-cols-[1fr_380px] gap-5 lg:gap-6 items-start">
+    <div class="vt-grid grid grid-cols-1 md:grid-cols-[1fr_380px] gap-4 items-start">
 
       <!-- ========== LEFT: INPUT FORM ========== -->
-      <div class="space-y-4 animate-fade-in">
+      <div class="space-y-3 animate-fade-in">
 
         <!-- ---- Renewal Type ---- -->
         <section>
@@ -132,7 +140,7 @@ const faqItems = [
           <p id="province-warning" class="text-[10px] mt-1 hidden" style="color: var(--nk-text-secondary);">⚠ Estimated rates (Bagmati tables). Verify locally.</p>
 
           <!-- Vehicle Type Cards (2x2 grid) -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-3" role="radiogroup" aria-label="Vehicle type">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-2" role="radiogroup" aria-label="Vehicle type">
             {vehicleTypes.map((vt, i) => (
               <button
                 class={`vehicle-card flex items-center gap-1.5 px-3 py-2 rounded-lg border text-left transition-all duration-150 ${i === 0 ? 'vehicle-card--active' : ''}`}
@@ -151,7 +159,7 @@ const faqItems = [
           </div>
 
           <!-- Engine Capacity -->
-          <div id="engine-section" class="mt-3">
+          <div id="engine-section" class="mt-2">
             <div class="flex items-center justify-between mb-1.5">
               <label for="cc-input" class="vt-field-label" id="engine-label">Engine Capacity</label>
               <span class="vt-unit-badge" id="engine-unit-badge">CC</span>
@@ -208,7 +216,7 @@ const faqItems = [
           </div>
 
           <!-- Current FY indicator -->
-          <div class="flex items-center gap-2 mt-2.5">
+          <div class="flex items-center gap-2 mt-1.5">
             <span class="text-[10px] font-semibold uppercase tracking-wider" style="color: var(--nk-text-secondary);">Current FY</span>
             <span class="text-xs font-bold mono" style="color: var(--nk-accent);">{currentFY}/{currentFY + 1}</span>
           </div>
@@ -220,7 +228,7 @@ const faqItems = [
 
           <div class="space-y-2.5">
             <!-- Bluebook Renewal Fee -->
-            <div class="flex items-center justify-between px-3 py-2.5 rounded-lg" style="background-color: var(--nk-bg); border: 1px solid var(--nk-border);">
+            <div class="flex items-center justify-between px-3 py-2 rounded-lg" style="background-color: var(--nk-bg); border: 1px solid var(--nk-border);">
               <div>
                 <p class="text-xs font-semibold" style="color: var(--nk-text);">Bluebook Renewal Fee</p>
                 <p class="text-[10px] mt-0.5" style="color: var(--nk-text-secondary);">Two-wheeler Rs 300 · Four-wheeler Rs 500</p>
@@ -232,7 +240,7 @@ const faqItems = [
             </div>
 
             <!-- Third-Party Insurance -->
-            <div class="flex items-center justify-between px-3 py-2.5 rounded-lg" style="background-color: var(--nk-bg); border: 1px solid var(--nk-border);">
+            <div class="flex items-center justify-between px-3 py-2 rounded-lg" style="background-color: var(--nk-bg); border: 1px solid var(--nk-border);">
               <div>
                 <p class="text-xs font-semibold" style="color: var(--nk-text);">Third-Party Insurance</p>
                 <p class="text-[10px] mt-0.5" style="color: var(--nk-text-secondary);">Mandatory — separate from tax, never fined</p>
@@ -381,6 +389,22 @@ const faqItems = [
   <style>
     .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    /* ---- Top row: back + breadcrumbs on one line ---- */
+    .vt-toprow { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .vt-crumbs { min-width: 0; overflow: hidden; }
+    .vt-toprow :global(.breadcrumb-nav) { margin-bottom: 0; }
+    .vt-toprow :global(.breadcrumb-list) { flex-wrap: wrap; row-gap: 2px; }
+    .vt-back {
+      display: inline-flex; align-items: center; gap: 5px;
+      min-height: 36px; padding: 7px 14px 7px 11px; margin: 0; flex-shrink: 0;
+      font-size: 13.5px; font-weight: 600; color: #1F2937;
+      background: #fff; border: 1px solid var(--nk-border); border-radius: 10px;
+      cursor: pointer; transition: all 140ms ease;
+      box-shadow: 0 1px 3px rgba(23,33,43,.10);
+    }
+    .vt-back:hover { color: #111827; border-color: var(--nk-border-strong); box-shadow: 0 2px 8px rgba(23,33,43,.14); }
+    .vt-back:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
 
     /* ---- Labels ---- */
     .vt-label {
@@ -570,7 +594,7 @@ const faqItems = [
       align-items: stretch;
     }
     .vt-reset-btn {
-      padding: 12px 20px;
+      padding: 10px 20px;
       font-size: 14px;
       font-weight: 600;
       border-radius: 10px;
@@ -596,7 +620,7 @@ const faqItems = [
     }
     .vt-calc-btn {
       flex: 1;
-      padding: 12px 20px;
+      padding: 10px 20px;
       font-size: 14px;
       font-weight: 700;
       border-radius: 10px;
@@ -638,13 +662,13 @@ const faqItems = [
       overflow: hidden;
     }
     .vt-result-hero {
-      padding: 24px 20px;
+      padding: 16px 20px;
       text-align: center;
       background: linear-gradient(160deg, var(--nk-accent-subtle) 0%, var(--nk-surface) 100%);
     }
     .vt-total-amount {
-      margin-top: 8px;
-      font-size: 36px;
+      margin-top: 6px;
+      font-size: 30px;
       font-weight: 800;
       letter-spacing: -0.03em;
       color: var(--nk-accent);
@@ -658,7 +682,7 @@ const faqItems = [
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 0;
+      padding: 8px 0;
       border-bottom: 1px solid var(--nk-border);
     }
     .vt-row:last-child {
@@ -756,6 +780,11 @@ const faqItems = [
     const CURRENT_FY_VALUE = CURRENT_FY;
 
     // DOM refs
+    const backBtn = document.getElementById('vt-back-btn');
+    backBtn?.addEventListener('click', () => {
+      if (!document.referrer) { window.location.assign('/nepal'); return; }
+      history.back();
+    });
     const modeRenewal = document.getElementById('mode-renewal');
     const modeSingle = document.getElementById('mode-single');
     const renewalSection = document.getElementById('renewal-section');

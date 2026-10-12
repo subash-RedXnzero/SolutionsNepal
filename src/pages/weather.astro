@@ -44,11 +44,10 @@ const initialCities = cityGrid(snaps, 'kathmandu');
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Fonts load via the @font-face rules in global.css; preloaded here since
+  <!-- Fonts are self-hosted in /fonts/ (see global.css); preloaded here since
        this page has a standalone <head> outside BaseLayout. -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/notosansdevanagari/v30/TuG7UUFzXI5FBtUq5a8bjKYTZjtRU6Sgv3NaV_SNmI0b8QQCQmHN5TV_9qo.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/inter-latin.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/noto-devanagari.woff2" />
 
   <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
@@ -74,7 +73,7 @@ const initialCities = cityGrid(snaps, 'kathmandu');
   <meta name="twitter:image" content={seo.ogImage} />
   <meta name="twitter:image:alt" content={seo.title} />
 
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
 
   {seo.jsonLd && <script type="application/ld+json" set:html={JSON.stringify(seo.jsonLd)} />}
   <script type="application/ld+json" set:html={JSON.stringify([

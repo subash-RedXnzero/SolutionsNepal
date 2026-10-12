@@ -15,8 +15,14 @@ export async function saveFileAs(blob, filename) {
   // Bracket access keeps this readable in plain JS and avoids TS complaints
   // about the not-yet-universal API.
   const picker = typeof window !== 'undefined' ? window['showSaveFilePicker'] : undefined;
+  // The picker needs a real user gesture: without transient activation it
+  // aborts instantly (headless browsers, some webviews) and that AbortError
+  // is indistinguishable from a user cancel — so skip it and use the
+  // anchor download instead.
+  const hasActivation = typeof navigator !== 'undefined'
+    && (!('userActivation' in navigator) || navigator.userActivation?.isActive);
 
-  if (typeof picker === 'function') {
+  if (typeof picker === 'function' && hasActivation) {
     try {
       const ext = (filename.match(/\.[^.]+$/) || [''])[0].toLowerCase();
       const accept = {};
