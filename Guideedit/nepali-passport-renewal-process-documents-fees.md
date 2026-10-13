@@ -1,5 +1,5 @@
 ---
-title: "Nepali Passport Renewal Fee 2026: Full Process and Required Documents"
+title: "Nepali Passport Renewal 2026: Fees, Process & Documents"
 description: Practical 2026 guide to Nepali passport renewal: fees, online pre-enrollment, biometrics, documents, and applying from abroad.
 category: Documents
 author: SolutionsNepal Team

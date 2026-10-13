@@ -191,9 +191,9 @@ const pages = {
 
   // ── Calendar & Dates ──────────────────────────────────────
   '/nepal/date/bs-to-ad': {
-    title: 'BS to AD Converter — BS to Gregorian | SolutionsNepal',
+    title: 'BS to AD Converter Nepal — Free & Accurate | SolutionsNepal',
     description:
-      'Convert Nepali Bikram Sambat (BS) dates to Gregorian AD dates accurately. Free online BS to AD date converter for Nepal.',
+      'Convert any Bikram Sambat date to AD instantly. Accurate BS to AD converter covering all BS years — free and works offline.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -324,9 +324,9 @@ const pages = {
   },
 
   '/nepal/finance/emi-calculator': {
-    title: 'EMI Calculator Nepal | Monthly Loan Payment Calculator | SolutionsNepal',
+    title: 'EMI Calculator Nepal — Loan EMI Online | SolutionsNepal',
     description:
-      'Calculate your monthly EMI for home loans, car loans, and personal loans in Nepal. Free online EMI calculator.',
+      'Calculate monthly EMI for home, car and personal loans in Nepal. Compare rates and tenures to see total interest — free.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -396,9 +396,9 @@ const pages = {
     },
   },
   '/nepal/finance/salary-checker': {
-    title: 'Nepal Salary Calculator 2026 — SSF & Tax | SolutionsNepal',
+    title: 'Take-Home Salary Calculator Nepal 2083 | SolutionsNepal',
     description:
-      'Calculate your take-home salary in Nepal. Enter your basic salary and allowances, and get your net salary, SSF and tax instantly. Works fully in your browser.',
+      'Calculate your monthly take-home salary in Nepal for FY 2083/84. SSF, income-tax slabs and TDS applied instantly — free, no signup.',
     jsonLd: [
       {
         '@context': 'https://schema.org',
@@ -539,9 +539,9 @@ const pages = {
 
   // ── Land & Property ──────────────────────────────────────
   '/nepal/land/ropani-to-aana': {
-    title: 'Ropani to Aana Converter Nepal | SolutionsNepal',
+    title: 'Ropani to Aana (1 Ropani = 16 Aana) | SolutionsNepal',
     description:
-      'Convert Ropani to Aana for Nepal land measurements. Quick and accurate online converter.',
+      'Convert Ropani to Aana instantly (1 Ropani = 16 Aana). Free Nepal land converter with paisa and daam breakdown included.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -613,9 +613,9 @@ const pages = {
 
   // ── Gold & Silver ─────────────────────────────────────────
   '/nepal/gold-price-nepal': {
-    title: 'Gold Price Nepal Today — Tola & Gram | SolutionsNepal',
+    title: 'Gold Price in Nepal Today — Per Tola Rate | SolutionsNepal',
     description:
-      'Check the latest gold price in Nepal, price per tola, gram and 10 gram rates, daily changes and gold price trends.',
+      "Today's gold price in Nepal per tola and gram (FENEGOSIDA rates). Daily change, 10-gram rate and trend — updated every morning.",
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
@@ -648,9 +648,9 @@ const pages = {
     },
   },
   '/nepal/gold/tola-to-gram': {
-    title: 'Tola to Gram Converter — Gold Weight | SolutionsNepal',
+    title: 'Tola to Gram Converter — 1 Tola = 11.664 g | SolutionsNepal',
     description:
-      'Convert Tola to Gram for gold and silver measurements. Quick and accurate online converter.',
+      'Convert tola to gram instantly: 1 tola = 11.664 grams exactly. Free gold and silver weight converter used across Nepal.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -1012,7 +1012,7 @@ const pages = {
   '/nepal/utilities/electricity-bill': {
     title: 'NEA Electricity Bill Calculator Nepal | SolutionsNepal',
     description:
-      'Estimate your NEA electricity bill quickly and easily. Enter your units and connection ampere for an instant slab-based estimate.',
+      'Estimate your NEA bill with FY 2083/84 tariff slabs for 5A–60A connections. Enter units for energy charge, VAT and total.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -1030,9 +1030,9 @@ const pages = {
 
   // ── Transport ────────────────────────────────────────────
   '/nepal/transport/vehicle-tax': {
-    title: 'Vehicle Tax Calculator Nepal — 7 Provinces | SolutionsNepal',
+    title: 'Vehicle Tax Calculator Nepal 2083 | SolutionsNepal',
     description:
-      'Calculate vehicle tax, overdue fines, renewal penalties and related costs for motorcycles, cars and EVs in Nepal.',
+      'Calculate bike, car and EV tax for all 7 provinces with late fines and bluebook renewal cost. Updated FY 2083/84 rates.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -1383,7 +1383,7 @@ const SEO_FIXES = {
   '/about': { title: 'About SolutionsNepal — Free Tools for Nepal', description: 'SolutionsNepal is a free collection of calculators and utilities built for Nepal. No sign-up, no tracking — everything runs in your browser.' },
   '/blog': { title: 'Nepal Blog — Money, Costs & How-To Guides | SolutionsNepal', description: 'Practical stories and explainers for Nepal: cost of living, salaries, taxes, documents, vehicles and everyday money decisions with current rates.' },
   '/contact': { title: 'Contact SolutionsNepal — Feedback & Reports', description: 'Contact the SolutionsNepal team with feedback, tool requests, corrections or bug reports. We reply to every useful message about Nepal tools.' },
-  '/foreign-exchange-nepal': { title: 'Dollar Price in Nepal — NRB Rates Today | SolutionsNepal', description: "Today's official NRB exchange rates: USD, EUR, GBP, INR and all currencies to NPR. Live foreign-exchange rates for Nepal." },
+  '/foreign-exchange-nepal': { title: 'USD to NPR Today — NRB Exchange Rates | SolutionsNepal', description: "Today's USD to NPR rate plus EUR, GBP, INR and all NRB reference rates. Official buying and selling prices, updated daily." },
   '/nepal/business/break-even-calculator': { title: 'Break-Even Calculator — Sales to Profit | SolutionsNepal', description: 'Find break-even sales in Nepal: required units, revenue, profit and margin of safety from fixed and variable costs. Free for shops.' },
   '/nepal/finance/sip-calculator': { title: 'SIP Calculator Nepal — Returns & Growth | SolutionsNepal', description: 'Project SIP growth in Nepal: monthly, annual and step-up SIPs with invested amount, gains and final value. Includes SIP vs FD compare.' },
   '/nepal/finance/fd-calculator': { title: 'FD Calculator Nepal — Maturity & Interest | SolutionsNepal', description: 'Calculate FD returns in Nepal: maturity value, interest and after-tax payout with quarterly, monthly or annual compounding. Free.' },
@@ -1410,7 +1410,7 @@ const SEO_FIXES = {
   '/tools/compress-photo-to-100kb': { title: 'Compress Photo to 100 KB Online Free | SolutionsNepal', description: 'Compress any photo to 100 KB free. Smart quality search lands closest to 100 KB with optional ID-size cropping. In-browser.' },
   '/tools/email-qr-code-generator': { title: 'Email QR Code Generator — mailto QR | SolutionsNepal' },
   '/weather': { title: "Today's Weather in Nepal — Forecast & AQI | SolutionsNepal", description: 'Live weather, hourly and 7-day forecasts plus air quality for Kathmandu, Pokhara and cities across Nepal. Updated frequently.' },
-  '/nepal/finance/emi-calculator': { title: 'EMI Calculator Nepal — Monthly Loan EMI | SolutionsNepal' },
+  '/nepal/finance/emi-calculator': { title: 'EMI Calculator Nepal — Loan EMI Online | SolutionsNepal' },
   '/nepal/date/ad-to-bs': { title: 'AD to BS Converter — Gregorian to BS | SolutionsNepal' },
 };
 Object.entries(SEO_FIXES).forEach(([k, v]) => {
