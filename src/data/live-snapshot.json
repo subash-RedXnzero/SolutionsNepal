@@ -1,12 +1,7 @@
 {
   "meta": {
-<<<<<<< HEAD
-    "fetchedAt": "2026-10-13T01:54:08.051Z",
-    "fetchedAtNPT": "7:39 AM",
-=======
-    "fetchedAt": "2026-10-13T05:49:34.360Z",
-    "fetchedAtNPT": "11:34 AM",
->>>>>>> 3390bb5 (Production)
+    "fetchedAt": "2026-10-13T06:40:57.231Z",
+    "fetchedAtNPT": "12:25 PM",
     "sources": {
       "forex": "Nepal Rastra Bank (nrb.org.np)",
       "gold": "FENEGOSIDA (fenegosida.org)",
@@ -29,152 +24,152 @@
         "iso3": "USD",
         "name": "U.S. Dollar",
         "unit": 1,
-        "buy": 152.94,
-        "sell": 153.54
+        "buy": 154.48,
+        "sell": 155.08
       },
       {
         "iso3": "EUR",
         "name": "European Euro",
         "unit": 1,
-        "buy": 171.03,
-        "sell": 171.7
+        "buy": 173.05,
+        "sell": 173.72
       },
       {
         "iso3": "GBP",
         "name": "UK Pound Sterling",
         "unit": 1,
-        "buy": 202.42,
-        "sell": 203.22
+        "buy": 204.42,
+        "sell": 205.21
       },
       {
         "iso3": "CHF",
         "name": "Swiss Franc",
         "unit": 1,
-        "buy": 183.59,
-        "sell": 184.31
+        "buy": 186.06,
+        "sell": 186.79
       },
       {
         "iso3": "AUD",
         "name": "Australian Dollar",
         "unit": 1,
-        "buy": 106.61,
-        "sell": 107.03
+        "buy": 107.9,
+        "sell": 108.32
       },
       {
         "iso3": "CAD",
         "name": "Canadian Dollar",
         "unit": 1,
-        "buy": 107.22,
-        "sell": 107.65
+        "buy": 108.35,
+        "sell": 108.77
       },
       {
         "iso3": "SGD",
         "name": "Singapore Dollar",
         "unit": 1,
-        "buy": 119.41,
-        "sell": 119.88
+        "buy": 120.62,
+        "sell": 121.09
       },
       {
         "iso3": "JPY",
         "name": "Japanese Yen",
         "unit": 10,
-        "buy": 9.64,
-        "sell": 9.68
+        "buy": 9.76,
+        "sell": 9.79
       },
       {
         "iso3": "CNY",
         "name": "Chinese Yuan",
         "unit": 1,
-        "buy": 22.85,
-        "sell": 22.94
+        "buy": 23.08,
+        "sell": 23.17
       },
       {
         "iso3": "SAR",
         "name": "Saudi Arabian Riyal",
         "unit": 1,
-        "buy": 40.72,
-        "sell": 40.88
+        "buy": 41.12,
+        "sell": 41.28
       },
       {
         "iso3": "QAR",
         "name": "Qatari Riyal",
         "unit": 1,
-        "buy": 41.96,
-        "sell": 42.12
+        "buy": 42.42,
+        "sell": 42.58
       },
       {
         "iso3": "THB",
         "name": "Thai Baht",
         "unit": 1,
-        "buy": 4.55,
-        "sell": 4.57
+        "buy": 4.61,
+        "sell": 4.63
       },
       {
         "iso3": "AED",
         "name": "UAE Dirham",
         "unit": 1,
-        "buy": 41.64,
-        "sell": 41.8
+        "buy": 42.06,
+        "sell": 42.22
       },
       {
         "iso3": "MYR",
         "name": "Malaysian Ringgit",
         "unit": 1,
-        "buy": 37.38,
-        "sell": 37.53
+        "buy": 37.82,
+        "sell": 37.96
       },
       {
         "iso3": "KRW",
         "name": "South Korean Won",
         "unit": 100,
-        "buy": 11.48,
-        "sell": 11.52
+        "buy": 11.52,
+        "sell": 11.57
       },
       {
         "iso3": "SEK",
         "name": "Swedish Kroner",
         "unit": 1,
-        "buy": 15.26,
-        "sell": 15.32
+        "buy": 15.45,
+        "sell": 15.51
       },
       {
         "iso3": "DKK",
         "name": "Danish Kroner",
         "unit": 1,
-        "buy": 22.88,
-        "sell": 22.97
+        "buy": 23.15,
+        "sell": 23.24
       },
       {
         "iso3": "HKD",
         "name": "Hong Kong Dollar",
         "unit": 1,
-        "buy": 19.49,
-        "sell": 19.57
+        "buy": 19.68,
+        "sell": 19.76
       },
       {
         "iso3": "KWD",
         "name": "Kuwaity Dinar",
         "unit": 1,
-        "buy": 496.32,
-        "sell": 498.26
+        "buy": 501.31,
+        "sell": 503.26
       },
       {
         "iso3": "BHD",
         "name": "Bahrain Dinar",
         "unit": 1,
-        "buy": 404.82,
-        "sell": 406.41
+        "buy": 409.06,
+        "sell": 410.64
       },
       {
         "iso3": "OMR",
         "name": "Omani Rial",
         "unit": 1,
-        "buy": 397.22,
-        "sell": 398.78
+        "buy": 401.24,
+        "sell": 402.8
       }
     ],
-    "date": "2026-10-13",
-    "publishedOn": "2026-10-13 00:00:25",
+    "date": "2026-10-12",
+    "publishedOn": "2026-10-12 00:00:03",
     "isLive": true
   },
   "gold": {
@@ -194,33 +189,21 @@
   },
   "fuel": {
     "isLive": false,
-    "error": "HTTP 403 for https://noc.org.np/"
+    "error": "NOC: kathmandu price not found in ticker"
   },
   "weather": {
     "cities": {
       "kathmandu": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 18.8,
-          "relative_humidity_2m": 80,
-          "apparent_temperature": 20.4,
-          "weather_code": 0,
-          "cloud_cover": 3,
-          "wind_speed_10m": 2.2,
-          "wind_direction_10m": 138,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 24.1,
+          "temperature_2m": 24.4,
           "relative_humidity_2m": 59,
-          "apparent_temperature": 26.7,
-          "weather_code": 1,
-          "cloud_cover": 28,
-          "wind_speed_10m": 3.5,
-          "wind_direction_10m": 351,
->>>>>>> 3390bb5 (Production)
+          "apparent_temperature": 27.1,
+          "weather_code": 2,
+          "cloud_cover": 71,
+          "wind_speed_10m": 3.1,
+          "wind_direction_10m": 329,
           "precipitation": 0
         },
         "hourly": {
@@ -315,16 +298,6 @@
             0,
             0,
             0,
-<<<<<<< HEAD
-            22,
-            52,
-            69,
-            60,
-            37,
-            18,
-            9,
-            3,
-=======
             25,
             57,
             75,
@@ -334,7 +307,6 @@
             4,
             1,
             0,
->>>>>>> 3390bb5 (Production)
             0,
             0,
             0
@@ -434,21 +406,12 @@
             45
           ],
           "precipitation_probability_max": [
-<<<<<<< HEAD
-            69,
-            53,
-            51,
-            57,
-            57,
-            37,
-=======
             75,
             25,
             69,
             45,
             71,
             35,
->>>>>>> 3390bb5 (Production)
             24,
             14
           ],
@@ -476,45 +439,25 @@
             7,
             7,
             6.95,
-<<<<<<< HEAD
-            6.85,
-            6.8,
-            6.05,
-            6.6,
-            6.15
-=======
             6.9,
             6.8,
             6,
             6.55,
             6.55
->>>>>>> 3390bb5 (Production)
           ]
         }
       },
       "pokhara": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 17.8,
-          "relative_humidity_2m": 72,
-          "apparent_temperature": 17.7,
-          "weather_code": 45,
-          "cloud_cover": 12,
-          "wind_speed_10m": 6,
-          "wind_direction_10m": 303,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 25.8,
+          "temperature_2m": 26.2,
           "relative_humidity_2m": 56,
-          "apparent_temperature": 28.4,
+          "apparent_temperature": 28.7,
           "weather_code": 0,
           "cloud_cover": 1,
-          "wind_speed_10m": 6,
-          "wind_direction_10m": 159,
->>>>>>> 3390bb5 (Production)
+          "wind_speed_10m": 7.2,
+          "wind_direction_10m": 158,
           "precipitation": 0
         },
         "hourly": {
@@ -717,21 +660,12 @@
             45
           ],
           "precipitation_probability_max": [
-<<<<<<< HEAD
-            0,
-            0,
-            41,
-            45,
-            12,
-            2,
-=======
             4,
             2,
             35,
             22,
             10,
             10,
->>>>>>> 3390bb5 (Production)
             6,
             2
           ],
@@ -761,43 +695,24 @@
             6.5,
             6.45,
             6.45,
-<<<<<<< HEAD
-            6.45,
-            6.4,
-            6.35
-=======
             6.65,
             6.4,
             6.3
->>>>>>> 3390bb5 (Production)
           ]
         }
       },
       "lalitpur": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 18.6,
-          "relative_humidity_2m": 82,
-          "apparent_temperature": 20.3,
-          "weather_code": 0,
-          "cloud_cover": 4,
-          "wind_speed_10m": 0.4,
-          "wind_direction_10m": 243,
-          "precipitation": 0
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 24.1,
-          "relative_humidity_2m": 61,
+          "temperature_2m": 24.2,
+          "relative_humidity_2m": 62,
           "apparent_temperature": 27.2,
-          "weather_code": 51,
-          "cloud_cover": 43,
-          "wind_speed_10m": 1,
-          "wind_direction_10m": 59,
-          "precipitation": 0.1
->>>>>>> 3390bb5 (Production)
+          "weather_code": 2,
+          "cloud_cover": 75,
+          "wind_speed_10m": 1.3,
+          "wind_direction_10m": 214,
+          "precipitation": 0
         },
         "hourly": {
           "time": [
@@ -891,16 +806,6 @@
             0,
             0,
             0,
-<<<<<<< HEAD
-            22,
-            52,
-            69,
-            60,
-            37,
-            18,
-            9,
-            3,
-=======
             25,
             57,
             75,
@@ -910,7 +815,6 @@
             4,
             1,
             0,
->>>>>>> 3390bb5 (Production)
             0,
             0,
             0
@@ -1010,21 +914,12 @@
             45
           ],
           "precipitation_probability_max": [
-<<<<<<< HEAD
-            69,
-            53,
-            51,
-            57,
-            57,
-            37,
-=======
             75,
             25,
             69,
             45,
             71,
             35,
->>>>>>> 3390bb5 (Production)
             24,
             14
           ],
@@ -1052,46 +947,26 @@
             7,
             7,
             6.95,
-<<<<<<< HEAD
-            6.85,
-            6.8,
-            6.05,
-            6.6,
-            6.15
-=======
             6.9,
             6.8,
             6,
             6.55,
             6.55
->>>>>>> 3390bb5 (Production)
           ]
         }
       },
       "bhaktapur": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 18.4,
-          "relative_humidity_2m": 81,
-          "apparent_temperature": 20,
-          "weather_code": 0,
-          "cloud_cover": 3,
-          "wind_speed_10m": 0.6,
-          "wind_direction_10m": 288,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 23.5,
-          "relative_humidity_2m": 63,
-          "apparent_temperature": 26.1,
-          "weather_code": 1,
-          "cloud_cover": 31,
-          "wind_speed_10m": 4.3,
-          "wind_direction_10m": 68,
->>>>>>> 3390bb5 (Production)
-          "precipitation": 0
+          "temperature_2m": 23.8,
+          "relative_humidity_2m": 61,
+          "apparent_temperature": 26.4,
+          "weather_code": 51,
+          "cloud_cover": 42,
+          "wind_speed_10m": 3.5,
+          "wind_direction_10m": 81,
+          "precipitation": 0.1
         },
         "hourly": {
           "time": [
@@ -1184,17 +1059,6 @@
             0,
             0,
             0,
-<<<<<<< HEAD
-            2,
-            9,
-            19,
-            24,
-            20,
-            11,
-            4,
-            1,
-            0,
-=======
             0,
             9,
             21,
@@ -1204,7 +1068,6 @@
             16,
             10,
             4,
->>>>>>> 3390bb5 (Production)
             0,
             0,
             0,
@@ -1305,21 +1168,12 @@
             51
           ],
           "precipitation_probability_max": [
-<<<<<<< HEAD
-            24,
-            16,
-            29,
-            27,
-            37,
-            27,
-=======
             29,
             6,
             41,
             16,
             29,
             4,
->>>>>>> 3390bb5 (Production)
             12,
             4
           ],
@@ -1347,45 +1201,25 @@
             7,
             7,
             6.95,
-<<<<<<< HEAD
-            6.85,
-            6.8,
-            6.2,
-            7.15,
-            6.5
-=======
             6.9,
             6.8,
             6.1,
             6.9,
             6.95
->>>>>>> 3390bb5 (Production)
           ]
         }
       },
       "biratnagar": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 24.8,
-          "relative_humidity_2m": 81,
-          "apparent_temperature": 28.8,
-          "weather_code": 0,
-          "cloud_cover": 1,
-          "wind_speed_10m": 4.1,
-          "wind_direction_10m": 358,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 30.6,
-          "relative_humidity_2m": 61,
-          "apparent_temperature": 36.6,
+          "temperature_2m": 31,
+          "relative_humidity_2m": 60,
+          "apparent_temperature": 37,
           "weather_code": 0,
           "cloud_cover": 0,
           "wind_speed_10m": 1.5,
-          "wind_direction_10m": 263,
->>>>>>> 3390bb5 (Production)
+          "wind_direction_10m": 256,
           "precipitation": 0
         },
         "hourly": {
@@ -1530,17 +1364,10 @@
             1.3,
             2.95,
             4.65,
-<<<<<<< HEAD
-            5.95,
-            6.7,
-            6.65,
-            5.85,
-=======
             6,
             6.7,
             6.65,
             5.9,
->>>>>>> 3390bb5 (Production)
             4.5,
             2.75,
             1.15,
@@ -1597,17 +1424,10 @@
           "precipitation_probability_max": [
             0,
             0,
-<<<<<<< HEAD
-            6,
-            14,
-            18,
-            6,
-=======
             4,
             10,
             29,
             12,
->>>>>>> 3390bb5 (Production)
             4,
             2
           ],
@@ -1638,39 +1458,22 @@
             6.55,
             6.5,
             6.45,
-<<<<<<< HEAD
-            6.45,
-            6.4,
-=======
             5.15,
->>>>>>> 3390bb5 (Production)
             6.35
           ]
         }
       },
       "bharatpur": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 22.8,
-          "relative_humidity_2m": 86,
-          "apparent_temperature": 26.4,
+          "temperature_2m": 30.4,
+          "relative_humidity_2m": 52,
+          "apparent_temperature": 34.7,
           "weather_code": 0,
-          "cloud_cover": 10,
-          "wind_speed_10m": 3.5,
-          "wind_direction_10m": 15,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 29.7,
-          "relative_humidity_2m": 57,
-          "apparent_temperature": 34.5,
-          "weather_code": 0,
-          "cloud_cover": 1,
-          "wind_speed_10m": 1.5,
-          "wind_direction_10m": 194,
->>>>>>> 3390bb5 (Production)
+          "cloud_cover": 7,
+          "wind_speed_10m": 1.4,
+          "wind_direction_10m": 220,
           "precipitation": 0
         },
         "hourly": {
@@ -1876,16 +1679,9 @@
             4,
             0,
             0,
-<<<<<<< HEAD
-            0,
-            6,
-            2,
-            2,
-=======
             4,
             4,
             12,
->>>>>>> 3390bb5 (Production)
             2,
             2
           ],
@@ -1911,11 +1707,7 @@
           ],
           "uv_index_max": [
             6.55,
-<<<<<<< HEAD
-            6.5,
-=======
             6.55,
->>>>>>> 3390bb5 (Production)
             6.45,
             6.4,
             6.35,
@@ -1927,27 +1719,15 @@
       },
       "butwal": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 22.2,
-          "relative_humidity_2m": 81,
-          "apparent_temperature": 24.9,
+          "temperature_2m": 28.6,
+          "relative_humidity_2m": 61,
+          "apparent_temperature": 33,
           "weather_code": 0,
-          "cloud_cover": 6,
-          "wind_speed_10m": 4.4,
-          "wind_direction_10m": 19,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 28.3,
-          "relative_humidity_2m": 63,
-          "apparent_temperature": 32.8,
-          "weather_code": 0,
-          "cloud_cover": 2,
-          "wind_speed_10m": 4.1,
-          "wind_direction_10m": 193,
->>>>>>> 3390bb5 (Production)
+          "cloud_cover": 3,
+          "wind_speed_10m": 3.8,
+          "wind_direction_10m": 197,
           "precipitation": 0
         },
         "hourly": {
@@ -2042,19 +1822,11 @@
             0,
             0,
             0,
-<<<<<<< HEAD
-            1,
-            3,
-            4,
-            3,
-            1,
-=======
             3,
             8,
             10,
             8,
             3,
->>>>>>> 3390bb5 (Production)
             0,
             0,
             0,
@@ -2102,11 +1874,7 @@
             3.95,
             5.35,
             6.2,
-<<<<<<< HEAD
-            6.4,
-=======
             6.35,
->>>>>>> 3390bb5 (Production)
             5.8,
             4.6,
             3,
@@ -2162,21 +1930,12 @@
             45
           ],
           "precipitation_probability_max": [
-<<<<<<< HEAD
-            4,
-            8,
-            16,
-            55,
-            54,
-            41,
-=======
             10,
             24,
             14,
             67,
             53,
             10,
->>>>>>> 3390bb5 (Production)
             10,
             4
           ],
@@ -2201,13 +1960,9 @@
             "2026-10-20T17:37"
           ],
           "uv_index_max": [
-<<<<<<< HEAD
-            6.4,
-=======
             6.35,
->>>>>>> 3390bb5 (Production)
             6.3,
-            6.3,
+            6.25,
             6.2,
             6.2,
             6.2,
@@ -2218,27 +1973,15 @@
       },
       "dharan": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 23.2,
-          "relative_humidity_2m": 80,
-          "apparent_temperature": 26.5,
+          "temperature_2m": 29,
+          "relative_humidity_2m": 55,
+          "apparent_temperature": 32.6,
           "weather_code": 0,
           "cloud_cover": 0,
-          "wind_speed_10m": 3,
-          "wind_direction_10m": 14,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 28.7,
-          "relative_humidity_2m": 58,
-          "apparent_temperature": 32.5,
-          "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 7.2,
-          "wind_direction_10m": 217,
->>>>>>> 3390bb5 (Production)
+          "wind_speed_10m": 6.8,
+          "wind_direction_10m": 215,
           "precipitation": 0
         },
         "hourly": {
@@ -2385,11 +2128,7 @@
             4.65,
             6,
             6.7,
-<<<<<<< HEAD
-            6.65,
-=======
             6.7,
->>>>>>> 3390bb5 (Production)
             5.9,
             4.5,
             2.75,
@@ -2447,17 +2186,10 @@
           "precipitation_probability_max": [
             0,
             0,
-<<<<<<< HEAD
-            4,
-            15,
-            20,
-            8,
-=======
             0,
             20,
             24,
             24,
->>>>>>> 3390bb5 (Production)
             6,
             6
           ],
@@ -2487,40 +2219,23 @@
             6.6,
             6.6,
             6.5,
-<<<<<<< HEAD
-            6.45,
-            6.4,
-=======
             6.4,
             6,
->>>>>>> 3390bb5 (Production)
             6.35
           ]
         }
       },
       "nepalgunj": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 20.8,
-          "relative_humidity_2m": 96,
-          "apparent_temperature": 24.6,
-          "weather_code": 45,
-          "cloud_cover": 100,
-          "wind_speed_10m": 0.5,
-          "wind_direction_10m": 180,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 28.7,
-          "relative_humidity_2m": 66,
-          "apparent_temperature": 34.1,
+          "temperature_2m": 29.4,
+          "relative_humidity_2m": 63,
+          "apparent_temperature": 34.8,
           "weather_code": 0,
-          "cloud_cover": 1,
-          "wind_speed_10m": 1.5,
-          "wind_direction_10m": 263,
->>>>>>> 3390bb5 (Production)
+          "cloud_cover": 0,
+          "wind_speed_10m": 2,
+          "wind_direction_10m": 270,
           "precipitation": 0
         },
         "hourly": {
@@ -2725,17 +2440,10 @@
           "precipitation_probability_max": [
             0,
             0,
-<<<<<<< HEAD
-            2,
-            9,
-            10,
-            6,
-=======
             4,
             2,
             2,
             2,
->>>>>>> 3390bb5 (Production)
             0,
             0
           ],
@@ -2762,46 +2470,26 @@
           "uv_index_max": [
             6,
             6,
-<<<<<<< HEAD
-            5.9,
-            4.35,
-            5.85,
-            5.9,
-            5.75,
-=======
             5.95,
             5.65,
             5.85,
             5.9,
             5.8,
->>>>>>> 3390bb5 (Production)
             5.75
           ]
         }
       },
       "dhangadhi": {
         "current": {
-<<<<<<< HEAD
-          "time": "2026-10-13T07:30",
+          "time": "2026-10-13T12:15",
           "interval": 900,
-          "temperature_2m": 21.5,
-          "relative_humidity_2m": 81,
-          "apparent_temperature": 24.3,
+          "temperature_2m": 29.6,
+          "relative_humidity_2m": 56,
+          "apparent_temperature": 34.1,
           "weather_code": 0,
           "cloud_cover": 0,
-          "wind_speed_10m": 0.9,
-          "wind_direction_10m": 360,
-=======
-          "time": "2026-10-13T11:30",
-          "interval": 900,
-          "temperature_2m": 28.8,
-          "relative_humidity_2m": 61,
-          "apparent_temperature": 33.4,
-          "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 2.2,
-          "wind_direction_10m": 246,
->>>>>>> 3390bb5 (Production)
+          "wind_speed_10m": 1.9,
+          "wind_direction_10m": 248,
           "precipitation": 0
         },
         "hourly": {
@@ -3006,17 +2694,10 @@
           "precipitation_probability_max": [
             0,
             0,
-<<<<<<< HEAD
-            4,
-            6,
-            8,
-            7,
-=======
             0,
             2,
             2,
             0,
->>>>>>> 3390bb5 (Production)
             0,
             0
           ],
@@ -3043,17 +2724,10 @@
           "uv_index_max": [
             6,
             5.95,
-<<<<<<< HEAD
-            5.55,
-            3.65,
-            5.8,
-            5.8,
-=======
             5.8,
             5.5,
             5.8,
             5.8,
->>>>>>> 3390bb5 (Production)
             5.7,
             5.3
           ]
@@ -3062,125 +2736,64 @@
     },
     "aqi": {
       "kathmandu": {
-<<<<<<< HEAD
-        "value": 87,
-        "pm25": 37.8,
-        "pm10": 41.3,
-        "time": "2026-10-13T06:45"
-      },
-      "pokhara": {
-        "value": 52,
-        "pm25": 6.1,
-        "pm10": 6.9,
-        "time": "2026-10-13T06:45"
-      },
-      "lalitpur": {
-        "value": 87,
-        "pm25": 37.8,
-        "pm10": 41.3,
-        "time": "2026-10-13T06:45"
-      },
-      "bhaktapur": {
-        "value": 83,
-        "pm25": 33.1,
-        "pm10": 36.3,
-        "time": "2026-10-13T06:45"
-      },
-      "biratnagar": {
-        "value": 156,
-        "pm25": 76.8,
-        "pm10": 78.7,
-        "time": "2026-10-13T06:45"
-      },
-      "bharatpur": {
-        "value": 89,
-        "pm25": 34.2,
-        "pm10": 37.4,
-        "time": "2026-10-13T06:45"
-      },
-      "butwal": {
-        "value": 114,
-        "pm25": 60.5,
-        "pm10": 61.5,
-        "time": "2026-10-13T06:45"
-      },
-      "dharan": {
-        "value": 88,
-        "pm25": 22.8,
-        "pm10": 23.3,
-        "time": "2026-10-13T06:45"
-      },
-      "nepalgunj": {
-        "value": 78,
-        "pm25": 39.8,
-        "pm10": 40.3,
-        "time": "2026-10-13T06:45"
-      },
-      "dhangadhi": {
-        "value": 73,
-        "pm25": 21.7,
-        "pm10": 23.6,
-        "time": "2026-10-13T06:45"
-=======
         "value": 85,
-        "pm25": 11.6,
-        "pm10": 15.7,
-        "time": "2026-10-13T10:45"
+        "pm25": 11.3,
+        "pm10": 15.3,
+        "time": "2026-10-13T11:45"
       },
       "pokhara": {
         "value": 50,
-        "pm25": 7,
-        "pm10": 9.3,
-        "time": "2026-10-13T10:45"
+        "pm25": 7.6,
+        "pm10": 10.3,
+        "time": "2026-10-13T11:45"
       },
       "lalitpur": {
         "value": 85,
-        "pm25": 11.6,
-        "pm10": 15.7,
-        "time": "2026-10-13T10:45"
+        "pm25": 11.3,
+        "pm10": 15.3,
+        "time": "2026-10-13T11:45"
       },
       "bhaktapur": {
         "value": 81,
-        "pm25": 11.2,
-        "pm10": 14.3,
-        "time": "2026-10-13T10:45"
+        "pm25": 10.9,
+        "pm10": 13.9,
+        "time": "2026-10-13T11:45"
       },
       "biratnagar": {
         "value": 156,
-        "pm25": 16.1,
-        "pm10": 17.9,
-        "time": "2026-10-13T10:45"
+        "pm25": 14.8,
+        "pm10": 17.1,
+        "time": "2026-10-13T11:45"
       },
       "bharatpur": {
-        "value": 87,
-        "pm25": 15.1,
-        "pm10": 18,
-        "time": "2026-10-13T10:45"
+        "value": 86,
+        "pm25": 14.8,
+        "pm10": 18.7,
+        "time": "2026-10-13T11:45"
       },
       "butwal": {
         "value": 114,
-        "pm25": 16.8,
-        "pm10": 17.8,
-        "time": "2026-10-13T10:45"
+        "pm25": 16.6,
+        "pm10": 18,
+        "time": "2026-10-13T11:45"
       },
       "dharan": {
-        "value": 84,
-        "pm25": 9.3,
-        "pm10": 12,
-        "time": "2026-10-13T10:45"
+        "value": 83,
+        "pm25": 9.7,
+        "pm10": 12.8,
+        "time": "2026-10-13T11:45"
       },
       "nepalgunj": {
         "value": 79,
-        "pm25": 10.5,
-        "pm10": 10.9,
-        "time": "2026-10-13T10:45"
+        "pm25": 9,
+        "pm10": 9.4,
+        "time": "2026-10-13T11:45"
       },
       "dhangadhi": {
-        "value": 75,
-        "pm25": 16.6,
-        "pm10": 24.7,
-        "time": "2026-10-13T10:45"
->>>>>>> 3390bb5 (Production)
+        "value": 76,
+        "pm25": 16.5,
+        "pm10": 25.7,
+        "time": "2026-10-13T11:45"
       }
     },
     "isLive": true

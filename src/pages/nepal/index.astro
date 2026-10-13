@@ -259,7 +259,13 @@ const iconPaths = {
     padding: 28px 24px 96px;
     align-items: stretch;
   }
-  .tl-side { width: 240px; flex-shrink: 0; margin-left: -48px; }
+  .tl-side { width: 240px; flex-shrink: 0; }
+  /* Pull-out needs real viewport room (1440px container + gutters):
+     below vw 1488 it would push the sidebar past the screen edge and clip
+     it / cause horizontal overflow, so it only applies from there up. */
+  @media (min-width: 1488px) {
+    .tl-side { margin-left: -48px; }
+  }
   .tl-side-sticky { position: sticky; top: 84px; }
   .tl-main { flex: 1; min-width: 0; }
 

@@ -34,7 +34,7 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
         <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
         <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
       </button>
-      <button id="mobile-menu-btn" class="nk-btn-icon nk-mobile-only" aria-label="Open menu">
+      <button id="mobile-menu-btn" class="nk-btn-icon nk-mobile-only" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
       </button>
     </div>
@@ -78,7 +78,13 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
     text-decoration: none;
     color: var(--nk-text);
     flex-shrink: 0;
-    transform: translateX(-36px);
+  }
+  /* Wide screens only: pull the logo left to align with page content. The
+     centered 1160px container has no side gutter to absorb a 36px shift
+     below ~1232px viewport width — ungated, the logo clips past the screen
+     edge and causes horizontal overflow on tablets/small laptops. */
+  @media (min-width: 1232px) {
+    .nk-logo { transform: translateX(-36px); }
   }
   .nk-logo:hover { color: var(--nk-text); }
   .nk-logo-mark {
@@ -204,8 +210,20 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
   // Mobile menu
   const menuBtn = document.getElementById('mobile-menu-btn');
   const mobileNav = document.getElementById('mobile-nav');
+  const setMenu = (open) => {
+    mobileNav?.classList.toggle('open', open);
+    menuBtn?.setAttribute('aria-expanded', String(open));
+    menuBtn?.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  };
   menuBtn?.addEventListener('click', () => {
-    mobileNav?.classList.toggle('open');
+    setMenu(!mobileNav?.classList.contains('open'));
+  });
+  // Escape closes the menu (and returns focus to the toggle)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileNav?.classList.contains('open')) {
+      setMenu(false);
+      menuBtn?.focus();
+    }
   });
 
   // Close mobile nav on link click

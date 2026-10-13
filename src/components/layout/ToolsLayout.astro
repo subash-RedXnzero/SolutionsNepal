@@ -114,9 +114,11 @@ function isActive(href: string) {
   .tools-layout-sidebar { min-width: 0; }
   .tools-layout-sidebar-sticky { position: sticky; top: 84px; }
   /* Same left offsets as .tl-side on /nepal so the sidebar sits at the
-     identical viewport position on every page (desktop only — the sidebar
-     is hidden at tablet widths and below). */
-  @media (min-width: 1024px) {
+     identical viewport position on every page. The pull-out is gated on real
+     viewport room — the 1440px container must have enough side gutter to
+     absorb it (48px needs vw ≥ 1488): otherwise the sidebar clips past the
+     screen edge and causes horizontal overflow on laptop widths. */
+  @media (min-width: 1488px) {
     .tools-layout-sidebar { margin-left: -48px; }
   }
   @media (min-width: 1600px) {

@@ -313,6 +313,11 @@ input:not([type="hidden"]), select, textarea { font-size: 16px !important; }
 }
 .tool-card:hover .tool-arrow { transform: translateX(2px); color: var(--nk-accent); }
 
+/* Sparse category hubs (e.g. NEPSE with a single tool): one lone card
+   stretched across the full grid row looks broken — cap its width.
+   Only matches single-card grids; multi-card layouts are untouched. */
+.tool-grid > .tool-card:only-child { max-width: 640px; }
+
 /* Category pages use the shared ToolsLayout sidebar; hide their legacy nested rail. */
 .tools-layout-content .sidebar-container { display: none !important; }
 .tools-layout-content > .page-layout {
