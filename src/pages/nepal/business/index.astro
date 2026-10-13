@@ -9,10 +9,7 @@ const tools = getToolsByCategory('business');
 const currentPath = Astro.url.pathname;
 ---
 
-<BaseLayout
-  title="Nepal Business Tools — Break-Even & Registration Cost"
-  description="Free Nepal business tools: break-even calculator, business registration cost estimator, and more."
->
+<BaseLayout>
   <ToolsLayout currentPath={currentPath} categoryPage={true}>
     <Breadcrumbs items={[
       { label: 'Nepal', href: '/nepal' },

@@ -5,7 +5,7 @@ export const marriageRegistrationNepalWardCourtDocumentsGuidePost = {
   slug: 'marriage-registration-nepal-ward-court-documents-guide',
   category: 'Documents',
   title: 'Marriage Registration Nepal 2026: Ward vs Court Process, Documents & Fees',
-  description: 'Complete 2026 guide to marriage registration in Nepal. Ward office (35 days, same-day) vs District Court process (both-Nepali typically 2–4 days; foreign-spouse cases ~16–22 days with residence/NOC checks), documents, fees Rs 500, online DONIDCR form, witnesses, and foreign-spouse court route.',
+  description: '2026 marriage registration guide Nepal: ward vs court process, documents, Rs 500 fee, online DONIDCR form and witness rules.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal documentation and civil-registration researchers',
   date: 'September 27, 2026',

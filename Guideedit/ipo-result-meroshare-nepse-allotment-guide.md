@@ -1,6 +1,6 @@
 ---
 title: "IPO Result MeroShare Guide 2026: Official NEPSE Allotment Check"
-description: Check your Nepal IPO result through CDSC or MeroShare, understand allotment status, verify credited shares, track listing, and calculate potential profit safely.
+description: Check your 2026 Nepal IPO result via CDSC or MeroShare. Allotment status, credited shares, NEPSE listing and profit guide.
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal investment and finance researchers

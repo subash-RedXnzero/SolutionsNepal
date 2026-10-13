@@ -5,7 +5,7 @@ export const canForeignersBuyPropertyNepalLegalGuidePost = {
   slug: 'can-foreigners-buy-property-nepal-legal-guide',
   category: 'Nepal',
   title: 'Can Foreigners Buy Property in Nepal? Foreigner Property Rights (2026)',
-  description: 'A practical legal guide to foreigner property rights in Nepal, including ordinary foreign nationals, NRNs, FITTA businesses, leases, inheritance, registration, and due diligence.',
+  description: 'Can foreigners buy property in Nepal 2026? Rules for NRNs, FITTA firms, leases, inheritance and due diligence explained.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal property and documentation researchers',
   date: 'September 10, 2026',

@@ -17,6 +17,32 @@ const SITE_URL = 'https://solutionsnepal.com';
 const DEFAULT_OG_IMAGE = 'https://solutionsnepal.com/og-default.png';
 
 /**
+ * Meta-description guardrail: search engines truncate/shuffle descriptions
+ * outside ~25–160 chars, so every emitted <meta name="description"> (and the
+ * matching og:/twitter: descriptions) is clamped here. Word-boundary cut
+ * keeps the text clean when an author writes too much; short/empty input
+ * falls back to a site-level description instead of shipping a stub that
+ * search engines would replace with random page text.
+ */
+export const META_DESC_MIN = 25;
+export const META_DESC_MAX = 160;
+const META_DESC_FALLBACK =
+  'Free calculators, converters, and utilities for everyday life in Nepal. Salary, tax, gold, fuel, currency, calendar and more.';
+export function clampDescription(desc) {
+  const clean = String(desc || '').replace(/\s+/g, ' ').trim();
+  if (clean.length === 0) return META_DESC_FALLBACK;
+  if (clean.length <= META_DESC_MAX) {
+    return clean.length >= META_DESC_MIN
+      ? clean
+      : `${clean} — free tool on SolutionsNepal.`.slice(0, META_DESC_MAX);
+  }
+  let cut = clean.slice(0, META_DESC_MAX);
+  const lastSpace = cut.lastIndexOf(' ');
+  if (lastSpace > 100) cut = cut.slice(0, lastSpace);
+  return cut.replace(/[,;:–—\-/(\s]+$/, '').trim();
+}
+
+/**
  * Auto-generate a WebApplication / WebPage / CollectionPage JSON-LD block
  * from the centralized SEO database so every tool has valid schema even
  * when no hand-written jsonLd exists.
@@ -67,7 +93,7 @@ function autoJsonLd(path, rec) {
 const pages = {
   // ── Homepage ──────────────────────────────────────────────
   '/': {
-    title: 'SolutionsNepal — Free Calculators & Tools for Nepal',
+    title: 'SolutionsNepal – Free Online Tools & Calculators for Nepal',
     description:
       'Free Nepal-focused calculators, converters, price checkers and everyday utility tools. Salary, tax, gold, fuel, currency, calendar and more.',
     jsonLd: [
@@ -165,7 +191,7 @@ const pages = {
 
   // ── Calendar & Dates ──────────────────────────────────────
   '/nepal/date/bs-to-ad': {
-    title: 'BS to AD Converter — Bikram Sambat to Gregorian | SolutionsNepal',
+    title: 'BS to AD Converter — BS to Gregorian | SolutionsNepal',
     description:
       'Convert Nepali Bikram Sambat (BS) dates to Gregorian AD dates accurately. Free online BS to AD date converter for Nepal.',
     jsonLd: {
@@ -174,7 +200,7 @@ const pages = {
       name: 'BS to AD Converter',
       description: 'Convert Bikram Sambat dates to Gregorian AD dates.',
       url: `${SITE_URL}/nepal/date/bs-to-ad`,
-      applicationCategory: 'UtilityApplication',
+      applicationCategory: 'UtilitiesApplication',
       operatingSystem: 'Web',
       offers: {
         price: '0',
@@ -192,7 +218,7 @@ const pages = {
       name: 'AD to BS Converter',
       description: 'Convert Gregorian AD dates to Bikram Sambat dates.',
       url: `${SITE_URL}/nepal/date/ad-to-bs`,
-      applicationCategory: 'UtilityApplication',
+      applicationCategory: 'UtilitiesApplication',
       operatingSystem: 'Web',
       offers: {
         price: '0',
@@ -203,7 +229,7 @@ const pages = {
 
   // ── Finance ───────────────────────────────────────────────
   '/nepal/finance/vat-calculator': {
-    title: 'VAT Calculator Nepal – Calculate 13% VAT Online | SolutionsNepal',
+    title: 'VAT Calculator Nepal — Add 13% VAT | SolutionsNepal',
     description:
       "Calculate VAT in Nepal instantly. Add 13% VAT to any price with SolutionsNepal's free VAT calculator.",
     jsonLd: {
@@ -316,7 +342,7 @@ const pages = {
     },
   },
   '/nepal/finance/overtime-calculator': {
-    title: 'Nepal Overtime Calculator | Calculate Overtime Pay | SolutionsNepal',
+    title: 'Overtime Calculator Nepal 2026 | SolutionsNepal',
     description:
       'Calculate your estimated overtime pay in Nepal using your basic salary, working hours, working days, and overtime hours.',
     jsonLd: {
@@ -370,7 +396,7 @@ const pages = {
     },
   },
   '/nepal/finance/salary-checker': {
-    title: 'Nepal Salary Calculator | SSF, Tax & Take-Home Salary | SolutionsNepal',
+    title: 'Nepal Salary Calculator 2026 — SSF & Tax | SolutionsNepal',
     description:
       'Calculate your take-home salary in Nepal. Enter your basic salary and allowances, and get your net salary, SSF and tax instantly. Works fully in your browser.',
     jsonLd: [
@@ -381,13 +407,6 @@ const pages = {
         description:
           'Calculate your take-home salary in Nepal with SSF, income tax, and TDS deductions. Free online calculator.',
         url: `${SITE_URL}/nepal/finance/salary-checker`,
-        applicationCategory: 'FinanceApplication',
-        operatingSystem: 'Web',
-      },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'SoftwareApplication',
-        name: 'Nepal Salary Calculator',
         applicationCategory: 'FinanceApplication',
         operatingSystem: 'Web',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
@@ -417,8 +436,13 @@ const pages = {
     ],
   },
   '/nepal/finance/salary-tax': {
-    title: 'Nepal Income Tax Calculator | Salary Tax Rates & Calculation | SolutionsNepal',
+    title: 'Nepal Salary Tax — Moved | SolutionsNepal',
     description: 'This page has moved. Use the Nepal Salary Calculator.',
+    noindex: true,
+  },
+  '/nepal/electricity': {
+    title: 'Electricity Tools — Moved to Utilities | SolutionsNepal',
+    description: 'This page has moved. Electricity tools are now part of Utilities.',
     noindex: true,
   },
   '/nepal/finance/house-rent-tax': {
@@ -478,7 +502,7 @@ const pages = {
     },
   },
   '/nepal/finance/remittance-calculator': {
-    title: 'Nepal Remittance Calculator | Foreign Currency to NPR | SolutionsNepal',
+    title: 'Remittance Calculator Nepal — USD to NPR | SolutionsNepal',
     description:
       'Convert USD, EUR, GBP, INR and other currencies to Nepalese Rupees using the latest Nepal Rastra Bank reference exchange rates.',
     jsonLd: {
@@ -515,7 +539,7 @@ const pages = {
 
   // ── Land & Property ──────────────────────────────────────
   '/nepal/land/ropani-to-aana': {
-    title: 'Ropani to Aana Converter | Nepal Land Measurement | SolutionsNepal',
+    title: 'Ropani to Aana Converter Nepal | SolutionsNepal',
     description:
       'Convert Ropani to Aana for Nepal land measurements. Quick and accurate online converter.',
     jsonLd: {
@@ -533,7 +557,7 @@ const pages = {
     },
   },
   '/nepal/land/aana-to-ropani': {
-    title: 'Aana to Ropani Converter | Nepal Land Measurement | SolutionsNepal',
+    title: 'Aana to Ropani Converter Nepal | SolutionsNepal',
     description:
       'Convert Aana to Ropani for Nepal land measurements. Quick and accurate online converter.',
     jsonLd: {
@@ -589,7 +613,7 @@ const pages = {
 
   // ── Gold & Silver ─────────────────────────────────────────
   '/nepal/gold-price-nepal': {
-    title: 'Gold Price Nepal Today | Gold Rate per Tola & Gram | SolutionsNepal',
+    title: 'Gold Price Nepal Today — Tola & Gram | SolutionsNepal',
     description:
       'Check the latest gold price in Nepal, price per tola, gram and 10 gram rates, daily changes and gold price trends.',
     jsonLd: {
@@ -606,7 +630,7 @@ const pages = {
     },
   },
   '/silver-price-nepal': {
-    title: 'Silver Price Nepal Today | Silver Rate per Tola & Gram | SolutionsNepal',
+    title: 'Silver Price Nepal — Per Tola & Gram | SolutionsNepal',
     description:
       'Check the latest silver price in Nepal, price per tola, 10 gram and gram rates, daily changes and silver price trends.',
     noindex: true,
@@ -624,7 +648,7 @@ const pages = {
     },
   },
   '/nepal/gold/tola-to-gram': {
-    title: 'Tola to Gram Converter Nepal | Gold & Silver Weight | SolutionsNepal',
+    title: 'Tola to Gram Converter — Gold Weight | SolutionsNepal',
     description:
       'Convert Tola to Gram for gold and silver measurements. Quick and accurate online converter.',
     jsonLd: {
@@ -642,7 +666,7 @@ const pages = {
     },
   },
   '/nepal/gold/gram-to-tola': {
-    title: 'Gram to Tola Converter Nepal | Gold & Silver Weight | SolutionsNepal',
+    title: 'Gram to Tola Converter — Gold Weight | SolutionsNepal',
     description:
       'Convert Gram to Tola for gold and silver measurements. Quick and accurate online converter.',
     jsonLd: {
@@ -662,7 +686,7 @@ const pages = {
 
   // ── Education ─────────────────────────────────────────────
   '/nepal/education/see-gpa': {
-    title: 'SEE GPA Calculator Nepal | Calculate SEE GPA | SolutionsNepal',
+    title: 'SEE GPA Calculator Nepal 2026 | SolutionsNepal',
     description:
       'Calculate your SEE (Secondary Education Examination) GPA from subject grades. Free online GPA calculator for Nepal students.',
     jsonLd: {
@@ -671,7 +695,7 @@ const pages = {
       name: 'SEE GPA Calculator',
       description: 'Calculate SEE GPA from subject grades.',
       url: `${SITE_URL}/nepal/education/see-gpa`,
-      applicationCategory: 'EducationApplication',
+      applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
       offers: {
         price: '0',
@@ -689,7 +713,7 @@ const pages = {
       name: 'NEB GPA Calculator',
       description: 'Calculate NEB Class 11 and 12 GPA.',
       url: `${SITE_URL}/nepal/education/neb-gpa-calculator`,
-      applicationCategory: 'EducationApplication',
+      applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
     },
@@ -703,7 +727,7 @@ const pages = {
 
   // ── Fuel & Transport ─────────────────────────────────────
   '/nepal/fuel-price-nepal': {
-    title: 'Petrol & Diesel Price Nepal Today | Fuel Rates | SolutionsNepal',
+    title: 'Petrol & Diesel Price Nepal Today | SolutionsNepal',
     description:
       'Check today\'s petrol, diesel and kerosene prices in Nepal across major cities. Updated NOC retail prices.',
     jsonLd: {
@@ -720,7 +744,7 @@ const pages = {
     },
   },
   '/nepal/vehicle/fuel-cost': {
-    title: 'Trip Fuel Cost Calculator Nepal | Trip Cost & Cost per KM | SolutionsNepal',
+    title: 'Trip Fuel Cost Calculator Nepal | SolutionsNepal',
     description:
       'Calculate trip fuel cost and cost per kilometer for your journey in Nepal.',
     jsonLd: {
@@ -758,7 +782,7 @@ const pages = {
   '/nepal/construction/house-construction-cost': {
     title: 'House Construction Cost Calculator Nepal | SolutionsNepal',
     description:
-      'Estimate house construction cost in Nepal by location, house size, floors, and construction quality. Calculate cost per sq.ft., total budget, contingency, and what you can build with your budget.',
+      'Estimate house construction cost in Nepal by location, size, floors and quality. Per-sq-ft rate, total budget and contingency included.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -772,7 +796,7 @@ const pages = {
   },
   '/nepal/construction/construction-material-calculator': {
     title: 'Construction Material Calculator Nepal 2026 | SolutionsNepal',
-    description: 'Calculate estimated cement, sand, aggregate, bricks and steel quantities for construction projects in Nepal with SolutionsNepal\'s construction material calculator.',
+    description: 'Estimate cement, sand, aggregate, bricks and steel quantities for construction projects in Nepal. Free material calculator.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -785,7 +809,7 @@ const pages = {
     },
   },
   '/nepal/education/study-abroad-total-cost-calculator-nepal': {
-    title: 'Study Abroad Total Cost Calculator Nepal (2026) | SolutionsNepal',
+    title: 'Study Abroad Cost Calculator Nepal | SolutionsNepal',
     description: 'Estimate how much you need to study abroad from Nepal, including tuition, visa, travel, living expenses and other major costs.',
     jsonLd: {
       '@context': 'https://schema.org',
@@ -884,7 +908,7 @@ const pages = {
   },
   '/nepal/finance/loan-eligibility-calculator-nepal': {
     title: 'Loan Eligibility Calculator Nepal (2026) | SolutionsNepal',
-    description: 'Estimate how much you may be able to borrow and comfortably repay in Nepal — check affordable loan amount, EMI, DTI and tenure based on income and existing EMIs.',
+    description: 'Estimate how much you may borrow and comfortably repay in Nepal — affordable loan amount, EMI, DTI and tenure from income and EMIs.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -968,7 +992,7 @@ const pages = {
 
   // ── Utilities ────────────────────────────────────────────
   '/nepal/utilities/kukl-water-bill': {
-    title: 'KUKL Water Bill Calculator Nepal | Estimate Water Bill | SolutionsNepal',
+    title: 'KUKL Water Bill Calculator Nepal | SolutionsNepal',
     description:
       'Estimate your KUKL water bill based on consumption. Free online water bill calculator for Kathmandu.',
     jsonLd: {
@@ -986,7 +1010,7 @@ const pages = {
     },
   },
   '/nepal/utilities/electricity-bill': {
-    title: 'NEA Electricity Bill Calculator Nepal | Estimate Bill | SolutionsNepal',
+    title: 'NEA Electricity Bill Calculator Nepal | SolutionsNepal',
     description:
       'Estimate your NEA electricity bill quickly and easily. Enter your units and connection ampere for an instant slab-based estimate.',
     jsonLd: {
@@ -1006,7 +1030,7 @@ const pages = {
 
   // ── Transport ────────────────────────────────────────────
   '/nepal/transport/vehicle-tax': {
-    title: 'Vehicle Tax, Fine & Renewal Calculator Nepal | SolutionsNepal',
+    title: 'Vehicle Tax Calculator Nepal — 7 Provinces | SolutionsNepal',
     description:
       'Calculate vehicle tax, overdue fines, renewal penalties and related costs for motorcycles, cars and EVs in Nepal.',
     jsonLd: {
@@ -1077,7 +1101,7 @@ const pages = {
   },
 
   '/nepal/tools/nepali-unicode': {
-    title: 'Nepali Unicode Converter | Romanized Nepali to Unicode | SolutionsNepal',
+    title: 'Nepali Unicode Converter — Type in Nepali | SolutionsNepal',
     description:
       'Type Nepali using English letters and convert Romanized Nepali into Nepali Unicode instantly. Free online Nepali typing tool.',
     jsonLd: {
@@ -1094,7 +1118,7 @@ const pages = {
 
   // ── Age Calculator ────────────────────────────────────────
   '/nepal/age-calculator': {
-    title: 'Nepali Age Calculator | Calculate Age in BS & AD | SolutionsNepal',
+    title: 'Nepali Age Calculator — Age in BS & AD | SolutionsNepal',
     description:
       'Calculate your exact age in years, months and days using Nepali Bikram Sambat or Gregorian dates. Free Nepali age calculator with BS and AD support.',
     jsonLd: {
@@ -1104,7 +1128,7 @@ const pages = {
       description:
         'Calculate your exact age in years, months and days using Nepali Bikram Sambat or Gregorian dates.',
       url: `${SITE_URL}/nepal/age-calculator`,
-      applicationCategory: 'UtilityApplication',
+      applicationCategory: 'UtilitiesApplication',
       operatingSystem: 'Web',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
     },
@@ -1166,32 +1190,32 @@ const pages = {
   },
 
   '/tools/wifi-qr-code-generator': {
-    title: 'WiFi QR Code Generator – Share Wi-Fi Without Typing Passwords | SolutionsNepal',
-    description: 'Create a Wi-Fi QR code guests can scan to connect instantly. Supports WPA/WPA2, WEP and open networks. Generated privately in your browser — your password is never uploaded.',
+    title: 'WiFi QR Code Generator | SolutionsNepal',
+    description: 'Wi-Fi QR guests scan to connect instantly. WPA/WPA2, WEP and open networks supported. Generated privately in your browser.',
   },
 
   '/tools/url-qr-code-generator': {
-    title: 'URL QR Code Generator – Turn Any Link Into a QR Code | SolutionsNepal',
+    title: 'URL QR Code Generator — Free | SolutionsNepal',
     description: 'Convert any website link into a free QR code instantly. Auto-completes bare domains, supports http and https, downloads as PNG or SVG.',
   },
 
   '/tools/whatsapp-qr-code-generator': {
-    title: 'WhatsApp QR Code Generator – wa.me Links as QR | SolutionsNepal',
+    title: 'WhatsApp QR Code Generator | SolutionsNepal',
     description: 'Create a WhatsApp QR code that opens a chat with your number — optionally with a pre-filled message. Uses the official wa.me format. Free and private.',
   },
 
   '/tools/vcard-qr-code-generator': {
-    title: 'vCard QR Code Generator – Digital Business Card QR | SolutionsNepal',
+    title: 'vCard QR Code Generator — Free | SolutionsNepal',
     description: 'Turn your contact details into a scannable vCard QR code. Name, phone, email, organization, website and address saved straight to the phone\u2019s contacts.',
   },
 
   '/tools/email-qr-code-generator': {
-    title: 'Email QR Code Generator – mailto QR with Subject & Body | SolutionsNepal',
+    title: 'Email QR Code Generator | SolutionsNepal',
     description: 'Create an email QR code that opens a draft to your address with subject and body pre-filled. Perfect for feedback forms, support desks and flyers.',
   },
 
   '/tools/image-compressor': {
-    title: 'Smart Image Compressor - Compress Images to 20KB, 50KB, 100KB & More | SolutionsNepal',
+    title: 'Image Compressor — Shrink to Exact KB | SolutionsNepal',
     description:
       'Compress JPG, PNG and WebP images to your target file size. Smart compression automatically optimizes your image while keeping the best possible quality.',
     jsonLd: {
@@ -1207,7 +1231,7 @@ const pages = {
   },
 
   '/tools/jpg-to-png': {
-    title: 'JPG to PNG Converter — Convert JPG to PNG Online Free | SolutionsNepal',
+    title: 'JPG to PNG Converter — Lossless | SolutionsNepal',
     description:
       'Convert JPG images to lossless PNG online for free. In-browser conversion — no upload, no signup, no watermark.',
     jsonLd: {
@@ -1223,7 +1247,7 @@ const pages = {
   },
 
   '/tools/png-to-jpg': {
-    title: 'PNG to JPG Converter — Convert PNG to JPG Online Free | SolutionsNepal',
+    title: 'PNG to JPG Converter — Smaller Files | SolutionsNepal',
     description:
       'Convert PNG images to JPG online for free. Shrink screenshots and photos by up to 80% with adjustable quality — in your browser, no upload.',
     jsonLd: {
@@ -1239,7 +1263,7 @@ const pages = {
   },
 
   '/tools/webp-converter': {
-    title: 'Image to WebP Converter — Convert JPG & PNG to WebP Free | SolutionsNepal',
+    title: 'JPG & PNG to WebP Converter | SolutionsNepal',
     description:
       'Convert JPG and PNG images to WebP online for free. Files ~30% smaller at the same quality, with adjustable compression — in your browser, no upload.',
     jsonLd: {
@@ -1272,17 +1296,17 @@ const pages = {
 
   '/tools/compress-passport-photo-to-200kb': {
     title: 'Compress Passport Photo to 200 KB Online Free | SolutionsNepal',
-    description: 'Compress a passport or visa photo to 200 KB online. Smart compression lands as close to 200 KB as possible — never far below, never above your original. 100% in your browser.',
+    description: 'Compress a passport or visa photo to 200 KB online. Smart compression lands close to 200 KB without going over. In-browser and free.',
   },
 
   '/tools/compress-photo-to-100kb': {
     title: 'Compress Photo to 100 KB - Resize Image to 100KB Online | SolutionsNepal',
-    description: 'Compress any photo to 100 KB online free. Smart compression finds the highest quality that lands closest to 100 KB — with optional cropping to passport or visa sizes. Runs in your browser.',
+    description: 'Compress any photo to 100 KB free. Smart quality search lands closest to 100 KB with optional ID-size cropping. In-browser.',
   },
 
   '/tools/compress-photo-to-50kb': {
     title: 'Compress Photo to 50 KB - Resize Image to 50KB | SolutionsNepal',
-    description: 'Compress a photo to 50 KB online for strict upload limits (signature-size photos, small ID images). Smart dimension + quality search gets as close to 50 KB as quality allows.',
+    description: 'Compress a photo to 50 KB for strict upload limits like signatures and small IDs. Smart quality search gets closest to 50 KB.',
   },
 
   // ── Informational ─────────────────────────────────────────
@@ -1356,13 +1380,13 @@ const pages = {
 // ── Title/description length + uniqueness fixes ─────────────────
 // Titles target 50–60 chars incl. brand; descriptions 140–160 chars.
 const SEO_FIXES = {
-  '/about': { title: 'About SolutionsNepal — Free Tools for Nepal | SolutionsNepal', description: 'SolutionsNepal is a free collection of calculators and utilities built for Nepal. No sign-up, no tracking — everything runs in your browser.' },
+  '/about': { title: 'About SolutionsNepal — Free Tools for Nepal', description: 'SolutionsNepal is a free collection of calculators and utilities built for Nepal. No sign-up, no tracking — everything runs in your browser.' },
   '/blog': { title: 'Nepal Blog — Money, Costs & How-To Guides | SolutionsNepal', description: 'Practical stories and explainers for Nepal: cost of living, salaries, taxes, documents, vehicles and everyday money decisions with current rates.' },
-  '/contact': { title: 'Contact SolutionsNepal — Feedback & Bug Reports | SolutionsNepal', description: 'Contact the SolutionsNepal team with feedback, tool requests, corrections or bug reports. We reply to every useful message about Nepal tools.' },
+  '/contact': { title: 'Contact SolutionsNepal — Feedback & Reports', description: 'Contact the SolutionsNepal team with feedback, tool requests, corrections or bug reports. We reply to every useful message about Nepal tools.' },
   '/foreign-exchange-nepal': { title: 'Dollar Price in Nepal — NRB Rates Today | SolutionsNepal', description: "Today's official NRB exchange rates: USD, EUR, GBP, INR and all currencies to NPR. Live foreign-exchange rates for Nepal." },
   '/nepal/business/break-even-calculator': { title: 'Break-Even Calculator — Sales to Profit | SolutionsNepal', description: 'Find break-even sales in Nepal: required units, revenue, profit and margin of safety from fixed and variable costs. Free for shops.' },
   '/nepal/finance/sip-calculator': { title: 'SIP Calculator Nepal — Returns & Growth | SolutionsNepal', description: 'Project SIP growth in Nepal: monthly, annual and step-up SIPs with invested amount, gains and final value. Includes SIP vs FD compare.' },
-  '/nepal/finance/fd-calculator': { title: 'FD Calculator Nepal — Fixed Deposit Maturity | SolutionsNepal', description: 'Calculate FD returns in Nepal: maturity value, interest and after-tax payout with quarterly, monthly or annual compounding. Free.' },
+  '/nepal/finance/fd-calculator': { title: 'FD Calculator Nepal — Maturity & Interest | SolutionsNepal', description: 'Calculate FD returns in Nepal: maturity value, interest and after-tax payout with quarterly, monthly or annual compounding. Free.' },
   '/nepal/finance/rent-vs-buy': { title: 'Rent vs Buy Calculator Nepal — Rent or Buy? | SolutionsNepal', description: 'Should you rent or buy in Nepal? Compare total rent, EMI, maintenance, appreciation and breakeven year. Free calculator.' },
   '/nepal/transport/likhit-mock-test': { title: 'Driving Likhit Mock Test नेपाल — अभ्यास | SolutionsNepal', description: 'निःशुल्क लिखित मक टेस्ट: संकेत, नियम र कागजातमा २० वटा अनियमित प्रश्न — टाइमर, व्याख्या र स्कोरसहित।' },
   '/nepal/nepse/profit-loss': { title: 'NEPSE Profit Calculator — After Fees | SolutionsNepal', description: 'Calculate NEPSE stock profit or loss after broker commission, SEBON fee and DP charges. Free Nepal share-trading calculator.' },
@@ -1394,23 +1418,26 @@ Object.entries(SEO_FIXES).forEach(([k, v]) => {
   else pages[k] = v;
 });
 
-// ── Category pages (unique titles, intros, schema) ─────────────
+// ── Category pages (unique titles ≤60 chars, intros, schema) ───
 const CATEGORY_SEO = {
-  '/nepal/date': { title: 'Nepali Date Tools — Calendar & BS/AD Converters | SolutionsNepal', description: 'Nepali calendar, BS to AD and AD to BS converters, age and date-difference calculators. Every date tool for Nepal in one place.' },
-  '/nepal/finance': { title: 'Nepal Finance Calculators — Salary, EMI & Tax | SolutionsNepal', description: 'Salary, SSF, VAT, EMI, SIP, loans, rent-tax and remittance calculators for Nepal. Free finance tools with current rules.' },
-  '/nepal/nepse': { title: 'NEPSE Calculators — Profit, Fees & Returns | SolutionsNepal', description: 'NEPSE profit/loss with broker, SEBON and DP charges plus SIP tools. Nepal stock-market calculators for smart trades.' },
-  '/nepal/land': { title: 'Nepal Land Tools — Ropani, Aana & Costs | SolutionsNepal', description: 'Ropani↔Aana converters, land affordability and registration-cost estimators. Land measurement and pass costs for Nepal.' },
-  '/nepal/gold': { title: 'Gold & Silver Tools Nepal — Price & Weight | SolutionsNepal', description: 'Today’s gold/silver context plus tola↔gram converters and gold-loan estimator. Weight and price tools for Nepal buyers.' },
-  '/nepal/education': { title: 'Education Calculators Nepal — GPA & Costs | SolutionsNepal', description: 'SEE GPA, NEB +2 GPA, CGPA, GPA-to-percentage and study-abroad cost planner. Academic tools for Nepal students.' },
-  '/nepal/tools': { title: 'Nepali Language Tools — Unicode & Words | SolutionsNepal', description: 'Nepali Unicode typing, English-to-Nepali translator and number-to-words for cheques. Language tools that work offline.' },
-  '/nepal/utilities': { title: 'Nepal Utility Tools — Bills, Gas & Living Cost | SolutionsNepal', description: 'NEA bill, KUKL water, LPG duration, paint, cost-of-living, QR and BMI. Everyday utilities for life in Nepal.' },
-  '/nepal/vehicle': { title: 'Vehicle Tools Nepal — Fuel & Ownership Cost | SolutionsNepal', description: 'Fuel prices, trip fuel cost, ownership cost and resale value for bikes and cars in Nepal. True driving costs.' },
-  '/nepal/transport': { title: 'Vehicle Tax Nepal — Tax, Fine & Renewal | SolutionsNepal', description: 'Vehicle tax, late fines and bluebook renewal for all 7 provinces. Motorbike, car and EV rates with penalty slabs.' },
-  '/nepal/construction': { title: 'Construction Calculators Nepal — Cost & Material | SolutionsNepal', description: 'House construction cost per sq ft and material quantities (cement, sand, bricks, steel). Plan builds anywhere in Nepal.' },
-  '/tools/photo': { title: 'Passport & ID Photo Tools — Resize Online | SolutionsNepal', description: 'Passport, visa, DV lottery and citizenship photos: crop to exact size and compress to KB targets. Free, private, in-browser.' },
-  '/tools/convert': { title: 'Image Converters — JPG, PNG & WebP Online | SolutionsNepal', description: 'Convert between JPG, PNG and WebP in your browser. Free image conversion with quality control — no uploads.' },
-  '/tools/pdf': { title: 'Free PDF Tools — Merge, Compress & Convert | SolutionsNepal', description: 'Merge, compress, convert and edit PDFs entirely in your browser. JPG↔PDF, PDF↔Word, signatures — free and private.' },
+  '/nepal/date': { title: 'Nepali Date Tools — BS/AD Converters | SolutionsNepal', description: 'Nepali calendar, BS to AD and AD to BS converters, age and date-difference calculators. Every date tool for Nepal in one place.' },
+  '/nepal/finance': { title: 'Nepal Finance Calculators — Salary & EMI | SolutionsNepal', description: 'Salary, SSF, VAT, EMI, SIP, loans, rent-tax and remittance calculators for Nepal. Free finance tools with current rules.' },
+  '/nepal/nepse': { title: 'NEPSE Calculators — Profit & Fees | SolutionsNepal', description: 'NEPSE profit/loss with broker, SEBON and DP charges plus SIP tools. Nepal stock-market calculators for smart trades.' },
+  '/nepal/land': { title: 'Nepal Land Tools — Ropani & Aana | SolutionsNepal', description: 'Ropani↔Aana converters, land affordability and registration-cost estimators. Land measurement and pass costs for Nepal.' },
+  '/nepal/gold': { title: 'Gold Tools Nepal — Price & Weight | SolutionsNepal', description: 'Today’s gold/silver context plus tola↔gram converters and gold-loan estimator. Weight and price tools for Nepal buyers.' },
+  '/nepal/education': { title: 'Education Calculators Nepal — GPA | SolutionsNepal', description: 'SEE GPA, NEB +2 GPA, CGPA, GPA-to-percentage and study-abroad cost planner. Academic tools for Nepal students.' },
+  '/nepal/tools': { title: 'Nepali Language Tools — Unicode | SolutionsNepal', description: 'Nepali Unicode typing, English-to-Nepali translator and number-to-words for cheques. Language tools that work offline.' },
+  '/nepal/utilities': { title: 'Nepal Utility Tools — Bills & Gas | SolutionsNepal', description: 'NEA bill, KUKL water, LPG duration, paint, cost-of-living, QR and BMI. Everyday utilities for life in Nepal.' },
+  '/nepal/vehicle': { title: 'Vehicle Tools Nepal — Fuel & Cost | SolutionsNepal', description: 'Fuel prices, trip fuel cost, ownership cost and resale value for bikes and cars in Nepal. True driving costs.' },
+  '/nepal/transport': { title: 'Vehicle Tax Nepal — Fine & Renewal | SolutionsNepal', description: 'Vehicle tax, late fines and bluebook renewal for all 7 provinces. Motorbike, car and EV rates with penalty slabs.' },
+  '/nepal/construction': { title: 'Construction Cost Calculators Nepal | SolutionsNepal', description: 'House construction cost per sq ft and material quantities (cement, sand, bricks, steel). Plan builds anywhere in Nepal.' },
+  '/nepal/business': { title: 'Nepal Business Tools — Break-Even | SolutionsNepal', description: 'Free Nepal business tools: break-even calculator, business registration cost estimator, and more.' },
   '/nepal/names': { title: 'Nepali Baby Names — Meanings A–Z | SolutionsNepal', description: 'Searchable Nepali baby names with meanings and origins: boy, girl, unisex, Sanskrit, Hindu, modern and traditional lists.' },
+  '/nepal/government-service-cost': { title: 'Nepal Govt Services — Fees & Guides | SolutionsNepal', description: 'Nepal government service fees, required documents, processing time and official sources — passports, licenses, PAN, citizenship and more.' },
+  '/blog': { title: 'Blog — Stories & Explainers for Nepal | SolutionsNepal', description: 'Stories, cost-of-living comparisons, legal explainers and current rates for Nepal. For step-by-step how-tos, visit the Guides library.' },
+  '/tools/photo': { title: 'Passport & ID Photo Tools Online | SolutionsNepal', description: 'Passport, visa, DV lottery and citizenship photos: crop to exact size and compress to KB targets. Free, private, in-browser.' },
+  '/tools/convert': { title: 'Image Converters — JPG, PNG, WebP | SolutionsNepal', description: 'Convert between JPG, PNG and WebP in your browser. Free image conversion with quality control — no uploads.' },
+  '/tools/pdf': { title: 'Free PDF Tools — Merge & Compress | SolutionsNepal', description: 'Merge, compress, convert and edit PDFs entirely in your browser. JPG↔PDF, PDF↔Word, signatures — free and private.' },
 };
 Object.entries(CATEGORY_SEO).forEach(([k, v]) => {
   if (!pages[k]) pages[k] = { ...v, jsonLd: autoJsonLd(k, { tool_name: v.title.split(' | ')[0], meta_description: v.description, canonical_url: `${SITE_URL}${k}`, schema: 'CollectionPage' }) };
@@ -1418,10 +1445,14 @@ Object.entries(CATEGORY_SEO).forEach(([k, v]) => {
 });
 
 // ── Auto-fill every SEO_DB record missing from pages ───────────
+// Brand guard: DB titles already carrying the brand must not get a second one.
+function withBrand(t) {
+  return t.includes(SITE_NAME) ? t : `${t} | ${SITE_NAME}`;
+}
 Object.entries(SEO_DB).forEach(([path, rec]) => {
   if (!pages[path]) {
     pages[path] = {
-      title: `${rec.seo_title} | SolutionsNepal`,
+      title: withBrand(rec.seo_title),
       description: rec.meta_description,
       jsonLd: autoJsonLd(path, rec),
     };
@@ -1429,6 +1460,15 @@ Object.entries(SEO_DB).forEach(([path, rec]) => {
     pages[path].jsonLd = autoJsonLd(path, rec);
   }
 });
+// Alias: page lives at /tools/photo/* but the DB record is keyed without /photo.
+if (SEO_DB['/tools/logo-size-resizer'] && !pages['/tools/photo/logo-size-resizer']) {
+  const rec = SEO_DB['/tools/logo-size-resizer'];
+  pages['/tools/photo/logo-size-resizer'] = {
+    title: withBrand(rec.seo_title),
+    description: rec.meta_description,
+    jsonLd: autoJsonLd('/tools/photo/logo-size-resizer', rec),
+  };
+}
 
 // ── Public API ──────────────────────────────────────────────
 
@@ -1441,6 +1481,7 @@ export function getSeo(pathname) {
   const path = pathname !== '/' ? pathname.replace(/\/+$/, '') : pathname;
   const entry = pages[path];
   if (entry) {
+    const description = clampDescription(entry.description);
     // Auto schema: every indexable page gets valid JSON-LD even if no hand-written block exists.
     // FAQPage/HowTo stay page-owned (only when visible content exists) — never auto-faked.
     const jsonLd = entry.jsonLd || (entry.noindex ? null : {
@@ -1453,9 +1494,9 @@ export function getSeo(pathname) {
     });
     return {
       title: entry.title,
-      description: entry.description,
+      description,
       ogTitle: entry.title,
-      ogDescription: entry.description,
+      ogDescription: description,
       ogImage: entry.ogImage || DEFAULT_OG_IMAGE,
       noindex: entry.noindex || false,
       jsonLd,
@@ -1464,12 +1505,13 @@ export function getSeo(pathname) {
   // Smart fallback: derive from SEO_DB record or prettified slug
   const rec = SEO_DB[path];
   if (rec) {
-    const title = `${rec.seo_title} | SolutionsNepal`;
-    return { title, description: rec.meta_description, ogTitle: title, ogDescription: rec.meta_description, ogImage: DEFAULT_OG_IMAGE, noindex: false, jsonLd: autoJsonLd(path, rec) };
+    const title = withBrand(rec.seo_title);
+    const description = clampDescription(rec.meta_description);
+    return { title, description, ogTitle: title, ogDescription: description, ogImage: DEFAULT_OG_IMAGE, noindex: false, jsonLd: autoJsonLd(path, rec) };
   }
   const pretty = path.split('/').filter(Boolean).pop()?.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || SITE_NAME;
   const title = `${pretty} | SolutionsNepal`;
-  const description = `${pretty} — free online tool on SolutionsNepal. Fast, private and mobile-friendly; everything runs in your browser.`;
+  const description = clampDescription(`${pretty} — free online tool on SolutionsNepal. Fast, private and mobile-friendly; everything runs in your browser.`);
   return { title, description, ogTitle: title, ogDescription: description, ogImage: DEFAULT_OG_IMAGE, noindex: false, jsonLd: null };
 }
 

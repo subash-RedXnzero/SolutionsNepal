@@ -5,7 +5,7 @@ export const vehicleOwnershipTransferNepalBluebookNamsariGuidePost = {
   slug: 'vehicle-ownership-transfer-nepal-bluebook-namsari-guide',
   category: 'Vehicles',
   title: 'Vehicle Ownership Transfer Nepal 2026: Bluebook Namsari at DOTM Guide',
-  description: 'Complete 2026 guide to vehicle ownership transfer (Namsari) at the Transport Management Office. Flat fee Rs 200 (bike) / Rs 500 (car) in Bagmati, required documents, 15-day rule, inspection, and how to avoid inheriting back tax.',
+  description: '2026 vehicle ownership transfer guide: Rs 200 bike and Rs 500 car fee in Bagmati, documents, inspection and 15-day rule.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal transport and vehicle researchers',
   date: 'September 27, 2026',

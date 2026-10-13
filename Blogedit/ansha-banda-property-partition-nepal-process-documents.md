@@ -1,6 +1,6 @@
 ---
 title: "Ansha Banda Nepal 2026: Property Partition Process, Documents & Court Route"
-description: "Complete Ansha Banda guide. Who can claim under Civil Code 2074 Sec 205–236, mutual deed vs court case, required documents (Lalpurja, citizenship, ward verification), Malpot registration, mutation, fees and deadlines."
+description: "Ansha Banda Nepal 2026: who can claim under Civil Code 2074, mutual deed vs court case, documents, Malpot fees and mutation."
 category: Property
 author: SolutionsNepal Team
 authorCredential: Nepal property and family-law researchers

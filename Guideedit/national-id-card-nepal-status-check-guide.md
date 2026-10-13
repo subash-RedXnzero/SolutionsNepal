@@ -1,6 +1,6 @@
 ---
 title: "National ID Card Nepal (Rastriya Parichayapatra): Status Check & Guide"
-description: Check your National ID status online, understand NIN requirements, complete pre-enrollment, prepare documents, and resolve common DoNIDCR application problems in Nepal.
+description: Check your National ID status online in Nepal (2026 guide). NIN requirements, pre-enrollment, documents and DoNIDCR fixes.
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers

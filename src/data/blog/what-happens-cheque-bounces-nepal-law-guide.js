@@ -5,7 +5,7 @@ export const whatHappensChequeBouncesNepalLawGuidePost = {
   slug: 'what-happens-cheque-bounces-nepal-law-guide',
   category: 'Finance',
   title: 'Cheque Bounce Law in Nepal (2026): Legal Remedies & Penalties',
-  description: 'Understand what happens when a cheque bounces in Nepal, including bank return records, civil recovery, criminal remedies, notice practice, blacklisting, limitation, and settlement.',
+  description: 'Cheque bounce law in Nepal 2026: bank return, civil recovery, criminal remedies, notice, blacklisting, limitation and settlement.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal legal and finance researchers',
   date: 'September 10, 2026',

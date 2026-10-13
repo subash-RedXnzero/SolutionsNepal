@@ -1,6 +1,6 @@
 ---
 title: "SEE GPA Calculator Nepal 2026: Class 10 Grading, GPA & Percentage (4.0 Scale)"
-description: "Complete SEE Class 10 GPA guide for 2026. NEB 4.0 scale A+ to NG, GPA formula, theory/practical weighting, GPA ×25 percentage, SEE pass rule and grade increment exam."
+description: "SEE Class 10 GPA guide 2026: NEB 4.0 scale A+ to NG, GPA formula, theory/practical weight, x25 percentage and pass rules."
 category: Education
 author: SolutionsNepal Team
 authorCredential: Nepal education researchers

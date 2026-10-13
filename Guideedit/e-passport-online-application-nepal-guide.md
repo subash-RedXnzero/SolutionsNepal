@@ -1,6 +1,6 @@
 ---
 title: How to Apply for an e-Passport in Nepal Online (2026 Guide)
-description: Comprehensive 2026 guide to applying for a biometric e-Passport in Nepal via the official Department of Passports portal. Covers NIN validation, booking appointments, fees, and tracking status.
+description: 2026 guide to applying for a biometric e-Passport in Nepal via the Department of Passports portal. NIN, booking, fees and status.
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal digital-government researchers

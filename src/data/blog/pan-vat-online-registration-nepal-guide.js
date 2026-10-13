@@ -5,7 +5,7 @@ export const panVatOnlineRegistrationNepalGuidePost = {
   slug: 'pan-vat-online-registration-nepal-guide',
   category: 'Finance',
   title: 'How to Register for PAN & VAT Online in Nepal (2026 IRD Guide)',
-  description: 'Complete 2026 guide to registering for a Permanent Account Number (PAN) and Value Added Tax (VAT) in Nepal via the IRD Taxpayer Portal (ird.gov.np). Covers threshold limits, documents, and activation.',
+  description: 'Complete 2026 guide to PAN and VAT registration in Nepal via the IRD Taxpayer Portal. Thresholds, documents and activation.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal tax and business researchers',
   date: 'September 16, 2026',

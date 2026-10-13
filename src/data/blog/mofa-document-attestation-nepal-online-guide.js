@@ -5,7 +5,7 @@ export const mofaDocumentAttestationNepalOnlineGuidePost = {
   slug: 'mofa-document-attestation-nepal-online-guide',
   category: 'Documents',
   title: 'MOFA Document Attestation Nepal Online Guide (NEATS Portal 2026)',
-  description: 'Step-by-step 2026 guide to attesting educational, personal, and legal documents via MOFA Department of Consular Services using the NEATS portal (doc.nepalconsular.gov.np).',
+  description: 'Step-by-step 2026 guide to MOFA document attestation in Nepal via the NEATS portal. Educational, personal and legal documents.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal documentation researchers',
   date: 'September 16, 2026',

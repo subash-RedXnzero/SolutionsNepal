@@ -6,6 +6,11 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
+# Thin duplicates: filtered/search/paginated views use query strings and
+# always canonicalize to the clean URL (see BaseLayout canonical logic).
+# Blocking the crawl saves budget; the canonical pages stay indexed.
+Disallow: /*?
+
 # AI search bots (allowed explicitly; optional, since * already allows them)
 User-agent: GPTBot
 Allow: /

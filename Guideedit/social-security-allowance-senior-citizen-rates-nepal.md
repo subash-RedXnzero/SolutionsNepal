@@ -1,6 +1,6 @@
 ---
 title: Social Security Allowance & Senior Citizen Rates Nepal 2026
-description: FY 2083/84 guide to Nepal Social Security Allowance rates, senior-citizen age rules, widow and disability benefits, child grants, NID linking, ward registration, and payment problems.
+description: FY 2083/84 guide to Nepal Social Security Allowance rates: senior-citizen rules, widow, disability, child grants and NID linking.
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal government-services researchers

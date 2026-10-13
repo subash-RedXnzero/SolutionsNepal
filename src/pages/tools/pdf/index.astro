@@ -7,7 +7,7 @@ import { getToolsByCategory } from '../../../data/tools.js';
 const tools = getToolsByCategory('pdf');
 const currentPath = Astro.url.pathname;
 ---
-<BaseLayout title="PDF Tools — Free Online PDF Utilities | SolutionsNepal" description="Convert, combine, and compress your PDF files with five simple free tools from SolutionsNepal.">
+<BaseLayout>
   <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
     <Breadcrumbs items={[{ label: 'PDF Tools' }]} />
     <div class="flex gap-10">

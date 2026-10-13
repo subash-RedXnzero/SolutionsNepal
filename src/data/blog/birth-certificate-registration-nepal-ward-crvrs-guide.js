@@ -5,7 +5,7 @@ export const birthCertificateRegistrationNepalWardCrvrsGuidePost = {
   slug: 'birth-certificate-registration-nepal-ward-crvrs-guide',
   category: 'Documents',
   title: 'Birth Certificate in Nepal 2026 (Janma Darta): Ward Registration & CRVS Guide',
-  description: 'Complete 2026 guide to birth certificate registration in Nepal. Covers ward CRVS process under Act 2033, required documents (hospital letter, citizenship), 35-day deadline, late fees, online portal, duplicate copy, and use for passport/NID.',
+  description: 'Birth certificate Nepal 2026 - ward CRVS process, documents, 35-day deadline, late fees, online portal and duplicate copy guide.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal documentation and civil-registration researchers',
   date: 'September 26, 2026',

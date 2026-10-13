@@ -1,6 +1,6 @@
 ---
 title: "Driving License Trial Nepal 2026: Written Test + Trial Tips & Fail Reasons"
-description: Pass your Nepal driving license in one attempt. Written test pattern (Likhit), trial 7 stages for bike & 4-wheel, common fail points, retrial rules and online result on edlvrs.dotm.gov.np.
+description: Driving license Nepal 2026 - Likhit exam pattern, bike and car trial stages, common fail points and full retrial rules guide.
 category: Nepal
 author: SolutionsNepal Team
 authorCredential: Nepal transport researchers

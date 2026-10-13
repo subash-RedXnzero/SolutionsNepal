@@ -5,7 +5,7 @@ export const nepalPoliceClearanceCertificateOnlinePccGuidePost = {
   slug: 'nepal-police-clearance-certificate-online-pcc-guide',
   category: 'Documents',
   title: 'Applying for Nepal Police Clearance Certificate Online (PCC 2026)',
-  description: 'Apply for Nepal Police Clearance Certificate online through the official OPCR portal, use Nagarik App, upload documents, check status, download the QR-signed PCC, and complete MOFA attestation if required.',
+  description: '2026 guide to Nepal Police Clearance Certificate (PCC) via the OPCR portal and Nagarik App. Documents, status and download.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal documentation researchers',
   date: 'September 14, 2026',

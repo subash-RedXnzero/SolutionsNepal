@@ -1,6 +1,6 @@
 ---
 title: "NEPSE TMS Account Nepal 2026: Open Broker Account & Start Trading Guide"
-description: "Open a NEPSE TMS broker account in Nepal. DEMAT + Meroshare + TMS linking, broker choice, trading hours Sun–Thu, order types, commissions/DP charges and first-trade walkthrough on nepse.org.np."
+description: "Open a NEPSE TMS account in 2026: DEMAT and Meroshare linking, broker choice, Sun-Thu trading hours, fees and first trade steps."
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal capital-market researchers

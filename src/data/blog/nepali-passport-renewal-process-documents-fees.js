@@ -5,7 +5,7 @@ export const nepaliPassportRenewalProcessDocumentsFeesPost = {
   slug: 'nepali-passport-renewal-process-documents-fees',
   category: 'Documents',
   title: 'Nepali Passport Renewal Fee 2026: Full Process and Required Documents',
-  description: 'A practical 2026 guide to Nepali passport renewal fees, online pre-enrollment, biometric appointments, required documents, and applications from inside Nepal or abroad.',
+  description: 'Practical 2026 guide to Nepali passport renewal: fees, online pre-enrollment, biometrics, documents, and applying from abroad.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal documentation researchers',
   date: 'September 10, 2026',

@@ -16,8 +16,8 @@ const bands = jobBands(job);
 const midMonthly = Math.round((bands.mid[0] + bands.mid[1]) / 2);
 const related = JOBS.filter((j) => j.sector === job.sector && j.id !== job.id).slice(0, 4);
 
-const title = `${job.title} Salary in Nepal — Monthly Earnings | SolutionsNepal`;
-const description = `${job.title} in Nepal typically earns ${inr(job.min)} – ${inr(job.max)} per month. See entry, mid & senior ranges, required skills, and how to earn more.`;
+const title = `${job.title} Salary in Nepal | SolutionsNepal`;
+const description = `${job.title}: typical pay ${inr(job.min)}-${inr(job.max)}/month in Nepal. Entry, mid and senior ranges, skills and how to earn more.`;
 ---
 
 <BaseLayout

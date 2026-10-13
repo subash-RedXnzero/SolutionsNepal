@@ -1,6 +1,6 @@
 ---
 title: "NEB GPA Calculator Nepal 2026: Class 11-12 Grading, CGPA & Percentage (4.0 Scale)"
-description: "Complete NEB GPA guide for Class 11 & 12 (2083). Letter grades A+ to NG on 4.0 scale, GPA formula with credit hours, theory/practical weighting, GPA ×25 percentage estimate, and NEB vs TU differences."
+description: "NEB Class 11-12 GPA guide 2026: 4.0 scale A+ to NG, GPA formula, theory/practical weight and GPA x25 percentage estimate."
 category: Education
 author: SolutionsNepal Team
 authorCredential: Nepal education researchers

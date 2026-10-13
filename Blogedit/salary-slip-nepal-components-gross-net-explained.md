@@ -1,6 +1,6 @@
 ---
 title: "Salary Slip Nepal 2026: Gross vs Net, SSF, Tax & Deductions Explained"
-description: "Read your salary slip correctly. Gross vs basic vs allowances, SSF 31% (11%+20%), SST waived if SSF, taxable income, TDS, overtime and bonus — with a Nepali slip example and calculator."
+description: "Read your Nepal salary slip for 2026: gross vs net, SSF 31 percent, SST, TDS, overtime and bonus with example and calculator."
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal payroll and tax researchers

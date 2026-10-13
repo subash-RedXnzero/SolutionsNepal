@@ -1,6 +1,6 @@
 ---
 title: Individual & Freelancer Income Tax Guide Nepal (FY 2082/83 - 2026)
-description: "A practical Nepal income-tax guide for individuals and freelancers: FY 2082/83 slabs, 5% foreign-freelance withholding, PAN, D-01/D-02/D-03 filing, TDS, residency, records, and deadlines."
+description: "Nepal income-tax guide for individuals and freelancers: FY 2082/83 slabs, 5% foreign-freelance rule, PAN, filing and deadlines."
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal tax and personal-finance researchers

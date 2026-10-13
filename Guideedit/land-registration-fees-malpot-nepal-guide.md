@@ -1,6 +1,6 @@
 ---
 title: Land Registration Fee & Valuation Rates Nepal (Malpot 2026)
-description: "FY 2083/84 guide to Nepal land registration fees, Malpot valuation, Bagmati rates, women's concessions, capital-gains tax, documents, and the legal transfer process."
+description: "FY 2083/84 guide to Nepal land registration fees, Malpot valuation, Bagmati rates, women's concessions and transfer steps."
 category: Nepal
 author: SolutionsNepal Team
 authorCredential: Nepal property and documentation researchers

@@ -5,7 +5,7 @@ export const nepseTmsAccountOpenTradingGuideNepalPost = {
   slug: 'nepse-tms-account-open-trading-guide-nepal',
   category: 'Finance',
   title: 'NEPSE TMS Account Nepal 2026: Open Broker Account & Start Trading Guide',
-  description: 'Open a NEPSE TMS broker account in Nepal. DEMAT + Meroshare + TMS linking, broker choice, trading hours Sun–Thu, order types, commissions/DP charges and first-trade walkthrough on nepse.org.np.',
+  description: 'Open a NEPSE TMS account in 2026: DEMAT and Meroshare linking, broker choice, Sun-Thu trading hours, fees and first trade steps.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal capital-market researchers',
   date: 'September 27, 2026',

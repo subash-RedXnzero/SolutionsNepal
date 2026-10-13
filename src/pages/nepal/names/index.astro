@@ -13,10 +13,7 @@ const hubTools = tools.filter(t => t.id === 'nepali-names');
 const currentPath = Astro.url.pathname;
 ---
 
-<BaseLayout
-  title="Nepal Names Tools — Nepali Baby Names & Meanings"
-  description="Find meaningful Nepali baby names: browse all names, boy and girl names, Sanskrit, Hindu, modern, and traditional lists with meanings and origins."
->
+<BaseLayout>
   <div class="page-layout">
     <Sidebar currentPath={currentPath} />
 

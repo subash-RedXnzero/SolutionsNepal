@@ -1,6 +1,6 @@
 ---
 title: "Rajinama & Gift Deed Nepal 2026: Land Transfer at Malpot — Documents & Fees"
-description: Rajinama (sale) vs gift deed vs inheritance at Malpot in 2026. Documents (Lalpurja, citizenship, tax clearance, map), sale deed steps, gift to family with concessional treatment, CGT, registration vs dakhil kharej, and fees.
+description: Rajinama vs gift deed in Nepal 2026: Malpot documents, sale deed steps, family gift concession, CGT, registration and fees.
 category: Property
 author: SolutionsNepal Team
 authorCredential: Nepal property and land researchers

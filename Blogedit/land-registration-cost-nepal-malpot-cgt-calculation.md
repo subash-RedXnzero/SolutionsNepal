@@ -1,6 +1,6 @@
 ---
 title: "Land Registration Cost Nepal 2026: Malpot Fee & CGT Calculation (Full Breakdown)"
-description: What you actually pay at Malpot in 2026 when registering land in Nepal. Province-wise registration fees (Bagmati 5.3% metro / 4.8% municipality / 3% rural), seller CGT 10% / 7.5%, women 25% discount, and a Rs 1 crore worked example with calculator.
+description: Land registration cost Nepal 2026: Bagmati 5.3%/4.8%/3% Malpot fees, 10%/7.5% CGT, 25% women discount and Rs 1 crore example.
 category: Property
 author: SolutionsNepal Team
 authorCredential: Nepal property and tax researchers

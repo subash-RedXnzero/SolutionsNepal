@@ -5,7 +5,8 @@ import Footer from '../components/layout/Footer.astro';
 import SearchModal from '../components/search/SearchModal.astro';
 import ToolsLayout from '../components/layout/ToolsLayout.astro';
 import Disclaimer from '../components/ui/Disclaimer.astro';
-import { getSeo, SITE_URL } from '../data/seo.js';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import { getSeo, SITE_URL, clampDescription } from '../data/seo.js';
 import { tools } from '../data/tools.js';
 
 const seo = getSeo(Astro.url.pathname);
@@ -22,7 +23,7 @@ function absOg(img) {
 
 const {
   title = seo.title,
-  description = seo.description,
+  description: rawDescription = seo.description,
   canonical = defaultCanonical,
   ogImage = seo.ogImage,
   ogType = 'website',
@@ -33,6 +34,7 @@ const {
   modifiedTime,
 } = Astro.props;
 
+const description = clampDescription(rawDescription);
 const absOgImage = absOg(ogImage);
 // If a page passed an explicit canonical with trailing slash, normalize it too.
 const normCanonical = canonical !== defaultCanonical && canonical.startsWith(SITE_URL)
@@ -184,13 +186,7 @@ const globalJsonLd = (isHomepage || noindex) ? null : [
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async is:inline src="https://www.googletagmanager.com/gtag/js?id=G-100NPWW5SN"></script>
-  <script is:inline>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-100NPWW5SN');
-  </script>
+  {import.meta.env.PROD && <GoogleAnalytics />}
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -221,7 +217,7 @@ const globalJsonLd = (isHomepage || noindex) ? null : [
   <meta name="description" content={description} />
   <link rel="canonical" href={normCanonical} />
 
-  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  {noindex && <meta name="robots" content="noindex, follow" />}
   {!noindex && <meta name="robots" content="index, follow, max-image-preview:large" />}
 
   <!-- Open Graph (unique per page via title/description/canonical) -->

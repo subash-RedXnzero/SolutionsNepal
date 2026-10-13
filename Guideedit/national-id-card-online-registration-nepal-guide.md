@@ -1,6 +1,6 @@
 ---
 title: National Identity Card (NID) Online Pre-Registration Nepal Guide (2026)
-description: Complete 2026 guide to applying for a National ID (Rastriya Parichayapatra) in Nepal. Covers online pre-registration, biometric appointment booking, required documents, and NIN tracking.
+description: Complete 2026 guide to National ID (Rastriya Parichayapatra) in Nepal: online pre-registration, biometrics, documents and NIN.
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal digital-government researchers

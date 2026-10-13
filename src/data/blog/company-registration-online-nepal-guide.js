@@ -5,7 +5,7 @@ export const companyRegistrationOnlineNepalGuidePost = {
   slug: 'company-registration-online-nepal-guide',
   category: 'Business',
   title: 'How to Register a Company Online in Nepal (2026 CAMIS Guide)',
-  description: 'Step-by-step 2026 guide to private limited company registration in Nepal using the OCR CAMIS portal (camis.ocr.gov.np). Covers fees, MOA/AOA setup, Ward registration, and post-incorporation compliance.',
+  description: 'Step-by-step 2026 guide to company registration in Nepal via the OCR CAMIS portal. Fees, MOA/AOA, ward steps and compliance.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal business-registration researchers',
   date: 'September 16, 2026',

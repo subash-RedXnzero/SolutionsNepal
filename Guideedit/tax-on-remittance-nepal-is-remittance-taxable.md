@@ -1,6 +1,6 @@
 ---
 title: "Tax on Remittance in Nepal (2026): Is Remittance Taxable?"
-description: "A practical guide to remittance tax in Nepal: family support, foreign employment income, freelance payments, bank interest, the commonly misunderstood 1% figure, and records to keep."
+description: "2026 guide to remittance tax in Nepal: family support, foreign income, freelance payments, bank interest and records to keep."
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal tax and personal-finance researchers

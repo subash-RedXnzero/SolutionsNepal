@@ -5,7 +5,7 @@ export const landRegistrationFeesMalpotNepalGuidePost = {
   slug: 'land-registration-fees-malpot-nepal-guide',
   category: 'Nepal',
   title: 'Land Registration Fee & Valuation Rates Nepal (Malpot 2026)',
-  description: 'FY 2083/84 guide to Nepal land registration fees, Malpot valuation, Bagmati rates, women\'s concessions, capital-gains tax, documents, and the legal transfer process.',
+  description: 'FY 2083/84 guide to Nepal land registration fees, Malpot valuation, Bagmati rates, women\'s concessions and transfer steps.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal property and documentation researchers',
   date: 'September 14, 2026',

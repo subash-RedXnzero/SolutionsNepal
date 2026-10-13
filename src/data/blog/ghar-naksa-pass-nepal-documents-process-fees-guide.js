@@ -5,7 +5,7 @@ export const gharNaksaPassNepalDocumentsProcessFeesGuidePost = {
   slug: 'ghar-naksa-pass-nepal-documents-process-fees-guide',
   category: 'Property',
   title: 'Ghar Naksa Pass Nepal 2026: Documents, Process & Fees Guide',
-  description: 'Complete 2026 guide to Ghar Naksa Pass (building permit) in Nepal. Documents (Lalpurja, Char-killa, drawings), ward→municipality steps, EBPS online, Asthai vs Sthai permit, fees per sq ft, timeline 30–90 days, and inspections.',
+  description: '2026 Ghar Naksa Pass guide Nepal: Lalpurja, Char-killa papers, EBPS online steps, Asthai/Sthai permits, fees per sq ft and timeline.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal property and municipal researchers',
   date: 'September 27, 2026',

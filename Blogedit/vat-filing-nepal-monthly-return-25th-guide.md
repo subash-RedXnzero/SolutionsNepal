@@ -1,6 +1,6 @@
 ---
 title: "VAT Filing Nepal 2026: Monthly Return by 25th, E-Filing & Late Fee Guide"
-description: Complete VAT filing guide for Nepal FY 2083/84. Monthly return by 25th of next Nepali month via taxpayerportal.ird.gov.np, Nil return, debit/credit, refund, and penalties for late filing.
+description: VAT filing guide Nepal FY 2083/84: monthly return by 25th via IRD portal, nil return, debit/credit, refund and late penalties.
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal tax researchers

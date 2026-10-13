@@ -5,7 +5,7 @@ export const fuelPriceNepalTodayNocRateMileageGuidePost = {
   slug: 'fuel-price-nepal-today-noc-rate-mileage-guide',
   category: 'Utilities',
   title: 'Fuel Price Nepal Today 2026: NOC Petrol/Diesel Rate & Mileage Cost Guide',
-  description: 'Track NOC petrol, diesel, kerosene & LPG prices in Nepal. How NOC sets rates from IOC import, price history, mileage cost per km formula and fuel-cost calculator.',
+  description: 'NOC petrol, diesel, kerosene & LPG prices in Nepal 2026: IOC rate formula, price history and mileage cost-per-km calculator.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal utilities researchers',
   date: 'September 27, 2026',

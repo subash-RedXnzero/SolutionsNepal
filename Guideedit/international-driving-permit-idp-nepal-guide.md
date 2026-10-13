@@ -1,6 +1,6 @@
 ---
 title: "International Driving Permit (IDP) Nepal: Validity & Process"
-description: Do you need an International Driving Permit from Nepal? Learn IDP rules, destination requirements, application documents, validity, and how to verify the authorized issuing body.
+description: Do you need an International Driving Permit (IDP) from Nepal? Rules, documents, validity and authorized issuing body explained.
 category: Vehicles
 author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers

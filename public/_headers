@@ -1,4 +1,4 @@
-# Cloudflare Pages headers (ported from vercel.json - that file is deleted).
+# Cloudflare Workers Static Assets headers.
 # Rules merge: more specific paths win on conflicting keys.
 
 /_astro/*

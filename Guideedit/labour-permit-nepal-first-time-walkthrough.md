@@ -1,6 +1,6 @@
 ---
 title: "Foreign Employment Permit (Shram Swikriti) Nepal 2026: Application & FEIMS Process"
-description: "A 2026 guide to Nepal's mandatory Shram Swikriti foreign-employment permit: FEIMS application, documents, medical, PDOT, insurance, fees, re-entry, renewal, status checks, and scam prevention."
+description: "2026 guide to Nepal's Shram Swikriti labour permit: FEIMS application, documents, medical, fees, renewal and status checks."
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers

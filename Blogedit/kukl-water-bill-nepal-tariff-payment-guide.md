@@ -1,6 +1,6 @@
 ---
 title: "KUKL Water Bill Nepal 2026: Tariff, How to Check & Pay Online Guide"
-description: Complete KUKL water bill guide. Tariff slabs, minimum charge, how to read your meter, check bill online at kukl.org.np, pay via eSewa/Khalti/connectIPS and avoid late fees.
+description: KUKL water bill Nepal 2026: tariff slabs, meter reading, check bill at kukl.org.np and pay via eSewa, Khalti or connectIPS.
 category: Utilities
 author: SolutionsNepal Team
 authorCredential: Nepal utilities researchers

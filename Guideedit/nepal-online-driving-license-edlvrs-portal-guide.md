@@ -1,6 +1,6 @@
 ---
 title: "Nepal Online Driving License Portal (EDLVRS 2026): How to Apply Online"
-description: Learn how to apply for a Nepal driving license through the provincial EDLVRS portals, use NID or Nagarik App QR verification, pay online, book biometrics, and track your smart license.
+description: 2026 guide to Nepal driving license via EDLVRS portals: NID/Nagarik App verification, online payment, biometrics and tracking.
 category: Vehicles
 author: SolutionsNepal Team
 authorCredential: Nepal transport and documentation researchers

@@ -5,7 +5,7 @@ export const nationalIdCardNepalStatusCheckGuidePost = {
   slug: 'national-id-card-nepal-status-check-guide',
   category: 'Documents',
   title: 'National ID Card Nepal (Rastriya Parichayapatra): Status Check & Guide',
-  description: 'Check your National ID status online, understand NIN requirements, complete pre-enrollment, prepare documents, and resolve common DoNIDCR application problems in Nepal.',
+  description: 'Check your National ID status online in Nepal (2026 guide). NIN requirements, pre-enrollment, documents and DoNIDCR fixes.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal documentation researchers',
   date: 'September 10, 2026',

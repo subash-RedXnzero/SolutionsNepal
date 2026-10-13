@@ -5,7 +5,7 @@ export const nagarikAppNepalRegistrationDigitalIdGuidePost = {
   slug: 'nagarik-app-nepal-registration-digital-id-guide',
   category: 'Documents',
   title: 'Nagarik App Nepal (2026): Registration, Linking Documents & Digital ID Guide',
-  description: 'Learn how to register for Nagarik App, link Citizenship, National ID, Driving License and PAN, use Digital ID, fix SIM mismatch errors, and access government services in Nepal.',
+  description: '2026 guide to Nagarik App registration in Nepal: link Citizenship, National ID, license and PAN, and use your Digital ID.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal digital-government researchers',
   date: 'September 14, 2026',

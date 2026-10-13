@@ -1,6 +1,6 @@
 ---
 title: "Health Insurance Nepal 2026: HIB Coverage, Premium & Enrollment Guide"
-description: "Join Nepal’s Swasthya Bima (Health Insurance Board). Premium Rs 3,500 for 5-member family, Rs 100,000 coverage, enrollment via ward/assistant, renewal, claim & hospital list on hib.gov.np."
+description: "Nepal Swasthya Bima 2026: Rs 3,500 premium for Rs 100,000 family cover, ward enrollment, renewal, claims and HIB hospital list."
 category: Health
 author: SolutionsNepal Team
 authorCredential: Nepal public-service researchers

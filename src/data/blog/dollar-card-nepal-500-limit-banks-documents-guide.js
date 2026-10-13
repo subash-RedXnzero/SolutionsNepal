@@ -5,7 +5,7 @@ export const dollarCardNepal500LimitBanksDocumentsGuidePost = {
   slug: 'dollar-card-nepal-500-limit-banks-documents-guide',
   category: 'Finance',
   title: 'Dollar Card Nepal 2026: $500 Limit, Banks, Documents & Fees Guide',
-  description: 'Get an international prepaid dollar card in Nepal. NRB $500/year facility, which banks issue fastest, citizenship/PAN/passport requirements, load fees, renewal and what you can (and cannot) pay.',
+  description: 'Dollar card Nepal 2026: NRB $500 yearly limit, which banks issue fastest, documents, load fees, renewal and allowed payments.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal banking researchers',
   date: 'September 27, 2026',

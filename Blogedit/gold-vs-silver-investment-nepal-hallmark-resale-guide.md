@@ -1,6 +1,6 @@
 ---
 title: "Gold vs Silver Investment Nepal 2026: Hallmark, Making Charges & Resale Guide"
-description: Gold or silver in Nepal? FENEGOSIDA rates per tola, hallmark 995/999/916 vs silver purity, making-charge math, buyback/resale rules and which suits investment vs jewelry.
+description: Gold vs silver in Nepal 2026: FENEGOSIDA per-tola rates, hallmark 995/999/916, making charges, resale rules and investment picks.
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal gold-market researchers

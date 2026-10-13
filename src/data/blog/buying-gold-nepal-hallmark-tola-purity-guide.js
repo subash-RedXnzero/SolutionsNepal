@@ -5,7 +5,7 @@ export const buyingGoldNepalHallmarkTolaPurityGuidePost = {
   slug: 'buying-gold-nepal-hallmark-tola-purity-guide',
   category: 'Finance',
   title: 'Buying Gold in Nepal: Hallmark, Tola, Purity & Prices Explained (2026)',
-  description: 'Buying gold in Nepal without understanding hallmark, purity, and how the final bill is calculated can cost you thousands. This guide explains what Hallmark 995 means, how tola and lal convert to grams, the difference between fine and tejabi gold, and why your jewelry bill is higher than the advertised gold rate.',
+  description: '2026 guide to buying gold in Nepal: Hallmark 995, tola to grams, fine vs tejabi purity, and how jewellery bills are calculated.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Gold market analysts and Nepal finance experts',
   date: 'September 14, 2026',

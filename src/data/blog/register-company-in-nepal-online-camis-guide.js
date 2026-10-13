@@ -5,7 +5,7 @@ export const registerCompanyInNepalOnlineCamisGuidePost = {
   slug: 'register-company-in-nepal-online-camis-guide',
   category: 'Business',
   title: 'Registering a Company in Nepal Online (OCR CAMIS Guide 2026)',
-  description: 'A practical 2026 guide to registering a private limited company in Nepal through OCR\'s CAMIS portal, including name reservation, documents, fees, workflow, PAN, foreign investment, and post-registration compliance.',
+  description: '2026 guide to registering a private limited company in Nepal via the OCR CAMIS portal. Name, documents, fees, PAN and compliance.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal business-registration researchers',
   date: 'September 14, 2026',

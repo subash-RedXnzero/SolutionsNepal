@@ -5,7 +5,7 @@ export const ssfContributionNepal1120PercentBenefitsGuidePost = {
   slug: 'ssf-contribution-nepal-11-20-percent-benefits-guide',
   category: 'Finance',
   title: 'SSF Contribution Nepal 2026: 11% + 20% Breakdown, Benefits & Enrollment',
-  description: 'Social Security Fund Nepal explained. 11% employee + 20% employer = 31% of basic salary, scheme-wise split (PF, gratuity, medical, accident), who must join, SST saving and loan benefits on ssf.gov.np.',
+  description: 'SSF Nepal 2026: 11 percent employee plus 20 percent employer breakdown, scheme split, who must join, SST saving and loan benefits.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal finance & labor researchers',
   date: 'September 27, 2026',

@@ -5,7 +5,7 @@ export const incomeTaxSlabsNepalFy208384IndividualCoupleGuidePost = {
   slug: 'income-tax-slabs-nepal-fy-2083-84-individual-couple-guide',
   category: 'Tax',
   title: 'Income Tax Slabs Nepal FY 2083/84: Unified Rates & Calculation',
-  description: 'Nepal salary tax slabs for FY 2083/84 (unified single schedule). First Rs 10 lakh at 1%, then 10/20/27/29% brackets, SSF/pension 1% exemptions, and take-home calculation with examples.',
+  description: 'Nepal salary tax slabs FY 2083/84: first Rs 10 lakh at 1%, then 10/20/27/29% brackets with SSF exemptions and take-home examples.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal tax researchers',
   date: 'September 27, 2026',

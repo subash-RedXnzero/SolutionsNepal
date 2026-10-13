@@ -5,7 +5,7 @@ export const lpgGasCostNepalCylinderDurationCalculatorGuidePost = {
   slug: 'lpg-gas-cost-nepal-cylinder-duration-calculator-guide',
   category: 'Utilities',
   title: 'LPG Gas Cost Nepal 2026: Cylinder Price & How Long It Lasts Guide',
-  description: 'Complete LPG gas guide: NOC cylinder price (14.2kg), refill cost, how many days a cylinder lasts by family size, burners & cooking time, and cost-per-day with the duration calculator.',
+  description: '2026 LPG gas guide Nepal: NOC 14.2kg cylinder price, refill cost, days it lasts by family size, and cost-per-day calculator.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal utilities researchers',
   date: 'September 27, 2026',

@@ -5,7 +5,7 @@ export const openNepaliBankAccountOnlineEkycVkycGuidePost = {
   slug: 'open-nepali-bank-account-online-ekyc-vkyc-guide',
   category: 'Finance',
   title: 'How to Open a Nepali Bank Account Online (eKYC & V-KYC Guide 2026)',
-  description: 'Learn how online bank-account opening works in Nepal, including eKYC, Video KYC, resident and remittance accounts, NRN banking, documents, fees, activation, and failed verification fixes.',
+  description: '2026 guide to opening a Nepali bank account online via eKYC and Video KYC. Accounts, NRN banking, documents and activation.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal banking and personal-finance researchers',
   date: 'September 14, 2026',

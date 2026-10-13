@@ -5,7 +5,7 @@ export const registerPrivateLimitedCompanyOnlineNepalGuidePost = {
   slug: 'register-private-limited-company-online-nepal-guide',
   category: 'Business',
   title: 'How to Register a Private Limited Company in Nepal Online (2026 Guide)',
-  description: 'Step-by-step 2026 guide to private limited company registration in Nepal using the OCR CAMIS portal. Covers name reservation, MOA/AOA, government fees, PAN/VAT, and local ward registration.',
+  description: 'Step-by-step 2026 guide to private limited company registration in Nepal via the OCR CAMIS portal. Fees, MOA/AOA and PAN/VAT.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal business-registration researchers',
   date: 'September 16, 2026',

@@ -1,6 +1,6 @@
 ---
 title: "Bluebook Renewal Nepal 2026: Documents, Fees & Online Payment Guide"
-description: "Complete 2026 guide to Bluebook (vehicle registration) renewal in Nepal. Covers required documents, Bagmati tax rates for bikes & cars, EV concessions, Rs 300 renewal fee, insurance requirement, online payment via Nagarik App/eSewa, late penalties (5%–32%), and office stamping."
+description: "Bluebook renewal Nepal 2026: documents, bike/car tax rates, insurance, online payment via Nagarik App and late penalties guide."
 category: Vehicles
 author: SolutionsNepal Team
 authorCredential: Nepal transport and vehicle researchers

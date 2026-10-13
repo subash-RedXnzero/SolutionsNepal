@@ -1,6 +1,6 @@
 ---
 title: "Voter ID Nepal 2026: Online Registration, Name Check & Card Guide"
-description: Complete 2026 guide to Voter ID (Matadata) registration in Nepal. Covers Election Commission online pre-registration via NIN or mobile, required documents, biometric visit, checking your name in the voter roll, correction/transfer, and collection.
+description: 2026 Voter ID guide Nepal: online pre-registration, documents, biometric visit, voter roll name check and card collection.
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal documentation and election researchers

@@ -3,17 +3,22 @@ const { title, description } = Astro.props;
 ---
 
 <div>
-  <!-- Header -->
+  <!-- Header (rendered only with real content: an empty heading element here
+       would duplicate the page H1, which hurts SEO and accessibility) -->
+  {(title || description) && (
   <div class="mb-5">
+    {title && (
     <h1 class="text-[22px] sm:text-[28px] font-bold tracking-[-0.025em] leading-[1.15] mb-1" style="color: var(--nk-text);">
       {title}
     </h1>
+    )}
     {description && (
       <p class="text-[13px] leading-relaxed" style="color: var(--nk-text-secondary);">
         {description}
       </p>
     )}
   </div>
+  )}
   
   <!-- Content -->
   <div class="nk-card p-5">

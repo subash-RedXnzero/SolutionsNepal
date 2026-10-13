@@ -447,7 +447,7 @@ const STRIP = [
       <div class="hp-guide-grid">
         {GUIDES.map((post, i) => (
           <a href={`/guides/${post.slug}`} class={`hp-guide-card${i === 0 ? ' is-lead' : ''}`}>
-            <span class="hp-guide-thumb" aria-hidden="true"><img src={post.image} alt="" loading="lazy" width="640" height="400" /></span>
+            <span class="hp-guide-thumb" aria-hidden="true"><img src={post.image} alt={post.title} loading="lazy" width="640" height="400" /></span>
             <span class="hp-guide-main">
               <span class="hp-guide-top">
                 <span class="hp-guide-badge">{i === 0 ? 'Featured guide' : 'Guide'}</span>

@@ -1,6 +1,6 @@
 ---
 title: "Advance Tax Nepal 2026: 3 Installments, Due Dates & Interest (Sec 94) Guide"
-description: Complete 2026 guide to advance tax in Nepal under Income Tax Act 2058 Sec 94. 40% by Poush end, 70% by Chaitra end, 100% by Ashad end, who must pay, revised estimate (Sec 95), interest & penalties, and filing via IRD portal.
+description: Advance tax Nepal 2026 - 40% by Poush end, 70% by Chaitra end, 100% by Ashad end. Who must pay, revised estimates and IRD filing.
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal tax researchers

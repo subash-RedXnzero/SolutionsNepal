@@ -5,7 +5,7 @@ export const personalPanCardOnlineNepalRegistrationGuidePost = {
   slug: 'personal-pan-card-online-nepal-registration-guide',
   category: 'Documents',
   title: 'How to Get a Personal PAN Card Online in Nepal (Step-by-Step 2026)',
-  description: 'Learn how to register for a Personal PAN online in Nepal through the IRD Taxpayer Portal or Nagarik App, download e-PAN, fix errors, and avoid duplicate registration.',
+  description: '2026 guide to Personal PAN registration in Nepal via IRD Taxpayer Portal or Nagarik App. e-PAN download, fixes and duplicates.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal tax and documentation researchers',
   date: 'September 14, 2026',

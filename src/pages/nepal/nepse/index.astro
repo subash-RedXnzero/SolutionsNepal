@@ -9,10 +9,7 @@ const tools = getToolsByCategory('nepse');
 const currentPath = Astro.url.pathname;
 ---
 
-<BaseLayout
-  title="NEPSE Tools — Nepal Stock Exchange Calculators"
-  description="Free NEPSE calculators for stock trading profit/loss and investment analysis."
->
+<BaseLayout>
   <div class="page-layout">
     <Sidebar currentPath={currentPath} />
 

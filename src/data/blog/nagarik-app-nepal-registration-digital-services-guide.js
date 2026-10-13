@@ -5,7 +5,7 @@ export const nagarikAppNepalRegistrationDigitalServicesGuidePost = {
   slug: 'nagarik-app-nepal-registration-digital-services-guide',
   category: 'Documents',
   title: 'How to Use Nagarik App Nepal: Registration & Services Guide (2026)',
-  description: 'Comprehensive 2026 guide to registering and using Nepal’s official Nagarik App. Learn how to link Digital Driving License, National ID, PAN, Vehicle Bluebook, and Voter ID.',
+  description: '2026 guide to Nagarik App registration in Nepal: link Digital License, National ID, PAN, Bluebook, Voter ID and services.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal digital-government researchers',
   date: 'September 16, 2026',

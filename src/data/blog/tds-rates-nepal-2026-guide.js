@@ -5,7 +5,7 @@ export const tdsRatesNepal2026GuidePost = {
   slug: 'tds-rates-nepal-2026-guide',
   category: 'Finance',
   title: 'TDS Rates Nepal 2026 (FY 2083/84): 1.5% vs 15% & Complete Rate Card',
-  description: 'Complete FY 2083/84 (2026/27) TDS rate card for Nepal. Service 1.5% (VAT) vs 15% (PAN-only), rent 10%, interest 6% (individual), dividend 5%, contract 1.5%, final vs adjustable, who withholds, e-TDS filing and deadlines.',
+  description: 'FY 2083/84 TDS rate card Nepal: service 1.5 percent vs 15 percent, rent 10 percent, interest 6 percent, dividend 5 percent, e-TDS filing.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal tax and finance researchers',
   date: 'September 26, 2026',

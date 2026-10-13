@@ -5,7 +5,7 @@ export const neaElectricityBillCalculatorNepalTariffGuidePost = {
   slug: 'nea-electricity-bill-calculator-nepal-tariff-guide',
   category: 'Utilities',
   title: 'NEA Electricity Bill Calculator Nepal 2026: Tariff Slabs, 5A Lifeline & VAT Guide',
-  description: 'Complete FY 2083/84 NEA domestic tariff guide. 5A/15A/30A/60A slabs 0–20 to 251+ units (Rs 0–11/unit), progressive calculation, 5A lifeline rule, 5% VAT above 50 units, service charges, worked examples and online payment.',
+  description: 'FY 2083/84 NEA tariff guide: 5A/15A/30A/60A slabs, 5A lifeline rule, 5 percent VAT, service charges and bill calculation examples.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal utilities and tariff researchers',
   date: 'September 26, 2026',

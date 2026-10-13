@@ -5,7 +5,7 @@ export const transferringVehicleOwnershipNepalNamsariPost = {
   slug: 'transferring-vehicle-ownership-nepal-namsari',
   category: 'Vehicles',
   title: 'Transferring Vehicle Ownership in Nepal (Namsari Process Guide 2026)',
-  description: 'Official guide to the vehicle namsari process in Nepal: required documents, Yatayat office steps, tax clearing, ownership transfer fees, and provincial requirements.',
+  description: '2026 guide to vehicle namsari (ownership transfer) in Nepal: documents, Yatayat steps, tax clearing, fees and provincial rules.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal documentation researchers',
   date: 'September 10, 2026',

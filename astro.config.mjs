@@ -6,29 +6,23 @@ import tailwindcss from '@tailwindcss/vite';
 import { getSeo } from './src/data/seo.js';
 
 // https://astro.build/config
-const redirects = {
-  '/robots': '/robots.txt',
-  '/llms': '/llms.txt',
-  '/sitemap': '/sitemap-index.xml',
-  '/sitemap.xml': '/sitemap-index.xml',
-  '/tools': '/nepal',
-  '/best-remittance-exchange-rate-nepal-guide': '/blog/best-remittance-exchange-rate-nepal-guide',
-  '/nepal/foreign-job-salary-savings': '/nepal/finance/foreign-job-salary-savings',
-  '/nepal/freelancer-take-home-calculator': '/nepal/finance/freelancer-take-home-calculator',
-  '/nepal/jobs': '/nepal/utilities/jobs',
-  '/nepal/pdf-editor': '/tools/merge-pdf',
-  '/tools/nepal-passport-photo': '/tools/passport-photo-resizer',
-  '/tools/visa-photo-resizer': '/tools/passport-photo-resizer',
-  '/tools/dv-lottery-photo': '/tools/passport-photo-resizer',
-  '/tools/citizenship-photo': '/tools/passport-photo-resizer',
-  '/tools/convert': '/tools/image-compressor',
-  '/nepal/tools/dashain-bonus-calculator': '/nepal/finance/dashain-bonus-calculator',
-};
-const cloudflareRedirectPaths = readFileSync(new URL('./public/_redirects', import.meta.url), 'utf8')
-  .split(/\r?\n/)
-  .map(line => line.trim().split(/\s+/, 1)[0])
-  .filter(path => path.startsWith('/') && !path.includes('*'));
-const redirectedPaths = new Set([...Object.keys(redirects), ...cloudflareRedirectPaths]);
+// Single source of truth for redirects: public/_redirects (honored by
+// Cloudflare Workers Static Assets in production). astro.config derives the
+// same table so `astro dev`/`preview` behave identically.
+function loadRedirects() {
+  const lines = readFileSync(new URL('./public/_redirects', import.meta.url), 'utf8').split(/\r?\n/);
+  const table = {};
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const [from, to, status] = trimmed.split(/\s+/);
+    if (!from || !from.startsWith('/') || !to || from.includes('*')) continue;
+    table[from] = { status: Number(status) === 308 ? 308 : 301, destination: to };
+  }
+  return table;
+}
+const redirects = loadRedirects();
+const redirectedPaths = new Set(Object.keys(redirects));
 const nonIndexablePaths = new Set([
   '/404',
   '/nepal/electricity',
@@ -60,6 +54,8 @@ export default defineConfig({
       entryLimit: 45_000,
       filter(page) {
         const pathname = new URL(page).pathname.replace(/\/+$/, '') || '/';
+        // Paginated archives are thin duplicates of page 1 (noindexed, follow).
+        if (/^\/blog\/\d+$/.test(pathname)) return false;
         return !redirectedPaths.has(pathname)
           && !nonIndexablePaths.has(pathname)
           && !getSeo(pathname).noindex;

@@ -5,7 +5,7 @@ export const vehicleTaxPaymentNepalProvinceOnlineGuidePost = {
   slug: 'vehicle-tax-payment-nepal-province-online-guide',
   category: 'Tax',
   title: 'Vehicle Tax Payment Nepal 2026: Province-Wise Rate & Online Payment Guide',
-  description: 'Pay your annual vehicle tax in Nepal online by province. Bagmati, Gandaki, Lumbini rates, deadlines, late fine, required bluebook & insurance, and step-by-step savari/IRD payment guide.',
+  description: 'Pay your annual vehicle tax in Nepal online by province. Bagmati, Gandaki and Lumbini rates, deadlines, fines and payment steps.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal transport & tax researchers',
   date: 'September 27, 2026',

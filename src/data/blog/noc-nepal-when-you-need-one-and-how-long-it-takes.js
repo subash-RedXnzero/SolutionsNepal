@@ -5,7 +5,7 @@ export const nocNepalWhenYouNeedOneAndHowLongItTakesPost = {
   slug: 'noc-nepal-when-you-need-one-and-how-long-it-takes',
   category: 'Documents',
   title: 'NOC Nepal Application Status & Guide: Online Process (2026)',
-  description: 'A practical 2026 guide to Nepal\'s No Objection Certificate: who needs it, online application steps, status tracking, fees, documents, banking rules, and common delays.',
+  description: '2026 guide to Nepal\'s No Objection Certificate (NOC): who needs it, online steps, status, fees, banking rules and delays.',
   author: 'SolutionsNepal Team',
   authorCredential: 'Nepal documentation researchers',
   date: 'September 10, 2026',

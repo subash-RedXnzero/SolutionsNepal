@@ -1,6 +1,6 @@
 ---
 title: "Nata Pramanit Nepal 2026: Relationship Certificate at Ward Office Guide"
-description: "Complete ward guide to Nata Pramanit (relationship certificate) in Nepal. When you need it (citizenship, passport, inheritance, abroad), documents, fee Rs 500–1,000, witnesses, and how to get it in one visit."
+description: "Nata Pramanit guide Nepal 2026: documents, Rs 500-1,000 fee, witnesses and how to get your relationship certificate in one visit."
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers

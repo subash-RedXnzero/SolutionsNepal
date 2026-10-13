@@ -6,10 +6,38 @@ import { nepaliNames, ALL_ALPHABET } from '../../../data/nepali-names.js';
 const totalNames = nepaliNames.length;
 const namesJSON = JSON.stringify(nepaliNames);
 const alphabetJSON = JSON.stringify(ALL_ALPHABET);
+
+// ── SSR baseline: first page of the default view ─────────────────────
+// The client script re-renders on load (readURL + render), so this static
+// markup is a crawlable baseline, not a second source of truth. It mirrors
+// the script's defaults exactly: gender Boy (+Unisex), all categories,
+// no letter/search filter, page 1 of 30.
+const SSR_PER_PAGE = 30;
+const ssrPool = nepaliNames.filter((n) => n.gender === 'Boy' || n.gender === 'Unisex');
+const ssrTotal = ssrPool.length;
+const ssrGroups = {};
+for (const n of ssrPool.slice(0, SSR_PER_PAGE)) {
+  const l = n.name.charAt(0).toUpperCase();
+  (ssrGroups[l] ??= []).push(n);
+}
+const ssrLetters = Object.keys(ssrGroups).sort();
+const ssrLetterCounts = {};
+for (const l of ALL_ALPHABET) ssrLetterCounts[l] = 0;
+for (const n of ssrPool) {
+  const l = n.name.charAt(0).toUpperCase();
+  if (ssrLetterCounts[l] !== undefined) ssrLetterCounts[l]++;
+}
+function esc(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 ---
 
 <BaseLayout
-  title="All Nepali Names A–Z – Browse the Full Directory | SolutionsNepal"
+  title="All Nepali Names A–Z — Meanings | SolutionsNepal"
   description="Browse every Nepali, Sanskrit, Hindu, modern, and traditional baby name with meanings, origins, and pronunciations — filter by letter, gender, and category."
 >
 <div class="pn-page">
@@ -68,9 +96,9 @@ const alphabetJSON = JSON.stringify(ALL_ALPHABET);
       </div>
       <div id="letter-grid" class="pn-alpha-grid">
         {ALL_ALPHABET.map(l => (
-          <button type="button" data-letter={l} class="pn-alpha" aria-label={`Names starting with ${l}`} disabled>
+          <button type="button" data-letter={l} class="pn-alpha" aria-label={`Names starting with ${l}`} disabled={ssrLetterCounts[l] === 0}>
             <span class="pn-alpha-l">{l}</span>
-            <span class="pn-alpha-c">0</span>
+            <span class="pn-alpha-c">{ssrLetterCounts[l]}</span>
           </button>
         ))}
       </div>
@@ -92,10 +120,26 @@ const alphabetJSON = JSON.stringify(ALL_ALPHABET);
     <!-- NAMES -->
     <section class="pn-section" id="names-section">
       <div class="pn-names-head">
-        <h2 id="results-heading" class="pn-names-title">Names</h2>
-        <p class="pn-names-count"><span id="results-count">{totalNames}</span> name<span id="results-plural">s</span></p>
+        <h2 id="results-heading" class="pn-names-title">Boy Names</h2>
+        <p class="pn-names-count"><span id="results-count">{ssrTotal}</span> name<span id="results-plural">s</span></p>
       </div>
-      <div id="letter-sections"></div>
+      <div id="letter-sections">
+        {ssrLetters.map((letter) => (
+          <section id={`letter-${letter}`} class="pn-letter">
+            <h3 class="pn-letter-h">{letter}</h3>
+            <div class="pn-letter-grid">
+              {ssrGroups[letter].map((n) => (
+                <a
+                  href={`/nepal/names/${n.slug}`}
+                  class="pn-card"
+                  aria-label={`${esc(n.name)} — ${esc(n.meaning)}`}
+                  set:html={`<div class="pn-card-row"><span class="pn-card-name">${esc(n.name)}</span></div><p class="pn-card-meaning">${esc(n.meaning)}</p><span class="pn-card-meta">${esc([n.origin, n.gender === 'Unisex' ? 'Unisex' : n.gender].filter(Boolean).join(' / '))}</span>`}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
       <div id="names-empty" class="pn-empty" style="display:none">
         <p class="pn-empty-title">No names found</p>
         <p class="pn-empty-hint">Try searching for another name or meaning.</p>

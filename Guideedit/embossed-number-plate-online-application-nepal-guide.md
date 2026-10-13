@@ -1,6 +1,6 @@
 ---
 title: How to Apply for an Embossed Number Plate in Nepal Online (2026 Guide)
-description: Step-by-step 2026 guide to applying for high-security Embossed Number Plates (EVNP) in Nepal via the DoTM portal. Covers online registration, fees, document verification, and installation.
+description: Step-by-step 2026 guide to Embossed Number Plates (EVNP) in Nepal via the DoTM portal. Registration, fees and installation.
 category: Vehicles
 author: SolutionsNepal Team
 authorCredential: Nepal transport-administration researchers

@@ -1,6 +1,6 @@
 ---
 title: "House Rent Tax Nepal 2026: 10% Rule, Who Pays & How to Calculate"
-description: Who actually pays house rent tax in Nepal in 2026. Federal 10% TDS vs 10% municipal ghar bahal kar, individual vs company landlord/tenant, Supreme Court 2025 rule, calculation examples and ward payment guide.
+description: House rent tax Nepal 2026: 10% TDS vs 10% ghar bahal kar, who pays, Supreme Court 2025 rule, calculation examples and ward payment.
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal tax and property researchers

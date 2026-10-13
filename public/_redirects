@@ -1,4 +1,4 @@
-# Cloudflare Pages redirects.
+# Cloudflare Workers Static Assets redirects (also honored in `astro dev` via astro.config.mjs).
 # <from> <to> <status> - keep in sync with astro.config.mjs redirects.
 
 /robots /robots.txt 301
@@ -6,7 +6,7 @@
 /sitemap /sitemap-index.xml 301
 /sitemap.xml /sitemap-index.xml 301
 /tools /nepal 301
-/best-remittance-exchange-rate-nepal-guide /blog/best-remittance-exchange-rate-nepal-guide 301
+/best-remittance-exchange-rate-nepal-guide /guides/best-remittance-exchange-rate-nepal-guide 301
 /nepal/foreign-job-salary-savings /nepal/finance/foreign-job-salary-savings 301
 /nepal/freelancer-take-home-calculator /nepal/finance/freelancer-take-home-calculator 301
 /nepal/jobs /nepal/utilities/jobs 301
@@ -17,6 +17,13 @@
 /tools/citizenship-photo /tools/passport-photo-resizer 301
 /tools/convert /tools/image-compressor 301
 /nepal/tools/dashain-bonus-calculator /nepal/finance/dashain-bonus-calculator 301
+
+# Soft-redirect stubs (meta-refresh pages) upgraded to real 301s.
+# The stub pages stay as a fallback and are noindexed.
+/nepal/electricity /nepal/utilities 301
+/nepal/electricity/bill-calculator /nepal/utilities/electricity-bill 301
+/nepal/finance/salary-tax /nepal/finance/salary-checker 301
+/silver-price-nepal /nepal/silver-price-nepal 301
 
 # Legacy /blog/* guides moved to /guides/* (ported from vercel.json).
 /tools/logo-size-resizer /tools/photo/logo-size-resizer 301

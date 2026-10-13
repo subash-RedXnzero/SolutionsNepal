@@ -1,6 +1,6 @@
 ---
 title: "EPF vs CIT vs SSF Nepal 2026: Which Retirement Scheme & Can You Join Two?"
-description: Employees Provident Fund vs Citizen Investment Trust vs Social Security Fund compared. Contribution rates, who must join, benefits, withdrawal, tax saving and whether private employees can hold SSF + CIT together.
+description: EPF vs CIT vs SSF Nepal 2026 - contribution rates, benefits, withdrawal, tax saving and can you join two schemes compared.
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal finance researchers
