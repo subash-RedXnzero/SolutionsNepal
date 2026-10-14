@@ -8,7 +8,8 @@
   "main": "src/worker.js",
   "name": "solutionsnepal",
   "compatibility_date": "2026-10-11",
-  "workers_dev": true,
+   "workers_dev": false,
+  "preview_urls": false,
   "routes": [
     {
       "pattern": "solutionsnepal.com",
