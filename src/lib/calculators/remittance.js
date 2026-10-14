@@ -80,11 +80,61 @@ export function applyFee(nprAmount, foreignAmount, fee, feeType, normalizedBuyRa
 }
 
 /**
+ * Normalize worker-shape rows [{iso3,name,unit,buy,sell}] into the same
+ * parsed shape as the direct NRB loop below (single shared contract).
+ */
+export function parseWorkerRates(list) {
+  var out = [];
+  for (var j = 0; j < list.length; j++) {
+    var rate = list[j];
+    var iso = rate.iso3;
+    var name = rate.name;
+    var unit = parseFloat(rate.unit) || 1;
+    var buy = parseFloat(rate.buy);
+    var sell = rate.sell == null ? NaN : parseFloat(rate.sell);
+    if (!iso || isNaN(buy)) continue;
+    var normalizedBuy = normalizeRate(buy, unit);
+    var normalizedSell = isNaN(sell) ? null : normalizeRate(sell, unit);
+    if (normalizedBuy === null) continue;
+    out.push({
+      iso3: iso,
+      name: name || iso,
+      unit: unit,
+      buy: buy,
+      sell: isNaN(sell) ? null : sell,
+      normalizedBuy: normalizedBuy,
+      normalizedSell: normalizedSell,
+    });
+  }
+  return out;
+}
+
+/**
  * Fetch NRB rates from the API.
- * Tries today first, then falls back to previous days.
+ * Fast path first: the site's edge-cached /api/live/forex (one request,
+ * shared by all visitors). Falls back to direct NRB day-by-day requests,
+ * then null (callers fall back to cached/baked rates).
  * Returns { rates: [...], date: "YYYY-MM-DD", publishedOn: "..." }
  */
 export async function fetchNRBRates() {
+  try {
+    var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var kill = ctrl ? setTimeout(function () { ctrl.abort(); }, 8000) : null;
+    var wr = await fetch("/api/live/forex", ctrl ? { signal: ctrl.signal } : {});
+    if (kill) clearTimeout(kill);
+    if (wr.ok) {
+      var wj = await wr.json();
+      var list = wj && wj.ok && wj.data && wj.data.currencies;
+      if (list && list.length > 0) {
+        var parsed = parseWorkerRates(list);
+        if (parsed.length > 0) {
+          return { rates: parsed, date: (wj.data && wj.data.date) || "", publishedOn: (wj.data && wj.data.publishedOn) || "" };
+        }
+      }
+    }
+  } catch (e) {
+    // Edge route unavailable (dev/preview/offline) — fall through to NRB.
+  }
   var today = new Date();
   // Try up to7 days back
   for (var i = 0; i < 7; i++) {

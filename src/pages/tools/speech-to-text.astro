@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
+import SpeechToText from '../../components/tools/SpeechToText.astro';
+import Disclaimer from '../../components/ui/Disclaimer.astro';
+
+const title = 'Speech to Text Converter – Nepali & English | SolutionsNepal';
+const description = 'Convert spoken Nepali and English into editable text with our free browser-based speech-to-text tool. Copy or download your transcript.';
+
+const faqItems = [
+  {
+    q: 'Which languages does this speech-to-text tool support?',
+    a: 'Nepali (ne-NP), English (US) (en-US) and English (UK) (en-GB). Pick a language before you start; switching languages never erases text you already have. If a language is unavailable on your device, the tool tells you instead of failing silently.',
+  },
+  {
+    q: 'Which browsers support voice typing?',
+    a: 'Voice typing works best in Chrome and Edge on desktop and Android, where the Web Speech API is fully supported. Safari and Firefox have limited or no support — the tool detects this and tells you, and you can still type or paste text and use Copy and Download.',
+  },
+  {
+    q: 'How accurate is Nepali speech recognition?',
+    a: 'Accuracy varies by device, microphone quality, background noise, accent and speaking pace — Nepali recognition quality is not the same on every browser or device. Speak clearly in short sentences and always review and edit the transcript before using it anywhere important.',
+  },
+  {
+    q: 'Does voice typing work offline?',
+    a: 'No. Your browser sends audio to its vendor speech-recognition service, so an internet connection is required. If the connection drops mid-sentence, the tool retries automatically a few times. Recognition may also pause during long silences; just tap Resume to continue — your existing text is kept.',
+  },
+  {
+    q: 'It says it can’t reach the speech service, but my internet works. Why?',
+    a: 'That message means the browser can’t reach Google’s speech servers specifically — not your Wi-Fi. The usual culprit is a content blocker: uBlock Origin (click its toolbar icon, then the power button to disable it on this site, and reload), AdGuard (add this site to Allowlist), or Brave Shields (set Shields down for this site). Other causes: an active VPN, firewall or “secure DNS”, office/school filters, or opening the page over plain HTTP instead of HTTPS. After allowlisting, tap “Try again” in the error box — your typed text is never lost.',
+  },
+  {
+    q: 'Is my voice or transcript saved anywhere?',
+    a: 'SolutionsNepal does not save your audio or transcript to any database — everything stays on this page in your browser. Note that your browser’s speech-recognition service may process audio externally to convert it to text. Clearing the transcript removes it from the page.',
+  },
+  {
+    q: 'Why is the microphone blocked?',
+    a: 'Your browser asks for microphone permission on first use. If you dismissed or blocked it, allow the microphone in your browser’s site settings (and use HTTPS), reload the page, and try again.',
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Speech to Text Converter — Nepali & English Voice Typing',
+      description: 'Dictate in Nepali or English with the browser speech-recognition engine, then edit, copy or download the transcript.',
+      url: 'https://solutionsnepal.com/tools/speech-to-text',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'NPR' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ]}
+>
+  <main class="max-w-3xl mx-auto px-4 pt-4 pb-8 sm:pt-6">
+    <Breadcrumbs items={[
+      { label: 'Tools', href: '/nepal' },
+      { label: 'Speech to Text Converter' },
+    ]} />
+    <!-- Hero -->
+    <div class="mb-5">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" style="color:var(--nk-text);">Speech to Text Converter</h1>
+      <p class="mt-2 text-[15px] leading-relaxed max-w-xl" style="color:var(--nk-text-secondary);">Speak in Nepali or English and get editable text instantly. Live transcription in your browser — copy or download, free, no signup.</p>
+    </div>
+
+    <!-- Tool -->
+    <SpeechToText />
+
+    <!-- SEO Content -->
+    <section class="mt-12 space-y-8 text-sm" style="color:var(--nk-text-secondary);">
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">How to Use Voice Typing</h2>
+        <ol class="space-y-1.5 list-decimal list-inside">
+          <li>Choose <strong>नेपाली (Nepali)</strong>, <strong>English (US)</strong> or <strong>English (UK)</strong> as the dictation language.</li>
+          <li>Tap the microphone (or <strong>Start Recording</strong>) and allow microphone permission when your browser asks.</li>
+          <li>Speak clearly — your words appear live, with the current sentence shown under “Hearing now”.</li>
+          <li>Tap the microphone (or <strong>Pause</strong>) to take a break, then <strong>Resume</strong> to continue — previous text is never overwritten.</li>
+          <li>Edit the transcript if needed, then Copy Text or Download TXT. <strong>Reset</strong> wipes everything and starts over.</li>
+        </ol>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-semibold mb-3" style="color:var(--nk-text);">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {faqItems.map((item) => (
+            <details class="rounded-lg border" style="border-color:var(--nk-border);background-color:var(--nk-surface);">
+              <summary class="px-4 py-2.5 text-sm font-medium cursor-pointer" style="color:var(--nk-text);">{item.q}</summary>
+              <div class="px-4 pb-3 text-sm leading-relaxed" style="color:var(--nk-text-secondary);border-top:1px solid var(--nk-border);"><p class="pt-3">{item.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <div class="pt-4" style="border-top:1px solid var(--nk-border);">
+        <p class="text-[11px]" style="color:var(--nk-text-tertiary);">Voice recognition runs through your browser’s speech-recognition service, which may process audio externally and needs an internet connection. SolutionsNepal does not save your audio or transcript to any database.</p>
+      </div>
+    </section>
+
+    <Disclaimer variant="general">Voice typing uses your browser’s built-in speech-recognition service (microphone permission required; internet needed). Recognition quality varies by browser, device and background noise — review the transcript before relying on it. SolutionsNepal does not store your audio or text.</Disclaimer>
+    <RelatedTools tools={[
+      { title: 'Nepali Unicode', description: 'Type Nepali with English letters', href: '/nepal/tools/nepali-unicode' },
+      { title: 'English to Nepali Translator', description: 'Translate sentences to Nepali', href: '/nepal/tools/english-to-nepali-translator' },
+      { title: 'Number to Nepali Words', description: 'Rupees in words for cheques', href: '/nepal/tools/nepali-number-to-words' },
+      { title: 'All Tools', description: 'Browse every tool', href: '/nepal' },
+    ]} />
+  </main>
+</BaseLayout>

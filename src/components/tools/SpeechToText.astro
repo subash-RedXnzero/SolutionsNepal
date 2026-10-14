@@ -1,0 +1,1172 @@
+---
+/**
+ * SpeechToText — Nepali + English voice typing via the browser Web Speech API.
+ *
+ * No backend, keys, or database. All `window` access lives in the client-side
+ * <script> below, so Astro SSR never touches browser APIs.
+ *
+ * Transcript model (duplicate-proof):
+ * - `committedText` mirrors the textarea and holds everything kept so far.
+ * - `finalSeen` (per recognition instance) records which result indexes were
+ *   already folded in. Chrome re-delivers the whole result list on every
+ *   event and flips entries interim→final in place, so a monotonic cursor
+ *   would miss flipped finals — each final index is consumed exactly once.
+ * - Interim hypotheses render in a separate live line and are never merged
+ *   into the transcript until the engine marks them final.
+ * - Live stabilization: interim unchanged for ~2.5s while listening is
+ *   optimistically committed (overlap-stripped against later finals), so
+ *   paused speech still lands in the transcript mid-session.
+ */
+---
+
+<div id="stt-root" class="nk-card overflow-hidden">
+  <div class="p-5 sm:p-6">
+
+    <p class="stt-card-title">Speech to Text Converter</p>
+    <p class="stt-card-sub">Convert your voice into text instantly. Supports Nepali and English in compatible browsers.</p>
+
+    <!-- Language -->
+    <p class="stt-section-label" id="stt-lang-label">Recognition language</p>
+    <div id="stt-lang-group" class="stt-radios" role="radiogroup" aria-labelledby="stt-lang-label">
+      <label class="stt-radio">
+        <input type="radio" name="stt-lang" value="ne-NP" checked />
+        <span class="stt-radio-dot" aria-hidden="true"></span>
+        <span class="stt-radio-text">नेपाली (Nepali)</span>
+      </label>
+      <label class="stt-radio">
+        <input type="radio" name="stt-lang" value="en-US" />
+        <span class="stt-radio-dot" aria-hidden="true"></span>
+        <span class="stt-radio-text">English (US)</span>
+      </label>
+      <label class="stt-radio">
+        <input type="radio" name="stt-lang" value="en-GB" />
+        <span class="stt-radio-dot" aria-hidden="true"></span>
+        <span class="stt-radio-text">English (UK)</span>
+      </label>
+    </div>
+    <p id="stt-lang-note" class="text-[11px] mb-4 leading-relaxed" style="color:var(--nk-text-tertiary);">Switching never erases your existing text.</p>
+
+    <!-- Proactive blocker notice (Brave / adblocker): warning only, mic stays usable -->
+    <div id="stt-notice" class="stt-notice hidden mb-5">
+      <span class="stt-notice-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+      </span>
+      <div class="stt-notice-text">
+        <p id="stt-notice-title" class="stt-notice-title"></p>
+        <p id="stt-notice-body" class="stt-notice-body"></p>
+      </div>
+      <button type="button" id="stt-notice-x" class="stt-notice-x" aria-label="Dismiss notice">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Recording controls -->
+    <div class="stt-center mb-4">
+      <span id="stt-mini" class="stt-mini" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+      </span>
+      <p id="stt-state-line" class="stt-state" aria-hidden="true">Ready to transcribe</p>
+      <p class="stt-state-meta" aria-hidden="true"><span id="stt-timer" class="tabular-nums">0:00</span> · <span id="stt-state-lang">Nepali</span></p>
+      <div class="stt-rec-row">
+        <button
+          id="stt-start"
+          type="button"
+          class="stt-btn stt-btn-dark"
+          aria-label="Start recording"
+        ><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg><span>Start</span></button>
+        <button
+          id="stt-resume"
+          type="button"
+          class="stt-btn stt-btn-dark hidden"
+          aria-label="Resume recording"
+        ><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg><span>Resume</span></button>
+        <button
+          id="stt-stop"
+          type="button"
+          class="stt-btn stt-btn-line hidden"
+          aria-label="Stop recording"
+        ><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/></svg><span>Stop</span></button>
+        <button id="stt-reset" type="button" class="stt-linkbtn" title="Stop recording and reset the whole recorder">Reset</button>
+      </div>
+    </div>
+
+    <!-- Status + error regions -->
+    <p id="stt-status" role="status" aria-live="polite" class="text-[13.5px] text-center mb-4 min-h-[1.4em] leading-relaxed" style="color:var(--nk-text-secondary);">Press Start and allow microphone access to begin.</p>
+    <div id="stt-error" role="alert" class="stt-error hidden mb-4"></div>
+    <div id="stt-unsupported" class="stt-error hidden mb-4"></div>
+
+    <!-- Interim line -->
+    <div id="stt-interim-wrap" class="hidden mb-4">
+      <p class="text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-tertiary);">Hearing now</p>
+      <p id="stt-interim" class="text-[14px] italic leading-relaxed rounded-lg px-3.5 py-2.5" style="color:var(--nk-text-secondary);background:var(--nk-hover);"></p>
+    </div>
+
+    <!-- Transcript editor -->
+    <div class="mb-3">
+      <div class="flex items-baseline justify-between mb-2">
+        <label for="stt-text" class="text-[14px] font-bold" style="color:var(--nk-text);">Transcript</label>
+        <p id="stt-count" class="text-[11.5px] tabular-nums" style="color:var(--nk-text-tertiary);">0 words · 0 characters</p>
+      </div>
+      <textarea
+        id="stt-text"
+        rows="5"
+        placeholder="Your recognized speech will appear here. You can also type or edit text..."
+        class="stt-textarea"
+      ></textarea>
+      <p id="stt-empty" class="text-[11.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Nothing yet — press Start to dictate, or type above.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-3 flex flex-wrap items-center gap-2">
+      <button id="stt-copy" type="button" class="stt-pill" title="Copy the transcript to clipboard" disabled><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="13" height="13" x="9" y="9" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy text</span></button>
+      <button id="stt-download" type="button" class="stt-pill" title="Download the transcript as a .txt file" disabled><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg><span>Download</span></button>
+      <button id="stt-clear" type="button" class="stt-linkbtn" title="Clear the transcript text" disabled>Clear</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Element refs (script is bundled as a deferred module: DOM is ready) ──
+  const root = document.getElementById('stt-root');
+  const miniIcon = document.getElementById('stt-mini');
+  const stateLine = document.getElementById('stt-state-line');
+  const stateLang = document.getElementById('stt-state-lang');
+  const startBtn = document.getElementById('stt-start');
+  const stopBtn = document.getElementById('stt-stop');
+  const resumeBtn = document.getElementById('stt-resume');
+  const statusEl = document.getElementById('stt-status');
+  const errorBox = document.getElementById('stt-error');
+  const unsupportedBox = document.getElementById('stt-unsupported');
+  const interimWrap = document.getElementById('stt-interim-wrap');
+  const interimEl = document.getElementById('stt-interim');
+  const textEl = document.getElementById('stt-text');
+  const emptyEl = document.getElementById('stt-empty');
+  const countEl = document.getElementById('stt-count');
+  const copyBtn = document.getElementById('stt-copy');
+  const downloadBtn = document.getElementById('stt-download');
+  const clearBtn = document.getElementById('stt-clear');
+  const resetBtn = document.getElementById('stt-reset');
+  const timerEl = document.getElementById('stt-timer');
+  const langInputs = Array.from(document.querySelectorAll('input[name="stt-lang"]'));
+  const langNote = document.getElementById('stt-lang-note');
+  const noticeBox = document.getElementById('stt-notice');
+  const noticeTitle = document.getElementById('stt-notice-title');
+  const noticeBody = document.getElementById('stt-notice-body');
+  const noticeX = document.getElementById('stt-notice-x');
+
+  // ── State ──
+  // idle | starting | listening | stopping | unsupported
+  let micState = 'idle';
+  let recognition = null;
+  let wantListening = false; // true between manual start and manual stop (spans auto-restarts)
+  let manualStop = false;    // true when onend follows a user stop (no restart)
+  let finalSeen = new Set(); // final result indexes consumed (per instance)
+  let committedText = '';
+  let interimText = '';
+  // Optimistic-commit bookkeeping: stabilized interim already folded into
+  // committedText (pending engine finalization), plus when it last changed.
+  let stableCommitted = '';
+  let lastInterimSnapshot = '';
+  let lastInterimAt = 0;
+  let lang = 'ne-NP';
+  let sessionStart = 0;      // timestamp the current timing stretch began
+  let elapsedBase = 0;       // ms accumulated across auto-restarts in this session
+  let timerId = null;
+  let restartTimer = null;
+  let destroyed = false;
+  // Reset uses two-tap confirm when there is anything to lose, so a stray
+  // tap next to the mic can never silently wipe a transcript.
+  let resetArmed = false;
+  let resetArmTimer = null;
+  // Clear uses the same two-tap confirm once text is substantial.
+  let clearArmed = false;
+  let clearArmTimer = null;
+  function disarmReset() {
+    resetArmed = false;
+    if (resetArmTimer) { clearTimeout(resetArmTimer); resetArmTimer = null; }
+    if (resetBtn) {
+      resetBtn.textContent = 'Reset';
+      resetBtn.classList.remove('is-armed');
+    }
+  }
+  function disarmClear() {
+    clearArmed = false;
+    if (clearArmTimer) { clearTimeout(clearArmTimer); clearArmTimer = null; }
+    if (clearBtn) {
+      clearBtn.textContent = 'Clear Text';
+      clearBtn.classList.remove('is-armed');
+    }
+  }
+  // When true, finishManualStop skips its status message (used by Reset so
+  // the late-arriving onend after abort() can't overwrite "Recorder reset").
+  // Cleared on the next manual start.
+  let silentFinish = false;
+  // 'network' errors are often transient (hiccup, rapid restart) — retry a
+  // few times with backoff before giving up. Reset on every manual start and
+  // on every final result (which proves the service is reachable).
+  let networkRetries = 0;
+  const MAX_NETWORK_RETRIES = 3;
+  const RESTART_DELAY_MS = 900;
+  let restartDelayMs = RESTART_DELAY_MS;
+
+  const LANG_NAMES = { 'ne-NP': 'Nepali', 'en-US': 'English (US)', 'en-GB': 'English (UK)' };
+  function langName(code) { return LANG_NAMES[code] || code; }
+
+  function engine() {
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  }
+  function isBraveLike() {
+    try { return !!(navigator.brave && navigator.brave.isBrave); } catch (e) { return false; }
+  }
+  function detectBraveAsync() {
+    try {
+      if (navigator.brave && typeof navigator.brave.isBrave === 'function') {
+        return navigator.brave.isBrave().then((v) => !!v).catch(() => false);
+      }
+    } catch (e) {}
+    return Promise.resolve(false);
+  }
+  // Adblock bait: EasyList-style cosmetic filters hide/remove elements with
+  // ad-ish class names. If the bait is hidden or gone, a blocker is active.
+  function detectAdblockAsync() {
+    return new Promise((resolve) => {
+      let bait = null;
+      try {
+        bait = document.createElement('div');
+        bait.className = 'adsbox ad-banner textads sponsoredbanner';
+        bait.setAttribute('aria-hidden', 'true');
+        bait.style.cssText = 'position:absolute!important;left:-9999px!important;top:-9999px!important;height:10px!important;width:10px!important;';
+        bait.innerHTML = '&nbsp;';
+        document.body.appendChild(bait);
+      } catch (e) { resolve(false); return; }
+      // Give cosmetic filters a tick to apply before measuring.
+      setTimeout(() => {
+        let blocked = false;
+        try {
+          if (!bait.isConnected) blocked = true;
+          else if (bait.offsetHeight === 0) blocked = true;
+          else if (window.getComputedStyle(bait).display === 'none') blocked = true;
+        } catch (e) { blocked = false; }
+        try { bait.remove(); } catch (e) {}
+        resolve(blocked);
+      }, 600);
+    });
+  }
+  function showNotice(kind) {
+    if (!noticeBox || !noticeTitle || !noticeBody) return;
+    if (kind === 'brave') {
+      noticeTitle.textContent = 'Brave browser detected';
+      noticeBody.textContent = 'Brave’s Shields or an ad blocker may be preventing this feature from working. Try disabling Shields for this site or opening it in another browser.';
+    } else {
+      noticeTitle.textContent = 'Ad blocker detected';
+      noticeBody.textContent = 'Your ad blocker may block the speech service this feature needs. Allowlist this site, reload the page, then tap the microphone.';
+    }
+    noticeBox.classList.remove('hidden');
+  }
+
+  // ── Small helpers ──
+  function setStatus(msg) { if (statusEl) statusEl.textContent = msg || ''; }
+  // Error banner with an optional "Try again" button, so users can retest
+  // immediately after allowlisting the site in their adblocker etc.
+  function showError(msg, retry) {
+    if (!errorBox) return;
+    errorBox.innerHTML = '';
+    const t = document.createElement('p');
+    t.textContent = msg;
+    errorBox.appendChild(t);
+    if (retry) {
+      const row = document.createElement('div');
+      row.className = 'stt-error-actions';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'stt-retry-btn';
+      btn.textContent = 'Try again';
+      btn.addEventListener('click', () => {
+        hideError();
+        if (micState === 'idle') start();
+      });
+      row.appendChild(btn);
+      const hint = document.createElement('span');
+      hint.className = 'stt-retry-hint';
+      hint.textContent = 'Allowlist this site in your adblocker first, then retry.';
+      row.appendChild(hint);
+      errorBox.appendChild(row);
+    }
+    errorBox.classList.remove('hidden');
+  }
+  function hideError() {
+    if (!errorBox) return;
+    errorBox.textContent = '';
+    errorBox.classList.add('hidden');
+  }
+  function fmtElapsed(ms) {
+    const s = Math.floor(ms / 1000);
+    return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  }
+  function wordCount(t) {
+    // Counting assumption: words are whitespace-separated runs. This holds
+    // for Nepali Devanagari (which uses spaces between words, like English)
+    // and English alike; conjuncts/zero-width joiners inside a word don't
+    // split it. Chars = UTF-16 code units (emoji may count as 2).
+    const w = t.trim().split(/\s+/).filter(Boolean).length;
+    return { words: t.trim() === '' ? 0 : w, chars: t.length };
+  }
+
+  function refreshMeta() {
+    const c = wordCount(committedText);
+    if (countEl) countEl.textContent = c.words + (c.words === 1 ? ' word · ' : ' words · ') + c.chars + ' characters';
+    const hasText = committedText.trim().length > 0;
+    if (emptyEl) emptyEl.style.visibility = hasText ? 'hidden' : 'visible';
+    const busy = micState === 'starting' || micState === 'stopping';
+    if (copyBtn) copyBtn.disabled = !hasText || busy;
+    if (downloadBtn) downloadBtn.disabled = !hasText || busy;
+    if (clearBtn) clearBtn.disabled = !hasText || busy;
+    paintControls(); // typing/clearing flips Start ↔ Resume live
+  }
+
+  function renderInterim() {
+    if (!interimWrap || !interimEl) return;
+    if (interimText) {
+      interimEl.textContent = interimText;
+      interimWrap.classList.remove('hidden');
+    } else {
+      interimEl.textContent = '';
+      interimWrap.classList.add('hidden');
+    }
+  }
+
+  function paintMic() {
+    const busy = micState === 'starting' || micState === 'stopping';
+    const listening = micState === 'listening';
+    // Resume = idle with kept text; fresh Start only when empty.
+    const resume = !listening && !busy && committedText.trim().length > 0;
+    if (miniIcon) miniIcon.classList.toggle('is-live', listening);
+    if (stateLine) {
+      stateLine.textContent =
+        micState === 'unsupported' ? 'Not supported' :
+        listening ? 'Listening…' :
+        busy ? (micState === 'starting' ? 'Starting…' : 'Stopping…') :
+        (resume ? 'Paused' : 'Ready to transcribe');
+    }
+    if (stateLang) stateLang.textContent = langName(lang);
+    paintControls();
+    langInputs.forEach((r) => { r.disabled = busy || micState === 'unsupported'; });
+  }
+
+  // Explicit controls, one primary slot — only the valid action is shown:
+  // fresh → Start + Reset · listening → Stop + Reset · paused → Resume + Reset.
+  function paintControls() {
+    const busy = micState === 'starting' || micState === 'stopping';
+    const listening = micState === 'listening';
+    const unsupported = micState === 'unsupported';
+    const hasText = committedText.trim().length > 0;
+    const showResume = !busy && !listening && hasText;
+    const showStop = listening || busy;
+    const showStart = !showStop && !showResume;
+    if (startBtn) {
+      startBtn.classList.toggle('hidden', !showStart);
+      startBtn.disabled = busy || listening || unsupported || hasText;
+    }
+    if (resumeBtn) {
+      resumeBtn.classList.toggle('hidden', !showResume);
+      resumeBtn.disabled = busy || listening || unsupported || !hasText;
+    }
+    if (stopBtn) {
+      stopBtn.classList.toggle('hidden', !showStop);
+      stopBtn.disabled = busy || !listening || unsupported;
+    }
+  }
+
+  function startTimer() {
+    stopTimer();
+    timerId = setInterval(() => {
+      if (timerEl) timerEl.textContent = fmtElapsed(elapsedBase + (Date.now() - sessionStart));
+      maybeStabilize();
+    }, 250);
+  }
+  function stopTimer() {
+    if (timerId) { clearInterval(timerId); timerId = null; }
+  }
+  function resetTimer() {
+    stopTimer();
+    elapsedBase = 0;
+    if (timerEl) timerEl.textContent = '0:00';
+  }
+
+  function appendFinal(chunk) {
+    const t = String(chunk || '').trim();
+    if (!t) return;
+    committedText += (committedText && !/\s$/.test(committedText) ? ' ' : '') + t;
+    if (textEl) textEl.value = committedText;
+    refreshMeta();
+  }
+
+  // Word-level overlap strip so optimistic commits never duplicate:
+  // if `fin` starts where `stable` left off, only the new tail is kept.
+  function stripOverlap(stable, fin) {
+    const f = String(fin || '');
+    if (!stable) return f;
+    if (f.startsWith(stable)) return f.slice(stable.length);
+    const sw = stable.split(/\s+/).filter(Boolean);
+    const fw = f.split(/\s+/).filter(Boolean);
+    const max = Math.min(sw.length, fw.length);
+    for (let n = max; n > 0; n--) {
+      if (sw.slice(sw.length - n).join(' ').toLowerCase() === fw.slice(0, n).join(' ').toLowerCase()) {
+        return fw.slice(n).join(' ');
+      }
+    }
+    return f;
+  }
+
+  // Chrome frequently ends a session (silence timeout, auto-restart pause,
+  // or manual Stop) while the last hypothesis is still interim — and then
+  // discards it. Flushing here guarantees heard words reach the transcript.
+  // Safe to call repeatedly: it clears interimText, and finalized results
+  // are never part of interimText, so nothing can duplicate.
+  function flushInterim() {
+    if (interimText) {
+      appendFinal(stripOverlap(stableCommitted, interimText));
+      stableCommitted = '';
+      interimText = '';
+      renderInterim();
+    }
+  }
+
+  // While still listening, commit interim that stopped changing (user paused
+  // but the session is alive) so words flow into the transcript instead of
+  // sitting in "Hearing now" forever. Overlap-stripped against anything
+  // already committed; skipped while the user is editing the textarea.
+  const STABLE_MS = 2500;
+  function maybeStabilize() {
+    if (micState !== 'listening' || destroyed) return;
+    if (!interimText || interimText === stableCommitted) return;
+    if (typeof document !== 'undefined' && document.activeElement === textEl) return;
+    if (Date.now() - lastInterimAt < STABLE_MS) return;
+    const add = stripOverlap(stableCommitted, interimText).trim();
+    stableCommitted = interimText;
+    if (add) appendFinal(add);
+  }
+
+  // ── Recognition lifecycle ──
+  function start() {
+    if (micState === 'listening' || micState === 'starting' || micState === 'stopping') return;
+    const SR = engine();
+    if (!SR) { markUnsupported(); return; }
+    // Speech recognition only runs in a secure context (HTTPS or localhost).
+    // Without it Chrome fails with a misleading 'network' error.
+    if (window.isSecureContext === false) {
+      micState = 'idle';
+      wantListening = false;
+      paintMic();
+      showError('Voice typing needs a secure connection (HTTPS or localhost). You are viewing this page over plain HTTP, so the microphone service is blocked. Open the HTTPS version of this page and try again.');
+      setStatus('');
+      refreshMeta();
+      return;
+    }
+    hideError();
+    if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
+
+    recognition = new SR();
+    recognition.lang = lang;
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+    finalSeen = new Set();
+    manualStop = false;
+    wantListening = true;
+    networkRetries = 0;
+    restartDelayMs = RESTART_DELAY_MS;
+    silentFinish = false;
+    stableCommitted = '';
+    lastInterimSnapshot = '';
+    lastInterimAt = 0;
+    disarmReset();
+    disarmClear();
+
+    recognition.onstart = () => {
+      if (destroyed) return;
+      micState = 'listening';
+      paintMic();
+      setStatus('Listening in ' + langName(lang) + '… speak now.');
+    };
+
+    recognition.onresult = (event) => {
+      if (destroyed) return;
+      const res = event.results;
+      // NOTE: res is the FULL session list every event, and Chrome flips
+      // entries interim→final in place — so every final index is consumed
+      // once via finalSeen instead of a head-only cursor.
+      for (let i = 0; i < res.length; i++) {
+        const r = res[i];
+        if (!r || !r.length || !r.isFinal || finalSeen.has(i)) continue;
+        finalSeen.add(i);
+        // Engine final for speech we may have optimistically committed:
+        // strip the overlap so it lands exactly once.
+        appendFinal(stripOverlap(stableCommitted, r[0].transcript));
+        if (stableCommitted) stableCommitted = '';
+        networkRetries = 0; // service answered — clear any retry debt
+      }
+      // Interim = trailing non-final hypotheses only; never merged into text.
+      let interim = '';
+      for (let i = 0; i < res.length; i++) {
+        const r = res[i];
+        if (r && !r.isFinal && r.length) interim += r[0].transcript;
+      }
+      interimText = interim.trim();
+      if (interimText !== lastInterimSnapshot) {
+        lastInterimSnapshot = interimText;
+        lastInterimAt = Date.now();
+      }
+      renderInterim();
+    };
+
+    recognition.onerror = (event) => {
+      if (destroyed) return;
+      handleRecError(event && event.error ? event.error : '');
+    };
+
+    recognition.onend = () => {
+      if (destroyed) return;
+      // Bank elapsed time across auto-restarts.
+      if (sessionStart) elapsedBase += Date.now() - sessionStart;
+      sessionStart = 0;
+      stopTimer();
+      flushInterim(); // keep words heard right before the session ended
+      interimText = '';
+      renderInterim();
+      if (manualStop || !wantListening) {
+        finishManualStop();
+      } else {
+        // Service ended the session (pause/timeout): resume after a short
+        // pause. The delay also avoids Chrome's rapid-restart 'network' quirk.
+        if (restartTimer) clearTimeout(restartTimer);
+        const wait = restartDelayMs;
+        restartDelayMs = RESTART_DELAY_MS;
+        restartTimer = setTimeout(() => {
+          restartTimer = null;
+          if (!wantListening || destroyed) return;
+          try {
+            sessionStart = Date.now();
+            startTimer();
+            recognition.start();
+          } catch (e) {
+            finishManualStop();
+            showError('Recognition paused unexpectedly. Tap Resume to continue.');
+          }
+        }, wait);
+      }
+    };
+
+    micState = 'starting';
+    paintMic();
+    const resuming = committedText.trim().length > 0;
+    setStatus(resuming ? 'Resuming — previous text kept…' : 'Starting microphone…');
+    // Resume continues the same timer; a fresh Start (empty text) restarts it.
+    if (!resuming) resetTimer();
+    try {
+      sessionStart = Date.now();
+      startTimer();
+      recognition.start();
+    } catch (e) {
+      // start() throws if called while already started.
+      stopTimer();
+      micState = 'idle';
+      wantListening = false;
+      paintMic();
+      showError('Could not start recording. Please try again.');
+      setStatus('');
+    }
+  }
+
+  function stop(manual) {
+    if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
+    if (!recognition) {
+      wantListening = false;
+      return;
+    }
+    if (manual) {
+      manualStop = true;
+      wantListening = false;
+      micState = 'stopping';
+      paintMic();
+      setStatus('Pausing…');
+      try {
+        recognition.stop();
+      } catch (e) {
+        // Already ended — finish directly.
+        finishManualStop();
+      }
+    }
+  }
+
+  function finishManualStop() {
+    wantListening = false;
+    stopTimer();
+    flushInterim(); // stop() can bypass onend — never drop heard words
+    interimText = '';
+    renderInterim();
+    disarmReset();
+    disarmClear();
+    micState = engine() ? 'idle' : 'unsupported';
+    paintMic();
+    if (!silentFinish) {
+      const c = wordCount(committedText);
+      if (c.words > 0) setStatus('Paused — transcript kept (' + c.words + (c.words === 1 ? ' word' : ' words') + '). Tap Resume to continue.');
+      else setStatus('Paused. Tap Resume or Start to try again.');
+    }
+    refreshMeta();
+  }
+
+  function handleRecError(code) {
+    if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
+    switch (code) {
+      case 'not-allowed':
+      case 'service-not-allowed':
+        wantListening = false;
+        manualStop = true;
+        try { recognition && recognition.abort && recognition.abort(); } catch (e) {}
+        finishManualStop();
+        showError('Microphone access was blocked. Allow microphone permission in your browser site settings (and use HTTPS), then tap the microphone again.');
+        break;
+      case 'audio-capture':
+        wantListening = false;
+        manualStop = true;
+        finishManualStop();
+        showError('No microphone was found. Connect or enable a microphone, then try again.');
+        break;
+      case 'network': {
+        // 'network' means the browser could not reach its speech servers —
+        // NOT necessarily your Wi-Fi. Transient hiccups (and Chrome's
+        // rapid-restart quirk) are retried with backoff; only persistent
+        // failure ends the session with troubleshooting guidance.
+        const online = typeof navigator === 'object' && 'onLine' in navigator ? navigator.onLine : true;
+        if (!online) {
+          wantListening = false;
+          manualStop = true;
+          finishManualStop();
+          showError('You appear to be offline. Reconnect to the internet — voice recognition needs it — then tap the microphone again.');
+          break;
+        }
+        if (networkRetries < MAX_NETWORK_RETRIES) {
+          networkRetries += 1;
+          // Keep the session alive: onend (which always follows onerror)
+          // will resume after this backoff instead of the default pause.
+          restartDelayMs = networkRetries * 1200;
+          setStatus('Connection hiccup — retrying… (attempt ' + networkRetries + ' of ' + MAX_NETWORK_RETRIES + ')');
+          break;
+        }
+        wantListening = false;
+        manualStop = true;
+        finishManualStop();
+        showError(
+          'Still can’t reach the speech service after ' + MAX_NETWORK_RETRIES + ' tries, even though you’re online. ' +
+          (isBraveLike()
+            ? 'Brave blocks Google’s speech servers, so voice typing cannot work in Brave — please use Chrome or Edge. '
+            : 'Your adblocker, VPN, firewall, “secure DNS”, or office/school filter is likely blocking Google’s speech servers. Allowlist this site in your adblocker (uBlock: click its icon → “disable on this site”; AdGuard: add to Allowlist; Brave: Shields down), pause VPN, then retry below. ') +
+          'Your text above is safe.',
+          !isBraveLike()
+        );
+        break;
+      }
+      case 'language-not-supported':
+        wantListening = false;
+        manualStop = true;
+        finishManualStop();
+        showError(langName(lang) + ' is not supported for speech recognition on this device. Try the other language.');
+        break;
+      case 'no-speech':
+        setStatus('No speech detected — still listening. Speak a little louder or closer to the mic.');
+        break;
+      case 'aborted':
+        if (!wantListening) finishManualStop();
+        break;
+      default:
+        wantListening = false;
+        manualStop = true;
+        finishManualStop();
+        showError('The speech service hit a problem' + (code ? ' (' + code + ')' : '') + '. Please try again.', true);
+        break;
+    }
+  }
+
+  function markUnsupported() {
+    micState = 'unsupported';
+    wantListening = false;
+    paintMic();
+    setStatus('');
+    if (unsupportedBox) {
+      unsupportedBox.innerHTML = '';
+      const t = document.createElement('p');
+      t.innerHTML = '<strong>Speech recognition is not supported in this browser.</strong> Voice typing works best in Chrome or Edge on desktop and Android. You can still type or paste text below and use Copy / Download.';
+      unsupportedBox.appendChild(t);
+      unsupportedBox.classList.remove('hidden');
+    }
+    refreshMeta();
+  }
+
+  // ── Events ──
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      if (micState === 'idle') start();
+    });
+  }
+  if (stopBtn) {
+    stopBtn.addEventListener('click', () => {
+      if (micState === 'listening') stop(true);
+    });
+  }
+  if (resumeBtn) {
+    resumeBtn.addEventListener('click', () => {
+      if (micState === 'idle') start();
+    });
+  }
+
+  langInputs.forEach((r) => {
+    r.addEventListener('change', () => {
+      if (!r.checked) return;
+      const next = r.value;
+      if (next === lang) return;
+      lang = next;
+      // Never erase text on language change: stop the session, keep everything.
+      if (micState === 'listening' || micState === 'starting') {
+        stop(true);
+        const c = wordCount(committedText);
+        setStatus('Language set to ' + langName(lang) + (c.words > 0 ? ' — your text (' + c.words + ' words) was kept.' : '.') + ' Tap Resume for a new session.');
+      } else {
+        setStatus('Language set to ' + langName(lang) + '. Tap Start to dictate.');
+      }
+      paintMic();
+      if (langNote) langNote.textContent = 'Listening in ' + langName(lang) + ' next session. Existing text is never erased by switching.';
+    });
+  });
+
+  if (textEl) {
+    textEl.addEventListener('input', () => {
+      // Textarea is the source of truth for kept text; result indexes already
+      // consumed stay consumed, so edits can never resurrect duplicates.
+      committedText = textEl.value;
+      disarmClear(); // edited text re-arms confirmation naturally on next tap
+      refreshMeta();
+    });
+  }
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const t = textEl ? textEl.value : committedText;
+      if (!t.trim()) return;
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(t);
+        ok = true;
+      } catch (e) {
+        try {
+          if (textEl) { textEl.focus(); textEl.select(); }
+          ok = document.execCommand('copy');
+          if (textEl) textEl.setSelectionRange(textEl.value.length, textEl.value.length);
+        } catch (e2) { ok = false; }
+      }
+      if (ok) {
+        const label = copyBtn.querySelector('span');
+        if (label) label.textContent = 'Copied!';
+        setStatus('Transcript copied to clipboard.');
+        setTimeout(() => { if (label) label.textContent = 'Copy text'; }, 2000);
+      } else {
+        showError('Copy failed. Select the text manually and copy it.');
+      }
+    });
+  }
+
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', () => {
+      const t = textEl ? textEl.value : committedText;
+      if (!t.trim()) return;
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      // UTF-8 blob preserves Nepali Devanagari exactly as typed/recognised.
+      const name = 'speech-transcript-' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()) + '.txt';
+      const blob = new Blob([t], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setStatus('Transcript downloaded as ' + name + '.');
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      // Substantial text gets the same two-tap confirm as Reset.
+      const c0 = wordCount(committedText);
+      const substantial = c0.words > 20 || c0.chars > 200;
+      if (substantial && !clearArmed) {
+        clearArmed = true;
+        clearBtn.textContent = 'Confirm?';
+        clearBtn.classList.add('is-armed');
+        setStatus('Tap Clear again to erase ' + c0.words + (c0.words === 1 ? ' word' : ' words') + '.');
+        if (clearArmTimer) clearTimeout(clearArmTimer);
+        clearArmTimer = setTimeout(disarmClear, 4000);
+        return;
+      }
+      // Clearing stops any live session first, then wipes state.
+      if (micState === 'listening' || micState === 'starting') stop(true);
+      disarmClear();
+      committedText = '';
+      interimText = '';
+      stableCommitted = '';
+      lastInterimSnapshot = '';
+      if (textEl) textEl.value = '';
+      renderInterim();
+      hideError();
+      resetTimer();
+      if (countEl) countEl.textContent = '0 words · 0 characters';
+      refreshMeta();
+      setStatus('Transcript cleared.');
+      if (textEl) textEl.focus();
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      const hasSomething = committedText.trim().length > 0
+        || micState === 'listening' || micState === 'starting' || micState === 'stopping'
+        || (timerEl && timerEl.textContent !== '0:00');
+      // First tap only arms when there is something to lose — a stray tap
+      // next to the mic can never silently wipe a transcript.
+      if (hasSomething && !resetArmed) {
+        resetArmed = true;
+        resetBtn.textContent = 'Confirm?';
+        resetBtn.classList.add('is-armed');
+        setStatus('Tap Reset again to erase everything.');
+        if (resetArmTimer) clearTimeout(resetArmTimer);
+        resetArmTimer = setTimeout(disarmReset, 4000);
+        return;
+      }
+      // Full recorder reset: stop anything running, wipe text + timer,
+      // restore default language. Proactive blocker notice is left as-is
+      // (detection still holds); the error banner is cleared.
+      if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
+      disarmReset();
+      disarmClear();
+      wantListening = false;
+      manualStop = true;
+      silentFinish = true; // late onend after abort() must not overwrite status
+      try { recognition && recognition.abort && recognition.abort(); } catch (e) {}
+      recognition = null;
+      stopTimer();
+      committedText = '';
+      interimText = '';
+      stableCommitted = '';
+      lastInterimSnapshot = '';
+      finalSeen = new Set();
+      networkRetries = 0;
+      restartDelayMs = RESTART_DELAY_MS;
+      if (textEl) textEl.value = '';
+      renderInterim();
+      hideError();
+      resetTimer();
+      lang = 'ne-NP';
+      langInputs.forEach((r) => { r.checked = r.value === 'ne-NP'; });
+      if (langNote) langNote.textContent = 'Switching never erases your existing text.';
+      micState = engine() ? 'idle' : 'unsupported';
+      paintMic();
+      refreshMeta();
+      setStatus('Recorder reset. Tap the microphone to start.');
+    });
+  }
+
+  // ── Cleanup when the component leaves (navigation away / teardown) ──
+  window.addEventListener('pagehide', () => {
+    destroyed = true;
+    wantListening = false;
+    manualStop = true;
+    if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
+    stopTimer();
+    try { recognition && recognition.abort && recognition.abort(); } catch (e) {}
+    recognition = null;
+  });
+
+  // ── Init (client-only; SSR never reaches here) ──
+  if (noticeX) {
+    noticeX.addEventListener('click', () => {
+      if (noticeBox) noticeBox.classList.add('hidden');
+    });
+  }
+  if (!engine()) {
+    markUnsupported();
+  } else {
+    paintMic();
+    refreshMeta();
+    renderInterim();
+    // Proactive warning only — the mic stays usable either way.
+    Promise.all([detectBraveAsync(), detectAdblockAsync()]).then(([brave, adblocked]) => {
+      if (destroyed) return;
+      if (brave) showNotice('brave');
+      else if (adblocked) showNotice('adblock');
+    });
+  }
+</script>
+
+<style>
+  /* Card heading (visual only — the page H1 carries the document heading) */
+  .stt-card-title { margin: 0 0 4px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; color: var(--nk-text); }
+  .stt-card-sub { margin: 0 0 18px; font-size: 13.5px; line-height: 1.6; color: var(--nk-text-secondary); }
+
+  /* Language: bold label + vertical classic radios */
+  .stt-section-label { margin: 0 0 10px; font-size: 14px; font-weight: 700; color: var(--nk-text); }
+  .stt-radios { display: flex; flex-direction: column; gap: 10px; margin-bottom: 6px; }
+  .stt-radio { display: flex; align-items: center; gap: 10px; min-width: 0; cursor: pointer; width: fit-content; max-width: 100%; }
+  .stt-radio input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .stt-radio-dot {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--nk-border-strong);
+    background: var(--nk-surface);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s ease;
+  }
+  .stt-radio-dot::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background-color 0.15s ease;
+  }
+  .stt-radio input:checked + .stt-radio-dot { border-color: var(--nk-accent); }
+  .stt-radio input:checked + .stt-radio-dot::after { background: var(--nk-accent); }
+  .stt-radio:hover .stt-radio-dot { border-color: var(--nk-accent); }
+  .stt-radio input:focus-visible + .stt-radio-dot { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .stt-radio input:disabled ~ .stt-radio-text, .stt-radio input:disabled + .stt-radio-dot { opacity: 0.5; cursor: not-allowed; }
+  .stt-radio-text { font-size: 14.5px; color: var(--nk-text); }
+
+  /* Center status block */
+  .stt-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .stt-mini {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nk-text-tertiary);
+    margin-bottom: 10px;
+    transition: color 0.15s ease;
+  }
+  .stt-mini.is-live { color: var(--nk-accent); animation: stt-blink 1.2s ease-in-out infinite; }
+  @keyframes stt-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .stt-state { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; color: var(--nk-text); }
+  .stt-state-meta { margin: 5px 0 0; font-size: 14px; color: var(--nk-text-tertiary); }
+  .stt-state-meta .tabular-nums { font-variant-numeric: tabular-nums; }
+
+  /* Main + utility buttons */
+  .stt-rec-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .stt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 52px;
+    padding: 12px 32px;
+    border-radius: 9999px;
+    font-size: 15.5px;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    transition: opacity 0.15s ease, transform 0.12s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .stt-btn:active:not(:disabled) { transform: scale(0.97); }
+  .stt-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .stt-btn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 3px; }
+  /* Primary: brand-red pill (project accent) */
+  .stt-btn-dark { background: var(--nk-accent); color: #fff; box-shadow: 0 6px 16px rgba(230, 43, 30, 0.28); }
+  .stt-btn-dark:hover:not(:disabled) { background: var(--nk-accent-hover); }
+  .stt-btn-dark:disabled { background: var(--nk-muted); color: var(--nk-text-tertiary); box-shadow: none; cursor: not-allowed; }
+  /* Unlayered component CSS beats Tailwind's layered `.hidden` utility:
+     without this, Start stays visible next to Resume. */
+  .stt-btn.hidden { display: none; }
+  /* Stop: quiet outline, turns brand-red while it can stop */
+  .stt-btn-line { background: transparent; border-color: var(--nk-border-strong); color: var(--nk-text-tertiary); }
+  .stt-btn-line:not(:disabled) { border-color: var(--nk-accent); color: var(--nk-accent); background: var(--nk-accent-subtle); }
+  .stt-btn-line:not(:disabled):hover { background: var(--nk-accent-subtle); opacity: 0.9; }
+  .stt-btn-line:disabled { cursor: not-allowed; opacity: 0.7; }
+  .stt-linkbtn {
+    background: var(--nk-muted);
+    border: 1px solid var(--nk-border);
+    border-radius: 9999px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    color: var(--nk-text-secondary);
+    cursor: pointer;
+    min-height: 44px;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+  }
+  .stt-linkbtn:hover { background: var(--nk-hover); color: var(--nk-text); border-color: var(--nk-border-strong); }
+  .stt-linkbtn:active { transform: scale(0.97); }
+  .stt-linkbtn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+  .stt-linkbtn.is-armed { color: #dc2626; }
+  #stt-clear.is-armed { color: #dc2626; }
+
+  /* Transcript */
+  .stt-textarea {
+    width: 100%;
+    min-height: 132px;
+    padding: 14px 16px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--nk-border-strong);
+    background: var(--nk-surface);
+    color: var(--nk-text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.7;
+    resize: vertical;
+    transition: border-color 0.15s ease;
+    max-width: 100%;
+  }
+  .stt-textarea:focus { outline: none; border-color: var(--nk-accent); box-shadow: 0 0 0 3px var(--nk-accent-subtle); }
+  .stt-textarea::placeholder { color: var(--nk-text-tertiary); font-size: 14px; }
+
+  /* Bottom utility pills */
+  .stt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .stt-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    border: none;
+    background: var(--nk-muted);
+    color: var(--nk-text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+  }
+  .stt-pill:hover:not(:disabled) { background: var(--nk-hover); color: var(--nk-text); }
+  .stt-pill:active:not(:disabled) { transform: scale(0.97); }
+  .stt-pill:disabled { opacity: 0.55; cursor: not-allowed; }
+  .stt-pill:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .stt-pill.is-armed { color: #dc2626; }
+
+  .stt-notice.hidden { display: none; }
+  #stt-timer { font-weight: 700; color: var(--nk-accent); }
+
+  .stt-error {
+    border-radius: var(--radius-lg);
+    padding: 13px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    background: #fef3cd;
+    border: 1px solid #eab308;
+    color: #713f12;
+  }
+  [data-theme="dark"] .stt-error { background: rgba(234, 179, 8, 0.12); border-color: rgba(234, 179, 8, 0.4); color: #fde68a; }
+  .stt-error strong { font-weight: 700; }
+  .stt-error p { margin: 0; }
+
+  /* Proactive blocker notice — neutral, matches site tokens */
+  .stt-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    background: var(--nk-muted);
+    border: 1px solid var(--nk-border);
+  }
+  .stt-notice-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    margin-top: 1px;
+    color: var(--nk-text);
+  }
+  .stt-notice-text { min-width: 0; flex: 1; }
+  .stt-notice-title {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--nk-text);
+  }
+  .stt-notice-body {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--nk-text-secondary);
+  }
+  .stt-notice-x {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: transparent;
+    color: var(--nk-text-tertiary);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .stt-notice-x:hover { background: var(--nk-hover); color: var(--nk-text); }
+  .stt-notice-x:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .stt-error-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-top: 10px;
+  }
+  .stt-retry-btn {
+    padding: 8px 18px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--nk-accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 650;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    min-height: 38px;
+    transition: opacity 0.15s ease;
+  }
+  .stt-retry-btn:hover { opacity: 0.9; }
+  .stt-retry-btn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .stt-retry-hint { font-size: 12px; opacity: 0.85; }
+
+  /* (Duplicate transcript block removed — the canonical .stt-textarea rules
+     live above, next to the link-button styles.) */
+
+  @media (prefers-reduced-motion: reduce) {
+    .stt-mini.is-live { animation: none; }
+  }
+  @media (max-width: 480px) {
+    .stt-rec-row { gap: 8px; }
+    .stt-btn { padding: 11px 24px; font-size: 14.5px; min-height: 48px; }
+    .stt-card-title { font-size: 17px; }
+    .stt-state { font-size: 18px; }
+  }
+</style>

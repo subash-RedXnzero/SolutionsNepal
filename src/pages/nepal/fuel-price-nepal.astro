@@ -74,7 +74,7 @@ const history = getFuelPriceHistory();
   <div class="fp-effective">
     <div class="fp-effective-row">
       <span class="fp-effective-label">Last checked</span>
-      <span class="fp-effective-value">Today · {priceData.lastUpdatedTime}</span>
+      <span class="fp-effective-value" id="fp-effective-val">Today · {priceData.lastUpdatedTime}</span>
     </div>
   </div>
 
@@ -459,6 +459,10 @@ const history = getFuelPriceHistory();
 
   var currentLocation = 'kathmandu';
 
+  // Filled by the live edge refresh below (byCity map + global LPG).
+  // Until then the baked snapshot values rendered server-side stay put.
+  var liveExtra = null;
+
   function formatNPR(n) {
     if (n == null || isNaN(n)) return '—';
     return 'Rs. ' + n.toLocaleString('en-IN');
@@ -520,6 +524,14 @@ const history = getFuelPriceHistory();
     document.getElementById('fp-table-petrol').textContent = formatNPR(loc.petrol);
     document.getElementById('fp-table-diesel').textContent = formatNPR(loc.diesel);
     document.getElementById('fp-table-kerosene').textContent = formatNPR(loc.kerosene);
+
+    // Live kerosene/LPG follow the selected location (present only after
+    // a successful edge refresh; otherwise the baked values stay).
+    if (liveExtra) {
+      var xr = liveExtra.byId[locId] || liveExtra.byId.kathmandu || {};
+      if (isFinite(xr.kerosene)) document.getElementById('fp-table-kerosene').textContent = formatNPR(xr.kerosene);
+      if (liveExtra.lpg) document.getElementById('fp-table-lpg').textContent = formatNPR(liveExtra.lpg);
+    }
 
     // Update location comparison highlight
     var locRows = document.querySelectorAll('.fp-loc-row');
@@ -593,6 +605,59 @@ const history = getFuelPriceHistory();
 
   // ── INIT ──
   updatePrices();
+
+  // ── LIVE REFRESH (stays live after hosting) ──
+  // The baked snapshot freezes at build time. This same-origin worker route
+  // re-fetches NOC at the edge (cached 6h). On success the location dataset,
+  // comparison rows, kerosene/LPG cells and calculators update to live values.
+  // Any failure keeps the baked snapshot silently — never an error state.
+  (function refreshLiveFuel() {
+    function nptTime(iso) {
+      try {
+        return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kathmandu' });
+      } catch (e) { return ''; }
+    }
+    var ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var kill = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+    function done() { clearTimeout(kill); }
+    fetch('/api/live/fuel', ctl ? { signal: ctl.signal } : {})
+      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function (j) {
+        done();
+        var d = j && j.ok && j.data;
+        if (!d || !d.byCity || !d.byCity.kathmandu) return;
+        // Merge into the calculator dataset (known city ids only).
+        var ids = {};
+        data.allLocations.forEach(function (l) { ids[l.id] = l; });
+        Object.keys(d.byCity).forEach(function (id) {
+          var row = d.byCity[id];
+          if (!row || !ids[id]) return;
+          if (isFinite(row.petrol)) ids[id].petrol = row.petrol;
+          if (isFinite(row.diesel)) ids[id].diesel = row.diesel;
+          if (isFinite(row.kerosene)) ids[id].kerosene = row.kerosene;
+        });
+        if (isFinite(d.lpg) && d.lpg > 0) data.lpgPrice = d.lpg;
+        // Comparison rows: refresh stored rates + visible text per active tab.
+        var activeTab = document.querySelector('.fp-compare-tab.active');
+        var activeFuel = activeTab ? activeTab.dataset.fuel : 'petrol';
+        document.querySelectorAll('.fp-loc-price').forEach(function (el) {
+          var row = el.closest('.fp-loc-row');
+          var id = row ? row.dataset.id : null;
+          var api = id && d.byCity[id];
+          if (!api) return;
+          el.dataset.petrol = api.petrol;
+          el.dataset.diesel = api.diesel;
+          var v = activeFuel === 'diesel' ? api.diesel : api.petrol;
+          el.textContent = formatNPR(v);
+        });
+        // Live kerosene/LPG follow the selected location from here on.
+        liveExtra = { byId: d.byCity, lpg: (isFinite(d.lpg) && d.lpg > 0) ? d.lpg : null };
+        updatePrices();
+        var when = j.fetchedAt ? nptTime(j.fetchedAt) : '';
+        var ev = document.getElementById('fp-effective-val');
+        if (ev) ev.textContent = when ? 'Live · ' + when : 'Live';
+      }, function () { done(); });
+  })();
 })();
 </script>
 </BaseLayout>

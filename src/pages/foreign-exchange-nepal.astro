@@ -30,7 +30,7 @@ const convOptions = [...allCurrencies, { iso3: 'NPR', name: 'Nepali Rupee', flag
     <p class="fx-sub">Today's official exchange rates in Nepal</p>
     <p class="fx-meta">
       <span class="fx-live"><span class="fx-live-dot" aria-hidden="true"></span>Live</span>
-      <span>Updated {meta.publishedDate} · {meta.publishedTime}</span>
+      <span>Updated <span id="fx-updated">{meta.publishedDate} · {meta.publishedTime}</span></span>
       <span class="fx-meta-sep">·</span>
       <span>Source: {meta.source}</span>
     </p>
@@ -623,6 +623,76 @@ const convOptions = [...allCurrencies, { iso3: 'NPR', name: 'Nepali Rupee', flag
   }
 
   convertFrom();
+
+  // ── LIVE REFRESH (stays live after hosting) ──
+  // The baked snapshot freezes at build time. This same-origin worker route
+  // re-fetches NRB at the edge (cached 6h). On success the table, cards,
+  // popular strip, converter dataset and timestamp update to live values.
+  // Any failure keeps the baked snapshot silently — never an error state.
+  (function refreshLiveFx() {
+    function fmt2(n) {
+      return (n == null || !isFinite(n)) ? '—' : 'Rs. ' + Number(n).toFixed(2);
+    }
+    var ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var kill = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+    function done() { clearTimeout(kill); }
+    fetch('/api/live/forex', ctl ? { signal: ctl.signal } : {})
+      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function (j) {
+        done();
+        var list = j && j.ok && j.data && j.data.currencies;
+        if (!list || !list.length) return;
+        var byIso = {};
+        currencies.forEach(function (c) { byIso[c.iso3] = c; });
+        var changed = false;
+        // Worker serves normalized rows: { iso3, name, unit, buy, sell }.
+        list.forEach(function (r) {
+          var c = r && byIso[r.iso3];
+          if (!c) return;
+          var unit = parseFloat(r.unit) || c.unit;
+          var buy = parseFloat(r.buy);
+          var sell = r.sell == null ? null : parseFloat(r.sell);
+          if (!isFinite(buy)) return;
+          if (c.buy !== buy || (isFinite(sell) && c.sell !== sell) || c.unit !== unit) changed = true;
+          c.unit = unit;
+          c.buy = buy;
+          if (isFinite(sell)) c.sell = sell;
+        });
+        if (!changed) return;
+        // Table rows (desktop).
+        document.querySelectorAll('#fx-table-body tr').forEach(function (row) {
+          var iso = (row.getAttribute('data-search') || '').split(' ')[0];
+          var c = byIso[iso];
+          if (!c) return;
+          var tds = row.querySelectorAll('td');
+          if (tds[2]) tds[2].textContent = c.unit + ' ' + c.iso3;
+          if (tds[3]) tds[3].textContent = fmt2(c.buy);
+          if (tds[4]) tds[4].textContent = fmt2(c.sell);
+        });
+        // Mobile cards.
+        document.querySelectorAll('#fx-mobile-cards .fx-m-card').forEach(function (card) {
+          var iso = (card.getAttribute('data-search') || '').split(' ')[0];
+          var c = byIso[iso];
+          if (!c) return;
+          var unitEl = card.querySelector('.fx-m-unit');
+          if (unitEl) unitEl.textContent = 'Unit: ' + c.unit + ' ' + c.iso3;
+          var vals = card.querySelectorAll('.fx-m-rate-value');
+          if (vals[0]) vals[0].textContent = fmt2(c.buy);
+          if (vals[1]) vals[1].textContent = fmt2(c.sell);
+        });
+        // Popular strip.
+        document.querySelectorAll('.fx-pop-item').forEach(function (btn) {
+          var c = byIso[btn.dataset.iso];
+          if (!c) return;
+          var el = btn.querySelector('.fx-pop-rates');
+          if (el) el.textContent = c.buy.toFixed(2) + ' / ' + (c.sell == null ? '—' : c.sell.toFixed(2));
+        });
+        // Timestamp + converter repaint with live rates.
+        var upd = document.getElementById('fx-updated');
+        if (upd) upd.textContent = 'Live · ' + ((j.data && j.data.date) || 'today');
+        convertFrom();
+      }, function () { done(); });
+  })();
 })();
 </script>
 </BaseLayout>

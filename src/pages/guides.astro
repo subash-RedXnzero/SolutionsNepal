@@ -90,29 +90,36 @@ const jsonLd = [
 <style>
   .guides-layout {
     max-width: 1400px;
+    width: 100%;
+    min-width: 0;
     margin: 0 auto;
     padding: 28px clamp(20px, 3.5vw, 44px) 88px;
+    overflow-x: clip;
   }
-  .guides-header { margin: 8px 0 24px; }
+  .guides-header { margin: 12px 0 32px; max-width: 720px; }
   .guides-h1 {
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-size: clamp(30px, 4vw, 40px);
+    font-weight: 750;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
     color: var(--nk-text);
-    margin: 0 0 10px;
+    margin: 0 0 14px;
+    text-wrap: balance;
   }
   .guides-sub {
-    font-size: 16px;
+    font-size: 17px;
     color: var(--nk-text-secondary);
     max-width: 640px;
-    line-height: 1.6;
+    line-height: 1.7;
     margin: 0;
+    overflow-wrap: break-word;
   }
   .guides-filters {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    max-width: 100%;
   }
   .gd-chip {
     padding: 8px 18px;
@@ -125,17 +132,22 @@ const jsonLd = [
     cursor: pointer;
     transition: all 0.15s ease;
     font-family: inherit;
+    min-height: 36px;
+    max-width: 100%;
+    overflow-wrap: break-word;
   }
   .gd-chip:hover { border-color: var(--nk-accent); color: var(--nk-accent); }
   .gd-chip.gd-active { background: var(--nk-accent); border-color: var(--nk-accent); color: #fff; font-weight: 600; }
-  .guides-count { font-size: 13px; color: var(--nk-text-tertiary); margin: 0 0 20px; }
+  .guides-count { font-size: 13px; color: var(--nk-text-tertiary); margin: 0 0 24px; }
   .guides-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 28px;
+    min-width: 0;
+    max-width: 100%;
   }
   /* Card look lives in src/components/blog/GuideCard.astro */
-  .guides-cross { margin-top: 40px; font-size: 14px; color: var(--nk-text-secondary); }
+  .guides-cross { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--nk-hairline); font-size: 15px; line-height: 1.7; color: var(--nk-text-secondary); }
   .guides-cross a { color: var(--nk-accent); font-weight: 600; text-decoration: none; }
   .guides-cross a:hover { text-decoration: underline; }
 
@@ -145,6 +157,17 @@ const jsonLd = [
   }
   @media (max-width: 640px) {
     .guides-layout { padding: 16px 16px 56px; }
+    .guides-header { margin: 4px 0 20px; }
+    .guides-h1 { font-size: 26px; }
+    .guides-sub { font-size: 14px; }
+    .guides-filters { gap: 8px; margin-bottom: 10px; }
+    .gd-chip { padding: 7px 14px; font-size: 13px; min-height: 36px; }
+    .guides-count { margin: 0 0 16px; }
     .guides-grid { grid-template-columns: 1fr; gap: 16px; }
+    .guides-cross { margin-top: 32px; }
+  }
+  @media (max-width: 380px) {
+    .guides-layout { padding: 12px 12px 48px; }
+    .guides-h1 { font-size: 24px; }
   }
 </style>

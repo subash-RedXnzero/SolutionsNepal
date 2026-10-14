@@ -55,15 +55,15 @@ const history1y = getSilverPriceHistory('1y');
     <div class="sp-rate-table">
       <div class="sp-rate-row">
         <span class="sp-rate-label">1 Tola</span>
-        <span class="sp-rate-value">{formatNPR(priceData.silver.pricePerTola)}</span>
+        <span class="sp-rate-value" id="sp-v-tola">{formatNPR(priceData.silver.pricePerTola)}</span>
       </div>
       <div class="sp-rate-row">
         <span class="sp-rate-label">10 Gram</span>
-        <span class="sp-rate-value">{formatNPR(priceData.silver.pricePer10Gram)}</span>
+        <span class="sp-rate-value" id="sp-v-10g">{formatNPR(priceData.silver.pricePer10Gram)}</span>
       </div>
       <div class="sp-rate-row">
         <span class="sp-rate-label">1 Gram</span>
-        <span class="sp-rate-value">{formatNPR(priceData.silver.pricePerGram)}</span>
+        <span class="sp-rate-value" id="sp-v-gram">{formatNPR(priceData.silver.pricePerGram)}</span>
       </div>
     </div>
 
@@ -73,11 +73,11 @@ const history1y = getSilverPriceHistory('1y');
       <div class="sp-rate-table" style="margin-top: 8px;">
         <div class="sp-rate-row">
           <span class="sp-rate-label">1 Aana</span>
-          <span class="sp-rate-value">{formatNPR(priceData.silver.pricePerAana)}</span>
+          <span class="sp-rate-value" id="sp-v-aana">{formatNPR(priceData.silver.pricePerAana)}</span>
         </div>
         <div class="sp-rate-row">
           <span class="sp-rate-label">1 Lal</span>
-          <span class="sp-rate-value">{formatNPR(priceData.silver.pricePerLal)}</span>
+          <span class="sp-rate-value" id="sp-v-lal">{formatNPR(priceData.silver.pricePerLal)}</span>
         </div>
       </div>
     </details>
@@ -119,7 +119,7 @@ const history1y = getSilverPriceHistory('1y');
     <div class="sp-compare">
       <div class="sp-compare-item">
         <span class="sp-compare-label">Yesterday</span>
-        <span class="sp-compare-price">{formatNPR(priceData.yesterday.pricePerTola)}</span>
+        <span class="sp-compare-price" id="sp-cmp-yesterday">{formatNPR(priceData.yesterday.pricePerTola)}</span>
       </div>
       <div class="sp-compare-arrow">
         <span class={priceData.change.direction === 'up' ? 'sp-up' : 'sp-down'}>
@@ -128,10 +128,10 @@ const history1y = getSilverPriceHistory('1y');
       </div>
       <div class="sp-compare-item">
         <span class="sp-compare-label">Today</span>
-        <span class="sp-compare-price sp-compare-today">{formatNPR(priceData.silver.pricePerTola)}</span>
+        <span class="sp-compare-price sp-compare-today" id="sp-cmp-today">{formatNPR(priceData.silver.pricePerTola)}</span>
       </div>
     </div>
-    <div class="sp-compare-change">
+    <div class="sp-compare-change" id="sp-cmp-change">
       <span class={priceData.change.direction === 'up' ? 'sp-up' : 'sp-down'}>
         {priceData.change.direction === 'up' ? '↑' : '↓'} {formatNPR(priceData.change.amount)} ({priceData.change.percent}%)
       </span>
@@ -165,7 +165,7 @@ const history1y = getSilverPriceHistory('1y');
     <h2 class="sp-source-title">Where does this price come from?</h2>
     <p class="sp-source-text">{priceData.source}</p>
     <p class="sp-source-detail">Rate type: {priceData.rateType}</p>
-    <p class="sp-source-detail">Last updated: Today · {priceData.lastUpdatedTime}</p>
+    <p class="sp-source-detail" id="sp-source-updated">Last updated: Today · {priceData.lastUpdatedTime}</p>
   </div>
 
   <!-- RELATED TOOLS -->
@@ -759,6 +759,59 @@ const history1y = getSilverPriceHistory('1y');
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function() { drawChart(currentData); }, 150);
   });
+
+  // ── LIVE REFRESH (stays live after hosting) ──
+  // The baked snapshot freezes at build time. This same-origin worker route
+  // re-fetches FENEGOSIDA at the edge (cached 6h). On success every number,
+  // the change block and the calculator rate update to live values.
+  // Any failure keeps the baked snapshot silently — never an error state.
+  (function refreshLiveSilver() {
+    function nptTime(iso) {
+      try {
+        return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kathmandu' });
+      } catch (e) { return ''; }
+    }
+    function setText(id, txt) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = txt;
+    }
+    var ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var kill = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+    function done() { clearTimeout(kill); }
+    fetch('/api/live/metals', ctl ? { signal: ctl.signal } : {})
+      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function (j) {
+        done();
+        var s = j && j.ok && j.data && j.data.silver;
+        if (!s || !isFinite(s.pricePerTola) || s.pricePerTola <= 0) return;
+        var tola = Math.round(s.pricePerTola);
+        var gram = Math.round(tola / GRAMS_PER_TOLA);
+        var yest = (isFinite(s.yesterdayPricePerTola) && s.yesterdayPricePerTola > 0) ? Math.round(s.yesterdayPricePerTola) : null;
+        var diff = (yest == null) ? 0 : tola - yest;
+        var dirUp = diff >= 0;
+        var pct = yest ? Math.round((Math.abs(diff) / yest) * 100 * 100) / 100 : 0;
+        var when = j.fetchedAt ? nptTime(j.fetchedAt) : '';
+        var stamp = when ? 'Live · ' + when : 'Live';
+        setText('sp-main-price', formatNPR(tola));
+        var chg = document.getElementById('sp-change');
+        if (chg) chg.innerHTML = '<span class="' + (dirUp ? 'sp-up' : 'sp-down') + '">' + (dirUp ? '↑ ' : '↓ ') + formatNPR(diff) + ' today</span>';
+        setText('sp-v-tola', formatNPR(tola));
+        setText('sp-v-10g', formatNPR(gram * 10));
+        setText('sp-v-gram', formatNPR(gram));
+        setText('sp-v-aana', formatNPR(Math.round(tola / 12)));
+        setText('sp-v-lal', formatNPR(Math.round(tola / 96)));
+        setText('sp-cmp-yesterday', yest == null ? '—' : formatNPR(yest));
+        setText('sp-cmp-today', formatNPR(tola));
+        var cmp = document.getElementById('sp-cmp-change');
+        if (cmp) cmp.innerHTML = '<span class="' + (dirUp ? 'sp-up' : 'sp-down') + '">' + (dirUp ? '↑ ' : '↓ ') + formatNPR(diff) + ' (' + pct + '%)</span>';
+        setText('sp-updated', stamp);
+        setText('sp-source-updated', 'Last updated: ' + stamp);
+        // Calculator + future interactions use the live rate.
+        data.pricePerTola = tola;
+        data.pricePerGram = gram;
+        if (calcWeight.value.trim() !== '') updateCalc();
+      }, function () { done(); });
+  })();
 })();
 </script>
 </BaseLayout>

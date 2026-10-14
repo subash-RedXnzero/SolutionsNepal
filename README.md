@@ -45,7 +45,7 @@ If you reuse this codebase, keep third-party license notices and replace API key
 │   ├── pages/          # routes — /nepal/*, /tools/*, /blog/*, /guides/*
 │   └── styles/         # global.css + design tokens
 ├── scripts/            # sync-content.mjs, fetch-live-data.mjs
-└── tests/              # 480 tests (node --test)
+└── tests/              # 496 tests (node --test)
 ```
 
 To add/edit a post: copy `Guideedit/_TEMPLATE.md` (or `Blogedit/_TEMPLATE.md`) to a new
@@ -62,7 +62,21 @@ every `npm run dev` / `npm run build`.
 | `npm run build`   | Production build to `./dist/`               |
 | `npm run preview` | Preview build locally                       |
 | `npm run deploy`  | Build and deploy to Cloudflare Workers      |
-| `npm test`        | Run 480 tests                               |
+| `npm test`        | Run 496 tests                               |
+
+## Live prices after hosting
+
+Gold/silver (FENEGOSIDA), fuel/LPG (NOC) and currency rates (NRB) stay live
+without rebuilds: `src/worker.js` exposes same-origin `GET /api/live/metals`,
+`/api/live/fuel` and `/api/live/forex`, proxying the free upstream APIs with
+6h edge caching. The gold, silver, fuel and foreign-exchange pages (plus the
+remittance calculator's rate fetch) refresh themselves from these routes on
+load and silently keep the baked snapshot if the fetch fails. Weather needs
+no proxy — `/weather` already re-fetches Open-Meteo directly in the browser
+(CORS-open) with a wttr.in backup. Upstream parsers live in
+`src/lib/nepal/live-upstream.js` (shared by the build-time fetcher and the
+worker) and are covered by `tests/live-upstream.test.mjs`. Deploys with
+`npm run deploy` include the worker automatically (`main` in `wrangler.jsonc`).
 
 ## License for this codebase
 

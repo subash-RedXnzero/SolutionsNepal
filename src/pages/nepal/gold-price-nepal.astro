@@ -53,15 +53,15 @@ const history1y = getGoldPriceHistory('1y');
     <div class="gp-rate-table">
       <div class="gp-rate-row">
         <span class="gp-rate-label">1 Tola</span>
-        <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePerTola)}</span>
+        <span class="gp-rate-value" id="gp-v-tola">{formatNPR(priceData.fineGold.pricePerTola)}</span>
       </div>
       <div class="gp-rate-row">
         <span class="gp-rate-label">10 Gram</span>
-        <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePer10Gram)}</span>
+        <span class="gp-rate-value" id="gp-v-10g">{formatNPR(priceData.fineGold.pricePer10Gram)}</span>
       </div>
       <div class="gp-rate-row">
         <span class="gp-rate-label">1 Gram</span>
-        <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePerGram)}</span>
+        <span class="gp-rate-value" id="gp-v-gram">{formatNPR(priceData.fineGold.pricePerGram)}</span>
       </div>
     </div>
 
@@ -71,15 +71,15 @@ const history1y = getGoldPriceHistory('1y');
       <div class="gp-rate-table" style="margin-top: 8px;">
         <div class="gp-rate-row">
           <span class="gp-rate-label">1 Aana</span>
-          <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePerAana)}</span>
+          <span class="gp-rate-value" id="gp-v-aana">{formatNPR(priceData.fineGold.pricePerAana)}</span>
         </div>
         <div class="gp-rate-row">
           <span class="gp-rate-label">1 Lal</span>
-          <span class="gp-rate-value">{formatNPR(priceData.fineGold.pricePerLal)}</span>
+          <span class="gp-rate-value" id="gp-v-lal">{formatNPR(priceData.fineGold.pricePerLal)}</span>
         </div>
         <div class="gp-rate-row">
           <span class="gp-rate-label">1 Gram (22K)</span>
-          <span class="gp-rate-value">{formatNPR(Math.round(priceData.fineGold.pricePerGram * 22 / 24))}</span>
+          <span class="gp-rate-value" id="gp-v-22k">{formatNPR(Math.round(priceData.fineGold.pricePerGram * 22 / 24))}</span>
         </div>
       </div>
     </details>
@@ -129,7 +129,7 @@ const history1y = getGoldPriceHistory('1y');
     <div class="gp-compare">
       <div class="gp-compare-item">
         <span class="gp-compare-label">Yesterday</span>
-        <span class="gp-compare-price">{formatNPR(priceData.yesterday.pricePerTola)}</span>
+        <span class="gp-compare-price" id="gp-cmp-yesterday">{formatNPR(priceData.yesterday.pricePerTola)}</span>
       </div>
       <div class="gp-compare-arrow">
         <span class={priceData.change.direction === 'up' ? 'gp-up' : 'gp-down'}>
@@ -138,10 +138,10 @@ const history1y = getGoldPriceHistory('1y');
       </div>
       <div class="gp-compare-item">
         <span class="gp-compare-label">Today</span>
-        <span class="gp-compare-price gp-compare-today">{formatNPR(priceData.fineGold.pricePerTola)}</span>
+        <span class="gp-compare-price gp-compare-today" id="gp-cmp-today">{formatNPR(priceData.fineGold.pricePerTola)}</span>
       </div>
     </div>
-    <div class="gp-compare-change">
+    <div class="gp-compare-change" id="gp-cmp-change">
       <span class={priceData.change.direction === 'up' ? 'gp-up' : 'gp-down'}>
         {priceData.change.direction === 'up' ? '↑' : '↓'} {formatNPR(priceData.change.amount)} ({priceData.change.percent}%)
       </span>
@@ -175,7 +175,7 @@ const history1y = getGoldPriceHistory('1y');
     <h2 class="gp-source-title">Where does this price come from?</h2>
     <p class="gp-source-text">{priceData.source}</p>
     <p class="gp-source-detail">Rate type: {priceData.rateType}</p>
-    <p class="gp-source-detail">Last updated: Today · {priceData.lastUpdatedTime}</p>
+    <p class="gp-source-detail" id="gp-source-updated">Last updated: Today · {priceData.lastUpdatedTime}</p>
   </div>
 
   <!-- RELATED TOOLS -->
@@ -846,6 +846,59 @@ const history1y = getGoldPriceHistory('1y');
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function() { drawChart(currentData); }, 150);
   });
+  // ── LIVE REFRESH (stays live after hosting) ──
+  // The baked snapshot freezes at build time. This same-origin worker route
+  // re-fetches FENEGOSIDA at the edge (cached 6h). On success every number,
+  // the change block and the calculator rate update to live values.
+  // Any failure keeps the baked snapshot silently — never an error state.
+  (function refreshLiveGold() {
+    function nptTime(iso) {
+      try {
+        return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kathmandu' });
+      } catch (e) { return ''; }
+    }
+    function setText(id, txt) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = txt;
+    }
+    var ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var kill = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+    function done() { clearTimeout(kill); }
+    fetch('/api/live/metals', ctl ? { signal: ctl.signal } : {})
+      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function (j) {
+        done();
+        var g = j && j.ok && j.data && j.data.gold;
+        if (!g || !isFinite(g.pricePerTola) || g.pricePerTola <= 0) return;
+        var tola = Math.round(g.pricePerTola);
+        var gram = Math.round(tola / GRAMS_PER_TOLA);
+        var yest = (isFinite(g.yesterdayPricePerTola) && g.yesterdayPricePerTola > 0) ? Math.round(g.yesterdayPricePerTola) : null;
+        var diff = (yest == null) ? 0 : tola - yest;
+        var dirUp = diff >= 0;
+        var pct = yest ? Math.round((Math.abs(diff) / yest) * 100 * 100) / 100 : 0;
+        var when = j.fetchedAt ? nptTime(j.fetchedAt) : '';
+        var stamp = when ? 'Live · ' + when : 'Live';
+        setText('gp-main-price', formatNPR(tola));
+        var chg = document.getElementById('gp-change');
+        if (chg) chg.innerHTML = '<span class="' + (dirUp ? 'gp-up' : 'gp-down') + '">' + (dirUp ? '↑ ' : '↓ ') + formatNPR(diff) + ' today</span>';
+        setText('gp-v-tola', formatNPR(tola));
+        setText('gp-v-10g', formatNPR(gram * 10));
+        setText('gp-v-gram', formatNPR(gram));
+        setText('gp-v-aana', formatNPR(Math.round(tola / 12)));
+        setText('gp-v-lal', formatNPR(Math.round(tola / 96)));
+        setText('gp-v-22k', formatNPR(Math.round(gram * 22 / 24)));
+        setText('gp-cmp-yesterday', yest == null ? '—' : formatNPR(yest));
+        setText('gp-cmp-today', formatNPR(tola));
+        var cmp = document.getElementById('gp-cmp-change');
+        if (cmp) cmp.innerHTML = '<span class="' + (dirUp ? 'gp-up' : 'gp-down') + '">' + (dirUp ? '↑ ' : '↓ ') + formatNPR(diff) + ' (' + pct + '%)</span>';
+        setText('gp-updated', stamp);
+        setText('gp-source-updated', 'Last updated: ' + stamp);
+        // Calculator + future interactions use the live rate.
+        data.pricePerTola = tola;
+        data.pricePerGram = gram;
+        if (calcWeight.value.trim() !== '') updateCalc();
+      }, function () { done(); });
+  })();
 })();
 </script>
 </BaseLayout>

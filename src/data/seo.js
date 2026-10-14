@@ -93,7 +93,7 @@ function autoJsonLd(path, rec) {
 const pages = {
   // ── Homepage ──────────────────────────────────────────────
   '/': {
-    title: 'SolutionsNepal – Free Online Tools & Calculators for Nepal',
+    title: 'SolutionsNepal — Everyday Tools for Nepal',
     description:
       'Free Nepal-focused calculators, converters, price checkers and everyday utility tools. Salary, tax, gold, fuel, currency, calendar and more.',
     jsonLd: [

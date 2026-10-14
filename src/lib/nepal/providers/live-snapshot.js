@@ -79,7 +79,7 @@ export function snapshotMetals() {
 
 /**
  * NOC fuel from the snapshot.
- * Returns { byCity: {kathmandu: {petrol, diesel, kerosene}, ...}, lpg, cities } or null.
+ * Returns { byCity: {kathmandu: {petrol, diesel, kerosene}, ...}, lpg, cities, history } or null.
  */
 export function snapshotFuel() {
   const f = snapshot?.fuel;
@@ -88,6 +88,7 @@ export function snapshotFuel() {
     byCity: f.byCity,
     cities: f.cities || [],
     lpg: f.lpg,
+    history: Array.isArray(f.history) ? f.history : [],
     fetchedAt: snapshot.meta?.fetchedAt,
     fetchedAtNPT: snapshot.meta?.fetchedAtNPT,
     isLive: f.isLive !== false,

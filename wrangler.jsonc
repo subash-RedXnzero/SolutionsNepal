@@ -1,6 +1,11 @@
 {
   // Cloudflare Workers — serves ./dist as static assets (no adapter needed:
   // this site is fully pre-rendered, no SSR).
+  // `main` adds the edge worker (src/worker.js): same-origin /api/live/*
+  // routes re-fetch free upstream prices with edge caching so gold/silver
+  // and fuel stay live after hosting without rebuilds. All other routes
+  // fall through to the static assets below untouched.
+  "main": "src/worker.js",
   "name": "solutionsnepal",
   "compatibility_date": "2026-10-11",
   "workers_dev": true,

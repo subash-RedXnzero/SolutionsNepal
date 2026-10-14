@@ -18,6 +18,7 @@
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { fetchMetalsUpstream, fetchFuelUpstream, fetchForexUpstream, normalizeForexRates } from '../src/lib/nepal/live-upstream.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'src', 'data', 'live-snapshot.json');
@@ -73,106 +74,36 @@ const npTimeStr = () => nepalNow().toLocaleTimeString('en-US', { hour: 'numeric'
 const npDateStr = () => nepalNow().toISOString().split('T')[0];
 
 /* ── 1. NRB forex ─────────────────────────────────────────── */
+// Fetch loop lives in src/lib/nepal/live-upstream.js (shared with the
+// post-hosting Worker) — the mapping below stays byte-identical.
 async function fetchForex() {
-  const today = npDateStr();
-  for (let back = 0; back < 7; back++) {
-    const d = new Date(nepalNow());
-    d.setUTCDate(d.getUTCDate() - back);
-    const dateStr = d.toISOString().split('T')[0];
-    try {
-      const json = await getJSON(`https://www.nrb.org.np/api/forex/v1/rates?page=1&per_page=100&from=${dateStr}&to=${dateStr}`);
-      const record = json?.data?.payload?.[0];
-      const raw = record?.rates;
-      if (!raw?.length) continue;
-      const currencies = raw.map(r => ({
-        iso3: r.currency?.iso3,
-        name: r.currency?.name || r.currency?.iso3,
-        unit: parseFloat(r.currency?.unit) || 1,
-        buy: parseFloat(r.buy),
-        sell: r.sell != null ? parseFloat(r.sell) : null,
-      })).filter(c => c.iso3 && !isNaN(c.buy));
-      if (!currencies.length) continue;
-      return {
-        currencies,
-        date: record.date || dateStr,
-        publishedOn: record.published_on || '',
-        isLive: true,
-      };
-    } catch { /* try previous day */ }
-  }
-  return null;
+  const { rates: raw, date, publishedOn } = await fetchForexUpstream();
+  const currencies = normalizeForexRates(raw);
+  if (!currencies.length) return null;
+  // NOTE: fetchForexUpstream only resolves when a day HAS rates.
+  return { currencies, date, publishedOn: publishedOn || '', isLive: true };
 }
 
 /* ── 2. FENEGOSIDA gold + silver ──────────────────────────── */
-// Rate labels seen in the API (Nepali):
-//   छापावाल सुन (१ तोला)  = fine/champhaval gold per tola
-//   असली चाँदी (१ तोला)   = fine silver per tola
-const GOLD_RE = /छापावाल\s*सुन.*१\s*तोला/;
-const SILVER_RE = /असली\s*चाँदी.*१\s*तोला/;
-
+// Parsing lives in src/lib/nepal/live-upstream.js (shared with the
+// post-hosting Worker) — the shape below stays byte-identical.
 async function fetchGoldSilver() {
-  const rows = await getJSON('https://api.fenegosida.org/api/website/v1/Dashboard/today', {
-    Origin: 'https://fenegosida.org',
-    Referer: 'https://fenegosida.org/',
-  });
-  if (!Array.isArray(rows)) throw new Error('FENEGOSIDA: unexpected shape');
-  const gold = rows.find(r => GOLD_RE.test(r.rateType));
-  const silver = rows.find(r => SILVER_RE.test(r.rateType));
+  const { gold, silver, date } = await fetchMetalsUpstream();
   if (!gold && !silver) throw new Error('FENEGOSIDA: rates not found');
-  const stamp = gold?.todayDate || silver?.todayDate;
-  const meta = {
-    fetchedAtISO: stamp || null,
-    isLive: true,
-  };
   return {
-    gold: gold ? {
-      pricePerTola: gold.todayBaseRatePerGram,
-      yesterdayPricePerTola: gold.yestardayBaseRatePerGram,
-    } : null,
-    silver: silver ? {
-      pricePerTola: silver.todayBaseRatePerGram,
-      yesterdayPricePerTola: silver.yestardayBaseRatePerGram,
-    } : null,
-    meta,
+    gold,
+    silver,
+    meta: { fetchedAtISO: date, isLive: true },
     isLive: true,
   };
 }
 
 /* ── 3. NOC fuel (homepage ticker) ────────────────────────── */
-const NOC_REGIONS = [
-  { keys: ['Charali', 'Biratnagar', 'Mahendranagar', 'Birgunj', 'Amlekhjung', 'Bhalbari', 'Nepalgung', 'Dhangadi'], cities: ['biratnagar', 'birgunj', 'nepalgunj', 'dhangadhi'] },
-  { keys: ['Surkhet', 'Dang'], cities: ['surkhet', 'dang'] },
-  { keys: ['Kathmandu', 'Pokhara', 'Dipayal'], cities: ['kathmandu', 'pokhara'] },
-];
-
+// Parsing lives in src/lib/nepal/live-upstream.js (shared with the
+// post-hosting Worker) — the shape below stays byte-identical.
 async function fetchFuel() {
-  const html = await getText('https://noc.org.np/');
-  const clean = html.replace(/&nbsp;/g, ' ');
-  const re = /\(([^)]{5,140})\)\s+Petrol\(MS\):NRs\s*([\d.]+)\/L\s*•\s*Diesel\(HSD\):NRs\s*([\d.]+)\/L\s*•\s*Kerosene\(SKO\):NRs\s*([\d.]+)/g;
-  const byCity = {};
-  let m;
-  while ((m = re.exec(clean)) !== null) {
-    const regions = m[1];
-    const petrol = parseFloat(m[2]);
-    const diesel = parseFloat(m[3]);
-    const kerosene = parseFloat(m[4]);
-    for (const grp of NOC_REGIONS) {
-      if (grp.keys.some(k => regions.includes(k))) {
-        for (const city of grp.cities) {
-          if (!byCity[city]) byCity[city] = { petrol, diesel, kerosene };
-        }
-      }
-    }
-  }
-  const lpgMatch = clean.match(/LP Gas:NRs\s*([\d.]+)/);
-  if (!byCity.kathmandu) throw new Error('NOC: kathmandu price not found in ticker');
-  const cities = Object.entries(byCity).map(([id, p]) => ({ id, ...p }));
-  return {
-    byCity,
-    lpg: lpgMatch ? parseFloat(lpgMatch[1]) : null,
-    cities,
-    isLive: true,
-  };
+  const { byCity, lpg, cities, history } = await fetchFuelUpstream();
+  return { byCity, lpg, cities, history, isLive: true };
 }
 
 /* ── 4. Open-Meteo weather + air quality ──────────────────── */

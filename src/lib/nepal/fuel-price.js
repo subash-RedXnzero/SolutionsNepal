@@ -52,6 +52,7 @@ async function ensureLiveData() {
         // Same-day prev = current ⇒ calcChange yields 'none' (no fabricated deltas)
         prevPrices: Object.fromEntries(Object.entries(byCity).map(([id, p]) => [id, p])),
         lpg: { price: snap.lpg ?? 0, prevPrice: snap.lpg ?? 0 },
+        history: snap.history || [],
       };
       _liveMeta = { isLive: snap.isLive && freshness('fuel') === 'live', source: 'Nepal Oil Corporation (NOC)', freshness: freshness('fuel') };
     }

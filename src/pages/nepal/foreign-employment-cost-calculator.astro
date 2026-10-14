@@ -2,7 +2,20 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import RelatedTools from '../../components/ui/RelatedTools.astro';
-import { MapPin, Briefcase, Building2, User, Landmark, Compass, Wallet, Calculator, PiggyBank } from '@lucide/astro';
+// Deep icon imports (not the '@lucide/astro' barrel): the barrel re-exports
+// ~1900 icon modules into this page's dev/build graph. Deep paths pull one
+// module per icon with byte-identical SVG output. NOTE: Building2 is a
+// deprecated alias of the identical BuildingComplex icon, so import the real
+// file directly.
+import MapPin from '@lucide/astro/icons/map-pin';
+import Briefcase from '@lucide/astro/icons/briefcase';
+import BuildingComplex from '@lucide/astro/icons/building-complex';
+import User from '@lucide/astro/icons/user';
+import Landmark from '@lucide/astro/icons/landmark';
+import Compass from '@lucide/astro/icons/compass';
+import Wallet from '@lucide/astro/icons/wallet';
+import Calculator from '@lucide/astro/icons/calculator';
+import PiggyBank from '@lucide/astro/icons/piggy-bank';
 import {
   DESTINATIONS,
   QUICK_DESTINATIONS,
@@ -16,7 +29,7 @@ import {
   SALARY_CURRENCIES,
   foreignEmploymentData,
 } from '../../data/foreign-employment.js';
-import { getAllCurrenciesAsync, getForexMetaAsync } from '../../lib/nepal/forex.js';
+import { snapshotForex } from '../../lib/nepal/providers/live-snapshot.js';
 import Disclaimer from '../../components/ui/Disclaimer.astro';
 
 const title = 'Foreign Employment Cost Calculator Nepal | SolutionsNepal';
@@ -49,21 +62,27 @@ const faqItems = [
   },
 ];
 
-const METHOD_ICONS = { manpower: Building2, direct: User, government: Landmark, unsure: Compass };
+const METHOD_ICONS = { manpower: BuildingComplex, direct: User, government: Landmark, unsure: Compass };
 const QUICK_NAMES = { 'saudi-arabia': 'Saudi Arabia', qatar: 'Qatar', uae: 'UAE', malaysia: 'Malaysia', japan: 'Japan', 'south-korea': 'South Korea' };
 
-// Live NRB selling rates for salary currencies (manual entry where unavailable).
-const FALLBACK_FX = {};
-let fxRates = {};
-for (const code of SALARY_CURRENCIES) fxRates[code] = null;
-let fxNote = 'indicative rates';
-try {
-  const [all, meta] = await Promise.all([getAllCurrenciesAsync(), getForexMetaAsync()]);
-  for (const c of all) {
-    if (c.iso3 in fxRates && c.sellPerUnit) fxRates[c.iso3] = Math.round(c.sellPerUnit * 100) / 100;
-  }
-  if (meta?.isLive) fxNote = 'NRB rates' + (meta.publishedDate ? ' (' + meta.publishedDate + ')' : '');
-} catch { /* manual entry remains available */ }
+// Salary-currency sell rates, read synchronously from the pre-fetched NRB
+// snapshot (written by scripts/fetch-live-data.mjs via predev/prebuild).
+// Fully sync frontmatter: no per-render network stall. Previously this page
+// awaited getAllCurrenciesAsync()/getForexMetaAsync(), which fall back to a
+// sequential 7-day × 10s-timeout NRB retry loop (up to ~70s) whenever the
+// snapshot is missing. Output is identical when the snapshot exists; when it
+// doesn't, rates stay null and the client already falls back to manual entry
+// ("No automatic rate — enter your bank rate").
+const snap = snapshotForex();
+const snapByIso = new Map((snap?.currencies || []).map((c) => [c.iso3, c]));
+function snapSellPerUnit(iso) {
+  const c = snapByIso.get(iso);
+  if (!c || c.sell == null) return null;
+  const unit = c.unit || 1;
+  return Math.round((c.sell / unit) * 100) / 100;
+}
+const fxRates = {};
+for (const code of SALARY_CURRENCIES) fxRates[code] = snapSellPerUnit(code);
 const fxDataAttrs = Object.fromEntries(
   SALARY_CURRENCIES.map((c) => [`data-${c.toLowerCase()}`, fxRates[c] ?? '']),
 );
@@ -169,7 +188,7 @@ const fxDataAttrs = Object.fromEntries(
 
         <!-- Step 3 · Recruitment method -->
         <div>
-          <p class="flex items-center gap-1.5 text-[13px] font-semibold mb-2" style="color:var(--nk-text);"><Building2 size={14} /> How are you going abroad?</p>
+          <p class="flex items-center gap-1.5 text-[13px] font-semibold mb-2" style="color:var(--nk-text);"><BuildingComplex size={14} /> How are you going abroad?</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" role="radiogroup" aria-label="Recruitment method">
             {RECRUITMENT_METHODS.map((m, i) => {
               const Icon = METHOD_ICONS[m.id];

@@ -618,6 +618,14 @@ export const tools = [
     popular: true,
   },
   {
+    id: 'speech-to-text',
+    title: 'Speech to Text',
+    description: 'Dictate in Nepali or English and get editable text',
+    category: 'language',
+    href: '/tools/speech-to-text',
+    popular: false,
+  },
+  {
     id: 'nepali-names',
     title: 'All Nepali Names A–Z',
     description: 'Browse the full name directory with search, letter and gender filters',
