@@ -113,7 +113,12 @@ faqs:
 
 <h2 id="malpot">What Is Malpot Land Valuation?</h2>
 
-The Malpot or Land Revenue Office maintains ownership records, registers transfers, collects land-revenue charges, and publishes or applies minimum valuation schedules for its jurisdiction.
+The Malpot or Land Revenue Office:
+
+- maintains ownership records,
+- registers transfers,
+- collects land-revenue charges,
+- and publishes or applies minimum valuation schedules for its jurisdiction.
 
 - Land transfers are recorded through deeds such as Rajinama, gift, partition, and inheritance documents.
 - The office maintains Lalpurja and other ownership records.
@@ -196,7 +201,11 @@ DOLMA can help identify relevant offices, but minimum valuation schedules are of
 Estimated local property tax = Applicable local tax base × Current local rate
 ```
 
-The formula is intentionally generic because the tax base differs by local government. Before calculating, collect municipality, ward, land area, property classification, building area, construction year, and the current local rate.
+The formula is intentionally generic because the tax base differs by local government. Before calculating, collect:
+
+- municipality, ward, land area,
+- property classification, building area, construction year,
+- and the current local rate.
 
 - **Area-based example** — If a local schedule says Rs 500 per aana and the property is 4 aana, the illustrative annual tax is Rs 2,000.
 - **Building-area example** — If a local schedule says Rs 10 per square foot and a house is 2,000 square feet, the illustrative base is Rs 20,000 before local adjustments.

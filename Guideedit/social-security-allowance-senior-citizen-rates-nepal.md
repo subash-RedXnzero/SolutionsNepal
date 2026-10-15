@@ -98,7 +98,17 @@ faqs:
 
 <h2 id="quick-answer">Quick Answer: Social Security Allowance Rates in 2026</h2>
 
-Nepal has several Social Security Allowance categories, so there is no single universal monthly payment. Eligibility depends on age, disability classification, widow or single-woman status, Dalit or former-Karnali eligibility, child-grant rules, endangered-community status, citizenship, registration, and current government policy.
+Nepal has several Social Security Allowance categories, so there is no single universal monthly payment. Eligibility depends on:
+
+- age
+- disability classification
+- widow or single-woman status
+- Dalit or former-Karnali eligibility
+- child-grant rules
+- endangered-community status
+- citizenship
+- registration
+- current government policy
 
 - **General senior citizen** — 68+ years (lowered from 70 under FY 2082/83 provisions; continuity commonly reported into FY 2083/84 — confirm at DONIDCR) — commonly Rs 4,000/month (as of October 2026)
 - **Dalit senior citizen** — 60+ years — commonly Rs 4,000/month
@@ -182,7 +192,20 @@ The Child Grant (Bal Suraksha Anudan) is a cash transfer for eligible children u
 
 Members of listed endangered or protected indigenous groups may qualify for an allowance commonly published at Rs 3,990 per month, subject to official recognition and local verification.
 
-Commonly listed groups include Bankariya, Hayu, Kisan, Kusbadhiya, Kusunda, Lepcha, Meche, Raji, Raute, and Surel. Confirm the current official list and proof requirements before applying.
+Commonly listed groups include:
+
+- Bankariya
+- Hayu
+- Kisan
+- Kusbadhiya
+- Kusunda
+- Lepcha
+- Meche
+- Raji
+- Raute
+- Surel
+
+Confirm the current official list and proof requirements before applying.
 
 <h2 id="donidcr">DONIDCR and NID Integration</h2>
 

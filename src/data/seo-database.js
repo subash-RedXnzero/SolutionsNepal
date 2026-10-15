@@ -31,7 +31,7 @@ export const SEO_DB = {
     long_tail: ['free calculators for nepal', 'nepali salary calculator', 'bs to ad converter'],
     questions: ['What tools does SolutionsNepal offer?', 'Is SolutionsNepal free?'],
     search_intent: 'navigational + commercial (find a Nepal tool)',
-    seo_title: 'SolutionsNepal — Everyday Tools for Nepal',
+    seo_title: 'Solutions Nepal — Everyday Tools for Nepal',
     meta_description: 'Free Nepal-focused calculators, converters and utilities: salary, tax, gold, fuel, forex, calendar, NEPSE and everyday tools. No sign-up.',
     h1: 'Free calculators & tools for everyday life in Nepal',
     intro: 'SolutionsNepal is a free collection of calculators, converters and checkers built for Nepal — salary and tax, BS/AD dates, gold and land units, NEPSE, bills and everyday utilities. Everything runs in your browser.',

@@ -90,7 +90,13 @@ faqs:
 
 <h2 id="quick-answer">Quick Answer: How to Get Personal PAN Online</h2>
 
-You can apply for an individual or <strong>Personal PAN</strong> through Nepal's Inland Revenue Department (IRD) Taxpayer Portal or through the PAN service in Nagarik App. The usual flow is: prepare Citizenship and a photograph, enter details that match government records, submit the application, complete any requested verification, and download your e-PAN after approval.
+You can apply for an individual or <strong>Personal PAN</strong> through Nepal's Inland Revenue Department (IRD) Taxpayer Portal or through the PAN service in Nagarik App. The usual flow is:
+
+1. prepare Citizenship and a photograph
+2. enter details that match government records
+3. submit the application
+4. complete any requested verification
+5. download your e-PAN after approval
 
 Personal PAN registration is generally free. A physical card may be collected later if your office or institution requires one, but the digital e-PAN is often sufficient for supported transactions.
 
@@ -110,7 +116,15 @@ Personal PAN registration is generally free. A physical card may be collected la
 
 <h2 id="who-needs">Who Needs a Personal PAN?</h2>
 
-You may need or benefit from a Personal PAN if you are a salaried employee, freelancer, consultant, professional, self-employed person, student with formal income, or digital creator receiving sponsorship, advertising, or platform income.
+You may need or benefit from a Personal PAN if you are:
+
+- a salaried employee
+- a freelancer
+- a consultant
+- a professional
+- a self-employed person
+- a student with formal income
+- a digital creator receiving sponsorship, advertising, or platform income
 
 - Employers commonly use PAN to report salary and TDS correctly.
 - Freelancers can use PAN for invoices, contracts, bank records, and tax reporting.
@@ -210,7 +224,15 @@ A public name-to-PAN search is generally not available for privacy reasons. Do n
 
 <h2 id="correction">How to Correct PAN Information</h2>
 
-Common corrections include name spelling, Citizenship number, date of birth, permanent or current address, mobile number, email, and other taxpayer-profile information.
+Common corrections include:
+
+- name spelling
+- Citizenship number
+- date of birth
+- permanent or current address
+- mobile number
+- email
+- other taxpayer-profile information
 
 1. Compare your PAN profile with Citizenship, NID, and other source documents.
 2. Open the IRD taxpayer-record update or KYT process where available.

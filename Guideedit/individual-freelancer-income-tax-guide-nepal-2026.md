@@ -218,7 +218,16 @@ Report foreign income in NPR using the bank conversion or credit record, while r
 
 <h2 id="pan">PAN for Freelancers</h2>
 
-PAN is required or strongly necessary for taxable income, filing returns, linking bank TDS, tax clearance, formal clients, and many financial transactions. Personal PAN does not make you a company; an individual can operate as a natural-person freelancer.
+PAN is required or strongly necessary for:
+
+- taxable income
+- filing returns
+- linking bank TDS
+- tax clearance
+- formal clients
+- many financial transactions.
+
+Personal PAN does not make you a company; an individual can operate as a natural-person freelancer.
 
 1. Register for Personal PAN through IRD or the supported Nagarik App service.
 2. Link PAN to the bank account receiving freelance income.
@@ -272,7 +281,14 @@ When income is taxed under progressive business or professional rules, legitimat
 - Equipment through the applicable depreciation treatment
 - Professional and payment-processing charges
 
-Personal groceries, family costs, unsupported claims, and capital purchases treated incorrectly are not automatically deductible. The 5% final foreign-freelance regime generally taxes gross receipts without expense deductions.
+These are not automatically deductible:
+
+- Personal groceries
+- family costs
+- unsupported claims
+- capital purchases treated incorrectly.
+
+The 5% final foreign-freelance regime generally taxes gross receipts without expense deductions.
 
 <h2 id="deadlines">Filing Deadlines and Penalties</h2>
 

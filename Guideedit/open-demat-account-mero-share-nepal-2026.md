@@ -108,7 +108,14 @@ faqs:
 
 <h2 id="introduction">Introduction</h2>
 
-If you want to participate in Nepal’s IPO, FPO, or rights issue market, you will need several connected services working together: a bank account, a Demat account, a BOID, Mero Share, a CRN for C-ASBA, and finally the IPO application itself.
+If you want to participate in Nepal’s IPO, FPO, or rights issue market, you will need several connected services working together:
+
+- A bank account
+- A Demat account
+- A BOID
+- Mero Share
+- A CRN for C-ASBA
+- Finally the IPO application itself
 
 This guide explains what each service does, how they fit together, and how to open and use them in 2026. It is written for first-time Nepali investors and IPO applicants, with practical, step-by-step instructions and Nepal-specific details.
 

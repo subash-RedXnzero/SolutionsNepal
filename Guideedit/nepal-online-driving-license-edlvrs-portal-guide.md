@@ -169,7 +169,16 @@ QR verification can auto-fill identity details from an integrated government rec
 4. Hold the QR fully inside the camera frame in good light until the portal reads it.
 5. Review all fetched details before continuing; correct source-record errors through the responsible authority.
 
-If scanning fails, increase brightness, use a current Chrome browser, check camera permissions, steady the camera, refresh the session, or use NIN/manual verification if the portal offers it. Never send your QR or OTP to an unofficial agent.
+If scanning fails, try:
+
+- Increase brightness
+- Use a current Chrome browser
+- Check camera permissions
+- Steady the camera
+- Refresh the session
+- Use NIN/manual verification if the portal offers it
+
+Never send your QR or OTP to an unofficial agent.
 
 <h2 id="new-license">How to Apply for a New Driving License</h2>
 
@@ -209,7 +218,12 @@ Renewal may be available before or after expiry, but late fees and grace periods
 
 <h2 id="payment">EDLVRS Payment and Fees</h2>
 
-Payment is generally required during application submission or at the relevant stage for a new license, category addition, renewal, or duplicate request. Commonly supported methods include ConnectIPS, eSewa, Khalti, and participating internet-banking gateways.
+Payment is generally required during application submission or at the relevant stage for a new license, category addition, renewal, or duplicate request. Commonly supported methods include:
+
+- ConnectIPS
+- eSewa
+- Khalti
+- Participating internet-banking gateways
 
 - **New Category A** — Often around Rs 3,000 in 2026, but province and category rules can differ.
 - **New Category B** — Often around Rs 4,000–5,000 depending on province.

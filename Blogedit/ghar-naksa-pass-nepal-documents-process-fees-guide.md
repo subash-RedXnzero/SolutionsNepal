@@ -82,7 +82,11 @@ Get <strong>Ghar Naksa Pass</strong> from your <strong>plot’s municipality/war
 
 <h2 id="what-is">What Is Ghar Naksa Pass?</h2>
 
-Naksha = drawing, Pass = approval. The municipality’s sign-off that your proposed building complies with local bylaws (setbacks, height, coverage, FAR), road Right of Way (ROW), and seismic safety under the Building Act 2055. Construction without it is illegal — inspectors can impose a stop-work order, fine, or in serious cases demolition on the offending portion.
+Naksha = drawing, Pass = approval. The municipality’s sign-off that your proposed building complies with local bylaws (setbacks, height, coverage, FAR), road Right of Way (ROW), and seismic safety under the Building Act 2055. Construction without it is illegal — inspectors can impose:
+
+- a stop-work order
+- fine
+- in serious cases demolition on the offending portion
 
 <h2 id="who-issues">Who Issues It?</h2>
 

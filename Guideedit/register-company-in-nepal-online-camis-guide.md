@@ -153,7 +153,16 @@ After incorporation, private companies must track annual returns, AGM obligation
 - Existing sole proprietorships or partnerships may convert or restructure, but that is not always the same as a fresh CAMIS incorporation.
 - Foreign nationals and foreign companies can participate only through the foreign-investment and sector-approval framework.
 
-Before filing, decide the shareholders, share percentages, directors, registered office, business objectives, and authorized, issued, and paid-up capital. Changing these later may require amendments and additional filings.
+Before filing, decide:
+
+- the shareholders
+- share percentages
+- directors
+- registered office
+- business objectives
+- authorized, issued, and paid-up capital
+
+Changing these later may require amendments and additional filings.
 
 <h2 id="requirements">Requirements Before Starting CAMIS</h2>
 

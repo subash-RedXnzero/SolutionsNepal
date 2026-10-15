@@ -588,7 +588,14 @@ Make sure your existing PAN details (name, address, business activity) are accur
 
 <h3 id="vat-step3">Step 3: Prepare Documents</h3>
 
-Typical documents cited across current guides include: company/business registration certificate, PAN certificate, citizenship certificates of owners/directors, proof of business premises, bank account details, and photographs of the business premises.
+Typical documents cited across current guides include:
+
+- company/business registration certificate
+- PAN certificate
+- citizenship certificates of owners/directors
+- proof of business premises
+- bank account details
+- photographs of the business premises
 
 <h3 id="vat-step4">Step 4: Access the IRD System</h3>
 

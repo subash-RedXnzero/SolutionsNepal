@@ -87,7 +87,16 @@ When a cheque is dishonoured, the bank returns it unpaid and records the reason.
 
 <h2 id="meaning">What Is a Cheque Bounce or Dishonour?</h2>
 
-Cheque bounce is the informal term for a bank returning a cheque unpaid. The return memo records a reason such as insufficient funds, a closed or restricted account, signature mismatch, stop payment, an incomplete instrument, or another technical problem.
+Cheque bounce is the informal term for a bank returning a cheque unpaid.
+
+The return memo records a reason such as:
+
+- insufficient funds
+- a closed or restricted account
+- signature mismatch
+- stop payment
+- an incomplete instrument
+- another technical problem
 
 The reason matters. Insufficient funds may raise different legal questions from a signature mismatch or a technical defect. A formal cheque dishonour is also different from an unsuccessful digital transfer or a failed mobile-banking payment.
 
@@ -101,7 +110,13 @@ The reason matters. Insufficient funds may raise different legal questions from 
 
 <h2 id="notice">Legal Notice for Cheque Bounce in Nepal</h2>
 
-A legal notice is a formal demand to the drawer. It commonly identifies the cheque number, date, amount, bank and branch, presentation and return details, the underlying loan or transaction, the demand for payment, and possible legal action.
+A legal notice is a formal demand to the drawer. It commonly identifies:
+
+- the cheque number, date, amount, bank and branch
+- presentation and return details
+- the underlying loan or transaction
+- the demand for payment
+- possible legal action
 
 A lawyer's notice and a statutory precondition are not automatically the same thing. A 35-day notice period is often referenced in practice for some proceedings, but readers should not treat it as a universal deadline or format without verifying the current statute and proceeding.
 

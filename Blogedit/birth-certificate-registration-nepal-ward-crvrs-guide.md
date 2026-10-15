@@ -98,7 +98,15 @@ In Nepal a birth must be registered at the <strong>ward office within 35 days</s
 
 <strong>Janma Darta Praman Patra (जन्म दर्ता प्रमाणपत्र)</strong> is the first legal identity document issued under Nepal’s vital-events (CRVS) system. It proves name, date/place of birth, sex and parentage, and is the base document for citizenship, passport, NID (for minors), school admission and vital-statistics planning.
 
-The five registrable vital events in Nepal are: birth, death, marriage (ward registration), divorce and migration. Birth is the most common and is handled entirely at the ward level.
+The five registrable vital events in Nepal are:
+
+- birth
+- death
+- marriage (ward registration)
+- divorce
+- migration
+
+Birth is the most common and is handled entirely at the ward level.
 
 <h2 id="law">Legal Basis</h2>
 

@@ -158,7 +158,7 @@ export function buildShareText(input = {}, result, countryName, currency) {
     result.exchangeRate ? `Estimated savings in Nepal: Rs. ${formatNumber(result.nprMonthlySavings)}/month` : null,
     result.exchangeRate ? `Estimated annual savings: Rs. ${formatNumber(result.nprAnnualSavings)}` : null,
     '',
-    'Calculated on SolutionsNepal - https://solutionsnepal.com/nepal/foreign-job-salary-savings',
+    'Calculated on SolutionsNepal - https://solutionsnepal.com/nepal/finance/foreign-job-salary-savings',
   ].filter(Boolean);
   return lines.join('\n');
 }

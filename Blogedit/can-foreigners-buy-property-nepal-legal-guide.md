@@ -92,7 +92,14 @@ The answer depends on the buyer's legal status, the property, and the purpose of
 
 <h2 id="land">Foreign Land Ownership in Nepal</h2>
 
-The starting question is whether the buyer can hold registered land ownership, not whether they can occupy a building. Land ownership, use rights, leasehold rights, and a contractual right to occupy property are different legal interests.
+The starting question is whether the buyer can hold registered land ownership, not whether they can occupy a building. These are different legal interests:
+
+- land ownership
+- use rights
+- leasehold rights
+- a contractual right to occupy property
+
+In practice:
 
 - Ordinary foreign nationals should not treat a residential lease as freehold ownership.
 - Buying a house often involves transferring rights in the underlying land as well as the structure.
@@ -103,7 +110,15 @@ The starting question is whether the buyer can hold registered land ownership, n
 
 “Buying a house” is not always legally separate from acquiring the land underneath it. A foreign national may be able to rent or lease a residence, but that does not mean they can purchase the building and land in the same way as a Nepali citizen.
 
-Do not use a friend's name, spouse's name, nominee, informal partnership, or shell company to bypass an ownership restriction. Such arrangements can leave the paying party without enforceable ownership and create serious legal and financial risk.
+Do not use the following to bypass an ownership restriction:
+
+- friend's name
+- spouse's name
+- nominee
+- informal partnership
+- shell company
+
+Such arrangements can leave the paying party without enforceable ownership and create serious legal and financial risk.
 
 <h2 id="nrn">NRN Property Rights in Nepal</h2>
 
@@ -136,7 +151,14 @@ The Foreign Investment and Technology Transfer Act (FITTA), 2075 is an investmen
 
 <h2 id="company">Can a Foreign Company Own Property in Nepal?</h2>
 
-Distinguish an overseas company, a Nepal-registered company with foreign investment, a joint venture, and an individual foreign national. The entity's registration does not decide the question by itself; purpose, sector, investment approval, land rules, and transaction documents also matter.
+Distinguish these entity types:
+
+- an overseas company
+- a Nepal-registered company with foreign investment
+- a joint venture
+- an individual foreign national
+
+The entity's registration does not decide the question by itself; purpose, sector, investment approval, land rules, and transaction documents also matter.
 
 - A foreign company not registered or approved to operate in Nepal should not be treated as an ordinary Nepalese landowner.
 - A Nepal-registered foreign-invested company may require Department of Industry approval, company registration, and lawful business premises.

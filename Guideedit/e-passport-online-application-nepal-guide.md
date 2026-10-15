@@ -278,7 +278,13 @@ Prepare these in advance:
 
 <h3 id="step-type">Step 3: Choose Application Type</h3>
 
-Choose the correct option: <strong>First Issuance</strong>, <strong>Renewal</strong>, <strong>Replacement (Lost/Stolen)</strong>, <strong>Replacement (Damaged)</strong>, or <strong>Minor/Children’s passport</strong>.
+Choose the correct option:
+
+- <strong>First Issuance</strong>
+- <strong>Renewal</strong>
+- <strong>Replacement (Lost/Stolen)</strong>
+- <strong>Replacement (Damaged)</strong>
+- <strong>Minor/Children’s passport</strong>
 
 <h3 id="step-personal">Step 4: Enter Personal Information</h3>
 
@@ -287,7 +293,11 @@ Choose the correct option: <strong>First Issuance</strong>, <strong>Renewal</str
 - Provide permanent and current addresses (district, municipality/ward).
 - Provide contact information (mobile number and email).
 
-<strong>Common mistakes:</strong> mismatching spellings across documents; using the wrong date format or incorrect date of birth; entering addresses that do not match official records.
+<strong>Common mistakes:</strong>
+
+- mismatching spellings across documents;
+- using the wrong date format or incorrect date of birth;
+- entering addresses that do not match official records.
 
 <h3 id="step-nin">Step 5: Validate NIN (if required)</h3>
 

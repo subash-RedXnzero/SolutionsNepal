@@ -153,11 +153,23 @@ faqs:
 
 <h2 id="introduction">Introduction</h2>
 
-If you need government services in Nepal, <strong>Nagarik App</strong> is the official mobile platform designed to give citizens access to multiple services from one app. You can link National ID, Digital Driving License, PAN/tax services, vehicle information, and voter-related services where available. Services may change as integrations expand.
+If you need government services in Nepal, <strong>Nagarik App</strong> is the official mobile platform designed to give citizens access to multiple services from one app. You can link the following where available:
+
+- National ID
+- Digital Driving License
+- PAN/tax services
+- vehicle information
+- voter-related services.
+
+Services may change as integrations expand.
 
 The basic journey:
 
-<strong>Install App → Register → Verify Identity → Link Available Services → Use Digital Government Services</strong>
+1. <strong>Install App</strong>
+2. <strong>Register</strong>
+3. <strong>Verify Identity</strong>
+4. <strong>Link Available Services</strong>
+5. <strong>Use Digital Government Services</strong>
 
 This guide explains how to use Nagarik App with practical, step-by-step instructions, focusing on what you can do today, what you need to prepare, and how to resolve common issues.
 

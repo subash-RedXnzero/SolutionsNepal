@@ -81,7 +81,12 @@ faqs:
 
 <strong>Shram Swikriti (श्रम स्वीकृति)</strong> is the labour approval issued by the Department of Foreign Employment (DoFE), under Nepal's Ministry of Labour, Employment and Social Security. It confirms that your employment contract has been reviewed, basic worker protections are in place, and you are cleared to travel for that specific job.
 
-The process runs through <strong>FEIMS</strong> (Foreign Employment Information Management System) at <a href="https://feims.dofe.gov.np">feims.dofe.gov.np</a>. You need it for overseas employment, including first-time departures, returns to a previous employer, Korea's EPS, and Japan's SSW schemes. It is generally not needed for tourism, study, business visits, or family visits.
+The process runs through <strong>FEIMS</strong> (Foreign Employment Information Management System) at <a href="https://feims.dofe.gov.np">feims.dofe.gov.np</a>. You need it for overseas employment, including first-time departures, returns to a previous employer, Korea's EPS, and Japan's SSW schemes. It is generally not needed for:
+
+- tourism
+- study
+- business visits
+- family visits.
 
 Nepal and India share an open border, so Nepali citizens can generally live and work in India without a visa or labour permit, apart from restricted sectors such as government or defense jobs. For other countries, Shram Swikriti is mandatory.
 
@@ -148,7 +153,15 @@ Medical clearance and foreign-employment insurance are separate requirements. Me
 
 <h2 id="payments">Welfare Fund and SSF Payments</h2>
 
-The Foreign Employment Welfare Fund and SSF contribution are different payments with different purposes. Welfare Fund contributions support migrant-worker assistance, rescue, repatriation, disability, and family support. SSF contributions support the contribution-based social-security system.
+The Foreign Employment Welfare Fund and SSF contribution are different payments with different purposes. Welfare Fund contributions support:
+
+- migrant-worker assistance
+- rescue
+- repatriation
+- disability
+- family support.
+
+SSF contributions support the contribution-based social-security system.
 
 - Use the FEIMS payment system or an official integrated channel.
 - Keep the transaction ID and receipt for every payment.

@@ -43,7 +43,16 @@ Pay <strong>annual vehicle tax</strong> to your province (not federal). <strong>
 
 <h2 id="rates">Province Vehicle Tax Rates — How It Works</h2>
 
-Vehicle tax is set by each <strong>Province Financial Act</strong> (Bagmati, Gandaki, Lumbini, etc.) and collected by <strong>Transport Management Office</strong>. Base determinants: <strong>two-wheeler vs four-wheeler, CC/kW, private vs public, and fuel type</strong>. EV is charged per <strong>motor kW</strong>, not CC.
+Vehicle tax is set by each <strong>Province Financial Act</strong> (Bagmati, Gandaki, Lumbini, etc.) and collected by <strong>Transport Management Office</strong>.
+
+Base determinants:
+
+- **two-wheeler vs four-wheeler**
+- **CC/kW**
+- **private vs public**
+- **fuel type**
+
+EV is charged per <strong>motor kW</strong>, not CC.
 
 - Bikes: Rs 3,000 (≤125cc) to 35,000+ (1000cc+) + Rs 300 renewal fee
 - Cars (petrol): Rs 22,000 (≤1000cc) to 70,000+ (4000cc+) + Rs 500 renewal fee

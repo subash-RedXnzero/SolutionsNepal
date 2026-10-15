@@ -113,7 +113,15 @@ If a month is missing, first ask HR or payroll whether it has been filed. Contri
 
 <h2 id="statement">SSF Statement Download</h2>
 
-After login, look for Statement, Contribution Statement, Download, or Print. A statement typically includes your SSID, personal details, employer, monthly contribution breakdown by scheme, and total contributions to date. It can generally be saved as a PDF for records, loan, visa, or benefit applications.
+After login, look for Statement, Contribution Statement, Download, or Print. A statement typically includes:
+
+- your SSID
+- personal details
+- employer
+- monthly contribution breakdown by scheme
+- total contributions to date
+
+It can generally be saved as a PDF for records, loan, visa, or benefit applications.
 
 - Complete KYC if statement features are restricted.
 - Contact <strong>tax@ssf.gov.np</strong> for tax-related statement issues (as listed on <a href="https://ssf.gov.np">ssf.gov.np</a>).

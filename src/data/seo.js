@@ -93,7 +93,7 @@ function autoJsonLd(path, rec) {
 const pages = {
   // ── Homepage ──────────────────────────────────────────────
   '/': {
-    title: 'SolutionsNepal — Everyday Tools for Nepal',
+    title: 'Solutions Nepal — Everyday Tools for Nepal',
     description:
       'Free Nepal-focused calculators, converters, price checkers and everyday utility tools. Salary, tax, gold, fuel, currency, calendar and more.',
     jsonLd: [
@@ -1436,7 +1436,6 @@ const CATEGORY_SEO = {
   '/nepal/government-service-cost': { title: 'Nepal Govt Services — Fees & Guides | SolutionsNepal', description: 'Nepal government service fees, required documents, processing time and official sources — passports, licenses, PAN, citizenship and more.' },
   '/blog': { title: 'Blog — Stories & Explainers for Nepal | SolutionsNepal', description: 'Stories, cost-of-living comparisons, legal explainers and current rates for Nepal. For step-by-step how-tos, visit the Guides library.' },
   '/tools/photo': { title: 'Passport & ID Photo Tools Online | SolutionsNepal', description: 'Passport, visa, DV lottery and citizenship photos: crop to exact size and compress to KB targets. Free, private, in-browser.' },
-  '/tools/convert': { title: 'Image Converters — JPG, PNG, WebP | SolutionsNepal', description: 'Convert between JPG, PNG and WebP in your browser. Free image conversion with quality control — no uploads.' },
   '/tools/pdf': { title: 'Free PDF Tools — Merge & Compress | SolutionsNepal', description: 'Merge, compress, convert and edit PDFs entirely in your browser. JPG↔PDF, PDF↔Word, signatures — free and private.' },
 };
 Object.entries(CATEGORY_SEO).forEach(([k, v]) => {

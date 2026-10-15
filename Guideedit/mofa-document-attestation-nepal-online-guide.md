@@ -120,7 +120,11 @@ faqs:
 
 <h2 id="introduction">Introduction (Quick Read)</h2>
 
-If you need Nepal-issued documents to be recognized abroad, <strong>MOFA (Ministry of Foreign Affairs)</strong> and the <strong>Department of Consular Services</strong> oversee attestation, authentication, and legalization. The process typically involves online submission (via <strong>NEATS</strong>) for certain steps, followed by in-person verification and authentication at the Department of Consular Services (DoS) in Tripureshwor, Kathmandu, and, if required, embassy legalization at the destination country.
+If you need Nepal-issued documents to be recognized abroad, <strong>MOFA (Ministry of Foreign Affairs)</strong> and the <strong>Department of Consular Services</strong> oversee attestation, authentication, and legalization. The process typically involves:
+
+- online submission (via <strong>NEATS</strong>) for certain steps
+- in-person verification and authentication at the Department of Consular Services (DoS) in Tripureshwor, Kathmandu
+- embassy legalization at the destination country, if required.
 
 This guide walks you through the entire end-to-end workflow — from document preparation to collection and post-embassy steps — so a complete beginner can navigate the system confidently.
 
@@ -177,7 +181,13 @@ Often yes. Many destinations require documents to be verified by the issuing aut
 
 <h3 id="step-doctype">Step 2: Identify the document type</h3>
 
-Determine whether the document is Educational, Personal, Legal, Employment, or Commercial.
+Determine whether the document is:
+
+- Educational
+- Personal
+- Legal
+- Employment
+- Commercial.
 
 <h3 id="step-preverification">Step 3: Check whether pre-verification is required</h3>
 

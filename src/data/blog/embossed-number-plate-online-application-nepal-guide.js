@@ -113,7 +113,7 @@ export const embossedNumberPlateOnlineApplicationNepalGuidePost = {
     { type: 'paragraph', content: '<strong>What cannot be completed fully online</strong> (common pattern):' },
     { type: 'list', style: 'ul', items: ['Physical document/Bluebook verification', 'Vehicle/record verification by staff', 'Plate production and installation'] },
     { type: 'paragraph', content: 'So the real workflow is:' },
-    { type: 'paragraph', content: '<strong>online application/pre-registration → physical verification/office processing → number plate production → installation</strong>' },
+    { type: 'list', style: 'ol', items: ['**online application/pre-registration**', '**physical verification/office processing**', '**number plate production**', '**installation**'] },
     { type: 'heading', level: 2, id: 'portal', text: 'Official DoTM / HSENP / EVNP Online Portal' },
     { type: 'paragraph', content: 'The official embossed-number-plate application system is managed under DoTM’s online ecosystem, and you should start from the official DoTM route.' },
     { type: 'heading', level: 3, id: 'portal-legit', text: 'How to identify the legitimate portal (so you don’t get scammed)' },

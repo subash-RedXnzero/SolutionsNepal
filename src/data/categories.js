@@ -106,14 +106,6 @@ export const categories = [
     color: '#EA580C',
   },
   {
-    id: 'image-convert',
-    name: 'Image Conversion',
-    description: 'Convert between JPG, PNG & WebP formats',
-    icon: 'image',
-    href: '/tools/convert',
-    color: '#16A34A',
-  },
-  {
     id: 'pdf',
     name: 'PDF Tools',
     description: 'Convert, combine, compress, and manage PDF files',

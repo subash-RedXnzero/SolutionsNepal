@@ -152,7 +152,14 @@ Use only the official domain. There are many fake “voter card online” sites 
 
 <h2 id="pre-registration">How to Complete Online Pre-Registration (Step-by-Step)</h2>
 
-Keep your citizenship, NIN (if any), permanent address (province/district/municipality/ward) and a phone that can receive OTP ready. Enrollment windows open and close by Commission notice — the process below reflects the commonly reported ECN flow as of October 2026, but portal labels and open/closed status change frequently, so verify the live instructions on election.gov.np before applying. (A specific "reopened April 6, 2026 after a Nov 2025 pause" timeline is widely repeated but could not be verified against a live ECN notice — treat dates as illustrative.)
+Keep ready:
+
+- citizenship
+- NIN (if any)
+- permanent address (province/district/municipality/ward)
+- a phone that can receive OTP
+
+Enrollment windows open and close by Commission notice — the process below reflects the commonly reported ECN flow as of October 2026, but portal labels and open/closed status change frequently, so verify the live instructions on election.gov.np before applying. (A specific "reopened April 6, 2026 after a Nov 2025 pause" timeline is widely repeated but could not be verified against a live ECN notice — treat dates as illustrative.)
 
 <h3 id="route-nin">Route A: With National ID (NIN) — Recommended</h3>
 

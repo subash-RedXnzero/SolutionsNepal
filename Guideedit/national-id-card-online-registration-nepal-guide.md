@@ -367,13 +367,24 @@ Fill in each section carefully. Typical fields include:
 - Citizenship number
 - Issuing district
 
-For each field: understand what the field asks, copy data exactly from your citizenship certificate, avoid shortcuts and guesswork, and re-check spelling and date.
+For each field:
+
+- Understand what the field asks
+- Copy data exactly from your citizenship certificate
+- Avoid shortcuts and guesswork
+- Re-check spelling and date
 
 > **Mistake to avoid:** Your name must match your citizenship record. Small differences can cause verification problems later.
 
 <h3 id="step-citizenship">Step 6: Enter citizenship information</h3>
 
-This usually includes citizenship number, citizenship issuing district, and citizenship details matching your certificate. Double-check the citizenship number digits and issuing district spelling.
+This usually includes:
+
+- Citizenship number
+- Citizenship issuing district
+- Citizenship details matching your certificate
+
+Double-check the citizenship number digits and issuing district spelling.
 
 <h3 id="step-address">Step 7: Enter address information</h3>
 

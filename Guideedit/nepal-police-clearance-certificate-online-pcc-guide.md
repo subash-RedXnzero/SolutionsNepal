@@ -98,7 +98,16 @@ faqs:
 
 Apply for a Nepal Police Clearance Certificate through the official <strong>Online Police Clearance Registration (OPCR)</strong> portal at <a href="https://opcr.nepalpolice.gov.np">opcr.nepalpolice.gov.np</a>. The basic online application is generally free, and an approved certificate can be downloaded as a digitally signed PDF with a QR code.
 
-The normal sequence is: register or log in → enter identity and passport details → select the purpose → upload documents → submit → check status → download the approved PCC → complete MOFA or embassy attestation only if the destination requires it.
+The normal sequence is:
+
+1. Register or log in
+2. Enter identity and passport details
+3. Select the purpose
+4. Upload documents
+5. Submit
+6. Check status
+7. Download the approved PCC
+8. Complete MOFA or embassy attestation only if the destination requires it
 
 > **PCC is not attestation:** Nepal Police issues the PCC. The Ministry of Foreign Affairs or consular service may attest it separately for international use. Do not pay for attestation unless your destination, institution, or employer requires it.
 

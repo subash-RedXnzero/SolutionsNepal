@@ -36,7 +36,13 @@ Your salary slip contains multiple components. A salary calculator breaks down y
 
 <h2 id="deductions">Deductions</h2>
 
-Major deductions include the SSF employee-share contribution (11% of basic salary — distinct from the employer's separate 20% share), income tax based on annual income brackets per current <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">IRD</a> slabs, and any loan EMIs. Our <a href="/nepal/finance/salary-checker">Salary Calculator</a> handles all these automatically.
+Major deductions include:
+
+- SSF employee-share contribution (11% of basic salary — distinct from the employer's separate 20% share)
+- income tax based on annual income brackets per current <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">IRD</a> slabs
+- any loan EMIs.
+
+Our <a href="/nepal/finance/salary-checker">Salary Calculator</a> handles all these automatically.
 
 <h2 id="conclusion">Conclusion</h2>
 

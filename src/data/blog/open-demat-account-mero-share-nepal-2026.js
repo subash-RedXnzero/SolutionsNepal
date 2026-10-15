@@ -54,7 +54,8 @@ export const openDematAccountMeroShareNepal2026Post = {
   ],
   sections: [
     { type: 'heading', level: 2, id: 'introduction', text: 'Introduction' },
-    { type: 'paragraph', content: 'If you want to participate in Nepal’s IPO, FPO, or rights issue market, you will need several connected services working together: a bank account, a Demat account, a BOID, Mero Share, a CRN for C-ASBA, and finally the IPO application itself.' },
+    { type: 'paragraph', content: 'If you want to participate in Nepal’s IPO, FPO, or rights issue market, you will need several connected services working together:' },
+    { type: 'list', style: 'ul', items: ['A bank account', 'A Demat account', 'A BOID', 'Mero Share', 'A CRN for C-ASBA', 'Finally the IPO application itself'] },
     { type: 'paragraph', content: 'This guide explains what each service does, how they fit together, and how to open and use them in 2026. It is written for first-time Nepali investors and IPO applicants, with practical, step-by-step instructions and Nepal-specific details.' },
     { type: 'callout', style: 'accent', bold: 'The chain in one line:', content: 'Bank account → Demat account (BOID) → Mero Share → CRN → IPO application.' },
     { type: 'heading', level: 2, id: 'what-is-demat', text: 'What Is a Demat Account in Nepal?' },

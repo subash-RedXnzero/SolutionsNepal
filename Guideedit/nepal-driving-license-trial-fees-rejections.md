@@ -63,7 +63,14 @@ Four-wheelers face reversing into a box, hill starts and track discipline. The u
 
 <h2 id="fees">Fees and the payment flow</h2>
 
-The license journey has several fee touchpoints — application, written exam, trial, and the printed license itself — each modest individually. Since FY 2083/84, amounts are set by province under eDLVRS and differ by vehicle category and province (indicative ranges as of October 2026; confirm on your provincial portal). The reliable approach:
+The license journey has several fee touchpoints:
+
+- Application
+- Written exam
+- Trial
+- The printed license itself
+
+Each is modest individually. Since FY 2083/84, amounts are set by province under eDLVRS and differ by vehicle category and province (indicative ranges as of October 2026; confirm on your provincial portal). The reliable approach:
 
 1. Check the current fee schedule on your province's eDLVRS portal when you apply (national policy notices at <a href="https://dotm.gov.np">dotm.gov.np</a>)
 2. Pay through the channel the portal assigns (typically bank vouchers or digital payment)

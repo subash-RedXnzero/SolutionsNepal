@@ -36,7 +36,13 @@ Loan interest is the cost of borrowing money. In Nepal, interest rates vary by b
 
 <h2 id="rates">Current Rates in Nepal</h2>
 
-Home loan rates in Nepal are commonly reported in the range of 10-13%, while personal loans are commonly reported at 12-16%. Auto loans are commonly reported between 10-14%. These are indicative market ranges as of October 2026 — verify current offers with NRB publications at <a href="https://www.nrb.org.np">nrb.org.np</a> and directly with banks, as rates move with NRB policy and each bank's base rate. Always compare rates from multiple banks.
+Commonly reported indicative ranges:
+
+- Home loans — 10-13%
+- Personal loans — 12-16%
+- Auto loans — 10-14%
+
+These are indicative market ranges as of October 2026 — verify current offers with NRB publications at <a href="https://www.nrb.org.np">nrb.org.np</a> and directly with banks, as rates move with NRB policy and each bank's base rate. Always compare rates from multiple banks.
 
 <h2 id="conclusion">Conclusion</h2>
 

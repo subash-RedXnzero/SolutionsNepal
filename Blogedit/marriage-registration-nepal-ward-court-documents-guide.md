@@ -143,7 +143,13 @@ faqs:
 
 <h2 id="online-donidcr">Online DONIDCR Form (Pre-registration Only)</h2>
 
-At <strong>donidcr.gov.np → Online Ghatana Darta → Marriage Registration</strong> you can download/pre-fill the Anusuchi form, track status and verify a certificate. This saves counter time but <strong>does not issue the certificate online</strong> — the Local Registrar (ward) or the District Court still does in-person verification and issuance. A ward certificate can be verified at donidcr.gov.np → Verification (with registration number); a court certificate is verified via the Supreme Court/District Court portal by date + number.
+At <strong>donidcr.gov.np → Online Ghatana Darta → Marriage Registration</strong> you can:
+
+- download/pre-fill the Anusuchi form
+- track status
+- verify a certificate
+
+This saves counter time but <strong>does not issue the certificate online</strong> — the Local Registrar (ward) or the District Court still does in-person verification and issuance. A ward certificate can be verified at donidcr.gov.np → Verification (with registration number); a court certificate is verified via the Supreme Court/District Court portal by date + number.
 
 > **Abroad?** Two Nepalis abroad can pre-fill online, but an in-person visit to Nepal is still expected for the registration itself, or a Power of Attorney authenticated at the Nepali embassy where the local office accepts it. For a foreign-national marriage the District Court route (with 15-day residence for the foreign party in many courts) is mandatory and cannot be done fully online.
 

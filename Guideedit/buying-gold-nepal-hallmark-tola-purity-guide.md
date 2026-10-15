@@ -99,11 +99,9 @@ A hallmark is an official mark stamped on gold items to certify their purity. In
 
 <h2 id="why-purity-matters">Why purity markings matter</h2>
 
-Trust: A hallmark tells you the gold content has been independently verified, not just claimed by the seller.
-
-Value: Purity directly affects resale value and buyback rates.
-
-Protection: Certified gold reduces the risk of being sold under-purity items at premium prices.
+- **Trust:** A hallmark tells you the gold content has been independently verified, not just claimed by the seller.
+- **Value:** Purity directly affects resale value and buyback rates.
+- **Protection:** Certified gold reduces the risk of being sold under-purity items at premium prices.
 
 <h2 id="fineness-numbers">How fineness numbers work</h2>
 
@@ -198,7 +196,11 @@ Important: These are weight conversions only, not prices. Gold rates are quoted 
 - Use: Traditional jewelry, local trading
 - Price: commonly reported as typically Rs 200-400 per tola less than fine gold — treat as indicative, since tejabi pricing varies by seller and day
 
-Why purity matters: Resale value — higher purity = higher buyback rate. Price transparency — fine gold has standardized rates; tejabi can vary by seller. Verification — always ask for the stated fineness (995, 999, 916) rather than relying only on terminology.
+Why purity matters:
+
+- **Resale value** — higher purity = higher buyback rate.
+- **Price transparency** — fine gold has standardized rates; tejabi can vary by seller.
+- **Verification** — always ask for the stated fineness (995, 999, 916) rather than relying only on terminology.
 
 Tip: Reputable dealers will clearly state the fineness number and provide certification where applicable.
 
@@ -215,7 +217,13 @@ Nepal's daily gold rate is not set arbitrarily—it follows a structured process
 
 <h3 id="fenegosida-role">FENEGOSIDA's role</h3>
 
-FENEGOSIDA (also written as FeNeGoSiDA) is the industry association that sets and publishes Nepal's official daily gold and silver rates. The rate: is derived from international spot prices + currency conversion + duties/taxes, is quoted per tola (and often per 10 grams), and does not change on Saturdays and public holidays. Important: The published rate is the base metal rate, not the final jewelry price you'll pay.
+FENEGOSIDA (also written as FeNeGoSiDA) is the industry association that sets and publishes Nepal's official daily gold and silver rates. The rate:
+
+- is derived from international spot prices + currency conversion + duties/taxes,
+- is quoted per tola (and often per 10 grams),
+- and does not change on Saturdays and public holidays.
+
+Important: The published rate is the base metal rate, not the final jewelry price you'll pay.
 
 <h2 id="final-bill">Gold Price Today Nepal: Why the Final Bill Is Different</h2>
 

@@ -267,7 +267,10 @@ These are the system’s stated objectives; practical benefits (like fraud resis
 
 So the real workflow is:
 
-<strong>online application/pre-registration → physical verification/office processing → number plate production → installation</strong>
+1. **online application/pre-registration**
+2. **physical verification/office processing**
+3. **number plate production**
+4. **installation**
 
 <h2 id="portal">Official DoTM / HSENP / EVNP Online Portal</h2>
 

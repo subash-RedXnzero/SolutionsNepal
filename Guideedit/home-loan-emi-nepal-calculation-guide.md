@@ -141,7 +141,12 @@ Prepayments, restructuring, tenure extension, and other contract changes can als
 
 <h2 id="affordability">How Much Home Loan EMI Can You Afford?</h2>
 
-Bank eligibility is not the same as personal affordability. Banks may assess income, existing debt, FOIR, credit history, job or business stability, down payment, property value, age, and maximum loan-to-value.
+Bank eligibility is not the same as personal affordability. Banks may assess:
+
+- income, existing debt, FOIR, credit history,
+- job or business stability,
+- down payment, property value,
+- age, and maximum loan-to-value.
 
 - A general budgeting guideline is to keep total debt obligations below roughly 40–50% of net income.
 - With Rs 1,00,000 net income and no other debt, total EMI around Rs 40,000–50,000 may be a planning ceiling, not a guarantee.
@@ -171,7 +176,13 @@ Excluding property registration, a borrower may need to budget roughly NPR 50,00
 
 <h2 id="calculator">EMI Calculator Nepal: How to Use One Correctly</h2>
 
-Enter the amount you plan to borrow, not the full property price; the annual interest rate; and the tenure in years or months. Review the monthly EMI, total repayment, and total interest.
+Enter the following:
+
+- the amount you plan to borrow, not the full property price;
+- the annual interest rate;
+- and the tenure in years or months.
+
+Review the monthly EMI, total repayment, and total interest.
 
 - An EMI calculator is an estimate, not a bank sanction letter.
 - It usually excludes processing, valuation, insurance, registration, and legal costs.

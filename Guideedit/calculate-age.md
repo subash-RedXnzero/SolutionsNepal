@@ -26,7 +26,11 @@ Knowing your exact age in years, months, and days can be useful for official doc
 
 <h2 id="method">Manual Method</h2>
 
-To calculate your age: subtract your birth date from today's date. Start with years, then months, then days. Account for whether your birthday has occurred this year.
+To calculate your age:
+
+1. Subtract your birth date from today's date.
+2. Start with years, then months, then days.
+3. Account for whether your birthday has occurred this year.
 
 > **BS-age worked example:** Suppose you were born on 2040-05-15 BS and today is 2083-06-24 BS. Years: 2083 − 2040 = 43, and since month 06 is past month 05, the birthday has occurred — so 43 full years. Months: 06 − 05 = 1 month. Days: 24 − 15 = 9 days. Result: **43 years, 1 month, 9 days** (BS). Because BS month lengths vary (29–32 days depending on the year), borrowing across months must use the actual length of the specific BS month — which is why a converter is more reliable than mental math.
 

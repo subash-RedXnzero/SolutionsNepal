@@ -72,7 +72,9 @@ KUKL (Kathmandu Upatyaka Khanepani Limited) supplies piped water in Kathmandu Va
 
 <h2 id="meter-reading">How to Read Your Meter</h2>
 
-Read the black digits (cubic meters) from left to right. Consumption = current reading − previous reading. The red dials show litres and are for testing, not billing.
+- Read the black digits (cubic meters) from left to right
+- Consumption = current reading − previous reading
+- The red dials show litres and are for testing, not billing
 
 <h2 id="late-fee">Late Fee &amp; Disconnection</h2>
 

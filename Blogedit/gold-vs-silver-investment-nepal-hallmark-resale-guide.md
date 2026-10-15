@@ -54,7 +54,15 @@ faqs:
 - **916 (22K)** — 91.6% — standard jewelry (durable); 750 = 18K modern designs
 - **Weight** — 1 tola = 11.664 g = 100 lal; 1 lal ≈ 0.11664 g — confirm invoice unit
 
-Demand: <strong>NBSM NS mark + fineness number + weight + rate + making/wastage split</strong> on the invoice. No certificate = just a claim. Use <a href="/nepal/gold/tola-to-gram">Tola → Gram converter</a> before you pay.
+Demand the following on the invoice:
+
+- **NBSM NS mark**
+- **fineness number**
+- **weight**
+- **rate**
+- **making/wastage split**
+
+No certificate = just a claim. Use <a href="/nepal/gold/tola-to-gram">Tola → Gram converter</a> before you pay.
 
 <h2 id="gold-vs-silver">Gold vs Silver — Investment Math</h2>
 

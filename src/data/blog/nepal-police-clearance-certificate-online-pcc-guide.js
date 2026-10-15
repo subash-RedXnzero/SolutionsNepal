@@ -51,7 +51,8 @@ export const nepalPoliceClearanceCertificateOnlinePccGuidePost = {
   sections: [
     { type: 'heading', level: 2, id: 'quick-answer', text: 'Quick Answer: How to Apply for Nepal Police PCC Online' },
     { type: 'paragraph', content: 'Apply for a Nepal Police Clearance Certificate through the official <strong>Online Police Clearance Registration (OPCR)</strong> portal at <a href="https://opcr.nepalpolice.gov.np">opcr.nepalpolice.gov.np</a>. The basic online application is generally free, and an approved certificate can be downloaded as a digitally signed PDF with a QR code.' },
-    { type: 'paragraph', content: 'The normal sequence is: register or log in → enter identity and passport details → select the purpose → upload documents → submit → check status → download the approved PCC → complete MOFA or embassy attestation only if the destination requires it.' },
+    { type: 'paragraph', content: 'The normal sequence is:' },
+    { type: 'list', style: 'ol', items: ['Register or log in', 'Enter identity and passport details', 'Select the purpose', 'Upload documents', 'Submit', 'Check status', 'Download the approved PCC', 'Complete MOFA or embassy attestation only if the destination requires it'] },
     { type: 'callout', style: 'accent', bold: 'PCC is not attestation:', content: 'Nepal Police issues the PCC. The Ministry of Foreign Affairs or consular service may attest it separately for international use. Do not pay for attestation unless your destination, institution, or employer requires it.' },
     { type: 'heading', level: 2, id: 'what-is', text: 'What Is a Police Clearance Certificate?' },
     { type: 'paragraph', content: 'A <strong>Police Clearance Certificate (PCC)</strong>, also called a police clearance report or police character certificate, is an official Nepal Police document confirming the applicant\'s criminal-record status in Nepal for the relevant purpose and period.' },

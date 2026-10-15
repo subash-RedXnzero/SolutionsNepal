@@ -176,7 +176,14 @@ Make scans clear, well-lit, and uncropped. Blurry uploads are a common reason ap
 
 Nepali citizens living outside the country generally apply through the Nepali embassy or consulate responsible for their location. The core process mirrors the domestic one — online pre-enrollment, document upload, appointment, and in-person biometrics — but fees, appointment systems, and processing times vary by mission. Processing abroad typically takes around 15–30 days, though this differs from embassy to embassy.
 
-Documents required abroad closely match the domestic list: your application copy, original citizenship certificate, original current passport, and payment receipt. Always check your specific mission's published instructions rather than assuming Kathmandu's fees or timelines apply worldwide.
+Documents required abroad closely match the domestic list:
+
+- Your application copy
+- Original citizenship certificate
+- Original current passport
+- Payment receipt
+
+Always check your specific mission's published instructions rather than assuming Kathmandu's fees or timelines apply worldwide.
 
 <h2 id="lost-damaged">If Your Passport Is Lost, Stolen, or Damaged</h2>
 

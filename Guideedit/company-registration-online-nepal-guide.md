@@ -531,7 +531,23 @@ Once your name is approved, it’s reserved for a limited window (commonly cited
 
 Here’s the overall workflow, from decision to operating company:
 
-<strong>Choose business structure → Select and reserve company name → Determine share capital and ownership structure → Prepare MOA & AOA → Prepare founder/director information and documents → Create the CAMIS incorporation application → Upload/submit supporting documents → OCR review → Make corrections if OCR requests them → Pay the applicable OCR registration fee → Company approval/incorporation → Receive Company Registration Certificate → PAN registration with IRD → Open a company bank account → Ward/local registration, where applicable → Industry/sector registrations, where applicable → Begin operations and ongoing compliance</strong>
+1. **Choose business structure**
+2. **Select and reserve company name**
+3. **Determine share capital and ownership structure**
+4. **Prepare MOA & AOA**
+5. **Prepare founder/director information and documents**
+6. **Create the CAMIS incorporation application**
+7. **Upload/submit supporting documents**
+8. **OCR review**
+9. **Make corrections if OCR requests them**
+10. **Pay the applicable OCR registration fee**
+11. **Company approval/incorporation**
+12. **Receive Company Registration Certificate**
+13. **PAN registration with IRD**
+14. **Open a company bank account**
+15. **Ward/local registration, where applicable**
+16. **Industry/sector registrations, where applicable**
+17. **Begin operations and ongoing compliance**
 
 <h2 id="step-by-step">Step-by-Step CAMIS Application</h2>
 
@@ -676,7 +692,14 @@ Beyond OCR and Ward registration, some companies need additional registration wi
 
 <h2 id="sector-licenses">Sector-Specific Licenses</h2>
 
-Building on the above, certain regulated activities require specific operating licenses beyond general company or industry registration — examples commonly cited include broadcasting/media permissions, telecom licenses, pharmaceutical/drug licenses, and financial-institution licenses. If your business activity touches any regulated sector, budget time and cost for this step separately from your OCR incorporation timeline, since sector licensing processes can run independently of — and sometimes take considerably longer than — company registration itself.
+Building on the above, certain regulated activities require specific operating licenses beyond general company or industry registration — examples commonly cited include:
+
+- broadcasting/media permissions,
+- telecom licenses,
+- pharmaceutical/drug licenses,
+- and financial-institution licenses.
+
+If your business activity touches any regulated sector, budget time and cost for this step separately from your OCR incorporation timeline, since sector licensing processes can run independently of — and sometimes take considerably longer than — company registration itself.
 
 <h2 id="bank-account">Opening a Company Bank Account</h2>
 

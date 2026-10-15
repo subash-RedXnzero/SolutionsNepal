@@ -12,7 +12,7 @@
 
 // Ordered: first match wins. Keep most specific intents near the top.
 export const SMART_ROUTES = [
-  { re: /(salary\s*tax|कर\s*कटौती|income\s*tax|tds)/i, href: '/nepal/finance/salary-tax', label: 'Salary Tax Calculator', why: 'Tax slabs & TDS by fiscal year', param: null },
+  { re: /(salary\s*tax|कर\s*कटौती|income\s*tax|tds)/i, href: '/nepal/finance/salary-checker', label: 'Salary Tax Calculator', why: 'Tax slabs & TDS by fiscal year', param: null },
   { re: /(dashain|दशैं|दशै|bonus|बोनस|festival\s*(allowance|bonus|expense)|chadparva|चाडपर्व)/i, href: '/nepal/finance/dashain-bonus-calculator', label: 'Dashain Bonus Calculator', why: 'Festival bonus estimate from salary', param: null },
   { re: /(salary|तलब|पारिश्रमिक|tax\s*पछि|tax\s*pachhi|take\s*home|net\s*pay|हजार)/i, href: '/nepal/finance/salary-checker', label: 'Nepal Salary Calculator', why: 'Take-home salary, SSF & income tax', param: 'basic' },
   { re: /(ropani|aana|आना|रोपनी|रोपैनी|paisa|पैसा|daam|दाम|biswansi|बिस्वंसी|dhur|धुर|kattha|कठ्ठा|bigha|बिघा|jagga|जग्गा)/i, href: '/nepal/land/ropani-to-aana', label: 'Land Converter (Ropani ↔ Aana)', why: 'Ropani, Aana, Paisa, Daam & more', param: 'value' },

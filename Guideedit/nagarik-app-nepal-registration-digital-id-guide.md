@@ -88,7 +88,19 @@ faqs:
 
 The <strong>Nagarik App (नागरिक एप)</strong> is the Government of Nepal's mobile platform for accessing supported public services from a phone. It was developed by the National Information Technology Center (NITC) under the Ministry of Communication and Information Technology.
 
-The app can connect verified users to digital records and services such as Citizenship, National ID, Driving License, PAN, vehicle services, police clearance, passport support, government payments, and complaints. Availability depends on the current app version and the rollout status of each government integration.
+The app can connect verified users to digital records and services such as:
+
+- Citizenship
+- National ID
+- Driving License
+- PAN
+- vehicle services
+- police clearance
+- passport support
+- government payments
+- complaints.
+
+Availability depends on the current app version and the rollout status of each government integration.
 
 > **Important distinction:** <strong>Nagarik App is the platform.</strong> Digital ID and National ID (NID) are government identity records. The app displays or links to those records; it does not issue a National ID or replace Citizenship.
 

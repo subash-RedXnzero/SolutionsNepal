@@ -19,32 +19,51 @@
  */
 ---
 
-<div id="stt-root" class="nk-card overflow-hidden">
-  <div class="p-5 sm:p-6">
+<div id="stt-root" class="stt-shell nk-card overflow-hidden">
+  <div class="stt-glow" aria-hidden="true"></div>
+  <div class="stt-inner">
 
-    <p class="stt-card-title">Speech to Text Converter</p>
-    <p class="stt-card-sub">Convert your voice into text instantly. Supports Nepali and English in compatible browsers.</p>
+    <!-- Header -->
+    <div class="stt-head">
+      <div class="stt-head-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+      </div>
+      <div class="stt-head-text">
+        <div class="stt-title-row">
+          <p class="stt-card-title">Speech to Text Converter</p>
+          <span class="stt-live"><span class="stt-live-dot"></span>Live</span>
+        </div>
+        <p class="stt-card-sub">Voice into text instantly — Nepali & English, right in your browser.</p>
+      </div>
+    </div>
 
+    <div class="stt-main">
+    <div class="stt-left">
     <!-- Language -->
-    <p class="stt-section-label" id="stt-lang-label">Recognition language</p>
+    <div class="stt-lang-head">
+      <p class="stt-section-label" id="stt-lang-label">Recognition language</p>
+    </div>
     <div id="stt-lang-group" class="stt-radios" role="radiogroup" aria-labelledby="stt-lang-label">
       <label class="stt-radio">
         <input type="radio" name="stt-lang" value="ne-NP" checked />
         <span class="stt-radio-dot" aria-hidden="true"></span>
-        <span class="stt-radio-text">नेपाली (Nepali)</span>
+        <span class="stt-radio-text"><strong>नेपाली</strong><em>ne-NP</em></span>
+        <span class="stt-radio-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
       </label>
       <label class="stt-radio">
         <input type="radio" name="stt-lang" value="en-US" />
         <span class="stt-radio-dot" aria-hidden="true"></span>
-        <span class="stt-radio-text">English (US)</span>
+        <span class="stt-radio-text"><strong>English (US)</strong><em>en-US</em></span>
+        <span class="stt-radio-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
       </label>
       <label class="stt-radio">
         <input type="radio" name="stt-lang" value="en-GB" />
         <span class="stt-radio-dot" aria-hidden="true"></span>
-        <span class="stt-radio-text">English (UK)</span>
+        <span class="stt-radio-text"><strong>English (UK)</strong><em>en-GB</em></span>
+        <span class="stt-radio-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
       </label>
     </div>
-    <p id="stt-lang-note" class="text-[11px] mb-4 leading-relaxed" style="color:var(--nk-text-tertiary);">Switching never erases your existing text.</p>
+    <p id="stt-lang-note" class="stt-lang-note">Switching never erases text.</p>
 
     <!-- Proactive blocker notice (Brave / adblocker): warning only, mic stays usable -->
     <div id="stt-notice" class="stt-notice hidden mb-5">
@@ -60,13 +79,25 @@
       </button>
     </div>
 
-    <!-- Recording controls -->
-    <div class="stt-center mb-4">
-      <span id="stt-mini" class="stt-mini" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-      </span>
+    <!-- Recording studio -->
+    <div class="stt-studio">
+      <div class="stt-studio-row">
+      <div class="stt-stage" aria-hidden="true">
+        <span class="stt-ring r1"></span>
+        <span class="stt-ring r2"></span>
+        <span id="stt-mini" class="stt-mini">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+        </span>
+      </div>
+      <div class="stt-studio-info">
       <p id="stt-state-line" class="stt-state" aria-hidden="true">Ready to transcribe</p>
-      <p class="stt-state-meta" aria-hidden="true"><span id="stt-timer" class="tabular-nums">0:00</span> · <span id="stt-state-lang">Nepali</span></p>
+      <p class="stt-state-meta" aria-hidden="true">
+        <span class="stt-meta-pill stt-meta-timer"><span class="stt-pulse-dot"></span><span id="stt-timer" class="tabular-nums">0:00</span></span>
+        <span class="stt-meta-pill"><span id="stt-state-lang">Nepali</span></span>
+      </p>
+      <div class="stt-eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      </div>
       <div class="stt-rec-row">
         <button
           id="stt-start"
@@ -88,39 +119,42 @@
         ><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/></svg><span>Stop</span></button>
         <button id="stt-reset" type="button" class="stt-linkbtn" title="Stop recording and reset the whole recorder">Reset</button>
       </div>
+      <!-- Status + error regions -->
+      <p id="stt-status" role="status" aria-live="polite" class="stt-status">Press Start and allow microphone access to begin.</p>
     </div>
-
-    <!-- Status + error regions -->
-    <p id="stt-status" role="status" aria-live="polite" class="text-[13.5px] text-center mb-4 min-h-[1.4em] leading-relaxed" style="color:var(--nk-text-secondary);">Press Start and allow microphone access to begin.</p>
+    </div>
+    <div class="stt-right">
     <div id="stt-error" role="alert" class="stt-error hidden mb-4"></div>
     <div id="stt-unsupported" class="stt-error hidden mb-4"></div>
 
     <!-- Interim line -->
     <div id="stt-interim-wrap" class="hidden mb-4">
-      <p class="text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:var(--nk-text-tertiary);">Hearing now</p>
-      <p id="stt-interim" class="text-[14px] italic leading-relaxed rounded-lg px-3.5 py-2.5" style="color:var(--nk-text-secondary);background:var(--nk-hover);"></p>
+      <p class="stt-hearing-label"><span class="stt-hearing-dot"></span>Hearing now</p>
+      <p id="stt-interim" class="stt-interim"></p>
     </div>
 
     <!-- Transcript editor -->
-    <div class="mb-3">
-      <div class="flex items-baseline justify-between mb-2">
-        <label for="stt-text" class="text-[14px] font-bold" style="color:var(--nk-text);">Transcript</label>
-        <p id="stt-count" class="text-[11.5px] tabular-nums" style="color:var(--nk-text-tertiary);">0 words · 0 characters</p>
+    <div class="stt-editor mb-3">
+      <div class="stt-editor-head">
+        <label for="stt-text" class="stt-editor-title"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>Transcript</label>
+        <p id="stt-count" class="stt-count tabular-nums">0 words · 0 characters</p>
       </div>
       <textarea
         id="stt-text"
-        rows="5"
+        rows="6"
         placeholder="Your recognized speech will appear here. You can also type or edit text..."
         class="stt-textarea"
       ></textarea>
-      <p id="stt-empty" class="text-[11.5px] mt-1.5" style="color:var(--nk-text-tertiary);">Nothing yet — press Start to dictate, or type above.</p>
+      <p id="stt-empty" class="stt-empty">Nothing yet — press Start to dictate, or type above.</p>
     </div>
 
     <!-- Actions -->
-    <div class="mt-3 flex flex-wrap items-center gap-2">
-      <button id="stt-copy" type="button" class="stt-pill" title="Copy the transcript to clipboard" disabled><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="13" height="13" x="9" y="9" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy text</span></button>
+    <div class="stt-actions mt-3">
+      <button id="stt-copy" type="button" class="stt-pill stt-pill-primary" title="Copy the transcript to clipboard" disabled><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="13" height="13" x="9" y="9" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy text</span></button>
       <button id="stt-download" type="button" class="stt-pill" title="Download the transcript as a .txt file" disabled><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg><span>Download</span></button>
       <button id="stt-clear" type="button" class="stt-linkbtn" title="Clear the transcript text" disabled>Clear</button>
+    </div>
+    </div>
     </div>
   </div>
 </div>
@@ -617,6 +651,26 @@
     refreshMeta();
   }
 
+  const MSG_MIC_BLOCKED = 'Microphone access was blocked. Allow microphone permission in your browser site settings (and use HTTPS), then tap the microphone again.';
+  const MSG_MIC_MISSING = 'Microphone not available. No microphone is connected or detected. Please connect or enable a microphone and try again. You can type your message instead.';
+  // 'not-allowed' fires both when permission is denied AND when no mic
+  // device exists (or it is held by another app). Check the device list so
+  // a missing mic gets the "not available" message instead of the
+  // permission guidance.
+  function showMicBlockedOrMissing() {
+    try {
+      if (navigator.mediaDevices && typeof navigator.mediaDevices.enumerateDevices === 'function') {
+        navigator.mediaDevices.enumerateDevices().then((devices) => {
+          if (destroyed) return;
+          const inputs = (devices || []).filter((d) => d && d.kind === 'audioinput');
+          showError(inputs.length > 0 ? MSG_MIC_BLOCKED : MSG_MIC_MISSING);
+        }).catch(() => { showError(MSG_MIC_BLOCKED); });
+        return;
+      }
+    } catch (e) {}
+    showError(MSG_MIC_BLOCKED);
+  }
+
   function handleRecError(code) {
     if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
     switch (code) {
@@ -626,13 +680,13 @@
         manualStop = true;
         try { recognition && recognition.abort && recognition.abort(); } catch (e) {}
         finishManualStop();
-        showError('Microphone access was blocked. Allow microphone permission in your browser site settings (and use HTTPS), then tap the microphone again.');
+        showMicBlockedOrMissing();
         break;
       case 'audio-capture':
         wantListening = false;
         manualStop = true;
         finishManualStop();
-        showError('No microphone was found. Connect or enable a microphone, then try again.');
+        showError(MSG_MIC_MISSING);
         break;
       case 'network': {
         // 'network' means the browser could not reach its speech servers —
@@ -911,262 +965,297 @@
 </script>
 
 <style>
-  /* Card heading (visual only — the page H1 carries the document heading) */
-  .stt-card-title { margin: 0 0 4px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; color: var(--nk-text); }
-  .stt-card-sub { margin: 0 0 18px; font-size: 13.5px; line-height: 1.6; color: var(--nk-text-secondary); }
-
-  /* Language: bold label + vertical classic radios */
-  .stt-section-label { margin: 0 0 10px; font-size: 14px; font-weight: 700; color: var(--nk-text); }
-  .stt-radios { display: flex; flex-direction: column; gap: 10px; margin-bottom: 6px; }
-  .stt-radio { display: flex; align-items: center; gap: 10px; min-width: 0; cursor: pointer; width: fit-content; max-width: 100%; }
-  .stt-radio input {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
+  /* ── Premium shell ── */
+  .stt-shell { position: relative; border-radius: 20px; background: var(--nk-card-bg); }
+  .stt-glow {
+    position: absolute; inset: 0 0 auto 0; height: 148px; pointer-events: none;
+    background:
+      radial-gradient(420px 160px at 12% 0%, color-mix(in srgb, var(--nk-accent) 9%, transparent), transparent 70%),
+      radial-gradient(420px 160px at 88% 0%, color-mix(in srgb, var(--nk-accent) 6%, transparent), transparent 70%);
   }
+  .stt-inner { position: relative; padding: 16px; }
+  @media (min-width: 640px) { .stt-inner { padding: 18px 20px; } }
+
+  /* ── Compact 2-column: controls left, transcript right ── */
+  .stt-main { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 820px) {
+    .stt-main { grid-template-columns: 290px minmax(0, 1fr); gap: 14px; align-items: start; }
+    .stt-left { position: sticky; top: 0; }
+  }
+  .stt-left { display: flex; flex-direction: column; min-width: 0; }
+  .stt-right { display: flex; flex-direction: column; min-width: 0; }
+
+  /* ── Header ── */
+  .stt-head { display: flex; gap: 11px; align-items: center; margin-bottom: 12px; }
+  .stt-head-icon {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; background: var(--nk-gradient-primary, var(--nk-accent));
+    box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--nk-accent) 55%, transparent);
+  }
+  .stt-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .stt-card-title { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; color: var(--nk-text); }
+  .stt-live {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--nk-accent); background: var(--nk-accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--nk-accent) 22%, transparent);
+    padding: 4px 10px; border-radius: 9999px;
+  }
+  .stt-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--nk-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--nk-accent) 20%, transparent); animation: stt-blink 1.6s ease-in-out infinite; }
+  .stt-card-sub { margin: 1px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--nk-text-secondary); max-width: 52ch; }
+
+  /* ── Language cards ── */
+  .stt-lang-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+  .stt-section-label { margin: 0; font-size: 12.5px; font-weight: 700; letter-spacing: 0.02em; color: var(--nk-text); }
+  .stt-lang-note { margin: 0 0 8px; font-size: 11px; color: var(--nk-text-tertiary); }
+  .stt-radios { display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 0; }
+  .stt-radio {
+    position: relative; display: flex; align-items: center; gap: 9px;
+    padding: 8px 11px; border-radius: 11px; cursor: pointer;
+    background: var(--nk-surface); border: 1.5px solid var(--nk-border);
+    transition: border-color 0.16s ease, background-color 0.16s ease, transform 0.12s ease, box-shadow 0.16s ease;
+  }
+  .stt-radio:hover { border-color: var(--nk-border-strong); transform: translateY(-1px); }
+  .stt-radio input { position: absolute; opacity: 0; width: 1px; height: 1px; overflow: hidden; }
   .stt-radio-dot {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1.5px solid var(--nk-border-strong);
-    background: var(--nk-surface);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+    border: 1.5px solid var(--nk-border-strong); background: var(--nk-surface);
+    display: inline-flex; align-items: center; justify-content: center;
     transition: border-color 0.15s ease;
   }
-  .stt-radio-dot::after {
-    content: '';
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: transparent;
-    transition: background-color 0.15s ease;
+  .stt-radio-dot::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: transparent; transition: background-color 0.15s ease; }
+  .stt-radio:has(input:checked) {
+    border-color: color-mix(in srgb, var(--nk-accent) 55%, transparent);
+    background: color-mix(in srgb, var(--nk-accent-subtle) 55%, var(--nk-surface));
+    box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--nk-accent) 35%, transparent);
   }
   .stt-radio input:checked + .stt-radio-dot { border-color: var(--nk-accent); }
   .stt-radio input:checked + .stt-radio-dot::after { background: var(--nk-accent); }
-  .stt-radio:hover .stt-radio-dot { border-color: var(--nk-accent); }
-  .stt-radio input:focus-visible + .stt-radio-dot { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
-  .stt-radio input:disabled ~ .stt-radio-text, .stt-radio input:disabled + .stt-radio-dot { opacity: 0.5; cursor: not-allowed; }
-  .stt-radio-text { font-size: 14.5px; color: var(--nk-text); }
+  .stt-radio input:focus-visible ~ .stt-radio-check { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .stt-radio:has(input:disabled) { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .stt-radio-text { display: flex; align-items: baseline; gap: 6px; line-height: 1.3; min-width: 0; flex: 1; }
+  .stt-radio-text strong { font-size: 13.5px; font-weight: 700; color: var(--nk-text); white-space: nowrap; }
+  .stt-radio-text em { font-style: normal; font-size: 11px; color: var(--nk-text-tertiary); margin-top: 0; }
+  .stt-radio-check {
+    flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--nk-muted); color: transparent; transition: all 0.16s ease;
+  }
+  .stt-radio:has(input:checked) .stt-radio-check { background: var(--nk-accent); color: #fff; }
 
-  /* Center status block */
-  .stt-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  /* ── Studio panel ── */
+  .stt-studio {
+    position: relative; display: flex; flex-direction: column; align-items: stretch; text-align: left;
+    border: 1px solid var(--nk-border); border-radius: 14px;
+    background: color-mix(in srgb, var(--nk-muted) 45%, var(--nk-surface));
+    padding: 12px; margin-top: 10px; margin-bottom: 0; overflow: hidden;
+  }
+  .stt-studio::before {
+    content: ''; position: absolute; inset: 0 0 auto 0; height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--nk-accent) 35%, transparent), transparent);
+  }
+  .stt-studio-row { display: flex; align-items: center; gap: 12px; }
+  .stt-studio-info { min-width: 0; flex: 1; }
+  .stt-stage { position: relative; width: 60px; height: 60px; display: grid; place-items: center; margin-bottom: 0; flex-shrink: 0; }
+  .stt-ring {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--nk-accent) 28%, transparent);
+    opacity: 0; pointer-events: none;
+  }
   .stt-mini {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--nk-text-tertiary);
-    margin-bottom: 10px;
-    transition: color 0.15s ease;
+    position: relative; z-index: 1;
+    width: 50px; height: 50px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--nk-text-tertiary); background: var(--nk-surface);
+    border: 1px solid var(--nk-border-strong);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    transition: all 0.2s ease;
   }
-  .stt-mini.is-live { color: var(--nk-accent); animation: stt-blink 1.2s ease-in-out infinite; }
+  /* Live state driven by JS (.is-live on #stt-mini) — rings + filled mic */
+  .stt-mini.is-live {
+    color: #fff; background: var(--nk-gradient-primary, var(--nk-accent)); border-color: transparent;
+    box-shadow: 0 10px 26px -6px color-mix(in srgb, var(--nk-accent) 60%, transparent);
+  }
+  .stt-stage:has(#stt-mini.is-live) .stt-ring { opacity: 1; }
+  .stt-stage:has(#stt-mini.is-live) .r1 { animation: stt-ring 1.8s ease-out infinite; }
+  .stt-stage:has(#stt-mini.is-live) .r2 { animation: stt-ring 1.8s ease-out 0.6s infinite; }
+  @keyframes stt-ring { 0% { transform: scale(0.78); opacity: 0.9; } 100% { transform: scale(1.25); opacity: 0; } }
   @keyframes stt-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
-  .stt-state { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; color: var(--nk-text); }
-  .stt-state-meta { margin: 5px 0 0; font-size: 14px; color: var(--nk-text-tertiary); }
-  .stt-state-meta .tabular-nums { font-variant-numeric: tabular-nums; }
 
-  /* Main + utility buttons */
-  .stt-rec-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 14px;
+  .stt-eq { display: flex; align-items: flex-end; gap: 3px; height: 16px; margin: 5px 0 0; opacity: 0.35; }
+  .stt-eq span { width: 3px; border-radius: 9999px; background: var(--nk-border-strong); height: 5px; }
+  .stt-studio:has(#stt-mini.is-live) .stt-eq { opacity: 1; }
+  .stt-studio:has(#stt-mini.is-live) .stt-eq span { background: var(--nk-accent); animation: stt-eq 0.9s ease-in-out infinite; }
+  .stt-studio:has(#stt-mini.is-live) .stt-eq span:nth-child(2) { animation-delay: 0.12s; }
+  .stt-studio:has(#stt-mini.is-live) .stt-eq span:nth-child(3) { animation-delay: 0.24s; }
+  .stt-studio:has(#stt-mini.is-live) .stt-eq span:nth-child(4) { animation-delay: 0.06s; }
+  .stt-studio:has(#stt-mini.is-live) .stt-eq span:nth-child(5) { animation-delay: 0.3s; }
+  .stt-studio:has(#stt-mini.is-live) .stt-eq span:nth-child(6) { animation-delay: 0.18s; }
+  .stt-studio:has(#stt-mini.is-live) .stt-eq span:nth-child(7) { animation-delay: 0.36s; }
+  @keyframes stt-eq { 0%, 100% { height: 5px; } 50% { height: 15px; } }
+
+  .stt-state { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.02em; color: var(--nk-text); }
+  .stt-state-meta { margin: 5px 0 0; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--nk-text-tertiary); }
+  .stt-meta-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--nk-surface); border: 1px solid var(--nk-border);
+    padding: 3px 10px; border-radius: 9999px; font-weight: 600; font-size: 11.5px;
   }
+  .stt-meta-timer { font-variant-numeric: tabular-nums; }
+  .stt-pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--nk-border-strong); }
+  .stt-studio:has(#stt-mini.is-live) .stt-pulse-dot { background: var(--nk-accent); animation: stt-blink 1.2s ease-in-out infinite; }
+  .stt-meta-sep { opacity: 0.5; }
+  #stt-timer { font-weight: 700; color: var(--nk-accent); font-variant-numeric: tabular-nums; }
+
+  /* ── Buttons ── */
+  .stt-rec-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
   .stt-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 52px;
-    padding: 12px 32px;
-    border-radius: 9999px;
-    font-size: 15.5px;
-    font-weight: 700;
-    font-family: var(--font-sans);
-    cursor: pointer;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    transition: opacity 0.15s ease, transform 0.12s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    min-height: 42px; padding: 9px 22px; border-radius: 9999px;
+    font-size: 14px; font-weight: 700; font-family: var(--font-sans);
+    cursor: pointer; border: 1px solid transparent; white-space: nowrap;
+    transition: opacity 0.15s ease, transform 0.12s ease, background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   }
   .stt-btn:active:not(:disabled) { transform: scale(0.97); }
   .stt-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
   .stt-btn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 3px; }
-  /* Primary: brand-red pill (project accent) */
-  .stt-btn-dark { background: var(--nk-accent); color: #fff; box-shadow: 0 6px 16px rgba(230, 43, 30, 0.28); }
-  .stt-btn-dark:hover:not(:disabled) { background: var(--nk-accent-hover); }
+  .stt-btn-dark {
+    background: var(--nk-gradient-primary, var(--nk-accent)); color: #fff;
+    box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--nk-accent) 55%, transparent), inset 0 1px 0 rgba(255,255,255,0.22);
+  }
+  .stt-btn-dark:hover:not(:disabled) { background: var(--nk-accent-hover); transform: translateY(-1px); box-shadow: 0 14px 28px -8px color-mix(in srgb, var(--nk-accent) 60%, transparent); }
   .stt-btn-dark:disabled { background: var(--nk-muted); color: var(--nk-text-tertiary); box-shadow: none; cursor: not-allowed; }
-  /* Unlayered component CSS beats Tailwind's layered `.hidden` utility:
-     without this, Start stays visible next to Resume. */
   .stt-btn.hidden { display: none; }
-  /* Stop: quiet outline, turns brand-red while it can stop */
-  .stt-btn-line { background: transparent; border-color: var(--nk-border-strong); color: var(--nk-text-tertiary); }
+  .stt-btn-line { background: var(--nk-surface); border-color: var(--nk-border-strong); color: var(--nk-text-secondary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
   .stt-btn-line:not(:disabled) { border-color: var(--nk-accent); color: var(--nk-accent); background: var(--nk-accent-subtle); }
-  .stt-btn-line:not(:disabled):hover { background: var(--nk-accent-subtle); opacity: 0.9; }
+  .stt-btn-line:not(:disabled):hover { transform: translateY(-1px); }
   .stt-btn-line:disabled { cursor: not-allowed; opacity: 0.7; }
   .stt-linkbtn {
-    background: var(--nk-muted);
-    border: 1px solid var(--nk-border);
-    border-radius: 9999px;
-    padding: 10px 22px;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: var(--font-sans);
-    color: var(--nk-text-secondary);
-    cursor: pointer;
-    min-height: 44px;
-    white-space: nowrap;
-    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+    background: transparent; border: 1px solid var(--nk-border);
+    border-radius: 9999px; padding: 8px 16px; font-size: 13px; font-weight: 700; font-family: var(--font-sans);
+    color: var(--nk-text-secondary); cursor: pointer; min-height: 38px; white-space: nowrap;
+    transition: all 0.15s ease;
   }
   .stt-linkbtn:hover { background: var(--nk-hover); color: var(--nk-text); border-color: var(--nk-border-strong); }
   .stt-linkbtn:active { transform: scale(0.97); }
-  .stt-linkbtn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; border-radius: var(--radius-sm); }
-  .stt-linkbtn.is-armed { color: #dc2626; }
-  #stt-clear.is-armed { color: #dc2626; }
+  .stt-linkbtn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .stt-linkbtn.is-armed { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+  [data-theme="dark"] .stt-linkbtn.is-armed { background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.4); }
+  .stt-linkbtn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #stt-clear.is-armed { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+  [data-theme="dark"] #stt-clear.is-armed { background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.4); }
 
-  /* Transcript */
+  .stt-status { margin: 8px 0 0; font-size: 12px; line-height: 1.5; color: var(--nk-text-secondary); min-height: 0; max-width: 52ch; }
+
+  /* ── Hearing now ── */
+  .stt-hearing-label {
+    margin: 0 0 8px; display: inline-flex; align-items: center; gap: 7px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--nk-text-tertiary);
+  }
+  .stt-hearing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--nk-accent); animation: stt-blink 1.2s ease-in-out infinite; }
+  .stt-interim {
+    margin: 0; font-size: 14.5px; font-style: italic; line-height: 1.65;
+    color: var(--nk-text-secondary); background: var(--nk-accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--nk-accent) 18%, transparent);
+    border-radius: 14px; padding: 13px 16px;
+  }
+  .stt-interim:empty { display: none; }
+
+  /* ── Transcript editor ── */
+  .stt-editor {
+    border: 1px solid var(--nk-border); border-radius: 14px; background: var(--nk-surface);
+    padding: 12px; transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .stt-editor:focus-within { border-color: color-mix(in srgb, var(--nk-accent) 45%, transparent); box-shadow: 0 0 0 4px var(--nk-accent-subtle); }
+  .stt-editor-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .stt-editor-title { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--nk-text); }
+  .stt-editor-title svg { color: var(--nk-accent); }
+  .stt-count {
+    margin: 0; font-size: 11.5px; font-variant-numeric: tabular-nums; font-weight: 600;
+    color: var(--nk-text-tertiary); background: var(--nk-muted);
+    border: 1px solid var(--nk-border); padding: 4px 11px; border-radius: 9999px;
+  }
   .stt-textarea {
-    width: 100%;
-    min-height: 132px;
-    padding: 14px 16px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--nk-border-strong);
-    background: var(--nk-surface);
-    color: var(--nk-text);
-    font-family: var(--font-sans);
-    font-size: 15px;
-    line-height: 1.7;
-    resize: vertical;
-    transition: border-color 0.15s ease;
-    max-width: 100%;
+    width: 100%; min-height: 212px; padding: 11px 12px; border-radius: 10px;
+    border: 1px solid var(--nk-border); background: var(--nk-bg);
+    color: var(--nk-text); font-family: var(--font-sans); font-size: 14px; line-height: 1.65;
+    resize: vertical; max-width: 100%; transition: border-color 0.15s ease, background-color 0.15s ease;
   }
-  .stt-textarea:focus { outline: none; border-color: var(--nk-accent); box-shadow: 0 0 0 3px var(--nk-accent-subtle); }
+  .stt-textarea:focus { outline: none; border-color: var(--nk-accent); background: var(--nk-surface); }
   .stt-textarea::placeholder { color: var(--nk-text-tertiary); font-size: 14px; }
+  .stt-empty { margin: 6px 2px 0; font-size: 11.5px; color: var(--nk-text-tertiary); }
 
-  /* Bottom utility pills */
-  .stt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  /* ── Actions ── */
+  .stt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 10px; }
   .stt-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    min-height: 38px;
-    padding: 8px 18px;
-    border-radius: 9999px;
-    border: none;
-    background: var(--nk-muted);
-    color: var(--nk-text-secondary);
-    font-size: 13px;
-    font-weight: 600;
-    font-family: var(--font-sans);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 38px; padding: 8px 16px; border-radius: 9999px;
+    border: 1px solid var(--nk-border); background: var(--nk-surface); color: var(--nk-text-secondary);
+    font-size: 13px; font-weight: 700; font-family: var(--font-sans);
+    cursor: pointer; white-space: nowrap; transition: all 0.15s ease;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
-  .stt-pill:hover:not(:disabled) { background: var(--nk-hover); color: var(--nk-text); }
+  .stt-pill:hover:not(:disabled) { border-color: var(--nk-border-strong); color: var(--nk-text); transform: translateY(-1px); box-shadow: 0 6px 14px -6px rgba(0,0,0,0.18); }
   .stt-pill:active:not(:disabled) { transform: scale(0.97); }
-  .stt-pill:disabled { opacity: 0.55; cursor: not-allowed; }
+  .stt-pill:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
   .stt-pill:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+  .stt-pill-primary:not(:disabled) { background: var(--nk-text); border-color: var(--nk-text); color: var(--nk-bg); }
+  .stt-pill-primary:hover:not(:disabled) { opacity: 0.88; color: var(--nk-bg); }
   .stt-pill.is-armed { color: #dc2626; }
+  .stt-trust { display: inline-flex; align-items: center; gap: 7px; margin-left: auto; font-size: 11.5px; font-weight: 600; color: var(--nk-text-tertiary); }
+  .stt-trust span:first-child { display: inline-flex; align-items: center; gap: 5px; }
 
   .stt-notice.hidden { display: none; }
-  #stt-timer { font-weight: 700; color: var(--nk-accent); }
 
   .stt-error {
-    border-radius: var(--radius-lg);
-    padding: 13px 16px;
-    font-size: 13px;
-    line-height: 1.6;
-    background: #fef3cd;
-    border: 1px solid #eab308;
-    color: #713f12;
+    border-radius: 14px; padding: 13px 16px; font-size: 13px; line-height: 1.6;
+    background: #fef3cd; border: 1px solid #eab308; color: #713f12;
   }
   [data-theme="dark"] .stt-error { background: rgba(234, 179, 8, 0.12); border-color: rgba(234, 179, 8, 0.4); color: #fde68a; }
   .stt-error strong { font-weight: 700; }
   .stt-error p { margin: 0; }
 
-  /* Proactive blocker notice — neutral, matches site tokens */
   .stt-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
-    background: var(--nk-muted);
-    border: 1px solid var(--nk-border);
+    display: flex; align-items: flex-start; gap: 12px;
+    border-radius: 14px; padding: 14px 16px;
+    background: var(--nk-muted); border: 1px solid var(--nk-border);
   }
-  .stt-notice-icon {
-    flex-shrink: 0;
-    display: inline-flex;
-    margin-top: 1px;
-    color: var(--nk-text);
-  }
+  .stt-notice-icon { flex-shrink: 0; display: inline-flex; margin-top: 1px; color: var(--nk-text); }
   .stt-notice-text { min-width: 0; flex: 1; }
-  .stt-notice-title {
-    margin: 0 0 4px;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--nk-text);
-  }
-  .stt-notice-body {
-    margin: 0;
-    font-size: 13.5px;
-    line-height: 1.6;
-    color: var(--nk-text-secondary);
-  }
+  .stt-notice-title { margin: 0 0 4px; font-size: 14px; font-weight: 700; color: var(--nk-text); }
+  .stt-notice-body { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--nk-text-secondary); }
   .stt-notice-x {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: var(--radius-md);
-    border: none;
-    background: transparent;
-    color: var(--nk-text-tertiary);
-    cursor: pointer;
+    flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 8px; border: none;
+    background: transparent; color: var(--nk-text-tertiary); cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
   }
   .stt-notice-x:hover { background: var(--nk-hover); color: var(--nk-text); }
   .stt-notice-x:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
-  .stt-error-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px 12px;
-    margin-top: 10px;
-  }
+  .stt-error-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-top: 10px; }
   .stt-retry-btn {
-    padding: 8px 18px;
-    border-radius: var(--radius-md);
-    border: none;
-    background: var(--nk-accent);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 650;
-    font-family: var(--font-sans);
-    cursor: pointer;
-    min-height: 38px;
-    transition: opacity 0.15s ease;
+    padding: 8px 18px; border-radius: 8px; border: none;
+    background: var(--nk-accent); color: #fff; font-size: 13px; font-weight: 650; font-family: var(--font-sans);
+    cursor: pointer; min-height: 38px; transition: opacity 0.15s ease;
   }
   .stt-retry-btn:hover { opacity: 0.9; }
   .stt-retry-btn:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
   .stt-retry-hint { font-size: 12px; opacity: 0.85; }
 
-  /* (Duplicate transcript block removed — the canonical .stt-textarea rules
-     live above, next to the link-button styles.) */
-
   @media (prefers-reduced-motion: reduce) {
-    .stt-mini.is-live { animation: none; }
+    .stt-mini.is-live, .stt-live-dot, .stt-hearing-dot,
+    .stt-stage:has(#stt-mini.is-live) .r1, .stt-stage:has(#stt-mini.is-live) .r2,
+    .stt-studio:has(#stt-mini.is-live) .stt-eq span { animation: none; }
+    .stt-radio:hover, .stt-pill:hover:not(:disabled), .stt-btn-dark:hover:not(:disabled) { transform: none; }
   }
   @media (max-width: 480px) {
-    .stt-rec-row { gap: 8px; }
-    .stt-btn { padding: 11px 24px; font-size: 14.5px; min-height: 48px; }
-    .stt-card-title { font-size: 17px; }
-    .stt-state { font-size: 18px; }
+    .stt-inner { padding: 14px 12px; }
+    .stt-rec-row { gap: 7px; }
+    .stt-btn { padding: 9px 18px; font-size: 13.5px; min-height: 42px; flex: 1 1 auto; justify-content: center; }
+    .stt-linkbtn { flex: 1 1 auto; text-align: center; }
+    .stt-card-title { font-size: 16px; }
+    .stt-state { font-size: 15px; }
+    .stt-main { gap: 10px; }
   }
 </style>

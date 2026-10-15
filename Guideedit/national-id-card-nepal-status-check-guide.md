@@ -78,7 +78,13 @@ You need your request or application number from enrollment, or your National Id
 
 > **SMS note:** An SMS format ("N [space] your 16-digit application number" to 30001) is commonly reported online but could not be confirmed on the official DoNIDCR portal (last checked October 2026). Use the portal lookup above as the reliable method, and only use an SMS short code shown in current official DoNIDCR instructions.
 
-If nothing appears, recheck the number exactly as printed, confirm you are on an official donidcr.gov.np domain, and wait a few days if biometrics were recent. Printing backlogs can delay status updates. Contact the DAO where you enrolled or DoNIDCR if the issue continues.
+If nothing appears:
+
+- recheck the number exactly as printed
+- confirm you are on an official donidcr.gov.np domain
+- wait a few days if biometrics were recent.
+
+Printing backlogs can delay status updates. Contact the DAO where you enrolled or DoNIDCR if the issue continues.
 
 <h2 id="what">What Is the National ID Card in Nepal?</h2>
 
@@ -107,7 +113,12 @@ People under 16 or without a citizenship certificate cannot apply yet. Whether N
 
 <h2 id="online-form">Rastriya Parichayapatra Online Form</h2>
 
-The online pre-enrollment form is available at <a href="https://enrollment.donidcr.gov.np">enrollment.donidcr.gov.np</a>. It lets you register a mobile number, verify by OTP, enter personal and family information, and choose an enrollment appointment.
+The online pre-enrollment form is available at <a href="https://enrollment.donidcr.gov.np">enrollment.donidcr.gov.np</a>. It lets you:
+
+- register a mobile number
+- verify by OTP
+- enter personal and family information
+- choose an enrollment appointment.
 
 - Personal details: name, date of birth, gender, citizenship number
 - Contact details: permanent and temporary address, phone, email

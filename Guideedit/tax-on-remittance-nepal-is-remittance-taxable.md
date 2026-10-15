@@ -76,7 +76,14 @@ faqs:
 
 <h2 id="short-answer">Short Answer: Is Remittance Taxable in Nepal?</h2>
 
-<strong>No, receiving a remittance in Nepal is not automatically taxable.</strong> Money entering Nepal through a bank or licensed remittance channel does not, by itself, create an income-tax liability for the recipient. The tax question depends on what the money represents: family support, your own foreign earnings, freelance income, a gift, a loan, or interest earned after deposit.
+<strong>No, receiving a remittance in Nepal is not automatically taxable.</strong> Money entering Nepal through a bank or licensed remittance channel does not, by itself, create an income-tax liability for the recipient. The tax question depends on what the money represents:
+
+- family support
+- your own foreign earnings
+- freelance income
+- a gift
+- a loan
+- interest earned after deposit
 
 A remittance is a transfer of money, not a separate category of income. Tax liability generally follows the underlying source and nature of the funds, together with your tax residency under the Income Tax Act, 2058.
 

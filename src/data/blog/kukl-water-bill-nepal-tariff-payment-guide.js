@@ -41,7 +41,7 @@ export const kuklWaterBillNepalTariffPaymentGuidePost = {
     { type: 'heading', level: 2, id: 'how-pay', text: 'How to Pay Online' },
     { type: 'list', style: 'ol', items: ['In eSewa/Khalti/connectIPS choose <strong>KUKL / Khanepani</strong>, enter customer ID, confirm the amount, and pay — save the receipt.', 'Or pay at your branch KUKL counter or an authorized bank counter with the bill.'] },
     { type: 'heading', level: 2, id: 'meter-reading', text: 'How to Read Your Meter' },
-    { type: 'paragraph', content: 'Read the black digits (cubic meters) from left to right. Consumption = current reading − previous reading. The red dials show litres and are for testing, not billing.' },
+    { type: 'list', style: 'ul', items: ['Read the black digits (cubic meters) from left to right', 'Consumption = current reading − previous reading', 'The red dials show litres and are for testing, not billing'] },
     { type: 'heading', level: 2, id: 'late-fee', text: 'Late Fee & Disconnection' },
     { type: 'paragraph', content: 'Unpaid bills attract a late fee and, after repeated default, temporary disconnection. The per-month late percentage and notice period are printed on the bill and at kukl.org.np — pay before the due date shown in the enquiry result.' },
     { type: 'heading', level: 2, id: 'mistakes', text: 'Common Mistakes to Avoid' },

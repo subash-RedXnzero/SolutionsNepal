@@ -162,7 +162,16 @@ If you want to establish a startup, trading business, software company, consulta
 
 The general journey is:
 
-<strong>Choose Structure → Reserve Company Name → Prepare MOA/AOA → Submit Application → Pay Fees → OCR Review → Receive Registration Certificate → PAN/VAT → Local Ward Registration → Sector-Specific Licenses</strong>
+1. <strong>Choose Structure</strong>
+2. <strong>Reserve Company Name</strong>
+3. <strong>Prepare MOA/AOA</strong>
+4. <strong>Submit Application</strong>
+5. <strong>Pay Fees</strong>
+6. <strong>OCR Review</strong>
+7. <strong>Receive Registration Certificate</strong>
+8. <strong>PAN/VAT</strong>
+9. <strong>Local Ward Registration</strong>
+10. <strong>Sector-Specific Licenses</strong>
 
 Company incorporation is not the same as permission to operate every type of business. After receiving the company certificate, you may still need tax registration, local business registration, and industry-specific licenses.
 
