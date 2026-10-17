@@ -80,7 +80,6 @@ Tools:
 - /nepal/finance/sip-calculator
 - /nepal/tools/nepali-number-to-words
 - /nepal/tools/rupees-to-words
-- /nepal/tools/number-to-words-nepali
 - /nepal/tools/cheque-amount-in-words
 - /nepal/tools/nepali-number-converter
 - /nepal/finance/vat-calculator

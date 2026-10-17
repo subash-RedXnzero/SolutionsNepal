@@ -10,7 +10,7 @@ export const vatFilingNepalMonthlyReturn25thGuidePost = {
   authorCredential: 'Nepal tax researchers',
   date: 'September 27, 2026',
   readTime: '11 min read',
-  image: '/blog/photo-1434030216411-0b793f4b4173.jpg',
+  image: '/blog/photo-1434030216411-0b793f4b4173.webp',
   tags: ['VAT Filing Nepal', 'VAT Return Nepal', 'IRD VAT', 'VAT 2026', 'Finance'],
   relatedTools: ['vat-calculator', 'salary-checker', 'house-rent-tax'],
   faqs: [
@@ -61,7 +61,7 @@ export const vatFilingNepalMonthlyReturn25thGuidePost = {
     { type: 'heading', level: 2, id: 'checklist', text: 'Monthly Checklist' },
     { type: 'list', style: 'ul', items: ['Sales + Output VAT (13% taxable + zero-rated export separately) reconciled to VAT invoices', 'Eligible Input VAT from purchase invoices — exempt-use portion removed', 'Debit/credit notes for the period entered', 'Opening credit applied; payable vs carry computed', 'File via taxpayerportal.ird.gov.np by the 25th; pay payable via connectIPS/eSewa and keep receipt', 'If Nil — file Nil return (same deadline, zero payment)'] },
     { type: 'heading', level: 2, id: 'sources', text: 'Official Sources & Final Note' },
-    { type: 'paragraph', content: 'Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a>, <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">IRD Taxpayer Portal (taxpayerportal.ird.gov.np)</a>, VAT Act 2052 + VAT Rules 2053 Rule 17, and the annual Finance Act (late-fee/interest figures). Approve bi-monthly/trimester filing only where the Tax Officer\'s approval letter allows it.' },
+    { type: 'paragraph', content: 'Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a>, <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">IRD Taxpayer Portal (taxpayerportal.ird.gov.np)</a>, VAT Act 2052 + VAT Rules 2053 Rule 17, and the annual Finance Act (late-fee/interest figures; act texts at <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Nepal Law Commission</a>). Approve bi-monthly/trimester filing only where the Tax Officer\'s approval letter allows it.' },
     { type: 'paragraph', content: '<strong>Last updated: September 27, 2026. Figures and hedges rechecked as of October 2026 — no numeric changes; re-verify the current period\'s IRD notice before filing.</strong> Deadlines, invoice formats, return fields and fee/interest figures are updated by IRD circulars and Finance Acts. Verify the current period\'s notice on ird.gov.np before filing. SolutionsNepal is an educational guide, not a tax advisor.' },
   ],
 };

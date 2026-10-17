@@ -10,7 +10,7 @@ export const openDematAccountMeroShareNepal2026Post = {
   authorCredential: 'Nepal banking and personal-finance researchers',
   date: 'September 16, 2026',
   readTime: '16 min read',
-  image: '/blog/photo-1551288049-bebda4e38f71.jpg',
+  image: '/blog/photo-1551288049-bebda4e38f71.webp',
   tags: ['Demat', 'Mero Share', 'BOID', 'CRN', 'C-ASBA', 'IPO', 'Nepal'],
   relatedTools: ['nepse-profit-loss', 'sip-calculator', 'foreign-exchange', 'nepali-calendar'],
   faqs: [
@@ -31,6 +31,7 @@ export const openDematAccountMeroShareNepal2026Post = {
     { id: 'introduction', text: 'Introduction', level: 2 },
     { id: 'what-is-demat', text: 'What Is a Demat Account in Nepal?', level: 2 },
     { id: 'what-is-mero-share', text: 'What Is Mero Share?', level: 2 },
+    { id: 'demat-vs-meroshare', text: 'Demat Account vs Mero Share', level: 3 },
     { id: 'key-terms', text: 'Demat Account vs Mero Share vs BOID vs CRN vs C-ASBA', level: 2 },
     { id: 'prerequisites', text: 'What You Need Before Opening a Demat Account', level: 2 },
     { id: 'open-demat', text: 'How to Open a Demat Account Online in Nepal', level: 2 },

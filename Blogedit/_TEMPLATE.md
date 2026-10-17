@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: SolutionsNepal Team
 date: October 8, 2026
 readTime: 4 min read
-image: /blog/my-photo.jpg
+image: /blog/my-photo.webp
 tags: [Nepal]
 relatedTools: []
 headings:
@@ -23,6 +23,6 @@ faqs:
 Write the story here. **Bold** important bits, add
 [links](/blog/some-post) like this.
 
-![Describe the photo](/blog/my-photo.jpg)
+![Describe the photo](/blog/my-photo.webp)
 
 > **Note:** a green highlight box — start the line with `> `.

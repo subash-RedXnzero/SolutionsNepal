@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal finance researchers
 date: September 27, 2026
 readTime: 9 min read
-image: "/blog/photo-1560472355-536de3962603.jpg"
+image: "/blog/photo-1560472355-536de3962603.webp"
 tags: [EPF Nepal, CIT Nepal, SSF Nepal, Retirement, Provident Fund]
 relatedTools: [ssf-calculator, salary-checker, sip-calculator]
 headings:
@@ -33,7 +33,6 @@ faqs:
   - q: What is the tax benefit?
     a: Approved retirement contributions (SSF/EPF/CIT, life insurance) are deductible within IRD caps — keep annual statements for filing. A '1% SST waived for SSF members' benefit is widely repeated but could not be verified against a live IRD/SSF notice as of October 2026 — confirm before relying on it.
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>Government job → EPF (~10%+10% — confirm on epf.org.np) + optional CIT. Private formal → SSF (11%+20%) + optional CIT top-up.</strong> SSF adds <strong>medical/accident/dependent + pension</strong>; EPF is <strong>PF + loans</strong>; CIT is <strong>voluntary growth + gratuity fund manager</strong>. You <strong>can hold SSF + CIT</strong> — registering the same salary in both SSF + EPF simultaneously is commonly described as not permitted, but the exact dual-coverage rule could not be verified against a live SSF/EPF notice as of October 2026 — confirm with the funds before assuming.
@@ -60,7 +59,7 @@ faqs:
 
 Model it: <a href="/nepal/ssf-calculator">SSF Calculator</a> for the 31%, then <a href="/nepal/finance/salary-checker">Salary Checker</a> for net after SSF + CIT + TDS.
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: <a href="https://ssf.gov.np" target="_blank" rel="noopener noreferrer">SSF (ssf.gov.np)</a> + <a href="https://epf.org.np" target="_blank" rel="noopener noreferrer">EPF (epf.org.np)</a> + <a href="https://cit.com.np" target="_blank" rel="noopener noreferrer">CIT (cit.com.np)</a> scheme notices + IRD deduction limits. Rates/profit revise yearly — verify before payroll.
 

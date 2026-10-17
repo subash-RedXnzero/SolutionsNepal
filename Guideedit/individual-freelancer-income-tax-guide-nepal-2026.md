@@ -1,12 +1,12 @@
 ---
-title: Individual & Freelancer Income Tax Guide Nepal (FY 2082/83 - 2026)
-description: "Nepal income-tax guide for individuals and freelancers: FY 2082/83 slabs, 5% foreign-freelance rule, PAN, filing and deadlines."
+title: Freelancer Income Tax Nepal FY 2083/84: Rates & Filing
+description: "Income tax for individuals and freelancers: slabs, 5% foreign-freelance withholding, PAN, D-01/D-02/D-03 filing, TDS and deadlines."
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal tax and personal-finance researchers
-date: September 14, 2026
-readTime: 17 min read
-image: "/blog/photo-1585771724684-38269d6639fd.jpg"
+date: October 17, 2026
+readTime: 16 min read
+image: "/blog/photo-1585771724684-38269d6639fd.webp"
 tags: [Income Tax Nepal, Freelancer Tax Nepal, Foreign Freelance Tax, PAN Nepal, IRD, Finance]
 relatedTools: [freelancer-take-home, salary-checker]
 headings:
@@ -14,66 +14,72 @@ headings:
     text: "Quick Answer: How Much Tax Do Individuals and Freelancers Pay?"
     level: 2
   - id: basics
-    text: Nepal Income Tax Basics
+    text: "Nepal Income Tax Basics"
     level: 2
   - id: slabs
-    text: FY 2082/83 Individual Income-Tax Slabs
+    text: "FY 2083/84 Individual Income-Tax Slabs"
     level: 2
   - id: progressive
-    text: How Progressive Tax Slabs Work
+    text: "How Progressive Tax Slabs Work (Worked Example)"
     level: 2
   - id: freelancer-regimes
-    text: Two Tax Regimes for Freelancers
+    text: "Two Tax Regimes for Freelancers"
     level: 2
+  - id: foreign-regime
+    text: "1. Foreign-Currency Freelance Income"
+    level: 3
+  - id: progressive-regime
+    text: "2. Domestic, High-Income, or Other Freelance Income"
+    level: 3
   - id: five-percent
-    text: The 5% Foreign-Freelance Rule
+    text: "The 5% Foreign-Freelance Rule"
     level: 2
   - id: income-types
-    text: Salary, Freelance, Professional, and Business Income
+    text: "Salary, Freelance, Professional, and Business Income"
     level: 2
   - id: sst
-    text: Social Security Tax and SSF
+    text: "Social Security Tax and SSF"
     level: 2
   - id: residency
-    text: Tax Residency and Foreign Income
+    text: "Tax Residency and Foreign Income"
     level: 2
   - id: records
-    text: Foreign-Currency Income Records
+    text: "Foreign-Currency Income Records"
     level: 2
   - id: pan
-    text: PAN for Freelancers
+    text: "PAN for Freelancers"
     level: 2
   - id: returns
-    text: D-01, D-02, and D-03 Tax Returns
+    text: "D-01, D-02, and D-03 Tax Returns"
     level: 2
   - id: workflow
-    text: Freelancer Tax-Compliance Workflow
+    text: "Freelancer Tax-Compliance Workflow"
     level: 2
   - id: tds
-    text: TDS and Withholding Tax
+    text: "TDS and Withholding Tax"
     level: 2
   - id: expenses
-    text: Allowable Expenses and Taxable Income
+    text: "Allowable Expenses and Taxable Income"
     level: 2
   - id: deadlines
-    text: Filing Deadlines and Penalties
+    text: "Filing Deadlines and Penalties"
     level: 2
   - id: mistakes
-    text: Common Freelancer Tax Mistakes
+    text: "Common Freelancer Tax Mistakes"
     level: 2
   - id: checklist
-    text: Freelancer Tax Checklist
+    text: "Freelancer Tax Checklist"
     level: 2
   - id: sources
-    text: Official Sources and Disclaimer
+    text: "Official Sources and Disclaimer"
     level: 2
 faqs:
-  - q: What is the income-tax rate for freelancers in Nepal in 2026?
-    a: Qualifying natural persons receiving foreign-currency freelance income through a Nepali bank below the applicable annual threshold may face 5% final withholding. Domestic, high-value, company, and other professional income generally falls under progressive slabs.
-  - q: What are Nepal FY 2082/83 individual tax slabs?
-    a: "For the commonly cited single-filer schedule: 1% SST on the first Rs 5,00,000, then 10% to Rs 7,00,000, 20% to Rs 10,00,000, 30% to Rs 20,00,000, 36% to Rs 50,00,000, and 39% above Rs 50,00,000. Verify the gazetted Finance Act and your taxpayer category before filing."
+  - q: What is the income-tax rate for freelancers in Nepal in FY 2083/84?
+    a: Two tracks exist. Qualifying natural persons receiving foreign-currency freelance income through a Nepali bank below the applicable annual threshold may face 5% final withholding. Everyone else — domestic income, companies, income above the threshold — generally falls under the FY 2083/84 progressive slabs (1% SST to Rs 10 lakh, then 10/20/27/29%).
+  - q: What are Nepal FY 2083/84 individual tax slabs?
+    a: One unified schedule for all resident individuals: 1% Social Security Tax on the first Rs 10,00,000 (waived for SSF or approved-retirement-fund contributors), 10% to Rs 15,00,000, 20% to Rs 25,00,000, 27% to Rs 40,00,000, and 29% above Rs 40,00,000. Verify the gazetted Finance Act 2083 before filing.
   - q: Is there a flat 5% tax on all freelance income?
-    a: "No. The 5% rule is conditional: it generally concerns foreign-currency service income received through proper banking channels by a natural person within the applicable annual limit. Domestic income, companies, and income outside the conditions use other rules."
+    a: "No. The 5% rule is conditional: it generally concerns foreign-currency service income received through proper banking channels by a natural person within the applicable annual limit. Domestic income, companies, and income outside the conditions use progressive rules."
   - q: Is 5% foreign-freelance withholding final tax?
     a: For a qualifying individual under the applicable conditions, the 5% withholding is generally treated as final for that income stream. Confirm the current rule and still report the income in the required annual return.
   - q: Do freelancers in Nepal need PAN?
@@ -91,22 +97,21 @@ faqs:
   - q: Are foreign remote workers taxed in Nepal?
     a: A Nepal tax resident is generally taxed on worldwide income. A non-resident is generally taxed on Nepal-source income. Residency and any foreign tax credit require a fact-specific review.
   - q: Do freelancers pay Social Security Tax?
-    a: Freelancers under progressive slabs who are not covered by the relevant SSF waiver may pay the 1% first-slab Social Security Tax. Qualifying 5% final foreign-freelance tax is treated separately.
+    a: Freelancers under progressive slabs pay the 1% SST on the first Rs 10 lakh unless covered by the SSF or approved-retirement-fund waiver. Qualifying 5% final foreign-freelance tax is treated separately.
 ---
-
-> **Fiscal-year currency note (as of October 2026):** This guide frames FY 2082/83 rules because FY 2082/83 returns are what individuals are filing now (commonly due by Ashoj-end 2083, around mid-October 2026). However, **FY 2083/84 has been current since mid-July 2026** — before acting on the FY 2082/83 slabs, the conditional 5% foreign-freelance withholding regime, or the commonly cited ~NPR 40 lakh threshold described below, confirm whether each carried forward unchanged under the Finance Act 2083. Verify current slabs and special-regime rules at <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a> before filing or pricing client work.
+> **Fiscal-year note (October 2026):** This guide uses <strong>FY 2083/84</strong> rules (mid-July 2026 to mid-July 2027), the year that is current now. FY 2082/83 returns — commonly due by Ashoj-end 2083, around mid-October 2026 — still use the old slabs (1% to Rs 5 lakh … 39% top). Make sure you are reading the schedule for the year you are filing or planning for, and confirm rates in the gazetted Finance Act 2083 at <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a> before acting.
 
 <h2 id="quick-answer">Quick Answer: How Much Tax Do Individuals and Freelancers Pay?</h2>
 
-The answer depends on your taxpayer type, income source, residency, annual taxable income, and whether a special final-withholding rule applies. For the FY 2082/83 framework commonly used for the 2025/26 tax year, salaried employees and many self-employed people use progressive rates, while qualifying individuals receiving foreign-currency freelance payments through proper banking channels may use a 5% final withholding arrangement below the applicable annual limit.
+The answer depends on your taxpayer type, income source, residency, annual taxable income, and whether a special final-withholding rule applies. Under FY 2083/84:
 
-- **Salary** — Progressive individual slabs; employers commonly withhold monthly TDS.
-- **Foreign freelance via bank** — Potential 5% final withholding for a qualifying natural person below the applicable NPR 40 lakh threshold.
+- **Salary** — One unified progressive schedule for everyone: 1% SST on the first Rs 10 lakh (waived with SSF), then 10/20/27/29%. Employers withhold monthly TDS.
+- **Foreign freelance via bank** — Potential 5% final withholding for a qualifying natural person below the applicable annual limit.
 - **Domestic freelance or professional income** — Progressive slabs; clients may deduct TDS.
-- **Foreign freelance above threshold** — Generally progressive rules apply to the relevant income, subject to current law.
+- **Foreign freelance above the limit** — Generally progressive rules apply to the relevant income, subject to current law.
 - **Investment income** — Separate withholding and final-tax rules can apply to interest, dividends, rent, and capital gains.
 
-> **Verify the fiscal year:** Tax slabs and special regimes change through Finance Acts. Confirm the applicable year and gazetted rules with IRD before filing. This guide discusses FY 2082/83 and is not personalized tax advice.
+> **Work it out first:** Enter your income in SolutionsNepal's <a href="/nepal/finance/freelancer-take-home-calculator">freelancer take-home calculator</a> or <a href="/nepal/finance/salary-checker">salary calculator</a> to see the FY 2083/84 result for your own numbers before reading the detail below.
 
 <h2 id="basics">Nepal Income Tax Basics</h2>
 
@@ -120,31 +125,30 @@ Nepal income tax is governed by the Income Tax Act, 2058 and updated through ann
 
 Gross receipts are not always the same as taxable income. Under progressive business or professional rules, documented allowable expenses and statutory deductions may reduce taxable income. A final gross-income withholding regime can work differently.
 
-<h2 id="slabs">FY 2082/83 Individual Income-Tax Slabs</h2>
+<h2 id="slabs">FY 2083/84 Individual Income-Tax Slabs</h2>
 
-The following is a commonly cited FY 2082/83 planning schedule for resident individuals. The first band is Social Security Tax (SST), and the 1% band may be waived for qualifying SSF or approved-retirement-fund contributors.
+FY 2083/84 merged the old single and couple schedules into <strong>one unified table</strong> that applies to every resident individual. The first band is Social Security Tax (SST), waived for SSF or approved-retirement-fund contributors (0% instead of 1% on that band).
 
-- **Single: first Rs 5,00,000** — 1% SST
-- **Rs 5,00,001–7,00,000** — 10% on the portion in this band
-- **Rs 7,00,001–10,00,000** — 20% on the portion in this band
-- **Rs 10,00,001–20,00,000** — 30% on the portion in this band
-- **Rs 20,00,001–50,00,000** — 36% on the portion in this band
-- **Above Rs 50,00,000** — 39% on the portion above the threshold
-- **Joint couple schedule** — Commonly uses a wider first band and different band boundaries; verify the current filing rules before choosing joint filing.
+- **First Rs 10,00,000** — 1% SST (0% with the SSF waiver)
+- **Rs 10,00,001–15,00,000** — 10% on the portion in this band
+- **Rs 15,00,001–25,00,000** — 20% on the portion in this band
+- **Rs 25,00,001–40,00,000** — 27% on the portion in this band
+- **Above Rs 40,00,000** — 29% on the portion above the threshold (27% + 2% surcharge)
 
-> **Marginal rates:** A higher band applies only to the income inside that band. Earning more does not make your entire income taxable at the highest rate.
+> **Marginal rates:** A higher band applies only to the income inside that band. Earning more never makes your entire income taxable at the highest rate.
 
-<h2 id="progressive">How Progressive Tax Slabs Work</h2>
+<h2 id="progressive">How Progressive Tax Slabs Work (Worked Example)</h2>
 
-For a single filer with Rs 12,00,000 of taxable income, the calculation is split across bands:
+Take a freelancer with <strong>Rs 12,00,000 of annual taxable income</strong> and no SSF enrollment. The calculation is split across bands:
 
-- **First Rs 5,00,000** — Rs 5,000 at 1% SST before any waiver
+- **First Rs 10,00,000** — Rs 10,000 at 1% SST
 - **Next Rs 2,00,000** — Rs 20,000 at 10%
-- **Next Rs 3,00,000** — Rs 60,000 at 20%
-- **Remaining Rs 2,00,000** — Rs 60,000 at 30%
-- **Illustrative annual tax** — Rs 1,45,000 before rebates, credits, or SSF waiver
+- **Total annual tax** — Rs 30,000, or about Rs 2,500 per month if withheld evenly
+- **With the SSF waiver** — the Rs 10,000 SST drops to zero, so the same income owes Rs 20,000
 
-A qualifying female employment-income rebate or SSF waiver may change the final result. Use the current IRD rules and a calculator rather than applying a single percentage to total income.
+A larger example: <strong>Rs 30,00,000 of taxable income</strong> owes Rs 10,000 + Rs 50,000 + Rs 2,00,000 + Rs 1,35,000 = <strong>Rs 3,95,000</strong> for the year.
+
+A qualifying female-employment-income rebate of 10% may further reduce the result. Use the current IRD rules and a calculator rather than applying a single percentage to total income.
 
 <h2 id="freelancer-regimes">Two Tax Regimes for Freelancers</h2>
 
@@ -162,14 +166,14 @@ A qualifying female employment-income rebate or SSF waiver may change the final 
 - Foreign-currency receipts exceed the applicable threshold.
 - The taxpayer is a company or entity.
 - The income is professional, business, or another category outside the special final regime.
-- Tax is calculated under progressive rules, with documented expenses allowed where the law permits.
+- Tax is calculated under the FY 2083/84 progressive rules above, with documented expenses allowed where the law permits.
 
 <h2 id="five-percent">The 5% Foreign-Freelance Rule</h2>
 
 The frequently cited 5% rate is not a universal freelancer tax. It is a conditional withholding treatment for qualifying foreign-currency service income of natural persons received through proper banking channels.
 
 - **Tax base** — Gross foreign-currency receipts converted and credited through the bank
-- **Rate** — 5% under the cited FY 2082/83 framework
+- **Rate** — 5% under the cited framework; confirm it carried into FY 2083/84
 - **Annual limit** — Commonly cited as NPR 40,00,000; verify the current statutory limit
 - **Tax character** — Final for qualifying natural persons; treatment can differ for companies
 - **Expenses** — Generally not deductible under the gross final-withholding regime
@@ -177,9 +181,11 @@ The frequently cited 5% rate is not a universal freelancer tax. It is a conditio
 
 Software, IT, data processing, digital marketing, design, writing, consulting, online teaching, content, and similar services may qualify when the exact legal and banking conditions are met. Confirm the classification with IRD or a qualified professional.
 
+A concrete comparison: Rs 24,00,000 of qualifying foreign freelance income faces about <strong>Rs 1,20,000 under the 5% regime</strong>, versus about <strong>Rs 2,40,000 under FY 2083/84 progressive slabs</strong> on the same base (Rs 10,000 + Rs 50,000 + Rs 1,80,000). That gap is why the banking conditions matter so much — but never assume you qualify without checking each condition.
+
 <h2 id="income-types">Salary, Freelance, Professional, and Business Income</h2>
 
-- **Salaried employee** — Employment income; progressive slabs and employer TDS. D-01 may apply where the filing conditions are met.
+- **Salaried employee** — Employment income; FY 2083/84 unified progressive slabs and employer TDS. D-01 may apply where the filing conditions are met.
 - **Foreign freelancer** — 5% final withholding may apply below the limit through a bank; otherwise progressive rules.
 - **Domestic freelancer** — Business or professional income; progressive slabs and client TDS.
 - **Consultant, doctor, lawyer, engineer** — Professional income; special presumptive D-01 treatment may not apply.
@@ -188,11 +194,11 @@ Software, IT, data processing, digital marketing, design, writing, consulting, o
 
 <h2 id="sst">Social Security Tax and SSF</h2>
 
-SST is the 1% first-slab tax applied to individuals who are not covered by the relevant SSF or approved-retirement-fund waiver. Under the commonly cited FY 2082/83 schedule, the first band is Rs 5,00,000 for a single filer and wider for a joint couple filer.
+SST is the 1% first-slab tax applied to individuals who are not covered by the SSF or approved-retirement-fund waiver. Under FY 2083/84 there is a single Rs 10,00,000 first band for everyone — no separate single/couple schedules.
 
-- **SST** — Tax on the first individual slab; no direct benefit by itself.
+- **SST** — Tax on the first Rs 10 lakh of taxable income; no direct benefit by itself.
 - **SSF** — Contribution-based medical, accident, dependent, and old-age protection; contribution rules are separate.
-- **SSF effect** — Qualifying SSF contributors may have the 1% first-slab SST waived.
+- **SSF effect** — Qualifying SSF contributors pay 0% instead of 1% on the first band, saving up to Rs 10,000 a year.
 - **5% final regime** — Qualifying foreign-freelance withholding is handled separately rather than adding SST on top.
 
 <h2 id="residency">Tax Residency and Foreign Income</h2>
@@ -253,7 +259,7 @@ A freelancer with foreign final-withholding income and no other income may be di
 3. <strong>Maintain PAN:</strong> Register and link PAN to the relevant bank accounts.
 4. <strong>Track TDS:</strong> Reconcile bank withholding and client deductions throughout the year.
 5. <strong>Classify income:</strong> Separate qualifying foreign-currency receipts from domestic, salary, investment, and other income.
-6. <strong>Calculate:</strong> Apply the final 5% regime only when all conditions are satisfied; otherwise use progressive taxable income.
+6. <strong>Calculate:</strong> Apply the final 5% regime only when all conditions are satisfied; otherwise use FY 2083/84 progressive taxable income.
 7. <strong>File:</strong> Submit the correct D-01, D-02, or D-03 return through the IRD Taxpayer Portal.
 8. <strong>Pay or claim:</strong> Pay any balance after TDS credits or follow the process for excess-credit/refund claims.
 9. <strong>Retain records:</strong> Keep filings, receipts, TDS, bank, and expense evidence for the applicable assessment period.
@@ -262,10 +268,9 @@ A freelancer with foreign final-withholding income and no other income may be di
 
 TDS is tax withheld by an employer, client, or bank before you receive payment. It is normally credited against final annual liability, except where the law treats a qualifying withholding as final.
 
-- **Employer** — Withholds salary tax under payroll rules.
+- **Employer** — Withholds salary tax under payroll rules; monthly TDS is the annual tax divided by 12, not an extra charge.
 - **Bank on qualifying foreign freelance** — Commonly withholds 5%; final for a qualifying natural person under the special regime.
-- **Domestic VAT-registered client** — May deduct a lower service-income TDS rate under the applicable rule.
-- **Domestic PAN-only client** — May deduct a higher TDS rate under the applicable rule.
+- **Domestic clients** — Withholding rates differ by client and income type; see the <a href="/blog/tds-rates-nepal-2026-guide">TDS rate card</a> for the FY 2083/84 schedule.
 - **Your filing** — Report gross income and claim eligible TDS credits using certificates or official records.
 
 > **Keep TDS proof:** Without TDS certificates or bank evidence, IRD may not accept a credit claim. Reconcile gross receipts, net deposits, and withheld amounts.
@@ -292,11 +297,12 @@ The 5% final foreign-freelance regime generally taxes gross receipts without exp
 
 <h2 id="deadlines">Filing Deadlines and Penalties</h2>
 
-- **FY 2082/83 period** — Approximately mid-July 2025 through mid-July 2026.
-- **Individual return** — Commonly due by Ashoj end 2083, around mid-October 2026; verify the current IRD notice.
+- **FY 2083/84 period** — Approximately mid-July 2026 through mid-July 2027.
+- **Individual return** — Commonly due by Ashoj end 2084, around mid-October 2027; verify the current IRD notice as the date approaches.
 - **Business/self-employed extension** — Some categories may have a later deadline such as Poush end; verify your exact category.
-- **Advance tax** — Business taxpayers may need installments during the year; confirm the applicable schedule.
+- **Advance tax** — Business taxpayers may need installments during the year; see the <a href="/blog/advance-tax-nepal-installments-due-dates-interest-guide">advance tax guide</a> for the schedule.
 - **Late compliance** — Interest, fixed penalties, assessment, and problems obtaining tax clearance can follow.
+- **FY 2082/83 returns** — If you are filing the prior year now (commonly due by Ashoj-end 2083), use the FY 2082/83 slabs, not the schedule in this guide.
 
 Deadlines and penalties depend on taxpayer type, return, unpaid amount, and current notices. File on time even when TDS was already deducted if the law requires a return.
 
@@ -304,6 +310,7 @@ Deadlines and penalties depend on taxpayer type, return, unpaid amount, and curr
 
 - Assuming Upwork, Fiverr, PayPal, or foreign income is tax-free
 - Treating 5% final withholding as a universal rate
+- Using this guide's FY 2083/84 slabs for an FY 2082/83 return (or vice versa)
 - Using informal channels and expecting the 5% bank regime to apply
 - Deducting expenses under the gross final-withholding regime
 - Failing to obtain PAN or link it to the receiving bank account
@@ -331,6 +338,6 @@ Deadlines and penalties depend on taxpayer type, return, unpaid amount, and curr
 
 <h2 id="sources">Official Sources and Disclaimer</h2>
 
-Use the <a href="https://ird.gov.np">Inland Revenue Department</a>, <a href="https://taxpayerportal.ird.gov.np">IRD Taxpayer Portal</a>, Finance Act and Income Tax Act publications, Nepal Law Commission, and relevant SSF or Nepal Rastra Bank notices for current rules.
+Use the <a href="https://ird.gov.np">Inland Revenue Department</a>, <a href="https://taxpayerportal.ird.gov.np">IRD Taxpayer Portal</a>, Finance Act and Income Tax Act publications, <a href="https://www.lawcommission.gov.np">Nepal Law Commission</a>, and relevant SSF or Nepal Rastra Bank notices for current rules.
 
 Tax slabs, thresholds, withholding rates, return forms, deadlines, residency treatment, and foreign-income rules can change. This guide is general information, not tax or legal advice. Confirm your specific situation with IRD or a qualified tax professional before filing.

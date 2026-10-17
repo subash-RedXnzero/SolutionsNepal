@@ -45,7 +45,9 @@ async function ensureLiveData() {
         source: 'Nepal Oil Corporation (NOC)',
         sourceShort: 'NOC',
         rateType: 'Official retail selling price',
-        effectiveDate: (snap.fetchedAt || '').slice(0, 10),
+        // NOC's own publish date (price_date), not our fetch date — the page
+        // must never imply prices are fresher than the upstream publish.
+        effectiveDate: snap.priceDate || (snap.fetchedAt || '').slice(0, 10),
         effectiveTime: snap.fetchedAtNPT || '',
         lastUpdatedTime: snap.fetchedAtNPT || '',
         locations: Object.entries(byCity).map(([id, p]) => ({ id, name: LOCATION_NAMES[id] || id, ...p })),

@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal education researchers
 date: September 26, 2026
 readTime: 12 min read
-image: "/blog/photo-1523240795612-9a054b0db644.jpg"
+image: "/blog/photo-1523240795612-9a054b0db644.webp"
 tags: [NEB GPA Calculator, NEB Grading System, Class 12 GPA, SEE GPA, NEB Percentage, Education Nepal]
 relatedTools: [neb-gpa, see-gpa, gpa-percentage, cgpa-calculator]
 headings:
@@ -67,7 +67,6 @@ faqs:
   - q: Class 12 result 2083 when?
     a: "Result dates move yearly — check the current notice on neb.gov.np; this guide updates when published. (Prior-year exam/result windows are illustrative only, as of October 2026.)"
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 NEB uses <strong>8 letter grades on a 4.0 scale</strong>: <strong>A+ 90–100 (4.0) → D 35–39 (1.6) → NG &lt;35 (0.0)</strong>. <strong>GPA = Σ(Grade Point × Credit Hours) ÷ Σ(Credit Hours)</strong> — Class 12 subjects are commonly described as ~4 credit hours each (confirm the current NEB curriculum table on neb.gov.np). <strong>Pass = D (1.6) in every subject</strong>; any NG pulls GPA down. <strong>Percentage estimate = GPA ×25</strong> (e.g., 3.2→~80%) — estimate only; confirm with the receiving institution and submit the original marksheet.
@@ -127,7 +126,7 @@ Total weighted = 64.0 ÷ 20 credit hours = <strong>GPA 3.20 → ~80%</strong> (B
 
 > **Try it:** Use SolutionsNepal’s <a href="/nepal/education/neb-gpa-calculator">NEB GPA Calculator</a> (pick stream, enter theory+potential marks) or <a href="/nepal/education/gpa-percentage">GPA → Percentage</a> for a quick ×25 estimate.
 
-<h2 id="passing">Passing Rule &amp; NG</h2>
+<h2 id="passing">Passing Rule & NG</h2>
 
 - <strong>Overall:</strong> need <strong>D (1.6) in every subject</strong> theory+practical combined — no aggregate pass alternative
 - <strong>NG = 0.0</strong> in any subject means that subject is not cleared; GPA collapses for that paper
@@ -175,7 +174,7 @@ Example: GPA 3.44 ×25 ≈ 86%. Note the band width: a 3.2 GPA covers a 70–79 
 - For percentage: use GPA×25 only where accepted, and label as approximate
 - Keep original marksheet for any submission
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: National Examination Board <a href="https://neb.gov.np" target="_blank" rel="noopener noreferrer">neb.gov.np</a>, Letter Grading Directive 2078 (4th Amendment 2081/03/16), Curriculum Development Centre (CDC), and college-verified 2082/2083 schedules. Nuffic Nepal education-system reference for upper-secondary NEB XI/XII table.
 

@@ -6,30 +6,30 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 10, 2026
 readTime: 8 min read
-image: "/blog/photo-1533473359331-0135ef1b58bf.jpg"
+image: "/blog/photo-1533473359331-0135ef1b58bf.webp"
 tags: [IDP, Driving Abroad, Driving License, Vehicles, Nepal]
 relatedTools: [vehicle-tax-new, fuel-cost]
 headings:
   - id: what
-    text: What Is an International Driving Permit?
+    text: "What Is an International Driving Permit?"
     level: 2
   - id: need
-    text: Do You Actually Need One?
+    text: "Do You Actually Need One?"
     level: 2
   - id: issuer
-    text: Who Issues the IDP in Nepal?
+    text: "A Word on Who Issues the IDP in Nepal — Verify Before You Apply"
     level: 2
   - id: documents
-    text: Documents Typically Required
+    text: "Documents Typically Required"
     level: 2
   - id: process
-    text: How to Apply
+    text: "Step-by-Step: How to Apply"
     level: 2
   - id: validity
-    text: Validity
+    text: "Validity"
     level: 2
   - id: checklist
-    text: Before You Travel
+    text: "Before You Travel: A Quick Checklist"
     level: 2
 faqs:
   - q: Can I drive abroad with just my Nepali license, no IDP?
@@ -47,7 +47,6 @@ faqs:
   - q: How do I avoid a fake or invalid IDP?
     a: Use only a verified official channel, be cautious of unusually low prices or guaranteed same-day offers, and confirm authenticity with DoTM or the relevant automobile association.
 ---
-
 <h2 id="what">What Is an International Driving Permit?</h2>
 
 An <strong>International Driving Permit (IDP)</strong> is not a separate license and does not replace your national one. It is a multilingual translation document issued under international road-traffic conventions, most relevantly the 1968 Vienna Convention on Road Traffic, to help foreign authorities, rental agencies, and traffic police read your Nepali license details.

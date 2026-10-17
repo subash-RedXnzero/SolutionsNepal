@@ -10,6 +10,13 @@
   "compatibility_date": "2026-10-11",
    "workers_dev": false,
   "preview_urls": false,
+  // Cron refresh: the scheduled handler in src/worker.js re-fetches the
+  // /api/live/* upstreams and re-warms the edge cache twice daily at
+  // 09:30 & 17:00 Nepal time (UTC-5:45) — day-open local rates + NRB's
+  // late-afternoon forex bulletin. Triggers upload with the next deploy.
+  "triggers": {
+    "crons": ["45 3 * * *", "15 11 * * *"]
+  },
   "routes": [
     {
       "pattern": "solutionsnepal.com",

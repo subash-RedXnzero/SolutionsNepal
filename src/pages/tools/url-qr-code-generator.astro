@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import QrCodeGenerator from '../../components/tools/QrCodeGenerator.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
 import Disclaimer from '../../components/ui/Disclaimer.astro';
 
 const title = 'URL QR Code Generator — Free | SolutionsNepal';
@@ -57,4 +58,5 @@ const description = 'Convert any website link into a free QR code instantly. Aut
     </div>
   </div>
   <Disclaimer variant="general" />
+  <RelatedTools tools={[{ title: 'WhatsApp QR Code', description: 'Chat link with optional message', href: '/tools/whatsapp-qr-code-generator' }, { title: 'WiFi QR Code', description: 'Share WiFi without typing passwords', href: '/tools/wifi-qr-code-generator' }, { title: 'vCard QR Code', description: 'Share contact details', href: '/tools/vcard-qr-code-generator' }, { title: 'Email QR Code', description: 'Pre-filled subject and body', href: '/tools/email-qr-code-generator' }]} />
 </BaseLayout>

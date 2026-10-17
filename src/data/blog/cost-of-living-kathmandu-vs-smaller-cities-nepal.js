@@ -10,7 +10,7 @@ export const costOfLivingKathmanduVsSmallerCitiesNepalPost = {
   authorCredential: 'Nepal finance and cost-of-living researchers',
   date: 'September 10, 2026',
   readTime: '15 min read',
-  image: '/blog/photo-1658437711216-1b55fd9ae096.jpg',
+  image: '/blog/photo-1658437711216-1b55fd9ae096.webp',
   tags: ['Cost of Living', 'Kathmandu', 'Pokhara', 'Chitwan', 'Butwal', 'Nepal'],
   relatedTools: ['salary-checker', 'cost-of-living', 'emi-calculator', 'electricity-bill', 'sip-calculator'],
   faqs: [
@@ -37,7 +37,7 @@ export const costOfLivingKathmanduVsSmallerCitiesNepalPost = {
     { id: 'hidden-costs', text: 'Hidden Costs People Forget', level: 2 },
     { id: 'reduce', text: 'How to Reduce Living Costs in Kathmandu', level: 2 },
     { id: 'budget', text: 'How to Build a Monthly Budget', level: 2 },
-    { id: 'verdict', text: 'Final Verdict', level: 2 },
+    { id: 'verdict', text: 'Kathmandu vs Pokhara vs Chitwan vs Butwal: Final Verdict', level: 2 },
     { id: 'methodology', text: 'Data Sources and Methodology', level: 2 },
   ],
   sections: [
@@ -78,7 +78,7 @@ export const costOfLivingKathmanduVsSmallerCitiesNepalPost = {
     { type: 'heading', level: 2, id: 'budget', text: 'How to Build a Monthly Budget' },
     { type: 'formula', code: 'Net income − rent − food − transport − utilities − debt/EMI − personal expenses − emergency savings = available savings' },
     { type: 'datatable', rows: [{ label: 'Net income', value: 'Rs 50,000 (100%)' }, { label: 'Rent', value: 'Rs 18,000 (36%)' }, { label: 'Food', value: 'Rs 10,000 (20%)' }, { label: 'Transport', value: 'Rs 2,500 (5%)' }, { label: 'Utilities', value: 'Rs 4,000 (8%)' }, { label: 'Personal expenses', value: 'Rs 5,000 (10%)' }, { label: 'Emergency savings', value: 'Rs 7,500 (15%)' }, { label: 'Discretionary savings', value: 'Rs 3,000 (6%)' }] },
-    { type: 'callout', style: 'accent', bold: 'Plan with SolutionsNepal:', content: 'Use our <a href="/nepal/finance/salary-checker">Salary Calculator</a> and <a href="/nepal/finance/salary-tax">Salary Tax Calculator</a> to estimate net income, tax, and deductions before setting your city budget.' },
+    { type: 'callout', style: 'accent', bold: 'Plan with SolutionsNepal:', content: 'Use our <a href="/nepal/finance/salary-checker">Salary Calculator</a> to estimate net income, tax, and deductions before setting your city budget.' },
     { type: 'heading', level: 2, id: 'verdict', text: 'Kathmandu vs Pokhara vs Chitwan vs Butwal: Final Verdict' },
     { type: 'datatable', rows: [{ label: 'Career opportunities', value: 'Kathmandu — most jobs, offices, and networking' }, { label: 'Remote work and lifestyle', value: 'Pokhara or Butwal — lower costs and lifestyle benefits' }, { label: 'Lowest-cost living', value: 'Butwal or Chitwan — often 30–40% lower rent and expenses' }, { label: 'Families', value: 'Chitwan or Pokhara — schools, hospitals, and affordable larger homes' }, { label: 'Best overall value', value: 'Depends on income, work, healthcare, education, and lifestyle priorities' }] },
     { type: 'paragraph', content: 'Kathmandu is worth the higher cost when career growth and specialized services matter. If you can earn Kathmandu-level income remotely, Pokhara, Chitwan, or Butwal usually offer better savings potential. For families, Chitwan and Butwal balance infrastructure with lower housing costs.' },

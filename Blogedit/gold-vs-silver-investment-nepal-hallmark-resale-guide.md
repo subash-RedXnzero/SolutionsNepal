@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal gold-market researchers
 date: September 27, 2026
 readTime: 10 min read
-image: "/blog/photo-1579621970795-87facc2f976d.jpg"
+image: "/blog/photo-1579621970795-87facc2f976d.webp"
 tags: [Gold Price Nepal, Silver Price Nepal, Hallmark, Tola, FENEGOSIDA, Investment]
 relatedTools: [gold-price, silver-price, tola-to-gram]
 headings:
@@ -36,7 +36,6 @@ faqs:
   - q: What does Hallmark 995 / 999 / 916 mean?
     a: "Parts per 1000 pure: 999 = 99.9% (24K fine/chhapawal), 995 = 99.5% (tejabi), 916 = 91.6% (22K jewelry). NBSM hallmark stamp certifies it — demand itemized invoice with fineness + weight in tola/gram."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>Investment → hallmark-certified bars/coins (999/995), not jewelry.</strong> Rate is <strong>FENEGOSIDA per tola (1 tola = 11.664 g)</strong> from international spot + USD/NPR + duty + VAT. Jewelry final bill = <strong>metal + making (Rs 500–3,000/tola or 5–15%) + wastage/jarti + 13% VAT</strong>. Silver has <strong>higher % spread</strong> — buy gold for liquidity, silver only for small-budget diversification.
@@ -47,7 +46,7 @@ faqs:
 - <strong>Formula:</strong> London spot (USD) × NRB USD/NPR + customs duty + 13% VAT + dealer margin → quoted per tola (chhapawal + tejabi)
 - <strong>Check live:</strong> <a href="/nepal/gold-price-nepal">Gold Price Nepal</a> + <a href="/nepal/silver-price-nepal">Silver Price Nepal</a> — FENEGOSIDA rate is base metal only, not final jewelry price
 
-<h2 id="hallmark">Hallmark, Tola &amp; Purity — The 3 Must-Knows</h2>
+<h2 id="hallmark">Hallmark, Tola & Purity — The 3 Must-Knows</h2>
 
 - **999 (24K, chhapawal/fine)** — 99.9% — bars, coins, investment; NBSM hallmark
 - **995 (tejabi)** — 99.5% — traditional; ~Rs 200–400/tola under fine; often acid-tested
@@ -56,11 +55,11 @@ faqs:
 
 Demand the following on the invoice:
 
-- **NBSM NS mark**
-- **fineness number**
-- **weight**
-- **rate**
-- **making/wastage split**
+- <strong>NBSM NS mark</strong>
+- <strong>fineness number</strong>
+- <strong>weight</strong>
+- <strong>rate</strong>
+- <strong>making/wastage split</strong>
 
 No certificate = just a claim. Use <a href="/nepal/gold/tola-to-gram">Tola → Gram converter</a> before you pay.
 
@@ -76,14 +75,14 @@ Final jewelry ≈ (Weight × FENEGOSIDA rate) + Making + Wastage + 13% VAT
 Illustrative (October 2026 rates): 1 tola × ~Rs 290,000 + making + wastage + 13% VAT = final bill — always use the morning FENEGOSIDA notice for the metal line.
 ```
 
-<h2 id="resale">Resale &amp; Buyback — How Not to Lose</h2>
+<h2 id="resale">Resale & Buyback — How Not to Lose</h2>
 
 - Sell where you bought + keep <strong>invoice + hallmark photo</strong> — best buyback %
 - Bars/coins fetch <strong>near-spot</strong>; jewelry loses <strong>making + wastage + VAT</strong> (10–20%) instantly
 - Ask before buying: <strong>“today’s buyback per tola for this fineness?”</strong> in writing
 - Silver: confirm <strong>purity + buyback policy</strong> — many shops exchange-only, no cash buyback
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: FENEGOSIDA daily rate + <a href="https://nbsm.gov.np" target="_blank" rel="noopener noreferrer">Nepal Bureau of Standards & Metrology (nbsm.gov.np)</a> hallmark standards. Rates move daily — verify the morning notice before visiting the shop.
 

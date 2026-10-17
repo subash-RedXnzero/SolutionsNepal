@@ -10,7 +10,7 @@ export const healthInsuranceNepalHibCoverageEnrollmentGuidePost = {
   authorCredential: 'Nepal public-service researchers',
   date: 'September 27, 2026',
   readTime: '9 min read',
-  image: '/blog/photo-1532938911079-1b06ac7ceec7.jpg',
+  image: '/blog/photo-1532938911079-1b06ac7ceec7.webp',
   tags: ['Health Insurance Nepal', 'Swasthya Bima', 'HIB', 'hib.gov.np', 'Health'],
   relatedTools: ['new-baby-cost', 'cost-of-living', 'emi-calculator'],
   faqs: [

@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal utilities researchers
 date: September 27, 2026
 readTime: 9 min read
-image: "/blog/photo-1513475382585-d06e58bcb0e0.jpg"
+image: "/blog/photo-1513475382585-d06e58bcb0e0.webp"
 tags: [KUKL Water Bill, KUKL Nepal, Water Bill Nepal, Utilities]
 relatedTools: [kukl-water-bill, electricity-bill, cost-of-living]
 headings:
@@ -44,7 +44,6 @@ faqs:
   - q: What if my meter shows zero or high reading?
     a: "Report a faulty meter or sudden spike to your KUKL branch — they can test/replace the meter. Pay the minimum charge while the complaint is processed and keep the complaint number."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 Check at <strong>kukl.org.np → Bill Enquiry</strong> or <strong>eSewa/Khalti → KUKL</strong> with your customer ID. Pay the same way or at a <strong>KUKL branch / authorized bank</strong>. Tariff is <strong>slab-based per cubic meter</strong> with a <strong>minimum charge</strong> — confirm the current slab at <strong>kukl.org.np</strong>.
@@ -76,7 +75,7 @@ KUKL (Kathmandu Upatyaka Khanepani Limited) supplies piped water in Kathmandu Va
 - Consumption = current reading − previous reading
 - The red dials show litres and are for testing, not billing
 
-<h2 id="late-fee">Late Fee &amp; Disconnection</h2>
+<h2 id="late-fee">Late Fee & Disconnection</h2>
 
 Unpaid bills attract a late fee and, after repeated default, temporary disconnection. The per-month late percentage and notice period are printed on the bill and at kukl.org.np — pay before the due date shown in the enquiry result.
 
@@ -87,7 +86,7 @@ Unpaid bills attract a late fee and, after repeated default, temporary disconnec
 - Paying the previous month’s amount when two months are now due — check “total dues” not just “current”
 - Ignoring a sudden high reading — report a suspected leak/faulty meter before paying a spike
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: <a href="https://kukl.org.np" target="_blank" rel="noopener noreferrer">Kathmandu Upatyaka Khanepani Limited (kukl.org.np)</a> tariff notices and bill enquiry. Outside the Valley, contact your local Khanepani / Water Supply Office for the local tariff.
 

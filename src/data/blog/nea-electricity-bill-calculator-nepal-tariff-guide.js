@@ -10,7 +10,7 @@ export const neaElectricityBillCalculatorNepalTariffGuidePost = {
   authorCredential: 'Nepal utilities and tariff researchers',
   date: 'September 26, 2026',
   readTime: '13 min read',
-  image: '/blog/photo-1754587113179-1865dcb6dae8.jpg',
+  image: '/blog/photo-1754587113179-1865dcb6dae8.webp',
   tags: ['NEA Electricity Bill', 'NEA Tariff Nepal', 'Electricity Bill Calculator Nepal', 'NEA 2026', 'Utilities', 'VAT'],
   relatedTools: ['electricity-bill', 'kukl-water-bill', 'cost-of-living', 'lpg-calculator'],
   faqs: [

@@ -5,10 +5,9 @@ import { getGoldPriceAsync, getGoldPriceHistory, calculateGoldValue, formatNPR, 
 import Disclaimer from '../../components/ui/Disclaimer.astro';
 
 const priceData = await getGoldPriceAsync();
-const history7d = getGoldPriceHistory('7d');
-const history30d = getGoldPriceHistory('30d');
-const history3m = getGoldPriceHistory('3m');
-const history1y = getGoldPriceHistory('1y');
+// FENEGOSIDA publishes today + yesterday only — the trend is those two
+// real points. No fabricated multi-day history (see getGoldPriceHistory).
+const trendHistory = getGoldPriceHistory();
 
 ---
 
@@ -151,18 +150,13 @@ const history1y = getGoldPriceHistory('1y');
   <!-- CHART -->
   <div class="gp-section">
     <h2 class="gp-section-title">Gold Price Trend</h2>
-    <div class="gp-chart-tabs">
-      <button class="gp-chart-tab active" data-period="7d">7 Days</button>
-      <button class="gp-chart-tab" data-period="30d">30 Days</button>
-      <button class="gp-chart-tab" data-period="3m">3 Months</button>
-      <button class="gp-chart-tab" data-period="1y">1 Year</button>
-    </div>
+    <p class="gp-chart-note">Yesterday → today · FENEGOSIDA publishes daily rates only, so the chart shows the two published points.</p>
     <div class="gp-chart-wrap">
       <canvas id="gp-chart" width="560" height="200"></canvas>
       <div class="gp-chart-tooltip" id="gp-tooltip" style="display:none;"></div>
     </div>
     <div class="gp-chart-legend">
-      <span id="gp-chart-label">7 Days</span>
+      <span id="gp-chart-label">Yesterday → Today</span>
       <span id="gp-chart-range"></span>
     </div>
   </div>
@@ -192,18 +186,12 @@ const history1y = getGoldPriceHistory('1y');
   <Disclaimer variant="gold" />
 
   <script is:inline define:vars={{
-    history7d: JSON.stringify(history7d),
-    history30d: JSON.stringify(history30d),
-    history3m: JSON.stringify(history3m),
-    history1y: JSON.stringify(history1y),
+    trendHistory: JSON.stringify(trendHistory),
     pricePerTola: priceData.fineGold.pricePerTola,
     pricePerGram: priceData.fineGold.pricePerGram,
   }}>
     window.__gp_data = {
-      history7d: JSON.parse(history7d),
-      history30d: JSON.parse(history30d),
-      history3m: JSON.parse(history3m),
-      history1y: JSON.parse(history1y),
+      trendHistory: JSON.parse(trendHistory),
       pricePerTola: pricePerTola,
       pricePerGram: pricePerGram,
     };
@@ -633,7 +621,13 @@ const history1y = getGoldPriceHistory('1y');
     .gp-price-main { font-size: 28px; }
     .gp-compare { flex-direction: column; gap: 8px; }
     .gp-compare-arrow { transform: rotate(90deg); }
-    .gp-chart-tabs { flex-wrap: wrap; }
+    .gp-chart-note {
+    margin: 0 0 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--nk-text-tertiary);
+  }
+  .gp-chart-tabs { flex-wrap: wrap; }
   }
 </style>
 
@@ -696,11 +690,8 @@ const history1y = getGoldPriceHistory('1y');
   var tooltip = document.getElementById('gp-tooltip');
   var chartLabel = document.getElementById('gp-chart-label');
   var chartRange = document.getElementById('gp-chart-range');
-  var tabs = document.querySelectorAll('.gp-chart-tab');
-  var currentPeriod = '7d';
-  var currentData = data.history7d;
-
-  var periodLabels = { '7d': '7 Days', '30d': '30 Days', '3m': '3 Months', '1y': '1 Year' };
+  // Single honest series: yesterday → today (the only points FENEGOSIDA publishes).
+  var currentData = data.trendHistory;
 
   function drawChart(chartData) {
     if (!chartData || chartData.length === 0) return;
@@ -794,8 +785,7 @@ const history1y = getGoldPriceHistory('1y');
     ctx.fillText(formatNPR(Math.round(max)), w, padTop + 8);
     ctx.fillText(formatNPR(Math.round(min)), w, padTop + chartH - 2);
 
-    // Update legend
-    chartLabel.textContent = periodLabels[currentPeriod];
+    // Update legend (static label set in HTML; range = the two real dates)
     var first = chartData[0];
     var last = chartData[chartData.length - 1];
     chartRange.textContent = first.date + ' — ' + last.date;
@@ -824,18 +814,6 @@ const history1y = getGoldPriceHistory('1y');
       tooltip.style.display = 'none';
     };
   }
-
-  // Tab switching
-  tabs.forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      tabs.forEach(function(t) { t.classList.remove('active'); });
-      tab.classList.add('active');
-      currentPeriod = tab.dataset.period;
-      var map = { '7d': data.history7d, '30d': data.history30d, '3m': data.history3m, '1y': data.history1y };
-      currentData = map[currentPeriod] || data.history7d;
-      drawChart(currentData);
-    });
-  });
 
   // Initial draw
   drawChart(currentData);

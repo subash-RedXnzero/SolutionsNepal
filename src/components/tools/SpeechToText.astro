@@ -242,6 +242,15 @@
   const MAX_NETWORK_RETRIES = 3;
   const RESTART_DELAY_MS = 900;
   let restartDelayMs = RESTART_DELAY_MS;
+  // Chrome's speech service silently stops finalizing results in one long
+  // continuous session (transcript freezes after a few hundred words).
+  //rolling: proactively end each recognition instance while it is healthy
+  // and let the existing auto-restart open a fresh one, so dictation length
+  // stays effectively unlimited. Rolls prefer natural pauses (empty
+  // "Hearing now" line); a hard deadline covers continuous speech.
+  const ROLL_AFTER_MS = 50000;     // roll each instance after ~50 s
+  const ROLL_DEADLINE_MS = 90000;  // force-roll by ~90 s even mid-sentence
+  let listeningSince = 0;          // when the current instance began listening
 
   const LANG_NAMES = { 'ne-NP': 'Nepali', 'en-US': 'English (US)', 'en-GB': 'English (UK)' };
   function langName(code) { return LANG_NAMES[code] || code; }
@@ -416,6 +425,7 @@
     timerId = setInterval(() => {
       if (timerEl) timerEl.textContent = fmtElapsed(elapsedBase + (Date.now() - sessionStart));
       maybeStabilize();
+      maybeRollSession();
     }, 250);
   }
   function stopTimer() {
@@ -481,6 +491,23 @@
     if (add) appendFinal(add);
   }
 
+  // Periodic session roll (see ROLL_AFTER_MS above): stop the healthy
+  // instance and let onend's auto-restart open a fresh one. Every word is
+  // banked before and after the roll — flushInterim() in onend guarantees
+  // the tail is committed. Rolling during a pause (interim empty) means the
+  // ~1 s restart gap falls in silence, so nothing is missed in practice;
+  // past the hard deadline we roll regardless so a continuously speaking
+  // user still gets a fresh engine.
+  function maybeRollSession() {
+    if (micState !== 'listening' || destroyed) return;
+    if (!wantListening || manualStop || !listeningSince) return;
+    const live = Date.now() - listeningSince;
+    if (live < ROLL_AFTER_MS) return;
+    if (interimText && live < ROLL_DEADLINE_MS) return; // wait for a pause
+    if (interimText) setStatus('Refreshing the listening session…'); // forced mid-speech roll
+    try { recognition && recognition.stop && recognition.stop(); } catch (e) {}
+  }
+
   // ── Recognition lifecycle ──
   function start() {
     if (micState === 'listening' || micState === 'starting' || micState === 'stopping') return;
@@ -520,6 +547,7 @@
     recognition.onstart = () => {
       if (destroyed) return;
       micState = 'listening';
+      listeningSince = Date.now(); // roll clock resets on every (re)start
       paintMic();
       setStatus('Listening in ' + langName(lang) + '… speak now.');
     };
@@ -635,6 +663,7 @@
 
   function finishManualStop() {
     wantListening = false;
+    listeningSince = 0;
     stopTimer();
     flushInterim(); // stop() can bypass onend — never drop heard words
     interimText = '';
@@ -908,6 +937,7 @@
       wantListening = false;
       manualStop = true;
       silentFinish = true; // late onend after abort() must not overwrite status
+      listeningSince = 0;
       try { recognition && recognition.abort && recognition.abort(); } catch (e) {}
       recognition = null;
       stopTimer();
@@ -937,6 +967,7 @@
     destroyed = true;
     wantListening = false;
     manualStop = true;
+    listeningSince = 0;
     if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
     stopTimer();
     try { recognition && recognition.abort && recognition.abort(); } catch (e) {}

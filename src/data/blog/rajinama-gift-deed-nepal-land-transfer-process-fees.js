@@ -10,7 +10,7 @@ export const rajinamaGiftDeedNepalLandTransferProcessFeesPost = {
   authorCredential: 'Nepal property and land researchers',
   date: 'September 27, 2026',
   readTime: '12 min read',
-  image: '/blog/photo-1568992687947-868a62a9f521.jpg',
+  image: '/blog/photo-1568992687947-868a62a9f521.webp',
   tags: ['Rajinama Nepal', 'Gift Deed Nepal', 'Bakaspapatra', 'Lalpurja Transfer', 'Malpot', 'Property Nepal'],
   relatedTools: ['land-registration', 'property-registration-cost', 'ropani-to-aana'],
   faqs: [

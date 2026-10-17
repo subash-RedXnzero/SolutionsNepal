@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal capital-market researchers
 date: September 27, 2026
 readTime: 10 min read
-image: "/blog/photo-1551288049-bebda4e38f71.jpg"
+image: "/blog/photo-1551288049-bebda4e38f71.webp"
 tags: [NEPSE, TMS Nepal, Share Market, Meroshare, DEMAT, Broker]
 relatedTools: [nepse-profit-loss, sip-calculator, emi-calculator]
 headings:
@@ -36,7 +36,6 @@ faqs:
   - q: What are the charges per trade?
     a: "Broker commission is commonly quoted as ~0.36–0.40% slab-wise under the SEBON-capped broker commission sheet, plus SEBON/NEPSE levies + DP charge ~Rs 25 per debit + bank transfer fee. Confirm your broker's current commission sheet and the live SEBON directive before trading — rates revise by directive (figures here as of October 2026)."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>DEMAT → Meroshare → TMS (broker) → Bank/C-ASBA, all on one BOID.</strong> Open TMS online/in-branch with <strong>citizenship + photo + bank + DEMAT</strong>, get <strong>TMS login + broker code</strong>, load <strong>collateral via IPS</strong>, trade <strong>Sun–Thu 11–3</strong>. Cost ≈ <strong>0.36–0.40% broker + levies + Rs 25 DP</strong> per side.
@@ -64,14 +63,14 @@ Already have DEMAT? See <a href="/guides/open-demat-account-mero-share-nepal-202
 - <strong>Settlement (commonly T+2 working days — confirm the current NEPSE settlement notice):</strong> bought shares in DEMAT in ~2 working days; sold cash in broker ledger → withdraw to bank
 - <strong>IPO vs Secondary:</strong> IPO via Meroshare C-ASBA; live NEPSE buying only via TMS — do not confuse the two
 
-<h2 id="charges">Charges &amp; Mistakes</h2>
+<h2 id="charges">Charges & Mistakes</h2>
 
 - **Broker commission** — ~0.36–0.40% per side, slab-wise per SEBON cap — confirm broker sheet
 - **Extras** — SEBON + NEPSE levies (fractional %) + DP Rs 25/debit + bank IPS fee
 - **Mistake #1** — Name/bank/BOID mismatch across DEMAT–Meroshare–TMS → collateral/transfer fails
 - **Mistake #2** — Buying upper-circuit blindly at 3 PM — next-day gap-down; use limit + position size
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: <a href="https://nepse.org.np" target="_blank" rel="noopener noreferrer">NEPSE (nepse.org.np)</a> trading/settlement/circuit notices + <a href="https://cdsc.com.np" target="_blank" rel="noopener noreferrer">CDSC/Meroshare</a> + SEBON broker-commission directive/circulars (confirm the current commission sheet with your broker and the live circuit/T+2 notices on nepse.org.np — working figures here as of October 2026). Hours/commissions revise by notice — verify before funding.
 

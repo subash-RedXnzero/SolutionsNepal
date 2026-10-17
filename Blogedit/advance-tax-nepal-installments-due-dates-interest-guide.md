@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax researchers
 date: September 27, 2026
 readTime: 10 min read
-image: "/blog/photo-1554224155-6726b3ff858f.jpg"
+image: "/blog/photo-1554224155-6726b3ff858f.webp"
 tags: [Advance Tax Nepal, Income Tax Act 2058, IRD Nepal, Installment Tax, Finance]
 relatedTools: [overtime-calculator, salary-checker, vat-calculator, freelancer-take-home]
 headings:
@@ -60,7 +60,6 @@ faqs:
   - q: What is the penalty for late/underpayment?
     a: "Interest under the interest provisions of the Income Tax Act on shortfall from the required coverage of actual year-end liability (commonly cited as Sec 117/118 against 90% of actual liability — verify current Act text). Pay at least the required share of final tax via installments + TDS by Ashad end to avoid interest. Final return is still due within 3 months of FY-end (Ashwin end, ~mid-Oct), extendable 3 months with interest on unpaid balance (per IRD notice — verify)."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 If you have <strong>business or investment assessable income</strong> in the income year, pay <strong>advance tax in 3 installments</strong> under <strong>Sec 94 of Income Tax Act 2058</strong>: <strong>40% by Poush end (~mid-Jan), 70% cumulative by Chaitra end (~mid-Apr), 100% by Ashad end (~mid-Jul)</strong>. Each installment is computed from the <strong>estimate/revised estimate</strong> for that period less <strong>already-paid installments + TDS credits to date + deemed withholding + Sec 51 medical credit</strong> (see Act text for the exact factor). Shortfall from the required coverage of actual liability attracts interest under the Act's interest provisions.
@@ -101,7 +100,7 @@ If business conditions change, file a <strong>revised estimate</strong> under Se
 - **By Poush end** — Tax at prescribed rate on actual transactions up to 20 Poush (~4 Jan)
 - **By Ashad end** — Tax on estimated full-year transactions based on actuals to 20 Ashad (~4 Jul) — less the first payment
 
-<h2 id="how-to-pay">How to Pay &amp; File</h2>
+<h2 id="how-to-pay">How to Pay & File</h2>
 
 1. Estimate the year’s tax (or transaction base) honestly before each date.
 2. Log in to <strong>taxpayerportal.ird.gov.np</strong> → Advance/Installment Tax → select FY and installment.
@@ -109,7 +108,7 @@ If business conditions change, file a <strong>revised estimate</strong> under Se
 4. File the estimate/revised estimate where the portal asks (Sec 95).
 5. Keep the e-payment receipt and TDS certificates for the annual return (due within 3 months of FY-end — Ashwin end ~mid-Oct, extendable 3 months with interest on unpaid balance, per IRD notice — verify current deadlines on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a>).
 
-<h2 id="interest-penalty">Interest &amp; Penalties for Shortfall</h2>
+<h2 id="interest-penalty">Interest & Penalties for Shortfall</h2>
 
 - **Shortfall vs required coverage of actual tax** — Interest under the interest provisions of the Income Tax Act (commonly cited as Sec 117/118 on shortfall from 90% of final assessed tax — verify current Act text) if installments + TDS fell short by Ashad end
 - **Late final return** — Interest continues on unpaid balance after Ashwin end; extension does not waive interest (per IRD notice — verify)
@@ -139,7 +138,7 @@ If TDS of Rs 30,000 was credited by Chaitra, the Chaitra installment falls: 1,89
 - Pay by Poush / Chaitra / Ashad end via taxpayerportal.ird.gov.np and keep vouchers + TDS certificates
 - Ensure the required share (commonly 90%) of final tax is covered by Ashad end to avoid interest; file the annual return by Ashwin end (per IRD notice — verify)
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a> — Income Tax Act 2058 Sec 94 (installments), Sec 95 (estimate/revised estimate), full Act text via <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">lawcommission.gov.np</a>, <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">taxpayerportal.ird.gov.np</a>, and IRD advance-tax notices. Transaction-based track commonly cited as Sec 94(11A) — verify numbering in current Act text.
 

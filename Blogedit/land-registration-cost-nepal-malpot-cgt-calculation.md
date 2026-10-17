@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and tax researchers
 date: September 26, 2026
 readTime: 15 min read
-image: "/blog/photo-1500382017468-9049fed747ef.jpg"
+image: "/blog/photo-1500382017468-9049fed747ef.webp"
 tags: [Land Registration Nepal, Malpot Fee Nepal, CGT Nepal, Property Registration Cost, Bagmati Province, Real Estate Nepal]
 relatedTools: [land-registration, property-registration-cost, ropani-to-aana, land-affordability]
 headings:
@@ -85,7 +85,6 @@ faqs:
   - q: Where can I calculate it officially?
     a: "Ask your Malpot (Land Revenue / Bhumi Prashasan Office) for the printed Finance Act schedule and have the counter run the duty + CGT math for your ward class and holding period. IRD guidance is at ird.gov.np and departmental notices at dolma.gov.np / malpot.gov.np where published — no standalone official web estimator or helpline could be verified as of October 2026, so do not rely on a third-party calculator alone."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 Buying land in Nepal produces <strong>two separate tax bills at the same counter</strong>: the <strong>buyer pays a province-set registration duty</strong> (in Kathmandu Valley metro wards of Bagmati this is <strong>commonly cited as 5.3% of the higher of deed vs minimum value, as of October 2026</strong> — always confirm the current Finance Act schedule at your Malpot), and the <strong>seller pays capital-gains tax only on the profit</strong> (<strong>10% if held 5 years or less, 7.5% if held longer</strong>, on deals above Rs 10 lakh — the post-16-July-2026 federal pair). Together they land around <strong>7–8.5% of the headline price</strong> on a typical Valley deal. Women / senior buyers are reported to get a <strong>fee reduction (commonly cited as 25%, higher in some cases)</strong> — confirm the exact concession clause in the current Bagmati Finance Act text before relying on it.
@@ -122,7 +121,7 @@ Lumbini, Gandaki, Koshi, Madhesh, Karnali and Sudurpaschim each publish their ow
 
 > **How to verify:** Ask for the current "Province Finance Act, registration-duty schedule" at the counter and read your ward class off that sheet.
 
-<h2 id="concession">Women &amp; Senior Discount</h2>
+<h2 id="concession">Women & Senior Discount</h2>
 
 Practitioner summaries describe a Bagmati reduction where the title passes to a woman, a senior citizen 70+, or a parentless minor — commonly quoted as 25% off the duty, with higher figures (e.g., ~35% for single women or rural-municipality transfers) in some write-ups, and joint husband-wife deeds still qualifying once. These summaries usually cite Finance Act section numbers (reported as Sec 9 / Sec 13), but the section text could not be independently verified against the gazetted Act as of October 2026 — <strong>treat the 25%/35% figures as unconfirmed planning figures and read the concession clause off the printed Act schedule at your Malpot before discounting your budget</strong>. Only one concession is reported to apply per deed.
 
@@ -202,7 +201,7 @@ Every district's Minimum Price Determination Committee (CDO-chaired) publishes a
 - Assuming “flats = 1%” or adding a fake 5% Sabhyata Kosh — neither exists in the Act
 - Forgetting the Rs 10 lakh floor — small transactions at/below Rs 10 lakh attract no CGT
 
-<h2 id="calculator">Official Calculators &amp; Helpline</h2>
+<h2 id="calculator">Official Calculators & Helpline</h2>
 
 - <strong>Printed schedule first:</strong> ask the counter for the current province Finance Act duty table + the CDO minimum sheet for your ward — that paper governs, not any web tool
 - <strong>Departmental sites:</strong> check <a href="https://dolma.gov.np" target="_blank" rel="noopener noreferrer">dolma.gov.np</a> / malpot.gov.np and <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a> for published notices. A "Malpot Fee Calculator" portal widget, an "IRD Property CGT Estimator" page, and a "1155 helpline" are widely repeated online but could not be verified as live official services as of October 2026 — do not rely on them; get the math stamped at the counter
@@ -219,7 +218,7 @@ Every district's Minimum Price Determination Committee (CDO-chaired) publishes a
 - Arrange PAN (buyer) + Lalpurja/tax receipt (seller)
 - Pay via malpot.gov.np portal and keep the payment reference
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: the federal Finance Act (CGT provisions) and the relevant <strong>Province Finance Act duty schedule</strong> — read the gazetted/signed text or the counter's printed schedule, not a summary; <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a>; <a href="https://dolma.gov.np" target="_blank" rel="noopener noreferrer">Department of Land Management and Archives (dolma.gov.np)</a>; and the district Minimum Price Determination Committee sheets. Other provinces — confirm at your local Bhumi Prashasan Karyalaya.
 

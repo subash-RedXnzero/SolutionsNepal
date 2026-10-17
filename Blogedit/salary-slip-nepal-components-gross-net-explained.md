@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal payroll and tax researchers
 date: September 27, 2026
 readTime: 10 min read
-image: "/blog/photo-1551836022-deb4988cc6c0.jpg"
+image: "/blog/photo-1551836022-deb4988cc6c0.webp"
 tags: [Salary Slip Nepal, Gross Salary, Net Salary Nepal, SSF, TDS Nepal, Finance]
 relatedTools: [salary-checker, sip-calculator, ssf-calculator, overtime-calculator]
 headings:
@@ -49,11 +49,10 @@ faqs:
   - q: What is SSF on my slip?
     a: "Social Security Fund contribution for formal private-sector employees. Total 31% of basic salary: 11% deducted from employee + 20% added by employer. It covers medical, accident, family and old-age benefits, and exempts you from the 1% SST on the first Rs 10 lakh unified band (FY 2083/84, as of October 2026)."
   - q: "Why does my slip show “taxable income” lower than gross?"
-    a: Because SSF employee contribution, eligible CIT/insurance (up to limits), and remote-area allowances are removed before applying the FY 2083/84 unified slab (1% to Rs 10L, 10% to Rs 15L, 20% to Rs 25L, 27% to Rs 40L, 29% above — as of October 2026). See our salary-tax guide for the slab math.
+    a: Because SSF employee contribution, eligible CIT/insurance (up to limits), and remote-area allowances are removed before applying the FY 2083/84 unified slab (1% to Rs 10L, 10% to Rs 15L, 20% to Rs 25L, 27% to Rs 40L, 29% above — as of October 2026). See our <a href="/nepal/finance/salary-checker">salary calculator</a> for the slab math.
   - q: What is TDS on salary?
     a: "Income tax your employer withholds monthly using the unified slab + SST rule, then deposits to IRD and reports in e-TDS. It is the advance of your annual tax — reconcile it at year-end via the TDS certificate."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>Gross = basic + allowances + bonus</strong> (before cuts). <strong>Net = Gross − 11% SSF (employee) − TDS − other deductions</strong>. Employer adds <strong>20% SSF</strong> separately. <strong>Taxable = Gross − SSF (11%) − eligible CIT/insurance − allowances</strong>, then taxed via the <strong>FY 2083/84 unified slab (1% to Rs 10L — waived if SSF/pension contributor — then 10%/20%/27%/29%)</strong> and withheld as <strong>TDS</strong>.
@@ -95,9 +94,9 @@ Assumptions: basic Rs 48,000 (60% of gross), SSF-covered, no CIT for simplicity.
 - **TDS (monthly, unified slab)** — SSF-covered: Rs 0/month (Rs 8,96,640 is inside the Rs 10L band and the 1% is exempt). Non-SSF same pay: 8,96,640×1% = Rs 8,966/year ≈ Rs 747/month. (Old guides showing ~Rs 6,100–6,800/month used the pre-2083/84 5/6L-band slabs and no longer apply.)
 - **Net (SSF-covered)** — Rs 80,000 − 5,280 − 0 ≈ Rs 74,720 + overtime/bonus month varies; non-SSF ≈ Rs 80,000 − 5,280 − 747 ≈ Rs 73,973
 
-> **Use the calculator:** Enter your gross, basic % and SSF toggle in SolutionsNepal's <a href="/nepal/finance/salary-checker">Salary Checker</a> or <a href="/nepal/finance/salary-tax">Salary Tax Calculator</a> for the exact TDS by FY 2083/84 unified slabs (no marital-status slab split).
+> **Use the calculator:** Enter your gross, basic % and SSF toggle in SolutionsNepal's <a href="/nepal/finance/salary-checker">Salary Checker</a> for the exact TDS by FY 2083/84 unified slabs (no marital-status slab split).
 
-<h2 id="bonuses">Bonus, Overtime &amp; Dashain</h2>
+<h2 id="bonuses">Bonus, Overtime & Dashain</h2>
 
 - <strong>Dashain bonus:</strong> often 1 month’s basic, taxed as salary income in the month paid (TDS spikes that month)
 - <strong>Overtime:</strong> taxable as salary; rate often 1.5× basic-hourly — try our <a href="/nepal/finance/overtime-calculator">Overtime Calculator</a>
@@ -119,7 +118,7 @@ Assumptions: basic Rs 48,000 (60% of gross), SSF-covered, no CIT for simplicity.
 - TDS computed per FY 2083/84 unified slab (1/10/20/27/29%, no single/couple split) and reconciled to IRD e-TDS at year-end
 - Net = gross − SSF(11%) − TDS − other deductions; bonus/overtime months checked separately
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department slab notices (FY 2083/84)</a>, Income Tax Act 2058 (full text via <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">lawcommission.gov.np</a>), Social Security Fund (ssf.gov.np) contribution rules. Salary components and allowance exemptions follow the Act and Finance Act.
 

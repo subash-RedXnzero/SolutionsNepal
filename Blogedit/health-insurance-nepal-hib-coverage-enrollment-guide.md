@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal public-service researchers
 date: September 27, 2026
 readTime: 9 min read
-image: "/blog/photo-1532938911079-1b06ac7ceec7.jpg"
+image: "/blog/photo-1532938911079-1b06ac7ceec7.webp"
 tags: [Health Insurance Nepal, Swasthya Bima, HIB, hib.gov.np, Health]
 relatedTools: [new-baby-cost, cost-of-living, emi-calculator]
 headings:
@@ -36,7 +36,6 @@ faqs:
   - q: Which hospitals accept it?
     a: "Listed public + private/community hospitals nationwide — primary point is your first service point (usually nearest PHC/hospital). Referral needed for higher-level care except emergencies. Check the live facility list on hib.gov.np (facility counts change — verify the live list; figures here as of October 2026)."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>Swasthya Bima (HIB)</strong>: <strong>Rs 3,500/year = Rs 100,000/year coverage</strong> for a <strong>5-member family</strong>. Enroll via <strong>ward enrollment assistant or hib.gov.np</strong>, choose your <strong>first service point</strong>, wait <strong>~30 days</strong>, then get <strong>cashless treatment</strong> at listed hospitals. Renew yearly — lapse means fresh waiting period.
@@ -58,21 +57,21 @@ Note: budget speeches often propose raising the ceiling (e.g., to Rs 200,000–5
 4. Collect <strong>Bima card</strong> after printing (2–4 weeks) — coverage starts after <strong>30-day waiting period</strong>
 5. Online: pre-fill on <strong>hib.gov.np → enrollment</strong>, then verify in person at ward
 
-<h2 id="claim">How to Use &amp; Claim</h2>
+<h2 id="claim">How to Use & Claim</h2>
 
 - <strong>Go to your first service point first</strong> with Bima card + ID — direct OPD at higher hospital without referral is rejected (except emergency)
 - Treatment is <strong>cashless up to ceiling</strong> — hospital claims HIB; you pay only over-ceiling + non-covered items
 - Covered: OPD, emergency, drugs in HIB list, lab, surgery, maternity within package limits
 - Not covered: cosmetic, non-listed drugs, treatment abroad, above-ceiling balance
 
-<h2 id="renewal">Renewal, Waiting Period &amp; Mistakes</h2>
+<h2 id="renewal">Renewal, Waiting Period & Mistakes</h2>
 
 - **Renewal** — Commonly reported as within ~3 months of expiry — confirm the current grace/renewal window in the live HIB notice on hib.gov.np, as it changes by directive; renew via assistant before lapse; late renewal is commonly reported as triggering a fresh waiting period
 - **Waiting period** — ~30 days for new enrollment before first claim (emergency excepted per directive)
 - **Top mistake #1** — Skipping referral — going straight to Bharatpur/Bir hospital without PHC referral slip
 - **Top mistake #2** — Letting card lapse — family must re-wait 30 days after re-enrollment
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: <a href="https://hib.gov.np" target="_blank" rel="noopener noreferrer">Health Insurance Board (hib.gov.np)</a> enrollment directive + Health Insurance Act 2074. Ceiling/premium revise by Board notice — verify before enrolling.
 

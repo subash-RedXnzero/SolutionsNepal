@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and family-law researchers
 date: September 27, 2026
 readTime: 13 min read
-image: "/blog/photo-1513475382585-d06e58bcb0e0.jpg"
+image: "/blog/photo-1513475382585-d06e58bcb0e0.webp"
 tags: [Ansha Banda, Property Partition Nepal, Ansabanda, Malpot, Civil Code 2074, Property]
 relatedTools: [land-registration, property-registration-cost, ropani-to-aana, house-construction-cost]
 headings:
@@ -69,7 +69,6 @@ faqs:
   - q: Is there a fee?
     a: "Surveyor + drafting/notary + ward + Malpot registration fee (family partition is treated differently from a sale — confirm the exact Malpot fee schedule locally; it varies by municipality and registration type)."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 Ansha Banda is the <strong>legal division of joint family property under Civil Code 2074 Sec 205–236</strong> — <strong>husband, wife, father, mother, son and daughter = equal shares</strong>. If everyone agrees: <strong>draft a deed (अंशबन्डा कागज) with inventory → sign with witnesses + thumb impressions → notarise → register at Malpot → mutate into separate Lalpurjas</strong>. If not: <strong>District Court Ansha Banda case</strong> (or mediation). Challenge an unfair partition within <strong>3 months</strong>.
@@ -120,7 +119,7 @@ Ansha Banda is the <strong>legal division of joint family property under Civil C
 5. <strong>Ward verification:</strong> submit deed + citizenship + Lalpurja + survey report to the ward; ward verifies family relationships.
 6. <strong>Register at Malpot:</strong> file for registration; pay the partition registration fee; Malpot registers the partition.
 
-<h2 id="mutation">Registration &amp; Mutation at Malpot</h2>
+<h2 id="mutation">Registration & Mutation at Malpot</h2>
 
 Registration at Malpot is what makes the partition operative against third parties. <strong>Mutation (dakhil kharej)</strong> then updates the land records: each former coparcener receives a <strong>fresh Lalpurja in their individual name</strong> for their allocated share. Only after mutation can a coparcener sell or mortgage their portion independently. Keep the stamped deed + new Lalpurjas safely — banks and future buyers will ask for them.
 
@@ -160,7 +159,7 @@ Registration at Malpot is what makes the partition operative against third parti
 - Notarised, registered at Malpot, and mutated into individual Lalpurjas
 - Copies kept for future sale/mortgage; note the 3-month challenge window
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: <a href="https://lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Muluki Civil Code 2074, partition provisions (commonly cited as Sec 205–236) + limitation chapter — lawcommission.gov.np</a>, Land Revenue Office (Malpot) registration practice, and ward procedure under Local Government Operation Act 2074. Section numbering and limitation windows should be verified in the gazetted Code text — confirm at your Land Revenue Office.
 

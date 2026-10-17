@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal legal and finance researchers
 date: September 10, 2026
 readTime: 14 min read
-image: "/blog/photo-1763872867598-b1b5f769d7e3.jpg"
+image: "/blog/photo-1763872867598-b1b5f769d7e3.webp"
 tags: [Cheque Bounce, Banking Law, Legal Remedies, Finance, Nepal]
 relatedTools: [nepali-number-to-words, emi-calculator]
 headings:
@@ -216,5 +216,6 @@ The drawer and holder can negotiate repayment and sign a written settlement. Kee
 - Nepal Rastra Bank directives and circulars on banking and blacklist procedures
 - Supreme Court of Nepal decisions on cheque-dishonour limitation and procedure
 - Official Nepal Gazette and government legal publications
+- Where to read them: current act texts at <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Nepal Law Commission (lawcommission.gov.np)</a> · gazette notices at <a href="https://www.dop.gov.np" target="_blank" rel="noopener noreferrer">Department of Printing (dop.gov.np)</a> · NRB directives at <a href="https://www.nrb.org.np" target="_blank" rel="noopener noreferrer">nrb.org.np</a>
 
 > **Legal disclaimer:** This article is for general informational purposes and does not constitute legal advice. Cheque dishonour cases depend on facts, current legislation, banking rules, procedure, and court interpretation. Verify the current law and consult a qualified Nepalese lawyer for a significant or disputed transaction.

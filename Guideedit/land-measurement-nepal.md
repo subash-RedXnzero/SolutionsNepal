@@ -1,62 +1,209 @@
 ---
-title: Land Measurement Units in Nepal
-description: "Ropani, Aana, Paisa, Daam (Dam) — plus Terai Bigha, Kattha and Dhur — understand Nepali land units."
+title: "Land Measurement Nepal: Ropani, Aana, Bigha, Kattha"
+description: "Nepali land units explained: Ropani, Aana, Paisa, Daam, plus Terai Bigha, Kattha and Dhur, with conversions."
 category: Nepal
 author: SolutionsNepal Team
-authorCredential: Financial analysts and Nepal tax experts
-date: August 12, 2026
-readTime: 5 min read
-image: "/blog/photo-1503387762-592deb58ef4e.jpg"
-tags: [Nepal, Land, Measurement, Converter]
+authorCredential: Nepal property and land-record researchers
+date: October 17, 2026
+readTime: 10 min read
+image: "/blog/photo-1503387762-592deb58ef4e.webp"
+tags: [Nepal, Land, Measurement, Converter, Property]
+relatedTools: [ropani-to-aana, aana-to-ropani, land-affordability, land-registration]
 headings:
+  - id: quick-answer
+    text: Quick Answer
+    level: 2
   - id: introduction
-    text: Introduction
+    text: Why Land Units Matter Before You Pay
     level: 2
   - id: units
-    text: Nepali Land Units
+    text: The Hill System — Ropani, Aana, Paisa, Daam
+    level: 2
+  - id: terai
+    text: The Terai System — Bigha, Kattha, Dhur
     level: 2
   - id: conversion
-    text: Conversion Table
+    text: Full Conversion Table
     level: 2
-  - id: conclusion
-    text: Conclusion
+  - id: cross-system
+    text: Crossing Between Systems — and Into Acres and Hectares
     level: 2
+  - id: lalpurja
+    text: How Units Appear on a Lalpurja
+    level: 2
+  - id: buying
+    text: Checking Area When You Buy
+    level: 2
+  - id: mistakes
+    text: Common Mistakes
+    level: 2
+  - id: sources
+    text: Sources and Disclaimer
+    level: 2
+faqs:
+  - q: How many aana are in 1 ropani?
+    a: 16 aana. Further down the chain, 1 aana is 4 paisa and 1 paisa is 4 daam, so 1 ropani is 64 paisa or 256 daam.
+  - q: How many square feet is 1 aana?
+    a: About 342.25 square feet, which is about 31.80 square metres. This is the figure most Kathmandu Valley land listings are built on.
+  - q: How many kattha are in 1 bigha?
+    a: 20 kattha. Each kattha is divided into 20 dhur, so 1 bigha is 400 dhur. In metric terms 1 bigha works out to about 6,772.63 square metres, or 72,900 square feet.
+  - q: What is 1 ropani in square metres?
+    a: About 508.74 square metres, which is 5,476 square feet. Some references cite 508.72 — the difference is a rounding convention, so for a transaction rely on the kitta area stated on the official land record.
+  - q: How many ropani are in 1 bigha?
+    a: About 13.31 ropani. Bigha and ropani come from two different systems, so the conversion is approximate — it is a useful sanity check, not a legal conversion.
+  - q: What is a daam (dam) in Nepali land measurement?
+    a: The smallest unit in the hill system. 1 paisa is 4 daam, so 1 daam is about 1.99 square metres or 21.39 square feet. It is still used for very small adjustments in land records.
+  - q: How do I convert a plot quoted in aana into square feet?
+    a: Multiply the aana figure by 342.25. A plot of 4 aana is about 1,369 square feet, and 10 aana is about 3,422.5 square feet.
+  - q: Does a Lalpurja state the area in traditional units or in square metres?
+    a: Traditionally in Ropani-Aana-Paisa-Daam for hill districts and Bigha-Kattha-Dhur for Terai districts, with metric equivalents increasingly shown alongside. Read both lines on the document and check that they agree before relying on either.
+  - q: Are the conversions here legal survey figures?
+    a: No. They are the standard conversions widely used in Nepal for understanding and comparing land areas. The legally relevant figure is the kitta area recorded in the official land record and confirmed by the survey office.
+  - q: Why do land listings sometimes not match my own calculation?
+    a: Common reasons are rounded unit conversions in the listing, a plot measured to a boundary that has since changed, or an area quoted from an old record rather than the current Lalpurja. Ask to see the current land record and, if in doubt, have the plot re-measured.
 ---
 
-<h2 id="introduction">Introduction</h2>
+<h2 id="quick-answer">Quick Answer</h2>
 
-Nepal uses traditional land measurement units that differ from the metric system. Understanding these units is essential for buying, selling, or registering land.
+Nepal uses two traditional land systems, plus the metric system:
 
-<h2 id="units">Nepali Land Units</h2>
+- <strong>Hill districts, including the Kathmandu Valley</strong> — Ropani, Aana, Paisa, Daam
+- <strong>Terai districts</strong> — Bigha, Kattha, Dhur
 
-Nepal uses two traditional systems: the hill system (Ropani-based) and the Terai system (Bigha-based), alongside metric units. Understanding these units is essential for buying, selling, or registering land.
+The chains are short and worth memorising before you look at a plot:
 
-<strong>Hill system:</strong>
+- <strong>1 Ropani</strong> = 16 Aana = 64 Paisa = 256 Daam ≈ 508.74 m² ≈ 5,476 sq ft
+- <strong>1 Aana</strong> = 4 Paisa = 16 Daam ≈ 31.80 m² ≈ 342.25 sq ft
+- <strong>1 Paisa</strong> = 4 Daam ≈ 7.95 m² ≈ 85.56 sq ft
+- <strong>1 Daam</strong> ≈ 1.99 m² ≈ 21.39 sq ft
+- <strong>1 Bigha</strong> = 20 Kattha = 400 Dhur ≈ 6,772.63 m² ≈ 72,900 sq ft
+- <strong>1 Kattha</strong> = 20 Dhur ≈ 338.63 m² ≈ 3,645 sq ft
+- <strong>1 Dhur</strong> ≈ 16.93 m² ≈ 182.25 sq ft
 
-- <strong>Ropani</strong> — the largest common hill unit (≈508.74 sq meters; some sources cite 508.72 — confirm against the official survey record for legal use)
-- <strong>Aana</strong> — 1 Ropani = 16 Aana
-- <strong>Paisa</strong> — 1 Aana = 4 Paisa
-- <strong>Daam</strong> (also spelled <strong>Dam</strong>) — 1 Paisa = 4 Daam
+> **Convert any figure instantly:** use the <a href="/nepal/land/ropani-to-aana">Ropani to Aana converter</a> or the <a href="/nepal/land/aana-to-ropani">Aana to Ropani converter</a>, both of which break the result down into paisa and daam. For budget planning on a plot, the <a href="/nepal/land/land-affordability-calculator">land affordability calculator</a> shows what an area costs at a given price per aana or per ropani.
 
-<strong>Terai system:</strong>
+Two figures do most of the work in practice: <strong>1 aana ≈ 342.25 sq ft</strong> in the hill districts, and <strong>1 kattha ≈ 3,645 sq ft</strong> in the Terai. If you remember those two and the fact that a ropani is 16 aana, you can sanity-check almost any listing.
 
-- <strong>Bigha</strong> — the largest common Terai unit (≈6,772.63 sq meters / about 1.67 acres)
-- <strong>Kattha</strong> — 1 Bigha = 20 Kattha (≈338.63 sq meters)
-- <strong>Dhur</strong> — 1 Kattha = 20 Dhur (≈16.93 sq meters)
+<h2 id="introduction">Why Land Units Matter Before You Pay</h2>
 
-> **Approximate values:** metric equivalents above are commonly cited conversions (last checked October 2026), not legal survey figures. For transactions, rely on the kitta area in the official Lalpurja and survey records.
+Land in Nepal is bought, sold, mortgaged and taxed in units that predate the metric system, and those units are what the official record is written in. A listing may say "4 aana", a malpot office may quote its rate per ropani, and a contractor may quote construction cost per square foot — three units for the same plot.
 
-<h2 id="conversion">Conversion Table</h2>
+Getting the units wrong is expensive in a way that is hard to correct later:
 
-- **1 Ropani** — 16 Aana ≈ 508.74 m² (some sources 508.72)
-- **1 Aana** — 4 Paisa ≈ 31.80 m²
-- **1 Paisa** — 4 Daam (Dam) ≈ 7.95 m²
-- **1 Bigha** — 20 Kattha ≈ 6,772.63 m²
-- **1 Kattha** — 20 Dhur ≈ 338.63 m²
-- **1 Dhur** ≈ 16.93 m²
+- <strong>The price is per unit of area.</strong> If you read a per-aana price as a per-ropani price, you are out by a factor of 16.
+- <strong>The official record is the boundary of what you own.</strong> The area on the Lalpurja is what you can build on, mortgage and sell.
+- <strong>Building rules apply per area.</strong> Floor-area and coverage limits, setback rules and plot-size requirements all depend on the measured area.
+- <strong>Valuation and tax use the same units.</strong> Government land-value rates are published per ropani, aana, bigha or kattha depending on the district.
 
-<h2 id="conclusion">Conclusion</h2>
+Because the units are unfamiliar rather than difficult, a few minutes with the conversion chains above prevents most of the mistakes people make at the start of a purchase.
 
-Use our <a href="/nepal/land/ropani-to-aana">Land Converter</a> to instantly convert between Nepali land units and square feet or meters.
+<h2 id="units">The Hill System — Ropani, Aana, Paisa, Daam</h2>
 
-> **Sources (last checked October 2026):** conversions above are commonly cited standard equivalents; for authoritative survey figures consult the Survey Department / <a href="https://dolma.gov.np">Department of Land Management and Archives</a> and the kitta record on your Lalpurja.
+The hill system divides land by fours and sixteens, and every step down the chain is smaller by a fixed factor:
+
+- <strong>Ropani</strong> — the largest common hill unit, about 508.74 m² (5,476 sq ft). Plots in the Kathmandu Valley are most often quoted per aana, with the total expressed in ropani and aana together, such as "1 ropani 4 aana".
+- <strong>Aana</strong> — one-sixteenth of a ropani, about 31.80 m² (342.25 sq ft). This is the workhorse unit of valley listings.
+- <strong>Paisa</strong> — one-fourth of an aana, about 7.95 m² (85.56 sq ft). Used for the remainder when a plot does not divide neatly into aana.
+- <strong>Daam</strong> (also spelled Dam) — one-fourth of a paisa, about 1.99 m² (21.39 sq ft). The smallest unit in everyday use.
+
+One consequence of the chain is worth noting: because the divisions are 16 then 4 then 4, a plot of "1 ropani 4 aana 2 paisa" is not 1.42 ropani in a decimal sense — it is 1 + 4/16 + 2/64 ropani, or 1.28125 ropani. Convert to a single unit carefully, or use the converter.
+
+<h2 id="terai">The Terai System — Bigha, Kattha, Dhur</h2>
+
+The Terai system uses a different chain and much larger base units:
+
+- <strong>Bigha</strong> — the largest common unit in the Terai, about 6,772.63 m² (72,900 sq ft, roughly 1.67 acres). Agricultural land is commonly quoted by the bigha.
+- <strong>Kattha</strong> — one-twentieth of a bigha, about 338.63 m² (3,645 sq ft). Residential plots in Terai towns are frequently quoted in kattha.
+- <strong>Dhur</strong> — one-twentieth of a kattha, about 16.93 m² (182.25 sq ft). Used for small remainders and adjustments.
+
+So 1 bigha = 20 kattha = 400 dhur, and the metric equivalents scale exactly with those factors. Because the standard chain in Nepal is 20 and 20, a plot of "5 kattha 10 dhur" is 5.5 kattha, or 0.275 bigha — the decimal conversion is straightforward once you know the chain.
+
+Local practice can differ in parts of the Terai, including how the kattha itself is subdivided. The authoritative figure for any transaction is the area stated in the official land record, so read the Lalpurja rather than relying on a listing or on local verbal convention.
+
+<h2 id="conversion">Full Conversion Table</h2>
+
+Hill system, with the metric, square-foot and acre equivalents:
+
+| Unit | Equals | Square metres | Square feet |
+| --- | --- | --- | --- |
+| 1 Ropani | 16 Aana | 508.74 m² | 5,476 sq ft |
+| 1 Aana | 4 Paisa | 31.80 m² | 342.25 sq ft |
+| 1 Paisa | 4 Daam | 7.95 m² | 85.56 sq ft |
+| 1 Daam | — | 1.99 m² | 21.39 sq ft |
+
+Terai system:
+
+| Unit | Equals | Square metres | Square feet |
+| --- | --- | --- | --- |
+| 1 Bigha | 20 Kattha | 6,772.63 m² | 72,900 sq ft |
+| 1 Kattha | 20 Dhur | 338.63 m² | 3,645 sq ft |
+| 1 Dhur | — | 16.93 m² | 182.25 sq ft |
+
+> **Approximate values:** the metric and square-foot figures above are the standard conversions used in Nepal for comparing and pricing land (last checked October 2026), not a legal survey. Some references cite 1 ropani as 508.72 m² rather than 508.74 m². For a transaction, rely on the kitta area stated in the official Lalpurja and on the survey office's measurement.
+
+<h2 id="cross-system">Crossing Between Systems — and Into Acres and Hectares</h2>
+
+Sometimes you need to move between the two systems, or into metric land units:
+
+- <strong>1 Bigha</strong> ≈ 13.31 Ropani
+- <strong>1 Ropani</strong> ≈ 0.0751 Bigha
+- <strong>1 Acre</strong> ≈ 7.95 Ropani, or about 0.5975 Bigha
+- <strong>1 Hectare</strong> = 10,000 m² ≈ 19.66 Ropani, or about 1.48 Bigha
+- <strong>1 Bigha</strong> ≈ 1.674 Acre
+
+Bigha-to-ropani conversions are approximate because the two systems were never designed to mesh: 13.31 is not a round number, and the widely quoted "1 bigha = 13 ropani" is a rounding. Use the approximate figures to sense-check a deal; use the official record for anything binding.
+
+A quick sense-check with these numbers: a 1-ropani plot (5,476 sq ft) is a little over one-eighth of an acre, while a 1-bigha plot (72,900 sq ft) is about 1.67 acres — roughly thirteen times larger. If a listing's price per unit looks similar across a bigha plot and a ropani plot, the units have been mixed up somewhere.
+
+<h2 id="lalpurja">How Units Appear on a Lalpurja</h2>
+
+The Lalpurja (land-ownership certificate) is the document that states what you own, and it is written in these units:
+
+- <strong>Kitta number</strong> — the plot identifier used in the land record.
+- <strong>Area</strong> — in Ropani-Aana-Paisa-Daam for hill districts and Bigha-Kattha-Dhur for Terai districts, increasingly with metric equivalents shown alongside.
+- <strong>Boundary and location</strong> — the ward, the adjoining plots and the physical boundaries used in the survey.
+- <strong>Land classification</strong> — which affects what the land can be used for and how it is valued.
+
+Practical reading tips:
+
+1. <strong>Read the area line in full.</strong> "0-4-2-0" style expressions are ropani-aana-paisa-daam in order, and a missing digit changes the area completely.
+2. <strong>Compare both units.</strong> If the traditional and metric figures on the document do not agree, ask the land revenue office which line is authoritative.
+3. <strong>Match the kitta number to the plot on the ground.</strong> A correct area attached to the wrong kitta is still someone else's land.
+4. <strong>Check for changes after the record was issued.</strong> Subdivisions, boundary corrections and plot mergers all create newer records — ask for the current state, not the oldest document in the file.
+
+For the transaction side — malpot fees, capital gains tax on land and registration costs — see our <a href="/guides/land-registration-fees-malpot-nepal-guide">land registration fees guide</a> and the <a href="/blog/land-registration-cost-nepal-malpot-cgt-calculation">malpot and CGT calculation explainer</a>. For annual land tax and valuation, see the <a href="/guides/house-property-valuation-land-tax-bhumi-kar-nepal-guide">property valuation and bhumi kar guide</a>.
+
+<h2 id="buying">Checking Area When You Buy</h2>
+
+Units convert cleanly; plots do not. Before you commit to a price built on an area figure:
+
+- <strong>Ask for the current Lalpurja</strong> and read the area yourself, in both unit systems if both are shown.
+- <strong>Convert the listing into the same unit as the official record</strong> — usually aana in the hills, kattha in the Terai — and compare.
+- <strong>Check the plot's shape and access.</strong> Two plots can have identical areas and very different usable space, and road access affects both value and building permission.
+- <strong>Look at the boundaries on the ground.</strong> The four-corner boundary (char-killa) matters; a boundary that has moved is a legal problem, not a rounding problem.
+- <strong>Re-measure if anything does not add up.</strong> A survey measurement is cheap compared with buying land you cannot build on.
+- <strong>Ask the price basis explicitly</strong> — per aana, per ropani, per kattha or per square foot — and confirm it in writing before paying a deposit.
+- <strong>Watch for area quoted "approximately".</strong> In listings this usually means rounded — sometimes upward.
+
+<h2 id="mistakes">Common Mistakes</h2>
+
+- <strong>Reading a per-aana price as a per-ropani price.</strong> A factor-of-16 error on the total.
+- <strong>Assuming 1 aana = 31.8 m² means every listing will match.</strong> Listings round; records do not.
+- <strong>Treating "1 ropani 4 aana" as 1.4 ropani.</strong> Sub-units are not decimal places.
+- <strong>Assuming bigha-to-ropani is exactly 13.</strong> It is about 13.31, and the difference is real money.
+- <strong>Confusing daam with dam in other contexts</strong> — in land measurement it is a unit of area, not an amount of money.
+- <strong>Mixing up kattha and dhur</strong> when a plot is quoted as "20 dhur" instead of "1 kattha" — they are the same thing, and the reverse mistake costs 20 times the price.
+- <strong>Ignoring the metric line on the record</strong> when it disagrees with the traditional units.
+- <strong>Relying on a verbal area from the seller</strong> rather than the Lalpurja.
+- <strong>Forgetting that area and value are different things.</strong> Two 4-aana plots in the same ward can differ 2× in price because of road access, shape and classification — the <a href="/nepal/land/land-affordability-calculator">land affordability calculator</a> helps you see the price per unit clearly.
+
+<h2 id="sources">Sources and Disclaimer</h2>
+
+This guide explains the traditional land units used in Nepal and the standard conversions between them. It is general information, not legal or survey advice, and it does not replace the figures on an official land record.
+
+- <strong>Conversion factors</strong> — the standard chain used in Nepal: 1 Ropani = 16 Aana = 64 Paisa = 256 Daam, 1 Aana = 4 Paisa, 1 Paisa = 4 Daam, 1 Bigha = 20 Kattha = 400 Dhur, and 1 Kattha = 20 Dhur. Metric equivalents follow from 1 Ropani = 508.737 m² and 1 Bigha = 6,772.63 m².
+- <strong>Department of Land Management and Archives</strong> — land records, Lalpurja and land administration: <a href="https://dolma.gov.np" target="_blank" rel="noopener noreferrer">dolma.gov.np</a>
+- <strong>Survey office and land revenue (malpot) office</strong> — the authoritative measurement and the recorded kitta area for any specific plot.
+- <strong>Conversion tools</strong> — <a href="/nepal/land/ropani-to-aana">Ropani to Aana</a>, <a href="/nepal/land/aana-to-ropani">Aana to Ropani</a> and the <a href="/nepal/land/land-affordability-calculator">land affordability calculator</a>.
+
+Land units, malpot rates and valuation rules are set by the responsible authorities and can be revised. Confirm the recorded area and the applicable rates with the land revenue office before completing a transaction.

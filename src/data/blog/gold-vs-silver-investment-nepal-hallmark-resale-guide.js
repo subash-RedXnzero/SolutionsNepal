@@ -10,7 +10,7 @@ export const goldVsSilverInvestmentNepalHallmarkResaleGuidePost = {
   authorCredential: 'Nepal gold-market researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: '/blog/photo-1579621970795-87facc2f976d.jpg',
+  image: '/blog/photo-1579621970795-87facc2f976d.webp',
   tags: ['Gold Price Nepal', 'Silver Price Nepal', 'Hallmark', 'Tola', 'FENEGOSIDA', 'Investment'],
   relatedTools: ['gold-price', 'silver-price', 'tola-to-gram'],
   faqs: [
@@ -34,7 +34,7 @@ export const goldVsSilverInvestmentNepalHallmarkResaleGuidePost = {
     { type: 'heading', level: 2, id: 'hallmark', text: 'Hallmark, Tola & Purity — The 3 Must-Knows' },
     { type: 'datatable', rows: [{ label: '999 (24K, chhapawal/fine)', value: '99.9% — bars, coins, investment; NBSM hallmark' }, { label: '995 (tejabi)', value: '99.5% — traditional; ~Rs 200–400/tola under fine; often acid-tested' }, { label: '916 (22K)', value: '91.6% — standard jewelry (durable); 750 = 18K modern designs' }, { label: 'Weight', value: '1 tola = 11.664 g = 100 lal; 1 lal ≈ 0.11664 g — confirm invoice unit' }] },
     { type: 'paragraph', content: 'Demand the following on the invoice:' },
-    { type: 'list', style: 'ul', items: ['**NBSM NS mark**', '**fineness number**', '**weight**', '**rate**', '**making/wastage split**'] },
+    { type: 'list', style: 'ul', items: ['<strong>NBSM NS mark</strong>', '<strong>fineness number</strong>', '<strong>weight</strong>', '<strong>rate</strong>', '<strong>making/wastage split</strong>'] },
     { type: 'paragraph', content: 'No certificate = just a claim. Use <a href="/nepal/gold/tola-to-gram">Tola → Gram converter</a> before you pay.' },
     { type: 'heading', level: 2, id: 'gold-vs-silver', text: 'Gold vs Silver — Investment Math' },
     { type: 'datatable', rows: [{ label: 'Entry ticket (indicative, October 2026 — verify the live FENEGOSIDA morning notice before visiting the shop)', value: 'Gold ~Rs 290,000+/tola vs Silver ~Rs 4,400+/tola — silver suits small budgets. (Older guides quoting ~Rs 150,000 / ~Rs 1,800 describe a much earlier market — do not use them.) Check live: <a href="/nepal/gold-price-nepal">Gold Price Nepal</a> + <a href="/nepal/silver-price-nepal">Silver Price Nepal</a>.' }, { label: 'Spread on jewelry', value: 'Gold making 5–15% vs Silver making often 15–30%+ (labour dominates) — bars/coins minimize this' }, { label: 'Liquidity', value: 'Gold buyback same-day at any dealer; silver buyback narrower + purity disputes more common' }, { label: 'Volatility', value: 'Silver % swings > gold — higher risk/reward; gold tracks NPR depreciation + global risk' }] },

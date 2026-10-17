@@ -46,11 +46,47 @@ for (const n of nepaliNames) {
   }
   if (sameMeaning.length >= 6 && moreByGender.length >= 6 && moreByOrigin.length >= 6) break;
 }
+
+// Auto-generated FAQ — targets "[name] meaning in nepali / boy or girl name" queries.
+const faqs = [
+  {
+    q: `What does ${name.name} mean?`,
+    a: `${name.name}${name.nepaliName ? ` (${name.nepaliName})` : ''} means "${name.meaning}".`,
+  },
+  {
+    q: `What is the origin of ${name.name}?`,
+    a: `${name.name} is of ${name.origin} origin${name.pronunciation ? `, pronounced ${name.pronunciation}` : ''}.`,
+  },
+  {
+    q: `Is ${name.name} a boy or girl name?`,
+    a: `${name.name} is used as a ${name.gender.toLowerCase()} name in Nepal.`,
+  },
+];
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 
 <BaseLayout
   title={`${name.name} — Meaning & Origin | SolutionsNepal`}
   description={`${name.name} (${name.nepaliName}) means "${name.meaning}". Origin: ${name.origin}. Gender: ${name.gender}.`}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: `${name.name} — Meaning & Origin`,
+      description: `${name.name} (${name.nepaliName}) means "${name.meaning}". Origin: ${name.origin}. Gender: ${name.gender}.`,
+      url: `https://solutionsnepal.com/nepal/names/${name.slug}`,
+      isPartOf: { '@type': 'WebSite', name: 'SolutionsNepal', url: 'https://solutionsnepal.com' },
+    },
+    faqJsonLd,
+  ]}
 >
   <div class="name-page">
     <!-- Breadcrumb -->
@@ -148,6 +184,17 @@ for (const n of nepaliNames) {
       </section>
     )}
 
+    <!-- FAQ — targets "[name] meaning / boy or girl name" queries -->
+    <section class="name-section name-faq">
+      <h2>Frequently asked questions</h2>
+      {faqs.map(f => (
+        <details class="name-faq-item">
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </section>
+
     <!-- Related Links -->
     <div class="name-related">
       <h2>Explore More</h2>
@@ -181,6 +228,11 @@ for (const n of nepaliNames) {
   /* Sections */
   .name-section { margin-bottom: 28px; }
   .name-section h2 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+  .name-faq-item { border-top: 1px solid var(--nk-border); padding: 9px 0; }
+  .name-faq-item:first-of-type { border-top: none; }
+  .name-faq-item summary { font-size: 14px; font-weight: 600; cursor: pointer; list-style: none; }
+  .name-faq-item summary::-webkit-details-marker { display: none; }
+  .name-faq-item p { margin: 6px 0 2px; }
   .name-section p { font-size: 14px; color: var(--nk-text-secondary); line-height: 1.7; }
 
   /* Tags */

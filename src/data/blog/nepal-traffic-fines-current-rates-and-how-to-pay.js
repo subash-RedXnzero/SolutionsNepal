@@ -10,7 +10,7 @@ export const nepalTrafficFinesCurrentRatesAndHowToPayPost = {
   authorCredential: 'Nepal documentation researchers',
   date: 'September 3, 2026',
   readTime: '7 min read',
-  image: '/blog/photo-1768059279306-98b49f47be92.jpg',
+  image: '/blog/photo-1768059279306-98b49f47be92.webp',
   tags: ['Traffic', 'Fines', 'Vehicles', 'Nepal'],
   relatedTools: ['vehicle-tax-new', 'fuel-price'],
   faqs: [

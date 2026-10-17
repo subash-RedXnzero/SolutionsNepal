@@ -1,11 +1,26 @@
 ---
 const measurementId = 'G-WV0T1BYNTY';
+// Deferred loader: the gtag library (~50-100 KB + DNS/TLS) must never compete
+// with first paint. We stub window.gtag so early events queue in dataLayer,
+// then inject the real script on idle (max 4s) instead of during parse.
 ---
 
-<script async is:inline src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}></script>
 <script is:inline define:vars={{ measurementId }}>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){window.dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', measurementId);
+  (function () {
+    var loaded = false;
+    function load() {
+      if (loaded) return;
+      loaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+      document.head.appendChild(s);
+      window.gtag('js', new Date());
+      window.gtag('config', measurementId);
+    }
+    if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 4000 });
+    else setTimeout(load, 2500);
+  })();
 </script>

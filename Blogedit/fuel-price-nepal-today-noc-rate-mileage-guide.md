@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal utilities researchers
 date: September 27, 2026
 readTime: 8 min read
-image: "/blog/photo-1748761751275-e55a2a29e1bf.jpg"
+image: "/blog/photo-1748761751275-e55a2a29e1bf.webp"
 tags: [Fuel Price Nepal, NOC Petrol Price, Diesel Price Nepal, Mileage, Utilities]
 relatedTools: [fuel-price, fuel-cost, ownership-cost]
 headings:
@@ -36,7 +36,6 @@ faqs:
   - q: Does fuel price vary by district?
     a: "Slightly — depot transport cost differs (Kathmandu vs far-west). NOC publishes depot-wise rates; Kathmandu Valley retail is the reference most blogs quote."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 Check <strong>NOC's fortnightly notice</strong> or SolutionsNepal's <a href="/nepal/fuel-price-nepal">Fuel Price Nepal</a> for <strong>petrol / diesel / kerosene / LPG</strong> today. Price is <strong>NOC retail = IOC import + freight + taxes + dealer margin</strong>. Your cost per km is <strong>fuel price ÷ mileage</strong> — e.g., <strong>~Rs 198/L ÷ 35 km/L ≈ Rs 5.66/km (illustrative, October 2026 — use the live NOC price)</strong>.
@@ -77,7 +76,7 @@ Try SolutionsNepal’s <a href="/nepal/vehicle/fuel-cost">Trip Fuel Cost Calcula
 - Clean air filter + timely servicing
 - Avoid idling >60 seconds — restart is cheaper than idling
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: <a href="https://noc.org.np" target="_blank" rel="noopener noreferrer">Nepal Oil Corporation (noc.org.np)</a> fortnightly price notices and IOC import parity. SolutionsNepal mirrors the latest notice — always verify before a long trip.
 

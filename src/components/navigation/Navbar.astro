@@ -14,7 +14,7 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
   <div class="nk-header-inner">
     <!-- Logo -->
     <a href="/" class="nk-logo" aria-label="SolutionsNepal Home">
-      <img src="/navbar.webp" alt="SolutionsNepal logo" width="38" height="38" class="nk-logo-mark" fetchpriority="high" />
+      <img src="/navbar.webp" alt="SolutionsNepal logo" width="38" height="38" class="nk-logo-mark" fetchpriority="high" decoding="async" />
       <span class="nk-logo-text">SolutionsNepal</span>
     </a>
 
@@ -195,6 +195,12 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
     .nk-mobile-only { display: inline-flex; }
     .nk-mobile-link { min-height: 44px; display: flex; align-items: center; }
   }
+
+  /* Very small screens: shrink the wordmark so logo + 3 action buttons fit 320px */
+  @media (max-width: 360px) {
+    .nk-header-inner { padding: 0 12px; gap: 8px; }
+    .nk-logo-text { font-size: 18px; }
+  }
 </style>
 
 <script is:inline>
@@ -214,6 +220,8 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
     mobileNav?.classList.toggle('open', open);
     menuBtn?.setAttribute('aria-expanded', String(open));
     menuBtn?.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    // Lock background scroll while the menu is open
+    document.body.style.overflow = open ? 'hidden' : '';
   };
   menuBtn?.addEventListener('click', () => {
     setMenu(!mobileNav?.classList.contains('open'));
@@ -226,9 +234,14 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
     }
   });
 
-  // Close mobile nav on link click
+  // Close mobile nav on link click (keep aria-expanded in sync)
   mobileNav?.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => mobileNav?.classList.remove('open'));
+    link.addEventListener('click', () => setMenu(false));
+  });
+
+  // Close the mobile nav when resizing up to desktop widths
+  window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => {
+    if (e.matches) setMenu(false);
   });
 
   // Search trigger

@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax and documentation researchers
 date: September 14, 2026
 readTime: 13 min read
-image: "/blog/photo-1434030216411-0b793f4b4173.jpg"
+image: "/blog/photo-1434030216411-0b793f4b4173.webp"
 tags: [Personal PAN Nepal, PAN Registration, e-PAN, IRD Nepal, Nagarik App, Documents]
 relatedTools: [salary-checker, freelancer-take-home]
 headings:
@@ -14,52 +14,73 @@ headings:
     text: "Quick Answer: How to Get Personal PAN Online"
     level: 2
   - id: what-is-pan
-    text: What Is a Personal PAN in Nepal?
+    text: "What Is a Personal PAN in Nepal?"
     level: 2
   - id: who-needs
-    text: Who Needs a Personal PAN?
+    text: "Who Needs a Personal PAN?"
+    level: 2
+  - id: personal-vs-business
+    text: "Personal PAN vs Business PAN"
     level: 2
   - id: documents
-    text: Documents Required for Personal PAN
+    text: "Documents Required for Personal PAN"
     level: 2
   - id: ird-portal
-    text: How to Apply Through the IRD Taxpayer Portal
+    text: "How to Apply Through the IRD Taxpayer Portal"
     level: 2
   - id: nagarik
-    text: How to Register PAN Through Nagarik App
+    text: "How to Register PAN Through Nagarik App"
     level: 2
   - id: cost
-    text: How Much Does Personal PAN Cost?
+    text: "How Much Does Personal PAN Cost?"
     level: 2
   - id: timeline
-    text: How Long Does PAN Registration Take?
+    text: "How Long Does PAN Registration Take?"
     level: 2
   - id: epan
-    text: What Is e-PAN and How Do You Download It?
+    text: "What Is e-PAN and How Do You Download It?"
     level: 2
   - id: find-pan
-    text: How to Find or Check Your PAN Number
+    text: "How to Find or Check Your PAN Number"
     level: 2
   - id: correction
-    text: How to Correct PAN Information
+    text: "How to Correct PAN Information"
     level: 2
   - id: duplicate
-    text: Can You Have More Than One PAN?
+    text: "Can You Have More Than One PAN?"
     level: 2
   - id: uses
-    text: PAN for Salary, Freelance, Creators, and Banking
+    text: "PAN for Salary, Freelance, Creators, and Banking"
     level: 2
+  - id: salary
+    text: "Salaried Employees"
+    level: 3
+  - id: freelance
+    text: "Freelancers and Remote Workers"
+    level: 3
+  - id: creators
+    text: "YouTubers, TikTokers, and Digital Creators"
+    level: 3
+  - id: banking
+    text: "Bank and Financial Transactions"
+    level: 3
   - id: errors
-    text: Common PAN Errors and Fixes
+    text: "Common PAN Errors and Fixes"
+    level: 2
+  - id: rejection
+    text: "What to Do If Your PAN Application Is Rejected"
     level: 2
   - id: mistakes
-    text: Common Mistakes When Applying
+    text: "Common Mistakes When Applying"
+    level: 2
+  - id: pan-vs-tax
+    text: "Personal PAN vs Taxpayer Registration and Tax Filing"
     level: 2
   - id: checklist
-    text: Quick Personal PAN Checklist
+    text: "Quick Personal PAN Checklist"
     level: 2
   - id: sources
-    text: Official Sources and Final Note
+    text: "Official Sources and Final Note"
     level: 2
 faqs:
   - q: How can I apply for a PAN card online in Nepal?
@@ -87,7 +108,6 @@ faqs:
   - q: How can I find my PAN number if I forgot it?
     a: Check your taxpayer profile, employer records, previous tax documents, bank forms, or the PAN certificate. If you do not know the number, contact the Inland Revenue Office because public name-based lookup is generally restricted.
 ---
-
 <h2 id="quick-answer">Quick Answer: How to Get Personal PAN Online</h2>
 
 You can apply for an individual or <strong>Personal PAN</strong> through Nepal's Inland Revenue Department (IRD) Taxpayer Portal or through the PAN service in Nagarik App. The usual flow is:

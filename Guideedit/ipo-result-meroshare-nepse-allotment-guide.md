@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal investment and finance researchers
 date: September 10, 2026
 readTime: 12 min read
-image: "/blog/photo-1551288049-bebda4e38f71.jpg"
+image: "/blog/photo-1551288049-bebda4e38f71.webp"
 tags: [IPO, MeroShare, CDSC, NEPSE, Investing, Nepal]
 relatedTools: [sip-calculator, emi-calculator]
 headings:
@@ -14,31 +14,40 @@ headings:
     text: "Quick Answer: How to Check IPO Result in Nepal"
     level: 2
   - id: cdsc
-    text: How to Check IPO Result Through CDSC
+    text: "How to Check IPO Result Through CDSC"
     level: 2
   - id: meroshare
-    text: How to Check IPO Allotment Through MeroShare
+    text: "How to Check IPO Allotment Through MeroShare"
     level: 2
   - id: meaning
-    text: What Allotted and Not Allotted Mean
+    text: "What Allotted and Not Allotted Mean"
     level: 2
   - id: credit
-    text: How to Check IPO Shares After Allotment
+    text: "How to Check IPO Shares After Allotment"
     level: 2
   - id: difference
     text: "IPO Result vs MeroShare: What Is the Difference?"
     level: 2
   - id: timeline
-    text: What Happens After IPO Allotment?
+    text: "What Happens After IPO Allotment?"
     level: 2
   - id: profit
-    text: How to Check IPO Profit
+    text: "How to Check IPO Profit"
     level: 2
   - id: problems
-    text: Common IPO Result Problems
+    text: "Common IPO Result Problems"
     level: 2
+  - id: not-showing
+    text: "My IPO Result Is Not Showing"
+    level: 3
+  - id: shares-missing
+    text: "I Was Allotted Shares but They Are Not in MeroShare"
+    level: 3
+  - id: money-blocked
+    text: "My Money Is Still Blocked"
+    level: 3
   - id: safety
-    text: IPO Result Safety Tips
+    text: "IPO Result Safety Tips"
     level: 2
 faqs:
   - q: How can I check my IPO result in Nepal?
@@ -58,7 +67,6 @@ faqs:
   - q: What should I do if my IPO result is not showing?
     a: Confirm the official allotment date, check the correct IPO and BOID, try again later during heavy traffic, and use MeroShare Application Report as an alternative.
 ---
-
 <h2 id="quick-answer">Quick Answer: How to Check IPO Result in Nepal</h2>
 
 You can check a Nepal IPO allotment through the official CDSC result system or through MeroShare. The result tells you whether the lottery or allotment selected your application; MeroShare later shows the shares after they are credited to your Demat account.

@@ -10,7 +10,7 @@ export const voterIdRegistrationNepalOnlineGuidePost = {
   authorCredential: 'Nepal documentation and election researchers',
   date: 'September 25, 2026',
   readTime: '16 min read',
-  image: '/blog/photo-1586953208448-b95a79798f07.jpg',
+  image: '/blog/photo-1586953208448-b95a79798f07.webp',
   tags: ['Voter ID Nepal', 'Matadata Namawali', 'Election Commission Nepal', 'Voter Registration 2026', 'NIN', 'Documents'],
   relatedTools: ['government-service-cost', 'nepali-calendar', 'passport-size-photo'],
   faqs: [
@@ -39,7 +39,7 @@ export const voterIdRegistrationNepalOnlineGuidePost = {
     { id: 'documents', text: 'Required Documents', level: 2 },
     { id: 'portal', text: 'Official Election Commission Portal', level: 2 },
     { id: 'pre-registration', text: 'How to Complete Online Pre-Registration (Step-by-Step)', level: 2 },
-    { id: 'route-nin', text: 'Route A: With National ID (NIN)', level: 3 },
+    { id: 'route-nin', text: 'Route A: With National ID (NIN) — Recommended', level: 3 },
     { id: 'route-mobile', text: 'Route B: Without NIN (Mobile OTP)', level: 3 },
     { id: 'biometrics', text: 'Biometric Visit at District Election Office', level: 2 },
     { id: 'status', text: 'How to Check Your Name in the Voter List', level: 2 },

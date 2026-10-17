@@ -6,84 +6,135 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 16, 2026
 readTime: 14 min read
-image: "/blog/photo-1434030216411-0b793f4b4173.jpg"
+image: "/blog/photo-1434030216411-0b793f4b4173.webp"
 tags: [MOFA Document Attestation Nepal Online 2026, MOFA Attestation, NEATS, Department of Consular Services, Embassy Legalization, Documents]
 relatedTools: [government-service-cost, nepali-calendar, passport-size-photo]
 headings:
   - id: introduction
-    text: Introduction (Quick Read)
+    text: "Introduction (Quick Read)"
     level: 2
   - id: what-is
-    text: What is MOFA Document Attestation?
+    text: "What is MOFA Document Attestation?"
     level: 2
   - id: key-terms
     text: "Key Terms You’ll Encounter"
     level: 2
   - id: neats
-    text: What is NEATS?
+    text: "What is NEATS?"
     level: 2
   - id: who-needs
-    text: Who Needs MOFA Attestation?
+    text: "Who Needs MOFA Attestation?"
     level: 2
   - id: documents
-    text: What Documents Can Be Attested?
+    text: "What Documents Can Be Attested?"
     level: 2
   - id: pre-verification
-    text: Do I Need Document Verification Before MOFA?
+    text: "Do I Need Document Verification Before MOFA?"
     level: 2
   - id: process
-    text: Complete MOFA Attestation Process (Step-by-Step)
+    text: "Complete MOFA Attestation Process (Step-by-Step)"
     level: 2
+  - id: step-destination
+    text: "Step 1: Identify the destination requirement"
+    level: 3
+  - id: step-doctype
+    text: "Step 2: Identify the document type"
+    level: 3
+  - id: step-preverification
+    text: "Step 3: Check whether pre-verification is required"
+    level: 3
+  - id: step-original
+    text: "Step 4: Prepare the original document"
+    level: 3
+  - id: step-portal
+    text: "Step 5: Access the official NEATS portal"
+    level: 3
+  - id: step-login
+    text: "Step 6: Create an account / log in"
+    level: 3
+  - id: step-service
+    text: "Step 7: Select the appropriate service"
+    level: 3
+  - id: step-applicant
+    text: "Step 8: Enter applicant information"
+    level: 3
+  - id: step-upload
+    text: "Step 9: Upload documents if required"
+    level: 3
+  - id: step-appointment
+    text: "Step 10: Select appointment/date if required"
+    level: 3
+  - id: step-review
+    text: "Step 11: Review and submit"
+    level: 3
+  - id: step-pay
+    text: "Step 12: Pay the official fee"
+    level: 3
+  - id: step-visit
+    text: "Step 13: Visit the Department of Consular Services (if required)"
+    level: 3
+  - id: step-authentication
+    text: "Step 14: Complete authentication"
+    level: 3
+  - id: step-collect
+    text: "Step 15: Collect the authenticated document"
+    level: 3
+  - id: step-embassy
+    text: "Step 16: Complete embassy legalization if required"
+    level: 3
   - id: neats-walkthrough
     text: "NEATS Portal: Step-by-Step Guide (Practical)"
     level: 2
   - id: doc-requirements
-    text: Document-Specific Requirements (Practical Approach)
+    text: "Document-Specific Requirements (Practical Approach)"
     level: 2
   - id: neats-limits
     text: "NEATS: Rights and Limitations"
     level: 2
   - id: embassy
-    text: Embassy Legalization After MOFA
+    text: "Embassy Legalization After MOFA"
     level: 2
   - id: fees
-    text: Fees and Payment
+    text: "Fees and Payment"
     level: 2
   - id: appointment
-    text: Appointment Booking
+    text: "Appointment Booking"
     level: 2
   - id: timeline
-    text: Timeline and Processing Times
+    text: "Timeline and Processing Times"
     level: 2
   - id: tracking
-    text: Tracking and Status
+    text: "Tracking and Status"
     level: 2
   - id: rejected
-    text: What to Do if the Application Is Rejected or Delayed
+    text: "What to Do if the Application Is Rejected or Delayed"
     level: 2
   - id: children
-    text: Children and MOFA Attestation
+    text: "Children and MOFA Attestation"
     level: 2
   - id: nrn
-    text: NRNs and Documents From Abroad
+    text: "NRNs and Documents From Abroad"
     level: 2
   - id: translation
-    text: Translation Requirements
+    text: "Translation Requirements"
     level: 2
   - id: originals
-    text: Original vs Copies
+    text: "Original vs Copies"
     level: 2
   - id: security
-    text: Security and Privacy
+    text: "Security and Privacy"
     level: 2
   - id: official-sources
-    text: Official Sources to Check
+    text: "Official Sources to Check"
     level: 2
   - id: final-checklist
-    text: Final Checklist for MOFA Attestation
+    text: "Final Checklist for MOFA Attestation"
+    level: 2
+  - id: related-guides
+    text: "Related SolutionsNepal Guides"
     level: 2
   - id: final-note
-    text: Final Note
+    text: "Final Note"
     level: 2
 faqs:
   - q: What is MOFA document attestation?
@@ -117,7 +168,6 @@ faqs:
   - q: Can NRNs get documents attested from abroad?
     a: "NRNs can often use attested documents, but the approach depends on the destination country's rules. Some documents may require further attestation or legalization in addition to MOFA authentication. Note: Nepal is not an HCCH Apostille Convention member, so an apostille — where the destination requires one — is obtained in the destination country under its rules, not from MOFA in Nepal."
 ---
-
 <h2 id="introduction">Introduction (Quick Read)</h2>
 
 If you need Nepal-issued documents to be recognized abroad, <strong>MOFA (Ministry of Foreign Affairs)</strong> and the <strong>Department of Consular Services</strong> oversee attestation, authentication, and legalization. The process typically involves:

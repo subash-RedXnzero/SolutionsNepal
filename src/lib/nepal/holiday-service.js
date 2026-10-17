@@ -37,6 +37,27 @@ let apiDataCache = {};
 async function loadApiData(bsYear) {
   if (apiDataCache[bsYear]) return apiDataCache[bsYear];
 
+  // 1. Live edge endpoint — kept fresh daily by the worker cron after
+  //    deployment. Same yearly shape as the static snapshot, wrapped as
+  //    { ok, fetchedAt, data }. Any failure falls through to the snapshot.
+  try {
+    const opts = typeof AbortSignal !== 'undefined' && AbortSignal.timeout
+      ? { signal: AbortSignal.timeout(6000) }
+      : {};
+    const resp = await fetch(`/api/live/calendar/${bsYear}`, opts);
+    if (resp.ok) {
+      const json = await resp.json();
+      const data = json && json.ok ? json.data : json;
+      if (data && Array.isArray(data.months) && data.months.some((m) => m.days && m.days.length)) {
+        apiDataCache[bsYear] = data;
+        return data;
+      }
+    }
+  } catch {
+    /* fall through to the static snapshot below */
+  }
+
+  // 2. Build-time snapshot (static JSON shipped with the site).
   try {
     const resp = await fetch(`/data/nepali-holidays/${bsYear}.json`);
     if (!resp.ok) return null;

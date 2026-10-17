@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and local-government researchers
 date: September 14, 2026
 readTime: 16 min read
-image: "/blog/photo-1513475382585-d06e58bcb0e0.jpg"
+image: "/blog/photo-1513475382585-d06e58bcb0e0.webp"
 tags: [Sarkari Mulyankan, Bhumi Kar Nepal, House Tax Nepal, Property Valuation, Malpot, Nepal]
 relatedTools: [land-registration, ropani-to-aana]
 headings:
@@ -147,7 +147,7 @@ Two nearby plots can have different government valuations when they fall in diff
 
 <h2 id="units">Land Measurement Units Used in Valuation</h2>
 
-- **Hill/Kathmandu Valley** — 1 ropani = 16 aana = 256 paisa = 4,096 daam; 1 aana is approximately 342.25 square feet.
+- **Hill/Kathmandu Valley** — 1 ropani = 16 aana = 64 paisa = 256 daam; 1 aana is approximately 342.25 square feet.
 - **Terai** — 1 bigha = 20 kattha = 400 dhur; 1 kattha is approximately 3,645 square feet.
 - **Metric** — Square metre and hectare are increasingly used in official documents.
 

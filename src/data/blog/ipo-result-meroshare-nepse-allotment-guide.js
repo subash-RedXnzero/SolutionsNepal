@@ -10,7 +10,7 @@ export const ipoResultMeroshareNepseAllotmentGuidePost = {
   authorCredential: 'Nepal investment and finance researchers',
   date: 'September 10, 2026',
   readTime: '12 min read',
-  image: '/blog/photo-1551288049-bebda4e38f71.jpg',
+  image: '/blog/photo-1551288049-bebda4e38f71.webp',
   tags: ['IPO', 'MeroShare', 'CDSC', 'NEPSE', 'Investing', 'Nepal'],
   relatedTools: ['sip-calculator', 'emi-calculator'],
   faqs: [
@@ -33,6 +33,9 @@ export const ipoResultMeroshareNepseAllotmentGuidePost = {
     { id: 'timeline', text: 'What Happens After IPO Allotment?', level: 2 },
     { id: 'profit', text: 'How to Check IPO Profit', level: 2 },
     { id: 'problems', text: 'Common IPO Result Problems', level: 2 },
+    { id: 'not-showing', text: 'My IPO Result Is Not Showing', level: 3 },
+    { id: 'shares-missing', text: 'I Was Allotted Shares but They Are Not in MeroShare', level: 3 },
+    { id: 'money-blocked', text: 'My Money Is Still Blocked', level: 3 },
     { id: 'safety', text: 'IPO Result Safety Tips', level: 2 },
   ],
   sections: [

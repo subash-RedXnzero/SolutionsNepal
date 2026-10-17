@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import PassportPhotoResizer from '../../components/tools/PassportPhotoResizer.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
 import Disclaimer from '../../components/ui/Disclaimer.astro';
 
 const title = 'Compress Passport Photo to 200 KB | SolutionsNepal';
@@ -77,4 +78,5 @@ const jsonLd = [
     </div>
   </div>
   <Disclaimer variant="general" />
+  <RelatedTools tools={[{ title: 'Passport Photo Resizer', description: 'Crop to exact passport size', href: '/tools/passport-photo-resizer' }, { title: 'Image Compressor', description: 'Shrink any image to a target size', href: '/tools/image-compressor' }, { title: 'Compress to 100 KB', description: 'Photos at exactly 100 KB', href: '/tools/compress-photo-to-100kb' }, { title: 'Compress to 50 KB', description: 'Signatures and small ID images', href: '/tools/compress-photo-to-50kb' }]} />
 </BaseLayout>

@@ -10,7 +10,7 @@ export const housePropertyValuationLandTaxBhumiKarNepalGuidePost = {
   authorCredential: 'Nepal property and local-government researchers',
   date: 'September 14, 2026',
   readTime: '16 min read',
-  image: '/blog/photo-1513475382585-d06e58bcb0e0.jpg',
+  image: '/blog/photo-1513475382585-d06e58bcb0e0.webp',
   tags: ['Sarkari Mulyankan', 'Bhumi Kar Nepal', 'House Tax Nepal', 'Property Valuation', 'Malpot', 'Nepal'],
   relatedTools: ['land-registration', 'ropani-to-aana'],
   faqs: [
@@ -66,7 +66,7 @@ export const housePropertyValuationLandTaxBhumiKarNepalGuidePost = {
     { type: 'list', style: 'ul', items: ['District, province, municipality, and ward', 'Main-road, secondary-road, narrow-lane, or no-road access', 'Road width and commercial-corridor classification', 'Residential, commercial, agricultural, industrial, or mixed-use classification', 'Urban or rural setting and proximity to markets, schools, hospitals, and transport', 'Corner-plot, frontage, topography, and development characteristics', 'Current fiscal-year policy and infrastructure changes'] },
     { type: 'paragraph', content: 'Two nearby plots can have different government valuations when they fall in different wards, road categories, zones, or land classifications. Always match the schedule to the exact parcel.' },
     { type: 'heading', level: 2, id: 'units', text: 'Land Measurement Units Used in Valuation' },
-    { type: 'datatable', rows: [{ label: 'Hill/Kathmandu Valley', value: '1 ropani = 16 aana = 256 paisa = 4,096 daam; 1 aana is approximately 342.25 square feet.' }, { label: 'Terai', value: '1 bigha = 20 kattha = 400 dhur; 1 kattha is approximately 3,645 square feet.' }, { label: 'Metric', value: 'Square metre and hectare are increasingly used in official documents.' }] },
+    { type: 'datatable', rows: [{ label: 'Hill/Kathmandu Valley', value: '1 ropani = 16 aana = 64 paisa = 256 daam; 1 aana is approximately 342.25 square feet.' }, { label: 'Terai', value: '1 bigha = 20 kattha = 400 dhur; 1 kattha is approximately 3,645 square feet.' }, { label: 'Metric', value: 'Square metre and hectare are increasingly used in official documents.' }] },
     { type: 'paragraph', content: 'Valuation schedules specify the unit to which a rate applies. Do not confuse a land-area conversion with a valuation rate.' },
     { type: 'heading', level: 2, id: 'bhumi-kar', text: 'What Is Bhumi Kar?' },
     { type: 'paragraph', content: '<strong>Bhumi Kar (भूमि कर)</strong> is local land or property tax collected by municipalities, rural municipalities, and metropolitan cities. It is distinct from Malpot land-revenue charges and from the registration fee paid during a transfer.' },

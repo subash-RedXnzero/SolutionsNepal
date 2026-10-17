@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: October 8, 2026
 readTime: 5 min read
-image: /blog/my-photo.jpg
+image: /blog/my-photo.webp
 tags: [Nepal, Documents]
 relatedTools: []
 headings:

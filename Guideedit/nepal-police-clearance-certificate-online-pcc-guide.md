@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 14, 2026
 readTime: 14 min read
-image: "/blog/photo-1453873531674-2151bcd01707.jpg"
+image: "/blog/photo-1453873531674-2151bcd01707.webp"
 tags: [Police Clearance Nepal, PCC Nepal, OPCR, Nagarik App, MOFA Attestation, Documents]
 relatedTools: [passport-size-photo]
 headings:
@@ -14,58 +14,61 @@ headings:
     text: "Quick Answer: How to Apply for Nepal Police PCC Online"
     level: 2
   - id: what-is
-    text: What Is a Police Clearance Certificate?
+    text: "What Is a Police Clearance Certificate?"
     level: 2
   - id: online
-    text: Can You Apply Online?
+    text: "Can You Apply for Nepal Police Clearance Online?"
     level: 2
   - id: eligibility
-    text: Who Can Apply?
+    text: "Who Can Apply?"
     level: 2
   - id: documents
-    text: Documents Required
+    text: "Documents Required for Nepal Police Clearance"
     level: 2
   - id: process
-    text: Step-by-Step OPCR Application
+    text: "Step-by-Step OPCR Application"
     level: 2
   - id: nagarik
-    text: Nepal Police Clearance Through Nagarik App
+    text: "Nepal Police Clearance Through Nagarik App"
     level: 2
   - id: fee
-    text: PCC Fees in Nepal
+    text: "Nepal Police PCC Fees"
     level: 2
   - id: timeline
-    text: Processing Time
+    text: "How Long Does Nepal Police PCC Take?"
     level: 2
   - id: status
-    text: How to Check Application Status
+    text: "How to Check Application Status"
     level: 2
   - id: download
-    text: How to Download the PCC
+    text: "How to Download the Nepal Police Clearance Report"
     level: 2
   - id: verify
-    text: How to Verify a PCC
+    text: "How to Verify a Nepal Police Clearance Certificate"
     level: 2
   - id: mofa
-    text: MOFA Attestation for Nepal Police PCC
+    text: "MOFA Attestation for Nepal Police PCC"
     level: 2
   - id: abroad
-    text: PCC for Nepalis Living Abroad
+    text: "PCC for Nepalis Living Abroad"
     level: 2
   - id: purpose
-    text: PCC for Work, Study, Visa, and PR
+    text: "PCC for Work, Study, Visa, and PR"
     level: 2
   - id: troubleshooting
-    text: Common Problems and Fixes
+    text: "Common Problems and Fixes"
     level: 2
   - id: mistakes
-    text: Common Mistakes to Avoid
+    text: "Common Mistakes to Avoid"
+    level: 2
+  - id: comparison
+    text: "Nepal Police PCC vs Nagarik App vs MOFA"
     level: 2
   - id: checklist
-    text: Final PCC Checklist
+    text: "Final PCC Checklist"
     level: 2
   - id: sources
-    text: Official Sources and Final Note
+    text: "Official Sources and Final Note"
     level: 2
 faqs:
   - q: Can I apply for a Nepal Police Clearance Certificate online?
@@ -93,7 +96,6 @@ faqs:
   - q: Is a police report the same as a PCC?
     a: People often use the terms interchangeably, but a PCC is the formal certificate issued by Nepal Police through OPCR. A local police verification or general report may be a different document.
 ---
-
 <h2 id="quick-answer">Quick Answer: How to Apply for Nepal Police PCC Online</h2>
 
 Apply for a Nepal Police Clearance Certificate through the official <strong>Online Police Clearance Registration (OPCR)</strong> portal at <a href="https://opcr.nepalpolice.gov.np">opcr.nepalpolice.gov.np</a>. The basic online application is generally free, and an approved certificate can be downloaded as a digitally signed PDF with a QR code.

@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal utilities researchers
 date: September 27, 2026
 readTime: 8 min read
-image: "/blog/photo-1473093295043-cdd812d0e601.jpg"
+image: "/blog/photo-1473093295043-cdd812d0e601.webp"
 tags: [LPG Gas Nepal, NOC Gas, Cylinder Price Nepal, Utilities]
 relatedTools: [lpg-calculator, cost-of-living]
 headings:
@@ -36,7 +36,6 @@ faqs:
   - q: How do I calculate cost per day?
     a: "Cost per day = Cylinder price ÷ Days it lasts. Our calculator does it: enter price + burners + hours/day."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>Standard cylinder = 14.2 kg</strong> (NOC refill). Price is <strong>set by Nepal Oil Corporation monthly</strong> — check the <strong>latest NOC notice / dealer board</strong>. Duration: <strong>2 burners ×2 hrs/day ≈ 45–60 days</strong>; cost/day = <strong>price ÷ days</strong>. Use the <a href="/nepal/utilities/lpg-gas-cost-duration-calculator-nepal">LPG Duration Calculator</a> for your use.
@@ -56,7 +55,7 @@ faqs:
 - **2 burners ×3 hrs/day (large family / 2 meals + tea)** — ~30–40 days
 - **3 burners ×2 hrs/day** — ~30–45 days (higher flow)
 
-<h2 id="formula">Formula &amp; Calculator</h2>
+<h2 id="formula">Formula & Calculator</h2>
 
 ```text
 Days ≈ (14.2 kg × Burner efficiency) ÷ (Burners × Hours/day × Flow rate)
@@ -75,7 +74,7 @@ Skip the manual math — enter your <strong>price + burners + hours/day</strong>
 - Clean burner ports monthly — yellow flame = incomplete burn
 - Check for leak: soapy water at the regulator, not a lighter
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: <a href="https://noc.org.np" target="_blank" rel="noopener noreferrer">Nepal Oil Corporation (noc.org.np)</a> monthly LPG price notices. Cylinder weight is 14.2 kg net for the standard domestic refill.
 

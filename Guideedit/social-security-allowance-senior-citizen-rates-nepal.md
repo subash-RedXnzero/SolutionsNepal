@@ -1,12 +1,12 @@
 ---
-title: Social Security Allowance & Senior Citizen Rates Nepal 2026
-description: FY 2083/84 guide to Nepal Social Security Allowance rates: senior-citizen rules, widow, disability, child grants and NID linking.
+title: Social Security Allowance Nepal FY 2083/84: Rates
+description: "Allowance rates for senior citizens, widows, disability and child grants, age rules, NID linking and payment problems."
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal government-services researchers
-date: September 14, 2026
+date: October 17, 2026
 readTime: 15 min read
-image: "/blog/photo-1544027993-37dbfe43562a.jpg"
+image: "/blog/photo-1544027993-37dbfe43562a.webp"
 tags: [Social Security Allowance Nepal, Senior Citizen Allowance, DONIDCR, NID, Government Services]
 relatedTools: [government-service-cost, nepali-age-calculator]
 headings:
@@ -73,7 +73,7 @@ faqs:
   - q: How much is the senior citizen allowance in Nepal in 2026?
     a: The commonly published FY 2083/84 rate is Rs 4,000 per month for general senior citizens who meet the current age and eligibility rules.
   - q: What is the senior citizen allowance age in Nepal?
-    a: The general age was lowered from 70 to 68 under the FY 2082/83 budget provisions, with continuity commonly reported into FY 2083/84 — confirm the current age rule at DONIDCR or the latest budget notice before applying. Dalit citizens, eligible former-Karnali or designated remote-area seniors, and some other categories may qualify from age 60. Existing beneficiaries can have grandfathering protections after an age-rule change.
+    a: The general age is commonly 68 — lowered from 70, with continuity reported into FY 2083/84. Confirm the current age rule at DONIDCR or the latest budget notice before applying. Dalit citizens, eligible former-Karnali or designated remote-area seniors, and some other categories may qualify from age 60. Existing beneficiaries can have grandfathering protections after an age-rule change.
   - q: How much does a single woman receive?
     a: The commonly published rate is Rs 2,660 per month for eligible single women aged 60 or above. Widows are a separate category and can qualify at any age.
   - q: What is the widow allowance in Nepal?
@@ -110,7 +110,7 @@ Nepal has several Social Security Allowance categories, so there is no single un
 - registration
 - current government policy
 
-- **General senior citizen** — 68+ years (lowered from 70 under FY 2082/83 provisions; continuity commonly reported into FY 2083/84 — confirm at DONIDCR) — commonly Rs 4,000/month (as of October 2026)
+- **General senior citizen** — 68+ years (lowered from 70; confirm the current age rule at DONIDCR) — commonly Rs 4,000/month (as of October 2026)
 - **Dalit senior citizen** — 60+ years — commonly Rs 4,000/month
 - **Former Karnali/designated remote senior** — 60+ years — commonly Rs 4,000/month
 - **Single woman** — 60+ years — commonly Rs 2,660/month
@@ -147,7 +147,7 @@ These are monthly entitlement figures as commonly published as of October 2026. 
 
 <h2 id="senior-age">Senior Citizen Allowance Age</h2>
 
-The general senior-citizen allowance age is commonly <strong>68 years</strong> under the current framework (lowered from 70 under FY 2082/83 budget provisions, with continuity commonly reported into FY 2083/84 budgets — confirm the current rule at <a href="https://donidcr.gov.np">DONIDCR</a> or the latest budget notice before applying, as of October 2026). People already receiving benefits during a rule change may have grandfathering protection, so existing beneficiaries below a new threshold should confirm continuity with the ward office rather than assuming cancellation.
+The general senior-citizen allowance age is commonly <strong>68 years</strong> under the current framework (lowered from 70 — confirm the current rule at <a href="https://donidcr.gov.np">DONIDCR</a> or the latest budget notice before applying, as of October 2026). People already receiving benefits during a rule change may have grandfathering protection, so existing beneficiaries below a new threshold should confirm continuity with the ward office rather than assuming cancellation.
 
 - Dalit senior citizens commonly qualify from age 60.
 - Eligible former-Karnali or designated remote-area seniors commonly qualify from age 60.
@@ -307,6 +307,6 @@ Do not confuse the allowance with SSF. A household may receive a Social Security
 
 <h2 id="sources">Official Sources and Final Note</h2>
 
-Use the <a href="https://donidcr.gov.np">Department of National ID and Civil Registration</a>, the relevant ward, municipality, or rural municipality, Ministry of Home Affairs, Nepal Law Commission, and current Government of Nepal budget notices (Ministry of Finance) for the latest rates and procedures. Age and rate figures above are as of October 2026 and should be rechecked against the FY 2083/84 budget once gazetted.
+Use the <a href="https://donidcr.gov.np">Department of National ID and Civil Registration</a>, the relevant ward, municipality, or rural municipality, Ministry of Home Affairs, Nepal Law Commission, and current Government of Nepal budget notices (Ministry of Finance) for the latest rates and procedures. Age and rate figures above are as of October 2026 and should be rechecked against the gazetted FY 2083/84 budget and DONIDCR notices.
 
 Social Security Allowance rates, eligibility, NID requirements, biometric procedures, local deadlines, and payment schedules can change. This guide is general information and should be confirmed with DONIDCR and the relevant local government before applying.

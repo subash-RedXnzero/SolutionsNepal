@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation and election researchers
 date: September 25, 2026
 readTime: 16 min read
-image: "/blog/photo-1586953208448-b95a79798f07.jpg"
+image: "/blog/photo-1586953208448-b95a79798f07.webp"
 tags: [Voter ID Nepal, Matadata Namawali, Election Commission Nepal, Voter Registration 2026, NIN, Documents]
 relatedTools: [government-service-cost, nepali-calendar, passport-size-photo]
 headings:
@@ -14,55 +14,55 @@ headings:
     text: "Quick Answer (TL;DR)"
     level: 2
   - id: what-is
-    text: What Is the Voter ID / Voter Roll in Nepal?
+    text: "What Is the Voter ID / Voter Roll in Nepal?"
     level: 2
   - id: eligibility
-    text: Who Can Register?
+    text: "Who Can Register?"
     level: 2
   - id: documents
-    text: Required Documents
+    text: "Required Documents"
     level: 2
   - id: portal
-    text: Official Election Commission Portal
+    text: "Official Election Commission Portal"
     level: 2
   - id: pre-registration
-    text: How to Complete Online Pre-Registration (Step-by-Step)
+    text: "How to Complete Online Pre-Registration (Step-by-Step)"
     level: 2
   - id: route-nin
-    text: "Route A: With National ID (NIN)"
+    text: "Route A: With National ID (NIN) — Recommended"
     level: 3
   - id: route-mobile
     text: "Route B: Without NIN (Mobile OTP)"
     level: 3
   - id: biometrics
-    text: Biometric Visit at District Election Office
+    text: "Biometric Visit at District Election Office"
     level: 2
   - id: status
-    text: How to Check Your Name in the Voter List
+    text: "How to Check Your Name in the Voter List"
     level: 2
   - id: correction
-    text: Correction, Transfer & Update
+    text: "Correction, Transfer & Update"
     level: 2
   - id: card
-    text: Voter ID Card Collection
+    text: "Voter ID Card Collection"
     level: 2
   - id: abroad
-    text: For Nepalis Abroad
+    text: "For Nepalis Abroad"
     level: 2
   - id: fees-timeline
-    text: Fees & Timeline
+    text: "Fees & Timeline"
     level: 2
   - id: problems
-    text: Common Problems & Fixes
+    text: "Common Problems & Fixes"
     level: 2
   - id: mistakes
-    text: Common Mistakes to Avoid
+    text: "Common Mistakes to Avoid"
     level: 2
   - id: checklist
-    text: Complete Checklist
+    text: "Complete Checklist"
     level: 2
   - id: sources
-    text: Official Sources & Final Note
+    text: "Official Sources & Final Note"
     level: 2
 faqs:
   - q: How do I register as a voter in Nepal in 2026?
@@ -100,7 +100,6 @@ faqs:
   - q: When should I register?
     a: "Anytime the Commission shows the roll as “open” for updates. Before any federal/provincial/local election the roll is closed on a published deadline — register or update at least weeks before that date."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 To get your Voter ID in Nepal in 2026: <strong>pre-register online → print your reference → visit the district election office for biometrics</strong>. Use <strong>https://election.gov.np → Voter Roll Pre-Registration</strong> (direct: <strong>https://applyvr.election.gov.np</strong>). Choose <strong>via NIN</strong> if you have National ID, or <strong>via mobile OTP</strong> if not. Online alone does not add you to the final voter roll — you must complete the in-person visit.
@@ -204,7 +203,7 @@ The online token is not the final registration. You must attend in person for:
 
 Tip: Search both Nepali and English name variants if the first search fails, and try with/without middle names.
 
-<h2 id="correction">Correction, Transfer &amp; Update</h2>
+<h2 id="correction">Correction, Transfer & Update</h2>
 
 - <strong>Correction</strong> (name/DOB/address typo): In <strong>applyvr.election.gov.np → Update</strong>, choose Correction, upload supporting proof, submit, then re-verify at the district office.
 - <strong>Transfer</strong> (moved ward/district): Choose Transfer/Update, enter new permanent address, attach migration/Basai Sarai or new municipality recommendation, and complete biometrics at the new office if requested. Transfer is blocked after the roll-freeze date.
@@ -222,14 +221,14 @@ After verification and inclusion in the final roll:
 
 Voter registration is tied to a polling centre linked to your permanent address in Nepal. As of the current ECN process, biometrics are taken in Nepal. Online pre-registration can be done from abroad, but plan to complete the district office visit during a trip to Nepal before the roll-closure date. Do not use unofficial “abroad voter” sites.
 
-<h2 id="fees-timeline">Fees &amp; Timeline</h2>
+<h2 id="fees-timeline">Fees & Timeline</h2>
 
 - **Registration fee** — NPR 0 — free. No payment at any stage.
 - **Online token** — Instant after submission
 - **Final roll inclusion** — After district verification + ECN roll publication cycle. Not instant — check status periodically.
 - **Roll freeze before election** — Set by ECN per election (published on election.gov.np). Register/update before this date.
 
-<h2 id="problems">Common Problems &amp; Fixes</h2>
+<h2 id="problems">Common Problems & Fixes</h2>
 
 - **NIN authentication failed** — Re-check NIN, DOB (AD), first name spelling vs NID; correct the source NID at DONIDCR first if the NID itself is wrong.
 - **OTP not received** — Check signal/SIM in your own name, wait 1–2 minutes, request once more, try a different browser/network.
@@ -260,7 +259,7 @@ Voter registration is tied to a polling centre linked to your permanent address 
 - Name checked in final voter roll search (after publication cycle)
 - Voter serial number / card kept safe for election day
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Use <a href="https://election.gov.np" target="_blank" rel="noopener noreferrer">Election Commission Nepal (election.gov.np)</a> and the pre-enrollment system at <a href="https://applyvr.election.gov.np" target="_blank" rel="noopener noreferrer">applyvr.election.gov.np</a> as the only sources for current eligibility, deadlines and portal instructions. For NIN corrections, see DONIDCR at <a href="https://donidcr.gov.np" target="_blank" rel="noopener noreferrer">donidcr.gov.np</a>.
 

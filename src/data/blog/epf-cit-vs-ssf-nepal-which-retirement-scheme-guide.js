@@ -10,7 +10,7 @@ export const epfCitVsSsfNepalWhichRetirementSchemeGuidePost = {
   authorCredential: 'Nepal finance researchers',
   date: 'September 27, 2026',
   readTime: '9 min read',
-  image: '/blog/photo-1560472355-536de3962603.jpg',
+  image: '/blog/photo-1560472355-536de3962603.webp',
   tags: ['EPF Nepal', 'CIT Nepal', 'SSF Nepal', 'Retirement', 'Provident Fund'],
   relatedTools: ['ssf-calculator', 'salary-checker', 'sip-calculator'],
   faqs: [

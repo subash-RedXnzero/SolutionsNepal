@@ -150,6 +150,9 @@ export function parseFuelRecords(records) {
   ktmPetrol.sort((a, b) => (a.date < b.date ? 1 : -1));
   // Distinct-date Kathmandu petrol history, newest first (cap 10),
   // with change vs the older entry (0 for the oldest → renders '—').
+  // priceDate = newest price_date seen across all records (the NOC publish
+  // date — shown as the effective date so pages never imply prices are
+  // fresher than the upstream publish).
   const history = [];
   const seenDates = new Set();
   for (const h of ktmPetrol) {
@@ -164,11 +167,19 @@ export function parseFuelRecords(records) {
       ? Math.round((history[i].petrol - history[i + 1].petrol) * 100) / 100
       : 0;
   }
+  // Newest price_date across every city+fuel actually displayed.
+  let priceDate = null;
+  for (const c of Object.values(latest)) {
+    for (const f of Object.values(c)) {
+      if (f?.date && (!priceDate || f.date > priceDate)) priceDate = f.date;
+    }
+  }
   return {
     byCity,
     lpg: lpgRows.length ? lpgRows[0].price : null,
     cities: Object.entries(byCity).map(([id, p]) => ({ id, ...p })),
     history,
+    priceDate: priceDate ? priceDate.slice(0, 10) : null,
   };
 }
 

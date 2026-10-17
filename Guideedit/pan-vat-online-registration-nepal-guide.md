@@ -1,182 +1,275 @@
 ---
-title: How to Register for PAN & VAT Online in Nepal (2026 IRD Guide)
-description: Complete 2026 guide to PAN and VAT registration in Nepal via the IRD Taxpayer Portal. Thresholds, documents and activation.
+title: Register for PAN & VAT Online in Nepal: IRD Guide
+description: "Register for PAN and VAT on the IRD Taxpayer Portal: threshold limits, documents and activation."
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Nepal tax and business researchers
-date: September 16, 2026
+date: October 17, 2026
 readTime: 24 min read
-image: "/blog/photo-1434030216411-0b793f4b4173.jpg"
+image: "/blog/photo-1434030216411-0b793f4b4173.webp"
 tags: [PAN Registration Nepal, VAT Registration Nepal, IRD Taxpayer Portal, VAT Threshold Nepal, TDS, Freelancing Nepal, Finance]
 relatedTools: [vat-calculator, salary-checker, freelancer-take-home, break-even]
 headings:
   - id: tldr
-    text: Quick Answer / At a Glance
+    text: "Quick Answer / At a Glance"
     level: 2
   - id: what-is-pan
-    text: What Is PAN in Nepal?
+    text: "What Is PAN in Nepal?"
     level: 2
   - id: what-is-vat
-    text: What Is VAT in Nepal?
+    text: "What Is VAT in Nepal?"
     level: 2
   - id: pan-vs-vat
-    text: PAN vs VAT
+    text: "PAN vs VAT"
     level: 2
   - id: who-needs-pan
-    text: Who Needs PAN?
+    text: "Who Needs PAN?"
     level: 2
   - id: who-needs-vat
-    text: Who Needs VAT Registration?
+    text: "Who Needs VAT Registration?"
     level: 2
   - id: vat-mandatory
-    text: Mandatory VAT registration
+    text: "Mandatory VAT registration"
     level: 3
   - id: vat-specified
     text: "Mandatory regardless of turnover (“specified” categories)"
     level: 3
   - id: vat-voluntary
-    text: Voluntary VAT registration
+    text: "Voluntary VAT registration"
     level: 3
   - id: vat-below
-    text: Businesses below the threshold
+    text: "Businesses below the threshold"
     level: 3
   - id: vat-above
-    text: Businesses above the threshold
+    text: "Businesses above the threshold"
     level: 3
   - id: vat-special
-    text: Special categories
+    text: "Special categories"
     level: 3
   - id: vat-threshold
-    text: VAT Threshold in Nepal 2026
+    text: "VAT Threshold in Nepal 2026"
     level: 2
   - id: vat-supplies
-    text: VAT-Exempt, Zero-Rated, and Taxable Supplies
+    text: "VAT-Exempt, Zero-Rated, and Taxable Supplies"
     level: 2
   - id: freelancers
-    text: Can Freelancers Get PAN Without VAT?
+    text: "Can Freelancers Get PAN Without VAT?"
     level: 2
   - id: pan-sole
-    text: PAN for Sole Proprietorships
+    text: "PAN for Sole Proprietorships"
     level: 2
   - id: pan-company
-    text: PAN for Private Limited Companies
+    text: "PAN for Private Limited Companies"
     level: 2
   - id: pan-partnership
-    text: PAN for Partnerships
+    text: "PAN for Partnerships"
     level: 2
   - id: pan-foreign
-    text: PAN for Foreign Companies and Non-Resident Taxpayers
+    text: "PAN for Foreign Companies and Non-Resident Taxpayers"
     level: 2
   - id: documents
-    text: Documents Required for PAN Registration
+    text: "Documents Required for PAN Registration"
     level: 2
   - id: docs-individual
-    text: Individual PAN
+    text: "Individual PAN"
     level: 3
   - id: docs-sole
-    text: Sole Proprietorship / Business PAN
+    text: "Sole Proprietorship / Business PAN"
     level: 3
   - id: docs-partnership
-    text: Partnership
+    text: "Partnership"
     level: 3
   - id: docs-company
-    text: Company
+    text: "Company"
     level: 3
   - id: docs-foreign
-    text: Foreign Company / Non-Resident
+    text: "Foreign Company / Non-Resident"
     level: 3
   - id: portal
-    text: Official IRD Taxpayer Portal
+    text: "Official IRD Taxpayer Portal"
     level: 2
   - id: apply-pan
-    text: How to Apply for PAN Online
+    text: "How to Apply for PAN Online"
     level: 2
+  - id: pan-step1
+    text: "Step 1: Determine Your Taxpayer Type"
+    level: 3
+  - id: pan-step2
+    text: "Step 2: Prepare Documents"
+    level: 3
+  - id: pan-step3
+    text: "Step 3: Open the Official IRD Taxpayer Portal"
+    level: 3
+  - id: pan-step4
+    text: "Step 4: Start Taxpayer Registration / PAN Application"
+    level: 3
+  - id: pan-step5
+    text: "Step 5: Enter Personal/Business Information"
+    level: 3
+  - id: pan-step6
+    text: "Step 6: Enter Business Information (for business/company applicants)"
+    level: 3
+  - id: pan-step7
+    text: "Step 7: Upload Documents"
+    level: 3
+  - id: pan-step8
+    text: "Step 8: Submit"
+    level: 3
+  - id: pan-step9
+    text: "Step 9: Verification"
+    level: 3
+  - id: pan-step10
+    text: "Step 10: PAN Issuance/Activation"
+    level: 3
   - id: tax-office
-    text: Business PAN Application Through the Tax Office
+    text: "Business PAN Application Through the Tax Office"
     level: 2
   - id: register-vat
-    text: How to Register for VAT
+    text: "How to Register for VAT"
     level: 2
+  - id: vat-step1
+    text: "Step 1: Determine Whether VAT Registration Is Required"
+    level: 3
+  - id: vat-step2
+    text: "Step 2: Confirm Business/Taxpayer Information"
+    level: 3
+  - id: vat-step3
+    text: "Step 3: Prepare Documents"
+    level: 3
+  - id: vat-step4
+    text: "Step 4: Access the IRD System"
+    level: 3
+  - id: vat-step5
+    text: "Step 5: Select VAT Registration/Service"
+    level: 3
+  - id: vat-step6
+    text: "Step 6: Enter Required Information"
+    level: 3
+  - id: vat-step7
+    text: "Step 7: Submit Application"
+    level: 3
+  - id: vat-step8
+    text: "Step 8: Complete Verification"
+    level: 3
+  - id: vat-step9
+    text: "Step 9: VAT Registration Approval"
+    level: 3
+  - id: vat-step10
+    text: "Step 10: Obtain VAT Registration Details/Certificate"
+    level: 3
+  - id: vat-step11
+    text: "Step 11: Start Issuing Compliant VAT Invoices"
+    level: 3
+  - id: vat-step12
+    text: "Step 12: Begin VAT Filing/Payment Obligations"
+    level: 3
   - id: workflow
-    text: PAN + VAT Registration Workflow
+    text: "PAN + VAT Registration Workflow"
     level: 2
   - id: vat-invoice
-    text: VAT Bill / VAT Invoice Requirements
+    text: "VAT Bill / VAT Invoice Requirements"
     level: 2
   - id: invoice-vs-bill
-    text: VAT Invoice vs Normal Bill
+    text: "VAT Invoice vs Normal Bill"
     level: 2
   - id: vat-rate
-    text: VAT Rate in Nepal
+    text: "VAT Rate in Nepal"
     level: 2
   - id: input-output
-    text: Input VAT vs Output VAT
+    text: "Input VAT vs Output VAT"
     level: 2
   - id: vat-filing
-    text: VAT Return Filing
+    text: "VAT Return Filing"
     level: 2
   - id: vat-payment
-    text: VAT Payment
+    text: "VAT Payment"
     level: 2
   - id: income-tax
-    text: Income Tax and PAN Compliance
+    text: "Income Tax and PAN Compliance"
     level: 2
   - id: tds
-    text: TDS / Withholding Tax
+    text: "TDS / Withholding Tax"
     level: 2
   - id: recordkeeping
-    text: Business Recordkeeping
+    text: "Business Recordkeeping"
     level: 2
   - id: update-pan
-    text: Updating PAN Information
+    text: "Updating PAN Information"
     level: 2
   - id: deregistration
-    text: VAT Deregistration
+    text: "VAT Deregistration"
     level: 2
   - id: not-registered
-    text: What Happens If You Should Have Registered for VAT But Did Not?
+    text: "What Happens If You Should Have Registered for VAT But Did Not?"
     level: 2
   - id: ecommerce
-    text: Online Business & E-Commerce
+    text: "Online Business & E-Commerce"
     level: 2
   - id: it-services
-    text: IT Services and Software Companies
+    text: "IT Services and Software Companies"
     level: 2
   - id: foreign-clients
-    text: Foreign Clients and Remote Work
+    text: "Foreign Clients and Remote Work"
     level: 2
   - id: pan-vs-registration
-    text: PAN vs Business Registration
+    text: "PAN vs Business Registration"
     level: 2
   - id: jurisdiction
-    text: Tax Office and Jurisdiction
+    text: "Tax Office and Jurisdiction"
     level: 2
   - id: fees
-    text: Fees
+    text: "Fees"
     level: 2
   - id: penalties
-    text: Penalties and Compliance Risks
+    text: "Penalties and Compliance Risks"
     level: 2
   - id: examples
-    text: Practical Examples
+    text: "Practical Examples"
     level: 2
+  - id: example-1
+    text: "Example 1 — Small freelancer"
+    level: 3
+  - id: example-2
+    text: "Example 2 — Sole proprietor crossing the VAT threshold"
+    level: 3
+  - id: example-3
+    text: "Example 3 — Private limited IT company"
+    level: 3
+  - id: example-4
+    text: "Example 4 — Online seller"
+    level: 3
+  - id: example-5
+    text: "Example 5 — Foreign-client software developer"
+    level: 3
   - id: pan-problems
-    text: Common PAN Problems
+    text: "Common PAN Problems"
     level: 2
   - id: vat-problems
-    text: Common VAT Problems
+    text: "Common VAT Problems"
     level: 2
   - id: checklist
-    text: Complete PAN + VAT Checklist
+    text: "Complete PAN + VAT Checklist"
     level: 2
+  - id: checklist-before
+    text: "Before Registration"
+    level: 3
+  - id: checklist-pan
+    text: "PAN"
+    level: 3
+  - id: checklist-vat
+    text: "VAT"
+    level: 3
+  - id: checklist-after
+    text: "After Registration"
+    level: 3
   - id: official-sources
-    text: Official IRD Sources
+    text: "Official IRD Sources"
     level: 2
   - id: related-guides
-    text: Related SolutionsNepal Guides
+    text: "Related SolutionsNepal Guides"
     level: 2
   - id: final-summary
-    text: Final Summary
+    text: "Final Summary"
     level: 2
 faqs:
   - q: What is PAN in Nepal?
@@ -204,7 +297,7 @@ faqs:
   - q: How long does VAT registration take?
     a: Commonly reported in the range of roughly 3 to 12 business days, depending on document completeness and office workload.
   - q: What is the VAT threshold in Nepal?
-    a: "For FY 2082/83, roughly NPR 50 lakh (5 million) annual turnover for goods-only businesses, and roughly NPR 30 lakh (3 million) for services or mixed businesses — confirm whether these carried into FY 2083/84 against the gazetted Economic Act, 2083 and current IRD notices, since they’re set through the annual Finance Act."
+    a: "For FY 2083/84, roughly NPR 50 lakh (5 million) annual turnover for goods-only businesses, and roughly NPR 30 lakh (3 million) for services or mixed businesses — these figures are reported as carried over under the Finance Bill 2083, but confirm them against the gazetted Economic Act, 2083 and current IRD notices before registering, since thresholds are set through the annual Finance Act."
   - q: Is the VAT threshold different for goods and services?
     a: "Yes — goods-only businesses generally have a higher threshold than service or mixed-supply businesses."
   - q: Can I have PAN without VAT?
@@ -248,14 +341,13 @@ faqs:
   - q: Where can I get help from IRD?
     a: "Through your local Inland Revenue Office, the IRD’s published contact channels on ird.gov.np, or the IRD Taxpayer Portal’s help resources."
 ---
-
 If you’re starting a business, freelancing, or providing IT services in Nepal, you’ll almost certainly run into two acronyms: <strong>PAN</strong> and <strong>VAT</strong>. They sound related, and they’re both handled by the same government office, but they are not the same thing.
 
 <strong>PAN (Permanent Account Number)</strong> is your tax identity — a unique number the Inland Revenue Department (IRD) issues to identify you as a taxpayer. <strong>VAT (Value Added Tax)</strong> is a separate indirect-tax status that lets you legally charge tax on sales and claim credit on purchases. Having a PAN does <strong>not</strong> automatically mean your business is VAT-registered. Whether you need VAT depends on your turnover, your industry, and specific rules under the VAT Act, 2052 (1996).
 
 This guide walks through both processes step by step — who needs what, the current turnover thresholds, how to apply online through the IRD Taxpayer Portal, what documents you’ll need, and what happens after you’re registered.
 
-> **Note on accuracy:** Nepal’s tax thresholds, rates, and procedures are set by the annual Finance Act and IRD circulars, and they change. The figures below reflect Fiscal Year 2082/83 (2025/26 — the year running into much of 2026) as reported by multiple current sources. The Finance Act for FY 2083/84 (Economic Act, 2083, gazetted 2083-03-30 per ird.gov.np) is now published — reconfirm whether the 50L/30L thresholds below carried over unchanged before registering or filing, as of October 2026. Always cross-check specifics with the IRD.
+> **Note on accuracy:** Nepal’s tax thresholds, rates, and procedures are set by the annual Finance Act and IRD circulars, and they change. The figures below reflect Fiscal Year 2083/84 (2026/27 — the current year) as reported in Finance Bill 2083 summaries and current sources: the 50L goods / 30L services thresholds are reported as carried over, but reconfirm against the gazetted Economic Act, 2083 and current IRD notices before registering or filing, as of October 2026. Always cross-check specifics with the IRD.
 
 <h2 id="tldr">Quick Answer / At a Glance</h2>
 
@@ -265,7 +357,7 @@ This guide walks through both processes step by step — who needs what, the cur
 - **Online system** — IRD Taxpayer Portal — taxpayerportal.ird.gov.np (also accessible via ird.gov.np)
 - **PAN application** — Apply online; most applicants still complete a short in-person biometric/verification step at their local Inland Revenue Office
 - **VAT registration** — Requires an active PAN first; applied for through the same portal; verification by a Tax Officer follows
-- **VAT threshold (FY 2082/83)** — Generally NPR 50 lakh (5 million) annual turnover for goods-only businesses; NPR 30 lakh (3 million) for services or mixed goods-and-services businesses. Some sectors must register regardless of turnover.
+- **VAT threshold (FY 2083/84)** — Generally NPR 50 lakh (5 million) annual turnover for goods-only businesses; NPR 30 lakh (3 million) for services or mixed goods-and-services businesses, as reported under Finance Bill 2083 (verify against the gazetted Act). Some sectors must register regardless of turnover.
 - **Documents** — Vary by taxpayer type — citizenship/passport for individuals; incorporation and registration certificates for entities (see document tables in this guide)
 - **Fee** — PAN registration is widely reported as free of government charge; VAT registration fees are reported inconsistently across sources — confirm the current figure at your local Inland Revenue Office before applying
 - **Tax office** — Determined by your registered business address (jurisdiction-based Inland Revenue Office or Taxpayer Service Office)
@@ -313,7 +405,7 @@ A business that is <strong>not</strong> VAT-registered cannot legally charge VAT
 - **Purpose** — PAN: taxpayer identification. VAT: indirect-tax registration and collection mechanism
 - **Who needs it** — PAN: individuals earning taxable income, and virtually every business or entity. VAT: businesses that cross the applicable turnover threshold, or fall into a mandatory category regardless of turnover
 - **Mandatory?** — PAN: yes, for anyone required to file tax or engage in PAN-requiring transactions. VAT: only mandatory once a legal trigger (turnover threshold or specified sector) is met; otherwise voluntary
-- **Turnover threshold** — PAN: no turnover threshold for PAN itself. VAT: roughly NPR 50 lakh (goods) or NPR 30 lakh (services/mixed) for FY 2082/83 — verify current figures
+- **Turnover threshold** — PAN: no turnover threshold for PAN itself. VAT: roughly NPR 50 lakh (goods) or NPR 30 lakh (services/mixed) for FY 2083/84 as reported — verify current figures
 - **Registration** — Both through the Inland Revenue Department — VAT requires an existing PAN first
 - **Tax charged to customers** — PAN alone doesn’t authorize charging any tax. VAT: 13% charged on taxable supplies
 - **Filing** — PAN: annual income tax return (plus advance tax/TDS obligations where applicable). VAT: monthly VAT return (some sectors may qualify for bi-monthly or trimester filing)
@@ -368,7 +460,7 @@ Some goods and services have VAT treatment that doesn’t depend on a straightfo
 
 <h2 id="vat-threshold">VAT Threshold in Nepal 2026</h2>
 
-For <strong>Fiscal Year 2082/83</strong> (mid-2025 to mid-2026, the fiscal year most relevant through much of calendar 2026), multiple current sources converge on the following approximate thresholds, set through the Finance Act 2081 (the “46th Amendment”) and continuing into FY 2082/83:
+For <strong>Fiscal Year 2083/84</strong> (mid-2026 to mid-2027, the current fiscal year), multiple current sources — including summaries of Finance Bill 2083 — converge on the following approximate thresholds, continuing the previous 50L/30L structure:
 
 - <strong>Goods-only businesses:</strong> annual turnover above <strong>NPR 50 lakh (NPR 5,000,000)</strong>
 - <strong>Service-only businesses and mixed (goods + services) businesses:</strong> annual turnover above <strong>NPR 30 lakh (NPR 3,000,000)</strong> — note that this threshold was reportedly raised from a lower figure (around NPR 20 lakh) in a recent amendment cycle, so older articles online may show outdated numbers
@@ -380,7 +472,7 @@ For <strong>Fiscal Year 2082/83</strong> (mid-2025 to mid-2026, the fiscal year 
 
 <strong>Consequences of not registering on time:</strong> sources describe a penalty per tax period of default (commonly cited in a range around NPR 10,000–20,000 per period, though figures vary by source and by the specific Finance Act in force), plus recovery of the VAT that should have been charged, plus annual interest on the amount due. Because penalty figures are adjusted periodically, <strong>treat any specific number as indicative rather than final</strong>, and confirm the exact figure with the IRD or a tax professional before relying on it.
 
-> **Reconfirm before filing:** Because thresholds and rules are revised through each year’s Finance Act, reconfirm the exact figures in force at the time you register — the Economic Act, 2083 (FY 2083/84) is now published, so check it and current IRD notices to confirm whether the 50L/30L figures still apply, as of October 2026.
+> **Reconfirm before filing:** Because thresholds and rules are revised through each year’s Finance Act, reconfirm the exact figures in force at the time you register — check the gazetted Economic Act, 2083 and current IRD notices to confirm the 50L/30L figures, as of October 2026.
 
 <h2 id="vat-supplies">VAT-Exempt, Zero-Rated, and Taxable Supplies</h2>
 
@@ -429,7 +521,7 @@ For a private limited company, PAN registration comes <strong>after</strong> inc
 
 Some current sources describe increasing digital coordination between OCR’s CAMIS platform and the IRD — including notices about more automated PAN-related verification following company registration. However, <strong>OCR incorporation and IRD tax registration remain two separate, sequential legal steps</strong> — completing OCR registration does not by itself constitute completing your IRD tax registration; you (or your authorized representative) still need to actively apply for PAN at the IRD.
 
-For the incorporation stage itself, see our <a href="/guides/register-private-limited-company-online-nepal-guide">Private Limited Company Registration guide</a>.
+For the incorporation stage itself, see our <a href="/guides/company-registration-online-nepal-guide">Company Registration guide</a>.
 
 <h2 id="pan-partnership">PAN for Partnerships</h2>
 
@@ -677,7 +769,7 @@ Because the specific rule numbering and content requirements can be revised, <st
 
 <h2 id="vat-rate">VAT Rate in Nepal</h2>
 
-Nepal applies a <strong>single, flat standard VAT rate of 13%</strong> on most taxable goods and services, unchanged since VAT was introduced in November 1997 and continuing through FY 2082/83. This is distinct from Nepal’s income tax rates, which are progressive for individuals and vary by entity type for businesses — don’t confuse the two.
+Nepal applies a <strong>single, flat standard VAT rate of 13%</strong> on most taxable goods and services, unchanged since VAT was introduced in November 1997 and continuing through FY 2083/84. This is distinct from Nepal’s income tax rates, which are progressive for individuals and vary by entity type for businesses — don’t confuse the two.
 
 Alongside the 13% standard rate, the VAT Act recognizes:
 
@@ -806,7 +898,7 @@ If a business crosses the VAT threshold (or falls into a mandatory category) and
 
 Exact penalty figures are set and periodically revised through the Finance Act — <strong>this guide will not state a specific number as fact</strong>, since figures reported across current sources vary. If you believe your business should have registered but hasn’t, the most practical step is to contact the IRD directly or a qualified Nepal tax professional promptly, rather than continuing to operate unregistered while the exposure grows.
 
-<h2 id="ecommerce">Online Business &amp; E-Commerce</h2>
+<h2 id="ecommerce">Online Business & E-Commerce</h2>
 
 Online stores, marketplace sellers (Daraz and similar platforms), social-media sellers (Instagram/Facebook shops), SaaS businesses, and digital agencies all sit under the same basic framework as any other business:
 
@@ -986,7 +1078,7 @@ A Kathmandu-based developer works exclusively for clients abroad, paid in foreig
 
 <h2 id="related-guides">Related SolutionsNepal Guides</h2>
 
-- <a href="/guides/register-private-limited-company-online-nepal-guide">Private Limited Company Registration in Nepal</a> — useful background on how OCR incorporation connects to your later PAN and VAT registration steps.
+- <a href="/guides/company-registration-online-nepal-guide">Company Registration Online in Nepal</a> — useful background on how OCR incorporation connects to your later PAN and VAT registration steps.
 - <a href="/nepal/finance/vat-calculator">VAT Calculator Nepal</a> — add or remove 13% VAT from any price instantly.
 - <a href="/nepal/finance/salary-checker">Nepal Salary Calculator (SSF & Income Tax)</a> — for PAN taxpayers estimating monthly TDS and take-home pay.
 - <a href="/nepal/finance/freelancer-take-home-calculator">Freelancer Take-home Calculator</a> — see your real freelance income after fees, expenses and tax.
@@ -997,4 +1089,4 @@ A Kathmandu-based developer works exclusively for clients abroad, paid in foreig
 
 A PAN identifies you as a taxpayer; VAT is a separate registration you only need once your turnover or business category requires it. Every business or serious freelancer in Nepal should expect to register for PAN through the IRD Taxpayer Portal — a largely online process that still typically ends with an in-person verification step. VAT registration builds on that PAN, becomes mandatory once you cross roughly NPR 50 lakh (goods) or NPR 30 lakh (services/mixed) in rolling annual turnover — or if your sector requires it regardless of turnover — and brings with it monthly filing, proper tax invoices, and ongoing compliance obligations. Whichever stage you’re at, keep your records clean, track your turnover continuously, and check specifics directly with the IRD before making decisions that carry real financial or legal consequences.
 
-<strong>Last updated: September 2026</strong> (recheck note added October 2026), reflecting Fiscal Year 2082/83 figures reported across current sources. The FY 2083/84 Finance Act (Economic Act, 2083) has since been gazetted — confirm whether the 50L goods / 30L services thresholds carried over before relying on them. Tax registration requirements, VAT thresholds, tax rates, filing deadlines, fees, and compliance rules can change. Always verify the latest information with the Inland Revenue Department and applicable Nepal tax laws before registering or filing. SolutionsNepal is an independent informational website and is not affiliated with the Inland Revenue Department or the Government of Nepal. This guide is for general informational purposes and is not a substitute for professional tax or legal advice.
+<strong>Last updated: October 2026</strong>, reflecting Fiscal Year 2083/84 figures as reported in Finance Bill 2083 summaries and current sources. The FY 2083/84 Finance Act (Economic Act, 2083) has been gazetted — confirm the 50L goods / 30L services thresholds against it before relying on them. Tax registration requirements, VAT thresholds, tax rates, filing deadlines, fees, and compliance rules can change. Always verify the latest information with the Inland Revenue Department and applicable Nepal tax laws before registering or filing. SolutionsNepal is an independent informational website and is not affiliated with the Inland Revenue Department or the Government of Nepal. This guide is for general informational purposes and is not a substitute for professional tax or legal advice.

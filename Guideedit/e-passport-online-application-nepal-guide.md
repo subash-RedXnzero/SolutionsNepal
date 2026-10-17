@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal digital-government researchers
 date: September 16, 2026
 readTime: 17 min read
-image: "/blog/photo-1578894381163-e72c17f2d45f.jpg"
+image: "/blog/photo-1578894381163-e72c17f2d45f.webp"
 tags: [e Passport Online Application Nepal 2026, e-Passport, Department of Passports, NIN, Passport Appointment, MRP, Documents]
 relatedTools: [government-service-cost, passport-size-photo, nepali-calendar]
 headings:

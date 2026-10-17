@@ -411,3 +411,22 @@ input:not([type="hidden"]), select, textarea { font-size: 16px !important; }
   h1 { font-size: 24px; }
   h2 { font-size: 18px; }
 }
+
+/* Touch devices: raise small interactive controls toward the 44px
+   recommended touch target without changing desktop layout. */
+@media (pointer: coarse) {
+  .nk-btn-sm,
+  .nk-btn-ghost-sm,
+  .chip,
+  .seg-btn,
+  .page-num,
+  .pn-pnum,
+  .tools-layout-back,
+  .nk-tool-back {
+    min-height: 40px;
+  }
+  .tools-layout-item,
+  .nk-footer-link {
+    min-height: 44px;
+  }
+}

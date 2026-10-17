@@ -7,12 +7,15 @@ import ToolsLayout from '../components/layout/ToolsLayout.astro';
 import Disclaimer from '../components/ui/Disclaimer.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import { getSeo, SITE_URL, clampDescription } from '../data/seo.js';
+import { SEO_NEW_META } from '../data/seo-new-meta.js';
 import { tools } from '../data/tools.js';
 
 const seo = getSeo(Astro.url.pathname);
 
 // Normalize canonical: self-referencing, no trailing slash (except root), absolute.
 const normPath = Astro.url.pathname !== '/' ? Astro.url.pathname.replace(/\/+$/, '') : '/';
+// Approved CSV titles/descriptions win over any page-passed title/description props.
+const hasSeoOverride = Object.hasOwn(SEO_NEW_META, normPath);
 const defaultCanonical = `${SITE_URL}${normPath}`;
 
 function absOg(img) {
@@ -22,17 +25,23 @@ function absOg(img) {
 }
 
 const {
-  title = seo.title,
-  description: rawDescription = seo.description,
+  title: propTitle,
+  description: propDescription,
   canonical = defaultCanonical,
   ogImage = seo.ogImage,
   ogType = 'website',
   jsonLd = seo.jsonLd,
-  noindex = seo.noindex,
+  keywords = seo.keywords || [],
+  noindex: propNoindex,
   author,
   publishedTime,
   modifiedTime,
 } = Astro.props;
+
+// CSV override wins for title/description; noindex is restrictive-wins from either source.
+const title = hasSeoOverride ? seo.title : (propTitle ?? seo.title);
+const rawDescription = hasSeoOverride ? seo.description : (propDescription ?? seo.description);
+const noindex = Boolean(propNoindex) || seo.noindex;
 
 const description = clampDescription(rawDescription);
 const absOgImage = absOg(ogImage);
@@ -218,6 +227,8 @@ const globalJsonLd = (isHomepage || noindex) ? null : [
 
   {noindex && <meta name="robots" content="noindex, follow" />}
   {!noindex && <meta name="robots" content="index, follow, max-image-preview:large" />}
+
+  {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
 
   <!-- Open Graph (unique per page via title/description/canonical) -->
   <meta property="og:type" content={ogType} />

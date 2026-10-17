@@ -4,7 +4,7 @@
  * Lets any calculator encode its inputs in the URL (?p=500000&rate=8…),
  * restore them on load, and offer a "Copy result link" button — so a
  * result can be shared on Viber, Messenger or Facebook and reopened
- * with the exact same inputs. No backend, no storage, no tracking.
+ * with the exact same inputs. No backend, no storage.
  *
  * Adoption per page (3 steps):
  *   1. import { readSharedParams, syncUrl, copyLink } from '…/share-params.js';

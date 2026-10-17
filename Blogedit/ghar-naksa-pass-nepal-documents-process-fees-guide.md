@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and municipal researchers
 date: September 27, 2026
 readTime: 14 min read
-image: "/blog/photo-1582719478250-c89cae4dc85b.jpg"
+image: "/blog/photo-1582719478250-c89cae4dc85b.webp"
 tags: [Ghar Naksa Pass, Building Permit Nepal, Naksa Pass, EBPS, Property Nepal]
 relatedTools: [house-construction-cost, construction-material, land-affordability, ropani-to-aana]
 headings:
@@ -73,7 +73,6 @@ faqs:
   - q: Can an NRN apply from abroad?
     a: Yes via a notarised Power of Attorney authenticated at the Nepali Embassy, authorising a trusted person to submit, pay, and attend the site inspection.
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 Get <strong>Ghar Naksa Pass</strong> from your <strong>plot’s municipality/ward</strong> before building — it approves your drawings against <strong>zoning, setbacks, ROW, FAR and the National Building Code</strong>. Bring <strong>Lalpurja + Char-killa + Thapad Napi + malpot clearance + citizenship</strong> and <strong>architect/structural drawings stamped by a NEC-registered professional</strong> (soil test for 3+ floors). <strong>Fee ~Rs 10–25/sq ft residential</strong>; timeline <strong>30–90 days</strong> for a clean file; issued as <strong>Asthai (plinth) → Sthai (full) → Completion Certificate</strong>.
@@ -104,7 +103,7 @@ Since federalism, your <strong>municipality / rural municipality</strong> (not a
 
 <h2 id="documents">Required Documents</h2>
 
-<h3 id="land-docs">Land &amp; Ownership</h3>
+<h3 id="land-docs">Land & Ownership</h3>
 
 - **Lalpurja** — Land ownership certificate — original + copy (Land Revenue Office)
 - **Char-killa** — Four-boundary certificate — confirms plot boundaries (Survey Office)
@@ -113,7 +112,7 @@ Since federalism, your <strong>municipality / rural municipality</strong> (not a
 - **Citizenship** — Landowner’s nagrikta (or company PAN + registration for institutional owner)
 - **Road/ROW note** — Ward road clearance where required for narrow access / shared wall
 
-<h3 id="design-docs">Design &amp; Professional</h3>
+<h3 id="design-docs">Design & Professional</h3>
 
 - **Architectural drawings** — Site plan, floor plans, elevations, sections — at required scales (often 1:100 plans, 1:50 sections), stamped/signed by a NEC/CAAN-registered architect
 - **Structural drawings** — Foundation, column-beam, reinforcement + calculation report — from a licensed structural engineer (mandatory for 3+ floors)
@@ -184,7 +183,7 @@ Because fees track built-up area and use, a 2-floor house and a 4-floor apartmen
 - Site inspection attended; Asthai → plinth inspection → Sthai → keep set on site
 - Completion Certificate applied for after construction
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: Building Act 2055, National Building Code, Local Government Operation Act 2074 (35-day rule), and your municipality’s building bylaws + EBPS portal (e.g., <a href="https://lsmcebps.gov.np" target="_blank" rel="noopener noreferrer">lsmcebps.gov.np</a> for KMC). Document lists and fees change by municipality — confirm at your ward before printing.
 

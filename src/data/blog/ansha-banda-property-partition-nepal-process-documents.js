@@ -10,7 +10,7 @@ export const anshaBandaPropertyPartitionNepalProcessDocumentsPost = {
   authorCredential: 'Nepal property and family-law researchers',
   date: 'September 27, 2026',
   readTime: '13 min read',
-  image: '/blog/photo-1513475382585-d06e58bcb0e0.jpg',
+  image: '/blog/photo-1513475382585-d06e58bcb0e0.webp',
   tags: ['Ansha Banda', 'Property Partition Nepal', 'Ansabanda', 'Malpot', 'Civil Code 2074', 'Property'],
   relatedTools: ['land-registration', 'property-registration-cost', 'ropani-to-aana', 'house-construction-cost'],
   faqs: [

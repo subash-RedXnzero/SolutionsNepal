@@ -131,6 +131,36 @@ const faqItems = [
       </section>
 
       <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">How Nepali number words work</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--nk-text-secondary);">
+          Nepali has unique words for every number 0–99 (एक, दुई … उनान्सय), then combines them with scale
+          words: सय (hundred), हजार (thousand), लाख (lakh), करोड (crore), अर्ब (arab), खर्ब (kharab) and नील.
+          So 2,34,567 is read as दुई लाख चौंतीस हजार पाँच सय सत्ताइस — the same rhythm as the comma grouping.
+          This converter applies those combinations grammatically rather than translating digit-by-digit, so
+          values stay correct all the way up to नील rather than stopping at lakh or crore.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-semibold mb-2" style="color:var(--nk-text);">Scale reference</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {[
+            ['1,000', 'एक हजार'],
+            ['10,000', 'दस हजार'],
+            ['1,00,000', 'एक लाख'],
+            ['10,00,000', 'दस लाख'],
+            ['1,00,00,000', 'एक करोड'],
+            ['1,00,00,00,000', 'एक अर्ब'],
+          ].map(([num, np]) => (
+            <div class="rounded-lg border px-3 py-2.5" style="border-color:var(--nk-border);background-color:var(--nk-bg);">
+              <span class="block text-[12.5px] font-bold" style="color:var(--nk-text);">{num}</span>
+              <span class="block text-[11.5px] mt-0.5" lang="ne" style="color:var(--nk-text-secondary);">{np}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
         <h2 class="text-base font-bold mb-2" style="color:var(--nk-text);">Frequently Asked Questions</h2>
         <div class="space-y-2">
           {faqItems.map((item) => (
@@ -147,6 +177,7 @@ const faqItems = [
         <ul class="text-sm leading-relaxed space-y-1" style="color:var(--nk-text-secondary);">
           <li>• <a class="underline hover:opacity-80" href="/nepal/tools/rupees-to-words" style="color:var(--nk-accent);">Rupees to Words</a> — focused currency-wording view</li>
           <li>• <a class="underline hover:opacity-80" href="/nepal/tools/cheque-amount-in-words" style="color:var(--nk-accent);">Cheque Amount in Words</a></li>
+          <li>• <a class="underline hover:opacity-80" href="/nepal/tools/nepali-number-converter" style="color:var(--nk-accent);">Nepali Number Converter</a> — Devanagari digits, lakh/crore grouping and words</li>
           <li>• <a class="underline hover:opacity-80" href="/nepal/finance/vat-calculator" style="color:var(--nk-accent);">VAT Calculator</a> — add or remove 13% VAT</li>
           <li>• <a class="underline hover:opacity-80" href="/nepal/finance/sip-calculator" style="color:var(--nk-accent);">SIP Calculator</a> — project investment growth</li>
         </ul>

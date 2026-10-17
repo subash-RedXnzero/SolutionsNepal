@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal transport and vehicle researchers
 date: September 26, 2026
 readTime: 13 min read
-image: "/blog/photo-1449965408869-eaa3f722e40d.jpg"
+image: "/blog/photo-1449965408869-eaa3f722e40d.webp"
 tags: [Bluebook Renewal Nepal, Vehicle Tax Nepal, DOTM, Nagarik App, Documents, Vehicles]
 relatedTools: [vehicle-tax-new, fuel-price, government-service-cost]
 headings:
@@ -80,7 +80,6 @@ faqs:
   - q: Where do I pay offline?
     a: At your district Transport Management Office (Ekantakuna/Gurjudhara in Valley) or via bank challan at Nepal Bank Ltd / Rastriya Banijya Bank authorized branches.
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 Renew your bluebook <strong>every fiscal year by Ashad end (mid-July)</strong>. Pay the <strong>provincial vehicle tax + Rs 300 (bike) / Rs 500 (car) renewal charge</strong> + have <strong>valid third-party insurance</strong>. You can pay the tax online via <strong>Nagarik App, eSewa, Khalti or connectIPS</strong>, but you <strong>must still visit the Transport Management Office</strong> with the receipt + insurance + original bluebook for stamping. Late = 5% → 32% penalty.
@@ -144,7 +143,7 @@ EV tax is by motor power (kW), not cc, and is substantially lower:
 
 > **Commercial vehicles:** Buses, trucks, pickups are assessed by GVW and age, with separate sheets for goods vs passenger. Public-transport vehicles with a current route permit + fitness certificate get the concession amount listed in the commercial table.
 
-<h2 id="renewal-charge">Renewal Charge &amp; Insurance</h2>
+<h2 id="renewal-charge">Renewal Charge & Insurance</h2>
 
 - **Renewal charge** — Rs 300 (two-wheelers) / Rs 500 (private four-wheelers) per fiscal year
 - **Third-party insurance (bike)** — Premiums vary by insurer schedule year (older schedules quoted ~Rs 1,715/1,945/2,167 by cc band) — confirm the current-year premium with your insurer
@@ -176,7 +175,7 @@ The FY 2083/84 gazette confirms all four payment channels are valid:
 
 > **10-minute job:** With all documents ready the counter visit is usually 10–15 minutes. Without valid insurance you will be turned away — renew insurance first.
 
-<h2 id="penalties">Late Penalties &amp; Cancellation</h2>
+<h2 id="penalties">Late Penalties & Cancellation</h2>
 
 - **First 30 days after expiry** — 5% of tax
 - **Up to 45 days** — 10% of tax
@@ -212,7 +211,7 @@ Rates above are Bagmati Province, where most vehicles are registered. Gandaki, L
 - Verify new stamp date/signature before leaving
 - Save photo of renewed page + receipt for next year
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: the <strong>province Economic/Finance Act vehicle-tax schedule for the fiscal year</strong> (posted at your Transport Management Office — the governing paper), <a href="https://dotm.gov.np" target="_blank" rel="noopener noreferrer">DoTM portal (dotm.gov.np)</a> and provincial transport notices. For online payment use <a href="https://nagarikapp.gov.np" target="_blank" rel="noopener noreferrer">Nagarik App</a> or your TMO's connectIPS/eSewa gateway. Working rupee figures here are as of October 2026.
 

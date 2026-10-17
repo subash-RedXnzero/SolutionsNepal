@@ -24,6 +24,23 @@
 /nepal/electricity/bill-calculator /nepal/utilities/electricity-bill 301
 /nepal/finance/salary-tax /nepal/finance/salary-checker 301
 /silver-price-nepal /nepal/silver-price-nepal 301
+# Renamed slug (was aashish_g — slug/name mismatch): keep the old URL working.
+/nepal/names/aashish_g /nepal/names/aashika 301
+
+# Merged tool pages (words converters share one engine; canonical keeps all unique content).
+/nepal/tools/number-to-words-nepali /nepal/tools/nepali-number-to-words 301
+
+# Merged guides (Batch 3 content consolidation — canonical keeps all unique content).
+/guides/national-id-card-nepal-status-check-guide /guides/national-id-card-online-registration-nepal-guide 301
+/guides/national-id-card-nepal-who-needs-one-now /guides/national-id-card-online-registration-nepal-guide 301
+/guides/nagarik-app-nepal-registration-digital-id-guide /guides/nagarik-app-nepal-registration-digital-services-guide 301
+/blog/vehicle-ownership-transfer-nepal-bluebook-namsari-guide /guides/transferring-vehicle-ownership-nepal-namsari 301
+/guides/social-security-fund-nepal-checking-balance /guides/ssf-balance-check-nepal-online-portal-guide 301
+/blog/ssf-contribution-nepal-11-20-percent-benefits-guide /guides/ssf-balance-check-nepal-online-portal-guide 301
+/guides/register-company-in-nepal-online-camis-guide /guides/company-registration-online-nepal-guide 301
+/guides/register-private-limited-company-online-nepal-guide /guides/company-registration-online-nepal-guide 301
+/blog/driving-license-trial-nepal-written-test-tips-guide /guides/nepal-driving-license-trial-date-route-guide 301
+/guides/nepal-driving-license-trial-fees-rejections /guides/nepal-driving-license-trial-date-route-guide 301
 
 # Legacy /blog/* guides moved to /guides/* (ported from vercel.json).
 /tools/logo-size-resizer /tools/photo/logo-size-resizer 301
@@ -48,14 +65,14 @@
 /blog/land-measurement-nepal /guides/land-measurement-nepal 301
 /blog/land-registration-fees-malpot-nepal-guide /guides/land-registration-fees-malpot-nepal-guide 301
 /blog/mofa-document-attestation-nepal-online-guide /guides/mofa-document-attestation-nepal-online-guide 301
-/blog/nagarik-app-nepal-registration-digital-id-guide /guides/nagarik-app-nepal-registration-digital-id-guide 301
+/blog/nagarik-app-nepal-registration-digital-id-guide /guides/nagarik-app-nepal-registration-digital-services-guide 301
 /blog/nagarik-app-nepal-registration-digital-services-guide /guides/nagarik-app-nepal-registration-digital-services-guide 301
-/blog/national-id-card-nepal-status-check-guide /guides/national-id-card-nepal-status-check-guide 301
-/blog/national-id-card-nepal-who-needs-one-now /guides/national-id-card-nepal-who-needs-one-now 301
+/blog/national-id-card-nepal-status-check-guide /guides/national-id-card-online-registration-nepal-guide 301
+/blog/national-id-card-nepal-who-needs-one-now /guides/national-id-card-online-registration-nepal-guide 301
 /blog/national-id-card-online-registration-nepal-guide /guides/national-id-card-online-registration-nepal-guide 301
 /blog/nepal-citizenship-certificate-documents-by-case /guides/nepal-citizenship-certificate-documents-by-case 301
 /blog/nepal-driving-license-trial-date-route-guide /guides/nepal-driving-license-trial-date-route-guide 301
-/blog/nepal-driving-license-trial-fees-rejections /guides/nepal-driving-license-trial-fees-rejections 301
+/blog/nepal-driving-license-trial-fees-rejections /guides/nepal-driving-license-trial-date-route-guide 301
 /blog/nepal-online-driving-license-edlvrs-portal-guide /guides/nepal-online-driving-license-edlvrs-portal-guide 301
 /blog/nepal-police-clearance-certificate-online-pcc-guide /guides/nepal-police-clearance-certificate-online-pcc-guide 301
 /blog/nepali-passport-renewal-process-documents-fees /guides/nepali-passport-renewal-process-documents-fees 301
@@ -64,11 +81,61 @@
 /blog/open-nepali-bank-account-online-ekyc-vkyc-guide /guides/open-nepali-bank-account-online-ekyc-vkyc-guide 301
 /blog/pan-vat-online-registration-nepal-guide /guides/pan-vat-online-registration-nepal-guide 301
 /blog/personal-pan-card-online-nepal-registration-guide /guides/personal-pan-card-online-nepal-registration-guide 301
-/blog/register-company-in-nepal-online-camis-guide /guides/register-company-in-nepal-online-camis-guide 301
-/blog/register-private-limited-company-online-nepal-guide /guides/register-private-limited-company-online-nepal-guide 301
+/blog/register-company-in-nepal-online-camis-guide /guides/company-registration-online-nepal-guide 301
+/blog/register-private-limited-company-online-nepal-guide /guides/company-registration-online-nepal-guide 301
 /blog/social-security-allowance-senior-citizen-rates-nepal /guides/social-security-allowance-senior-citizen-rates-nepal 301
-/blog/social-security-fund-nepal-checking-balance /guides/social-security-fund-nepal-checking-balance 301
+/blog/social-security-fund-nepal-checking-balance /guides/ssf-balance-check-nepal-online-portal-guide 301
 /blog/ssf-balance-check-nepal-online-portal-guide /guides/ssf-balance-check-nepal-online-portal-guide 301
 /blog/tax-on-remittance-nepal-is-remittance-taxable /guides/tax-on-remittance-nepal-is-remittance-taxable 301
 /blog/transferring-vehicle-ownership-nepal-namsari /guides/transferring-vehicle-ownership-nepal-namsari 301
 /blog/understanding-loan-interest /guides/understanding-loan-interest 301
+
+# blog/guide cover images converted to webp (Oct 2026)
+/blog/nepal-driving-license-trial-guide-2026.jpg /blog/nepal-driving-license-trial-guide-2026.webp 301
+/blog/photo-1434030216411-0b793f4b4173.jpg /blog/photo-1434030216411-0b793f4b4173.webp 301
+/blog/photo-1449965408869-eaa3f722e40d.jpg /blog/photo-1449965408869-eaa3f722e40d.webp 301
+/blog/photo-1450101499163-c8848c66ca85.jpg /blog/photo-1450101499163-c8848c66ca85.webp 301
+/blog/photo-1453873531674-2151bcd01707.jpg /blog/photo-1453873531674-2151bcd01707.webp 301
+/blog/photo-1454165804606-c3d57bc86b40.jpg /blog/photo-1454165804606-c3d57bc86b40.webp 301
+/blog/photo-1473093295043-cdd812d0e601.jpg /blog/photo-1473093295043-cdd812d0e601.webp 301
+/blog/photo-1486406146926-c627a92ad1ab.jpg /blog/photo-1486406146926-c627a92ad1ab.webp 301
+/blog/photo-1500382017468-9049fed747ef.jpg /blog/photo-1500382017468-9049fed747ef.webp 301
+/blog/photo-1503387762-592deb58ef4e.jpg /blog/photo-1503387762-592deb58ef4e.webp 301
+/blog/photo-1506784983877-45594efa4cbe.jpg /blog/photo-1506784983877-45594efa4cbe.webp 301
+/blog/photo-1512941937669-90a1b58e7e9c.jpg /blog/photo-1512941937669-90a1b58e7e9c.webp 301
+/blog/photo-1513475382585-d06e58bcb0e0.jpg /blog/photo-1513475382585-d06e58bcb0e0.webp 301
+/blog/photo-1516321318423-f06f85e504b3.jpg /blog/photo-1516321318423-f06f85e504b3.webp 301
+/blog/photo-1516589178581-6cd7833ae3b2.jpg /blog/photo-1516589178581-6cd7833ae3b2.webp 301
+/blog/photo-1523240795612-9a054b0db644.jpg /blog/photo-1523240795612-9a054b0db644.webp 301
+/blog/photo-1532938911079-1b06ac7ceec7.jpg /blog/photo-1532938911079-1b06ac7ceec7.webp 301
+/blog/photo-1533473359331-0135ef1b58bf.jpg /blog/photo-1533473359331-0135ef1b58bf.webp 301
+/blog/photo-1544027993-37dbfe43562a.jpg /blog/photo-1544027993-37dbfe43562a.webp 301
+/blog/photo-1544126592-807ade215a0b.jpg /blog/photo-1544126592-807ade215a0b.webp 301
+/blog/photo-1551288049-bebda4e38f71.jpg /blog/photo-1551288049-bebda4e38f71.webp 301
+/blog/photo-1551836022-deb4988cc6c0.jpg /blog/photo-1551836022-deb4988cc6c0.webp 301
+/blog/photo-1554224155-6726b3ff858f.jpg /blog/photo-1554224155-6726b3ff858f.webp 301
+/blog/photo-1554224155-8d04cb21cd6c.jpg /blog/photo-1554224155-8d04cb21cd6c.webp 301
+/blog/photo-1556742049-0cfed4f6a45d.jpg /blog/photo-1556742049-0cfed4f6a45d.webp 301
+/blog/photo-1560472355-536de3962603.jpg /blog/photo-1560472355-536de3962603.webp 301
+/blog/photo-1560518883-ce09059eeffa.jpg /blog/photo-1560518883-ce09059eeffa.webp 301
+/blog/photo-1563013544-824ae1b704d3.jpg /blog/photo-1563013544-824ae1b704d3.webp 301
+/blog/photo-1568667256549-094345857637.jpg /blog/photo-1568667256549-094345857637.webp 301
+/blog/photo-1568992687947-868a62a9f521.jpg /blog/photo-1568992687947-868a62a9f521.webp 301
+/blog/photo-1578894381163-e72c17f2d45f.jpg /blog/photo-1578894381163-e72c17f2d45f.webp 301
+/blog/photo-1579621970563-ebec7560ff3e.jpg /blog/photo-1579621970563-ebec7560ff3e.webp 301
+/blog/photo-1579621970795-87facc2f976d.jpg /blog/photo-1579621970795-87facc2f976d.webp 301
+/blog/photo-1580519542036-c47de6196ba5.jpg /blog/photo-1580519542036-c47de6196ba5.webp 301
+/blog/photo-1582719478250-c89cae4dc85b.jpg /blog/photo-1582719478250-c89cae4dc85b.webp 301
+/blog/photo-1585771724684-38269d6639fd.jpg /blog/photo-1585771724684-38269d6639fd.webp 301
+/blog/photo-1586953208448-b95a79798f07.jpg /blog/photo-1586953208448-b95a79798f07.webp 301
+/blog/photo-1587145820266-a5951ee6f620.jpg /blog/photo-1587145820266-a5951ee6f620.webp 301
+/blog/photo-1590846406792-0adc7f938f1d.jpg /blog/photo-1590846406792-0adc7f938f1d.webp 301
+/blog/photo-1596422846543-75c6fc197f07.jpg /blog/photo-1596422846543-75c6fc197f07.webp 301
+/blog/photo-1610375461246-83df859d849d.jpg /blog/photo-1610375461246-83df859d849d.webp 301
+/blog/photo-1658437711216-1b55fd9ae096.jpg /blog/photo-1658437711216-1b55fd9ae096.webp 301
+/blog/photo-1740937560703-fd059680eb7d.jpg /blog/photo-1740937560703-fd059680eb7d.webp 301
+/blog/photo-1748761751275-e55a2a29e1bf.jpg /blog/photo-1748761751275-e55a2a29e1bf.webp 301
+/blog/photo-1754587113179-1865dcb6dae8.jpg /blog/photo-1754587113179-1865dcb6dae8.webp 301
+/blog/photo-1763872867598-b1b5f769d7e3.jpg /blog/photo-1763872867598-b1b5f769d7e3.webp 301
+/blog/photo-1768059279306-98b49f47be92.jpg /blog/photo-1768059279306-98b49f47be92.webp 301
+/blog/tvs-ntorq-125-eicma.jpg /blog/tvs-ntorq-125-eicma.webp 301

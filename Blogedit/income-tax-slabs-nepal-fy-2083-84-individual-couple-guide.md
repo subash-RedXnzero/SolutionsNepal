@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax researchers
 date: September 27, 2026
 readTime: 10 min read
-image: "/blog/photo-1554224155-6726b3ff858f.jpg"
+image: "/blog/photo-1554224155-6726b3ff858f.webp"
 tags: [Income Tax Nepal, Salary Tax, IRD, FY 2083/84, Tax Slabs]
 relatedTools: [overtime-calculator, salary-checker, ssf-calculator]
 headings:
@@ -36,10 +36,9 @@ faqs:
   - q: What deductions reduce my taxable income?
     a: SSF/EPF/CIT contributions, life-insurance premium and approved retirement contributions within IRD limits, plus remote-area and standard employment deductions per IRD notice. Keep SSF statements + insurance receipts for filing.
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
-<strong>FY 2083/84 uses one unified schedule for all individuals (no separate single/couple slabs, as of October 2026): Rs 10 lakh @1% → next 5L @10% → next 10L @20% → next 15L @27% → rest @29%.</strong> Taxable = <strong>gross − SSF/retirement deductions</strong>. <strong>SSF/pension contributors are exempt from the 1% band</strong> (pension income and sole-proprietorship income also excluded from the 1% band — commonly reported, confirm current IRD notice). Use <a href="/nepal/finance/salary-tax">Salary Tax calculator</a> for exact monthly TDS.
+<strong>FY 2083/84 uses one unified schedule for all individuals (no separate single/couple slabs, as of October 2026): Rs 10 lakh @1% → next 5L @10% → next 10L @20% → next 15L @27% → rest @29%.</strong> Taxable = <strong>gross − SSF/retirement deductions</strong>. <strong>SSF/pension contributors are exempt from the 1% band</strong> (pension income and sole-proprietorship income also excluded from the 1% band — commonly reported, confirm current IRD notice). Use <a href="/nepal/finance/salary-checker">Salary calculator</a> for exact monthly TDS.
 
 <h2 id="slabs">FY 2083/84 Slabs — Unified Schedule</h2>
 
@@ -67,7 +66,7 @@ All examples use the FY 2083/84 unified schedule (non-exempt person; SSF/pension
 
 Check with <a href="/nepal/finance/salary-checker">Salary Checker</a> (SSF + TDS + net).
 
-<h2 id="deductions">Deductions &amp; Filing Steps</h2>
+<h2 id="deductions">Deductions & Filing Steps</h2>
 
 1. Total your <strong>gross (basic + allowances + bonus + Dashain)</strong> for Shrawan–Ashad
 2. Subtract <strong>SSF 11% / EPF / CIT / approved insurance</strong> within IRD caps → taxable income
@@ -81,8 +80,8 @@ Check with <a href="/nepal/finance/salary-checker">Salary Checker</a> (SSF + TDS
 - Claiming full insurance/CIT without caps — excess disallowed on assessment
 - Ignoring the SSF/pension 1% exemption (plus pension-income and sole-proprietorship exclusions) — exempt persons should not pay the first-band 1%
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
-Source: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a> — Income Tax Act 2058 + Finance Act 2083 (Economic Act 2083 information booklet) notices; slab figures as of October 2026. Slabs revise each Jestha budget — verify the current notice before payroll or filing.
+Source: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a> — Income Tax Act 2058 + Finance Act 2083 (Economic Act 2083 information booklet) notices; current act texts also at <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Nepal Law Commission (lawcommission.gov.np)</a>. Slab figures as of October 2026. Slabs revise each Jestha budget — verify the current notice before payroll or filing.
 
 <strong>Last updated: September 27, 2026. Figures rechecked as of October 2026.</strong> SolutionsNepal is an educational guide, not IRD.

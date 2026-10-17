@@ -6,42 +6,63 @@ author: SolutionsNepal Team
 authorCredential: Gold market analysts and Nepal finance experts
 date: September 14, 2026
 readTime: 12 min read
-image: "/blog/photo-1596422846543-75c6fc197f07.jpg"
+image: "/blog/photo-1596422846543-75c6fc197f07.webp"
 tags: [Gold, Hallmark, Tola, Purity, Nepal, Finance]
 headings:
   - id: introduction
-    text: Introduction
+    text: "Introduction"
     level: 2
   - id: what-is-hallmark
-    text: What Is Hallmark Gold in Nepal?
+    text: "What Is Hallmark Gold in Nepal?"
     level: 2
   - id: why-purity-matters
-    text: Why purity markings matter
-    level: 3
+    text: "Why purity markings matter"
+    level: 2
   - id: fineness-numbers
-    text: How fineness numbers work
-    level: 3
+    text: "How fineness numbers work"
+    level: 2
   - id: what-buyers-should-look-for
-    text: What buyers should look for
-    level: 3
+    text: "What buyers should look for"
+    level: 2
   - id: what-does-995-mean
-    text: What Does Hallmark 995 Mean?
+    text: "What Does Hallmark 995 Mean?"
     level: 2
   - id: purity-comparison
-    text: Gold Purity Comparison Table
+    text: "Gold Purity Comparison Table"
     level: 2
   - id: 22k-vs-24k
-    text: 22K vs 24K Gold in Nepal
+    text: "22K vs 24K Gold in Nepal"
     level: 2
+  - id: 24k-details
+    text: "24K Gold (Fine/Hallmark)"
+    level: 3
+  - id: 22k-details
+    text: "22K Gold"
+    level: 3
   - id: tola-lal-gram
     text: "Tola, Lal and Gram: Gold Weight in Nepal"
     level: 2
+  - id: conversions
+    text: "Key conversions"
+    level: 3
+  - id: formulas
+    text: "Conversion formulas"
+    level: 3
   - id: fine-vs-tejabi
-    text: Fine Gold vs Tejabi Gold
+    text: "Fine Gold vs Tejabi Gold"
     level: 2
+  - id: fine-details
+    text: "What &quot;fine gold&quot; means"
+    level: 3
+  - id: tejabi-details
+    text: "What &quot;tejabi gold&quot; means"
+    level: 3
   - id: gold-rate
-    text: How Is the Gold Rate Determined in Nepal?
+    text: "How Is the Gold Rate Determined in Nepal?"
     level: 2
+  - id: factors
+    text: "Four factors that set the rate"
+    level: 3
   - id: fenegosida-role
     text: "FENEGOSIDA's role"
     level: 3
@@ -49,22 +70,37 @@ headings:
     text: "Gold Price Today Nepal: Why the Final Bill Is Different"
     level: 2
   - id: making-charges
-    text: Gold Making Charges in Nepal
+    text: "Gold Making Charges in Nepal"
     level: 2
+  - id: why-differ
+    text: "Why two pieces with the same gold weight cost different amounts"
+    level: 3
+  - id: fixed-vs-percent
+    text: "Fixed vs percentage-based charges"
+    level: 3
+  - id: questions
+    text: "Questions to ask your jeweler"
+    level: 3
   - id: example
     text: "Example: How to Calculate the Cost of Gold Jewelry"
     level: 2
+  - id: scenario
+    text: "Scenario"
+    level: 3
+  - id: steps
+    text: "Step-by-step calculation"
+    level: 3
   - id: check-before-buying
-    text: How to Check Gold Before Buying in Nepal
+    text: "How to Check Gold Before Buying in Nepal"
     level: 2
   - id: common-mistakes
-    text: Common Mistakes When Buying Gold in Nepal
+    text: "Common Mistakes When Buying Gold in Nepal"
     level: 2
   - id: faqs
-    text: Frequently Asked Questions
+    text: "Frequently Asked Questions"
     level: 2
   - id: before-you-buy
-    text: Before You Buy Gold in Nepal
+    text: "Before You Buy Gold in Nepal"
     level: 2
 faqs:
   - q: What is hallmark gold in Nepal?
@@ -88,7 +124,6 @@ faqs:
   - q: How can I check gold purity before buying?
     a: Look for the NBSM hallmark stamp, verify the fineness number (999, 995, 916), ask for certification, and buy from FENEGOSIDA-registered dealers who provide itemized invoices.
 ---
-
 <h2 id="introduction">Introduction</h2>
 
 Buying gold in Nepal without understanding hallmark, purity, and how the final bill is calculated can cost you thousands. This guide explains what Hallmark 995 means, how tola and lal convert to grams, the difference between fine and tejabi gold, and why your jewelry bill is higher than the advertised gold rate—so you can buy with confidence.
@@ -99,9 +134,9 @@ A hallmark is an official mark stamped on gold items to certify their purity. In
 
 <h2 id="why-purity-matters">Why purity markings matter</h2>
 
-- **Trust:** A hallmark tells you the gold content has been independently verified, not just claimed by the seller.
-- **Value:** Purity directly affects resale value and buyback rates.
-- **Protection:** Certified gold reduces the risk of being sold under-purity items at premium prices.
+- <strong>Trust:</strong> A hallmark tells you the gold content has been independently verified, not just claimed by the seller.
+- <strong>Value:</strong> Purity directly affects resale value and buyback rates.
+- <strong>Protection:</strong> Certified gold reduces the risk of being sold under-purity items at premium prices.
 
 <h2 id="fineness-numbers">How fineness numbers work</h2>
 
@@ -332,4 +367,4 @@ Avoid these costly errors:
 
 Ready to buy? Check <a href="/nepal/gold-price-nepal">Today's Gold Price in Nepal</a> for the latest FENEGOSIDA rates, and use SolutionsNepal's calculators to estimate your total cost before visiting the jeweler.
 
-**Official sources:** <a href="https://www.nbsm.gov.np" target="_blank" rel="noopener noreferrer">Nepal Bureau of Standards and Metrology (NBSM)</a> for hallmark certification standards; FENEGOSIDA (Federation of Nepal Gold & Silver Dealers' Association) for the published daily gold/silver rate; <a href="https://www.nrb.org.np" target="_blank" rel="noopener noreferrer">Nepal Rastra Bank (nrb.org.np)</a> for the USD/NPR reference rate; <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">IRD (ird.gov.np)</a> for current VAT and tax applicability. Rates in this guide are date-stamped where given — always confirm the day's rate before buying.
+<strong>Official sources:</strong> <a href="https://www.nbsm.gov.np" target="_blank" rel="noopener noreferrer">Nepal Bureau of Standards and Metrology (NBSM)</a> for hallmark certification standards; FENEGOSIDA (Federation of Nepal Gold & Silver Dealers' Association) for the published daily gold/silver rate; <a href="https://www.nrb.org.np" target="_blank" rel="noopener noreferrer">Nepal Rastra Bank (nrb.org.np)</a> for the USD/NPR reference rate; <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">IRD (ird.gov.np)</a> for current VAT and tax applicability. Rates in this guide are date-stamped where given — always confirm the day's rate before buying.

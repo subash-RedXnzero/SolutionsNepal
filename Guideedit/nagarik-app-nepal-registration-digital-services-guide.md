@@ -1,26 +1,26 @@
 ---
-title: "How to Use Nagarik App Nepal: Registration & Services Guide (2026)"
-description: "2026 guide to Nagarik App registration in Nepal: link Digital License, National ID, PAN, Bluebook, Voter ID and services."
+title: "Nagarik App Registration Nepal: Step-by-Step Guide"
+description: "Register for Nagarik App and use government services: link license, National ID, PAN, bluebook and Voter ID."
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal digital-government researchers
 date: September 16, 2026
 readTime: 14 min read
-image: "/blog/photo-1516321318423-f06f85e504b3.jpg"
+image: "/blog/photo-1516321318423-f06f85e504b3.webp"
 tags: [Nagarik App Nepal Registration Guide 2026, Nagarik App, Digital Driving License, National ID, PAN, Vehicle Bluebook, Voter ID, e-KYC, Documents]
 relatedTools: [government-service-cost, passport-size-photo]
 headings:
   - id: introduction
-    text: Introduction
+    text: "Introduction"
     level: 2
   - id: what-is
-    text: What Is Nagarik App in Nepal?
+    text: "What Is Nagarik App in Nepal?"
     level: 2
   - id: services
-    text: What Services Are Available on Nagarik App?
+    text: "What Services Are Available on Nagarik App?"
     level: 2
   - id: registration
-    text: How to Register for Nagarik App
+    text: "How to Register for Nagarik App"
     level: 2
   - id: step-download
     text: "Step 1: Download the Official App"
@@ -34,65 +34,86 @@ headings:
   - id: step-account
     text: "Step 4: Create/Login to Your Account"
     level: 3
+  - id: login
+    text: "How to Login and Recover Access"
+    level: 2
+  - id: citizenship
+    text: "How to Link Citizenship"
+    level: 2
   - id: national-id
-    text: How to Link National ID With Nagarik App
+    text: "How to Link National ID With Nagarik App"
     level: 2
   - id: national-id-issues
-    text: What to do if issues arise
+    text: "What to do if issues arise"
     level: 3
   - id: driving-license
-    text: How to Access Your Digital Driving License
+    text: "How to Access Your Digital Driving License"
     level: 2
   - id: bluebook
-    text: How to Link or View Your Vehicle Bluebook
+    text: "How to Link or View Your Vehicle Bluebook"
     level: 2
   - id: vehicle-tax
-    text: How to Pay Vehicle Tax Through Nagarik App
+    text: "How to Pay Vehicle Tax Through Nagarik App"
     level: 2
   - id: pan
-    text: How to Access PAN and Tax Services
+    text: "How to Access PAN and Tax Services"
     level: 2
   - id: voter-id
-    text: How to Access Voter ID / Election Services
+    text: "How to Access Voter ID / Election Services"
     level: 2
   - id: ekyc
-    text: e-KYC Through Nagarik App
+    text: "e-KYC Through Nagarik App"
+    level: 2
+  - id: digital-id
+    text: "Nagarik App Digital ID Explained"
     level: 2
   - id: troubleshooting
-    text: Nagarik App Login Problems and Troubleshooting
+    text: "Nagarik App Login Problems and Troubleshooting"
     level: 2
   - id: verification-failing
-    text: Why Is My Nagarik App Verification Failing?
+    text: "Why Is My Nagarik App Verification Failing?"
+    level: 2
+  - id: sim-mismatch
+    text: "Fix: SIM Details Do Not Match"
     level: 2
   - id: safety
-    text: Is Nagarik App Safe?
+    text: "Is Nagarik App Safe?"
     level: 2
   - id: abroad
-    text: Can Nepalis Living Abroad Use Nagarik App?
+    text: "Can Nepalis Living Abroad Use Nagarik App?"
     level: 2
   - id: vs-websites
-    text: Nagarik App vs Government Websites
+    text: "Nagarik App vs Government Websites"
+    level: 2
+  - id: physical-documents
+    text: "Nagarik App vs Physical Documents"
     level: 2
   - id: checklist
-    text: Nagarik App Registration Checklist
+    text: "Nagarik App Registration Checklist"
     level: 2
-  - id: faq
-    text: Frequently Asked Questions
-    level: 2
+  - id: checklist-before
+    text: "Before you start"
+    level: 3
+  - id: checklist-after
+    text: "After you install"
+    level: 3
   - id: official-sources
-    text: Official Sources to Check
+    text: "Official Sources to Check"
     level: 2
   - id: summary
-    text: Final Quick Summary
+    text: "Final Quick Summary"
     level: 2
   - id: registration-checklist
-    text: Registration Checklist
+    text: "Registration Checklist"
     level: 2
   - id: quick-reference
-    text: Troubleshooting Table (Quick Reference)
+    text: "Troubleshooting Table (Quick Reference)"
     level: 2
   - id: final-note
-    text: Final Note
+    text: "Final Note"
+    level: 2
+  - id: faq
+    text: "Frequently asked questions"
     level: 2
 faqs:
   - q: What is Nagarik App in Nepal?
@@ -149,8 +170,15 @@ faqs:
     a: "Many core services require identity verification; some services may still be usable with alternate verification methods supported by partner services."
   - q: Can I use Nagarik App for all government services?
     a: "Not yet. Only the services currently integrated and supported by Nagarik App are accessible; many government portals still operate independently."
+  - q: Can I link my Citizenship to Nagarik App?
+    a: Yes. Open the Citizenship module, choose the add or link option, enter your citizenship number and other requested details, and let the app verify them against the government record.
+  - q: What documents are required for Nagarik App registration?
+    a: You generally need a Nepal-registered SIM in your own name, OTP access, and an accepted government identity document such as Citizenship, National ID, Passport, or Driving License. Requirements can vary by app flow.
+  - q: Why does Nagarik App say my SIM details do not match?
+    a: The SIM may be registered under another person, or the name and identity details in the telecom or government databases may not match. Recent ownership changes can also take time to synchronize.
+  - q: Is Nagarik App a replacement for Citizenship?
+    a: "No. Nagarik App displays and links digital records; it does not replace the original Citizenship certificate. Acceptance of a digital record depends on the specific office or service."
 ---
-
 <h2 id="introduction">Introduction</h2>
 
 If you need government services in Nepal, <strong>Nagarik App</strong> is the official mobile platform designed to give citizens access to multiple services from one app. You can link the following where available:
@@ -175,7 +203,7 @@ This guide explains how to use Nagarik App with practical, step-by-step instruct
 
 <h2 id="what-is">What Is Nagarik App in Nepal?</h2>
 
-- <strong>What it is:</strong> Nagarik App is the Government of Nepal’s official digital-service gateway, bringing several public services into a single mobile app.
+- <strong>What it is:</strong> Nagarik App is the Government of Nepal’s official digital-service gateway, bringing several public services into a single mobile app. It was developed by the National Information Technology Center (NITC) under the Ministry of Communication and Information Technology.
 - <strong>Who operates/supports it:</strong> government agencies and partner service providers coordinate with the app through official channels.
 - <strong>Its purpose:</strong> to streamline access to government services, reduce queues, and enable remote verification, payments, and service access.
 - <strong>Why citizens use it:</strong> convenience, accessibility, and the ability to view linked records (National ID, driving license, PAN) and pay certain fees digitally.
@@ -219,6 +247,27 @@ This guide explains how to use Nagarik App with practical, step-by-step instruct
 - If you already have an account, log in with the provided credentials.
 
 Screens and verification steps can change with app updates.
+
+<h2 id="login">How to Login and Recover Access</h2>
+
+1. Open the official Nagarik App on your phone.
+2. Enter the registered mobile number.
+3. Verify the OTP and enter the PIN if the app requests it.
+4. Use the in-app recovery or re-verification instructions if you changed devices or lost access to the number.
+
+After changing phones, install the official app again and use the same registered number. Linked documents should return after OTP and identity verification succeed. If the old number is unavailable, contact official support or follow the latest recovery flow shown in the app.
+
+<h2 id="citizenship">How to Link Citizenship</h2>
+
+Citizenship is one of the most common identity records used by Nagarik App. The app checks the details you submit against the relevant government database.
+
+1. Open the Citizenship section or begin the identity-verification flow.
+2. Choose Add Citizenship or the equivalent option shown in your app version.
+3. Enter the citizenship number and any requested district or personal details.
+4. Submit for verification against the government record.
+5. Review the linked details after a successful match.
+
+If the details do not match, check the number format, spelling, and district first. If the underlying record is incorrect, the relevant District Administration Office must correct it; the app cannot repair the source record by itself.
 
 <h2 id="national-id">How to Link National ID With Nagarik App</h2>
 
@@ -289,6 +338,17 @@ Digital receipts may appear in-app or in your connected bank app.
 - <strong>Data usage:</strong> identity details provided can be used to verify identity for services.
 - <strong>Privacy/security:</strong> share data only with verified institutions through official Nagarik App workflows.
 
+<h2 id="digital-id">Nagarik App Digital ID Explained</h2>
+
+Digital identity in Nagarik App means your verified profile and the digital versions or linked records of government documents such as Citizenship, NID, Driving License, and PAN. It is not a new identity document issued by the app.
+
+- Use digital records for supported online applications and pre-filled forms.
+- Use NID or QR-linked information where the service specifically accepts it.
+- View application status, license print status, PAN information, and other records where integrated.
+- Check the specific office policy before presenting a digital record as a replacement for a physical document.
+
+> **Do not discard originals:** Many legal, administrative, transport, and banking processes still require the original Citizenship certificate, physical NID, smart license, or printed PAN.
+
 <h2 id="troubleshooting">Nagarik App Login Problems and Troubleshooting</h2>
 
 - **OTP not received** — Check mobile signal, ensure the SIM is in your name, and retry the OTP.
@@ -319,6 +379,18 @@ What to do:
 3. Check service status notices from Nagarik or the relevant department.
 4. Contact the appropriate department or Nagarik support if problems persist.
 
+<h2 id="sim-mismatch">Fix: SIM Details Do Not Match</h2>
+
+Errors such as <strong>SIM details do not match</strong> or <strong>mobile number is not registered in your name</strong> usually mean the app cannot confirm that the SIM belongs to the same person as the identity record.
+
+1. <strong>Check SIM ownership.</strong> Ask Nepal Telecom, Ncell, or the relevant operator whether the number is registered in your name. If it belongs to a family member, friend, or shopkeeper, request ownership re-registration using your Citizenship or NID.
+2. <strong>Compare identity details.</strong> Check name spelling, citizenship number, district, and NID details against the records you entered.
+3. <strong>Allow synchronization time.</strong> A recently transferred or re-registered SIM may not appear in government systems immediately.
+4. <strong>Update and restart.</strong> Install the latest Nagarik App version, restart your phone, and retry with a reliable network connection.
+5. <strong>Contact the correct authority.</strong> Telecom operators handle SIM ownership; the DAO or NID authority handles identity records; app support handles application or system issues.
+
+Do not assume a mismatch proves your documents are invalid. It can be caused by telecom records, a government-record spelling error, or a database synchronization delay.
+
 <h2 id="safety">Is Nagarik App Safe?</h2>
 
 - Use only the official Nagarik App from trusted stores.
@@ -343,6 +415,13 @@ Usually only when they still have access to a Nepal-registered mobile number tha
 - <strong>Government websites:</strong> department-specific portals with direct access to a particular service.
 
 Nagarik App provides convenient access for many tasks when supported; some functions still require visiting the official department site.
+
+<h2 id="physical-documents">Nagarik App vs Physical Documents</h2>
+
+- **Citizenship** — Digital details may support verification, but keep the original certificate for legal and administrative processes.
+- **National ID** — Digital NID can be displayed after linking; carry the physical card where an office explicitly requires it.
+- **Driving License** — Digital license information is useful for supported checks, but the physical smart card may still be required.
+- **PAN** — Digital PAN may work for many online workflows; keep the physical card or a printed copy for institutions that ask for it.
 
 <h2 id="checklist">Nagarik App Registration Checklist</h2>
 
@@ -369,9 +448,10 @@ Nagarik App provides convenient access for many tasks when supported; some funct
 <h2 id="official-sources">Official Sources to Check</h2>
 
 - <a href="https://nagarikapp.gov.np" target="_blank" rel="noopener noreferrer">Nagarik App official portal (nagarikapp.gov.np)</a> — start here for downloads and official guidance
+- <a href="https://nitc.gov.np" target="_blank" rel="noopener noreferrer">National Information Technology Center (NITC)</a> — the agency behind the Nagarik App
 - <a href="https://doit.gov.np" target="_blank" rel="noopener noreferrer">Department of Information Technology (DoIT)</a>
 - <a href="https://dotm.gov.np" target="_blank" rel="noopener noreferrer">Department of Transport Management (DoTM)</a>
-- <a href="https://nidwc.gov.np" target="_blank" rel="noopener noreferrer">National ID and Civil Registration Department</a>
+- <a href="https://donidcr.gov.np" target="_blank" rel="noopener noreferrer">Department of National ID and Civil Registration (DoNIDCR)</a>
 - <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (IRD)</a>
 - <a href="https://election.gov.np" target="_blank" rel="noopener noreferrer">Election Commission Nepal</a>
 
@@ -406,6 +486,4 @@ Nagarik App provides convenient access for many tasks when supported; some funct
 
 <h2 id="final-note">Final Note</h2>
 
-This guide provides educational information about Nagarik App. Always verify current instructions with the official Nagarik App channels and the relevant government departments before depending on a service. Last updated: September 2026.
-
-> **Related guide:** For document-linking walkthroughs — Citizenship, National ID (NIN), Driving License, and PAN — plus fixing SIM mismatch errors, see our <a href="/guides/nagarik-app-nepal-registration-digital-id-guide">Nagarik App registration & digital ID guide</a>.
+This guide provides educational information about Nagarik App. Always verify current instructions with the official Nagarik App channels and the relevant government departments before depending on a service. Last updated: October 2026.

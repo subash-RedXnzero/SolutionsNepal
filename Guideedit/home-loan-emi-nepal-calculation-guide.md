@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal finance researchers
 date: September 10, 2026
 readTime: 14 min read
-image: "/blog/photo-1560518883-ce09059eeffa.jpg"
+image: "/blog/photo-1560518883-ce09059eeffa.webp"
 tags: [Home Loan, EMI, Base Rate, NRB, Finance, Nepal]
 relatedTools: [emi-calculator, salary-checker, home-loan-down-payment, sip-calculator]
 headings:
@@ -14,34 +14,43 @@ headings:
     text: "Quick Answer: How Is Home Loan EMI Calculated in Nepal?"
     level: 2
   - id: what
-    text: What Is a Home Loan EMI?
+    text: "What Is a Home Loan EMI?"
     level: 2
   - id: pricing
-    text: How Banks Set Home Loan Interest Rates in Nepal
+    text: "How Banks Set Home Loan Interest Rates in Nepal"
     level: 2
+  - id: base-rate
+    text: "Base Rate"
+    level: 3
+  - id: spread
+    text: "Spread / Risk Premium"
+    level: 3
   - id: nrb
-    text: What Is the NRB Base Rate Rule?
+    text: "What Is the NRB Base Rate Rule for Home Loans?"
     level: 2
   - id: fixed-floating
-    text: Floating vs Fixed Home Loan Interest Rate
+    text: "Floating vs Fixed Home Loan Interest Rate"
     level: 2
   - id: changes
-    text: Why Does My Home Loan EMI Change?
+    text: "Why Does My Home Loan EMI Change?"
     level: 2
   - id: affordability
-    text: How Much Home Loan EMI Can You Afford?
+    text: "How Much Home Loan EMI Can You Afford?"
     level: 2
   - id: costs
-    text: Additional Home Loan Costs to Check
+    text: "Additional Home Loan Costs to Check"
     level: 2
   - id: compare
-    text: How to Compare Home Loans
+    text: "How to Compare Home Loans From Nepalese Banks"
     level: 2
   - id: calculator
-    text: How to Use an EMI Calculator Correctly
+    text: "EMI Calculator Nepal: How to Use One Correctly"
+    level: 2
+  - id: sensitivity
+    text: "How Interest Rate and Tenure Affect EMI"
     level: 2
   - id: mistakes
-    text: Common Home Loan EMI Mistakes
+    text: "Common Home Loan EMI Mistakes"
     level: 2
 faqs:
   - q: How is home-loan EMI calculated in Nepal?
@@ -61,7 +70,6 @@ faqs:
   - q: Does a longer home-loan tenure reduce EMI?
     a: Yes, but the total interest rises. A Rs 50 lakh loan at 8% has a lower monthly EMI over 20 or 25 years than over 10 years, but costs much more overall.
 ---
-
 <h2 id="quick-answer">Quick Answer: How Is Home Loan EMI Calculated in Nepal?</h2>
 
 Nepalese commercial banks generally calculate home-loan EMI from the loan amount, annual interest rate, and tenure. Most floating products are priced from a published bank base rate plus a premium or spread, so the EMI can change over time.
@@ -189,7 +197,7 @@ Review the monthly EMI, total repayment, and total interest.
 - A floating-rate result can change when the bank rate changes.
 - Compare the calculator output with the bank's written amortization schedule.
 
-> **Calculate before comparing:** Use SolutionsNepal's <a href="/nepal/finance/emi-calculator">EMI Calculator</a>, then check the <a href="/nepal/finance/salary-checker">Salary Calculator</a> and <a href="/nepal/finance/salary-tax">Salary Tax Calculator</a> to estimate how the EMI fits your net income.
+> **Calculate before comparing:** Use SolutionsNepal's <a href="/nepal/finance/emi-calculator">EMI Calculator</a>, then check the <a href="/nepal/finance/salary-checker">Salary Calculator</a> to estimate how the EMI fits your net income.
 
 <h2 id="sensitivity">How Interest Rate and Tenure Affect EMI</h2>
 
@@ -216,4 +224,4 @@ A one-percentage-point change can add several thousand rupees to the monthly EMI
 
 > **Verify before borrowing:** Home-loan rates, terms, and conditions vary by bank and change over time. This guide is educational, not borrowing or financial advice. Confirm the current offer and loan agreement with the specific bank.
 
-**Official sources (as of October 2026):** <a href="https://www.nrb.org.np" target="_blank" rel="noopener noreferrer">Nepal Rastra Bank (nrb.org.np)</a> for base-rate methodology and monetary-policy notices; individual commercial-bank websites for their published monthly base rates and home-loan product sheets. The indicative rate range cited in this guide could not be re-verified against current bank publications at the time of writing — always confirm the live offer with the lending bank.
+<strong>Official sources (as of October 2026):</strong> <a href="https://www.nrb.org.np" target="_blank" rel="noopener noreferrer">Nepal Rastra Bank (nrb.org.np)</a> for base-rate methodology and monetary-policy notices; individual commercial-bank websites for their published monthly base rates and home-loan product sheets. The indicative rate range cited in this guide could not be re-verified against current bank publications at the time of writing — always confirm the live offer with the lending bank.

@@ -1,49 +1,221 @@
 ---
-title: How Does a Salary Calculator Work?
-description: The logic behind computing take-home salary in Nepal.
+title: "How Nepal Salary Calculation Works: Basic to Take-Home"
+description: "The logic behind take-home pay in Nepal: basic salary, allowances, SSF, tax slabs and how net salary is worked out."
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Financial analysts and Nepal tax experts
-date: August 10, 2026
-readTime: 3 min read
-image: "/blog/photo-1554224155-8d04cb21cd6c.jpg"
-tags: [Finance, Salary, Tax, SSF]
+date: October 17, 2026
+readTime: 9 min read
+image: "/blog/photo-1554224155-8d04cb21cd6c.webp"
+tags: [Finance, Salary, Tax, SSF, Nepal]
+relatedTools: [salary-checker, ssf-calculator, dashain-bonus, overtime-calculator, freelancer-take-home]
 headings:
+  - id: quick-answer
+    text: Quick Answer
+    level: 2
   - id: introduction
-    text: Introduction
+    text: Gross, Deductions, Net — The Three Numbers on Your Slip
     level: 2
   - id: components
-    text: Salary Components
+    text: What Goes Into Gross Salary
+    level: 2
+  - id: ssf
+    text: SSF — Two Contributions, Only One Leaves Your Pay
     level: 2
   - id: deductions
-    text: Deductions
+    text: Retirement Contributions and Insurance Deductions
     level: 2
-  - id: conclusion
-    text: Conclusion
+  - id: tax
+    text: "Income Tax: FY 2083/84 Slabs and the SST Waiver"
     level: 2
+  - id: tds
+    text: "TDS Is Not an Extra Charge"
+    level: 2
+  - id: worked-example
+    text: Worked Examples
+    level: 2
+  - id: employer-cost
+    text: Net Pay vs What You Actually Cost the Employer
+    level: 2
+  - id: mistakes
+    text: Common Mistakes
+    level: 2
+  - id: sources
+    text: Sources and Disclaimer
+    level: 2
+faqs:
+  - q: How is take-home salary calculated in Nepal?
+    a: "Start with gross monthly salary, subtract the employee SSF contribution (11% of basic salary), subtract any other employee deductions, then subtract monthly TDS — which is the annual income tax divided by 12. What remains is net (take-home) pay."
+  - q: How much SSF is deducted from salary in Nepal?
+    a: The employee contribution is 11% of basic salary (10% pension fund plus 1% social security tax), and the employer separately contributes 20% of basic salary. Only the 11% employee share is deducted from your pay; the employer share is paid on top of your salary.
+  - q: Is TDS the same as income tax?
+    a: Yes. TDS (tax deducted at source) is your income tax withheld monthly by the employer instead of being paid in one lump sum. Monthly TDS is the computed annual tax divided by 12 — never add TDS and income tax together.
+  - q: What are the income tax slabs for FY 2083/84?
+    a: The reported schedule is 1% social security tax on the first Rs 10,00,000 (waived for SSF contributors), then 10% up to Rs 15,00,000, 20% up to Rs 25,00,000, 27% up to Rs 40,00,000 and 29% above that. Verify the gazetted figures on ird.gov.np before relying on them for filing.
+  - q: Why does my take-home pay go down when I join SSF?
+    a: Because 11% of your basic salary is deducted as your contribution, which lowers your net pay this month. In exchange you build a retirement and social-security balance, and the 1% social security tax on the first income slab is waived. The employer's 20% contribution is added on top and is not taken from your salary.
+  - q: Is the employer's SSF contribution part of my salary?
+    a: No. It is paid by the employer in addition to your gross salary, and it is not deducted from your pay. It is, however, part of the retirement-contribution pool that can reduce your taxable income for the year.
+  - q: How is the festival (Dashain) allowance calculated?
+    a: Under Labour Act 2074 section 37, festival expense works out to one month's salary pro-rated for the months you worked in the year. Actual payout depends on employer policy and the Act, and the amount is part of your annual income.
+  - q: How is overtime paid?
+    a: Overtime is paid at 1.5 times the normal hourly wage under Labour Act 2074 sections 55 and 57. The hourly rate is normally derived from monthly salary divided by working days and normal daily hours — check how your employer computes the base.
+  - q: How much of my income can I deduct for retirement contributions?
+    a: Employee and employer contributions to SSF, PF and CIT are combined into one deduction pool, capped at the lower of the actual amount, Rs 5,00,000, or one-third of your assessable income. Life insurance premiums are deductible up to Rs 40,000 and health insurance premiums up to Rs 20,000 a year.
+  - q: Does a lower net salary mean SSF is a bad deal?
+    a: Not by itself. Net pay falls because part of your salary is being saved in your name, and joining SSF waives the 1% social security tax on the first income slab. Whether SSF or a PF/CIT arrangement suits you better depends on your employer's scheme and your retirement plans.
 ---
 
-<h2 id="introduction">Introduction</h2>
+<h2 id="quick-answer">Quick Answer</h2>
 
-Your salary slip contains multiple components. A salary calculator breaks down your gross salary into take-home pay by accounting for all deductions mandated by the Nepal government.
+A salary calculator works in one direction, in four steps:
 
-<h2 id="components">Salary Components</h2>
+1. Add up every taxable earning for the month — basic salary and allowances.
+2. Multiply basic salary by 11% to get the employee SSF contribution.
+3. Work out the annual tax on your taxable income, then divide by 12 to get this month's TDS.
+4. Subtract the SSF contribution and the TDS from gross pay. The remainder is your net (take-home) pay.
 
-- <strong>Basic Salary</strong> — typically 50-60% of gross salary
-- <strong>Allowances</strong> — house rent, dearness, festival, etc.
-- <strong>SSF (Social Security Fund)</strong> — 11% of basic salary (employee share; the employer separately contributes 20% of basic salary under current SSF rules — confirm current rates at <a href="https://ssf.gov.np" target="_blank" rel="noopener noreferrer">ssf.gov.np</a>)
-- <strong>Income Tax</strong> — based on Nepal tax slabs (see current slabs and the <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">IRD at ird.gov.np</a>)
+Worked on a Rs 60,000 monthly salary with basic pay of Rs 36,000 and SSF enrolment:
 
-<h2 id="deductions">Deductions</h2>
+- <strong>Gross salary</strong> — Rs 60,000
+- <strong>Employee SSF (11% of basic)</strong> — Rs 3,960
+- <strong>Employer SSF (20% of basic)</strong> — Rs 7,200, paid by the employer and not deducted from your pay
+- <strong>TDS</strong> — Rs 0, because the taxable income falls inside the waived first slab
+- <strong>Net take-home</strong> — Rs 56,040
 
-Major deductions include:
+> **Check your own payslip:** the <a href="/nepal/finance/salary-checker">salary calculator</a> runs all four steps with the current slabs and SSF rules, and shows the assumptions it used. For the contribution side alone, use the <a href="/nepal/ssf-calculator">SSF calculator</a>; for the annual tax picture, see the <a href="/blog/income-tax-slabs-nepal-fy-2083-84-individual-couple-guide">FY 2083/84 slab guide</a>.
 
-- SSF employee-share contribution (11% of basic salary — distinct from the employer's separate 20% share)
-- income tax based on annual income brackets per current <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">IRD</a> slabs
-- any loan EMIs.
+<h2 id="introduction">Gross, Deductions, Net — The Three Numbers on Your Slip</h2>
 
-Our <a href="/nepal/finance/salary-checker">Salary Calculator</a> handles all these automatically.
+Most confusion about salary in Nepal comes from mixing up three different numbers:
 
-<h2 id="conclusion">Conclusion</h2>
+- <strong>Gross salary</strong> — everything you earn before any deduction: basic pay, allowances, overtime, bonus, commission.
+- <strong>Deductions</strong> — the employee-side amounts withheld: SSF contribution, income tax (TDS), loan repayments, advances, and any other authorised deduction.
+- <strong>Net salary</strong> — what actually reaches your bank account.
 
-Understanding your salary breakdown helps you plan finances better. Try our <a href="/nepal/finance/salary-checker">Salary Calculator</a> for instant results. For the authoritative rules behind the numbers, see the <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a> for income-tax slabs and the <a href="https://ssf.gov.np" target="_blank" rel="noopener noreferrer">Social Security Fund (ssf.gov.np)</a> for current contribution rates.
+There is a fourth number nobody prints on the slip: your <strong>employer's total cost</strong>, which is your gross salary plus the employer's SSF contribution. Knowing it is useful when you compare a job that offers SSF with one that pays a slightly higher salary instead.
+
+<h2 id="components">What Goes Into Gross Salary</h2>
+
+Salary slips in Nepal are not standardised, but the same components appear again and again:
+
+- <strong>Basic salary</strong> — the anchor figure. SSF contributions and several benefits are calculated on it, and many employers set it at roughly half to 60% of gross pay. The split is set by your contract, not by law, but it changes your SSF and retirement deductions directly.
+- <strong>Allowances</strong> — dearness, house rent, transport, communication and similar fixed monthly amounts.
+- <strong>Overtime</strong> — extra hours, paid at 1.5 times the normal hourly wage under Labour Act 2074. See the <a href="/nepal/finance/overtime-calculator">overtime calculator</a>.
+- <strong>Bonus and commission</strong> — performance-linked pay, usually irregular.
+- <strong>Festival expense</strong> — the Dashain allowance, which under Labour Act 2074 section 37 works out to one month's salary pro-rated for the months worked. See the <a href="/nepal/finance/dashain-bonus-calculator">Dashain bonus calculator</a>.
+- <strong>Other income</strong> — reimbursements treated as pay, arrears, or ad-hoc payments.
+
+Almost all of these are treated as taxable income for the year. The exceptions are genuine reimbursements of business expenses — and even those need documentation to be defended.
+
+<h2 id="ssf">SSF — Two Contributions, Only One Leaves Your Pay</h2>
+
+The Social Security Fund (SSF) is the part of Nepali payroll that causes the most confusion, because two contributions are involved and only one of them is deducted from your salary:
+
+- <strong>Employee contribution</strong> — 11% of basic salary (10% pension fund plus 1% social security tax). This is withheld from your pay.
+- <strong>Employer contribution</strong> — 20% of basic salary. Paid by the employer on top of your salary.
+
+Three practical consequences:
+
+1. <strong>Your net pay falls when you enrol, but your total package does not.</strong> The 11% is moved into your own SSF account, not lost.
+2. <strong>Employer contributions are never deducted from your net pay.</strong> If a payslip shows the employer's 20% coming out of your salary, ask payroll to explain — that is not how the scheme works.
+3. <strong>The base is normally basic salary only</strong>, which is why the basic-versus-allowances split in your contract matters so much. Some employers use a wider base; the calculator lets you match whatever your payslip shows.
+
+Confirm the current contribution rates and your enrolment status at <a href="https://ssf.gov.np" target="_blank" rel="noopener noreferrer">ssf.gov.np</a> before relying on any percentage.
+
+<h2 id="deductions">Retirement Contributions and Insurance Deductions</h2>
+
+Contributions are not only a deduction from pay — they are also a deduction from taxable income, which is where the tax saving comes from. Under the rules carried forward into FY 2083/84:
+
+- <strong>Retirement pool</strong> — employee and employer contributions to SSF, PF and CIT are combined into ONE pool, deductible up to the lower of the actual total, Rs 5,00,000, or one-third of assessable income.
+- <strong>Life insurance premium</strong> — deductible up to Rs 40,000 a year.
+- <strong>Health insurance premium</strong> — deductible up to Rs 20,000 a year.
+- <strong>Remote area allowance</strong> — a deduction by posting category (A to E), for employees stationed in designated remote areas.
+
+The one-third cap is the part people miss. On a Rs 1,50,000 monthly salary the assessable annual income is Rs 18,00,000, so the retirement pool is capped at the lower of the actual contribution, Rs 5,00,000, and Rs 6,00,000 — in that case the actual contribution of Rs 3,34,800 is fully deductible. On a much larger salary the Rs 5,00,000 absolute cap bites first, and the excess contribution gives no further deduction.
+
+To see how the schemes differ before choosing, read our comparison of <a href="/blog/epf-cit-vs-ssf-nepal-which-retirement-scheme-guide">EPF/CIT vs SSF</a>.
+
+<h2 id="tax">Income Tax: FY 2083/84 Slabs and the SST Waiver</h2>
+
+For FY 2083/84, Budget 2083/84 is reported to have merged the earlier single and couple schedules into one table for all resident individuals:
+
+- <strong>First Rs 10,00,000</strong> — 1% Social Security Tax, waived to 0% for SSF or approved retirement-fund contributors
+- <strong>Rs 10,00,001 to Rs 15,00,000</strong> — 10%
+- <strong>Rs 15,00,001 to Rs 25,00,000</strong> — 20%
+- <strong>Rs 25,00,001 to Rs 40,00,000</strong> — 27%
+- <strong>Above Rs 40,00,000</strong> — 29% (27% plus a 2% surcharge)
+
+Two features of this schedule that change the answer significantly:
+
+- <strong>The 1% waiver.</strong> If you are enrolled in the SSF or an approved retirement fund, the first slab is charged at 0%. On a Rs 5,86,080 taxable income that is the difference between paying Rs 5,860.80 and paying nothing — which is exactly what happens in the Rs 60,000-salary example above.
+- <strong>Female rebate.</strong> A 10% rebate on computed tax applies to a resident female taxpayer whose income is from employment only. The rebate is carried forward from earlier years and should be confirmed in the gazetted Finance Act.
+
+> **Verify before you file:** the FY 2083/84 slabs are widely reported and consistently described, but direct confirmation against the gazetted Finance Act 2083 on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a> is still outstanding. Treat every slab figure here as needing confirmation against the Act for anything official.
+
+<h2 id="tds">TDS Is Not an Extra Charge</h2>
+
+This is the single most expensive misunderstanding in Nepali payroll. TDS and income tax are the same liability:
+
+```text
+Monthly TDS = annual income tax ÷ 12
+```
+
+The employer works out your likely annual taxable income, computes the tax for the year, and withholds one-twelfth of it every month. At the end of the year the total withheld should equal your annual tax. Three consequences follow:
+
+- <strong>Never add TDS and income tax together.</strong> A payslip showing both is showing the same number twice, in two different places.
+- <strong>TDS is not a fee for being paid.</strong> It is your own tax, paid in instalments through your employer.
+- <strong>Salary tax is progressive.</strong> Only the income inside each band is taxed at that band's rate, which is why the tax on a Rs 15,00,000 income is not 15 times the tax on Rs 1,00,000.
+
+Salaried employees who have no other income source normally do not have to file a separate return simply to pay this tax — the employer has already withheld it. If you also have rent, freelance, business or investment income, you are in a different position: see the <a href="/guides/individual-freelancer-income-tax-guide-nepal-2026">freelancer and individual income-tax guide</a> for the filing forms and deadlines.
+
+<h2 id="worked-example">Worked Examples</h2>
+
+Three salaries, all with SSF enabled on basic salary, run through the same steps the calculator uses:
+
+| Monthly gross (basic) | Employee SSF | Retirement deduction | Annual tax | Monthly TDS | Net take-home |
+| --- | --- | --- | --- | --- | --- |
+| Rs 60,000 (Rs 36,000) | Rs 3,960 | Rs 1,33,920 | Rs 0 | Rs 0 | Rs 56,040 |
+| Rs 1,50,000 (Rs 90,000) | Rs 9,900 | Rs 3,34,800 | Rs 46,520 | Rs 3,876.67 | Rs 1,36,223.33 |
+| Rs 3,00,000 (Rs 1,80,000) | Rs 19,800 | Rs 5,00,000 (capped) | Rs 4,12,000 | Rs 34,333.33 | Rs 2,45,866.67 |
+
+Reading the table:
+
+- <strong>The Rs 60,000 salary pays no income tax at all</strong> — not because of a special exemption, but because the retirement deduction brings taxable income to Rs 5,86,080, and the whole of that sits inside the 0% (SSF-waived) first slab.
+- <strong>The same salary without SSF pays Rs 7,200 a year</strong> — Rs 600 a month in TDS, because the 1% social security tax is no longer waived and there is no retirement deduction. Net pay is higher (Rs 59,400) but the Rs 3,960 a month that would have gone into SSF is not being saved anywhere.
+- <strong>The Rs 3,00,000 salary hits the Rs 5,00,000 retirement cap.</strong> The pool of Rs 6,69,600 is not fully deductible; Rs 1,69,600 of contributions give no further tax relief.
+- <strong>Monthly TDS is exactly one-twelfth of the annual tax</strong> in every row — Rs 46,520 ÷ 12 = Rs 3,876.67 and Rs 4,12,000 ÷ 12 = Rs 34,333.33.
+
+Every figure in this table comes from the same calculation engine that powers our <a href="/nepal/finance/salary-checker">salary calculator</a>, using the FY 2083/84 rules and SSF rates. If your payslip differs, the usual causes are a different SSF base (basic plus allowances instead of basic only), a different basic-to-gross split, or additional employer deductions such as a loan instalment.
+
+<h2 id="employer-cost">Net Pay vs What You Actually Cost the Employer</h2>
+
+Employers pay more than your gross salary, and that difference is real compensation even though it never appears in your bank account:
+
+- <strong>Gross salary</strong> — what your contract says you earn.
+- <strong>Employer SSF contribution</strong> — 20% of basic salary, paid on top.
+- <strong>Total employer cost</strong> — gross salary plus the employer contribution.
+
+Comparing two job offers by net salary alone can mislead you. An offer with SSF has a lower take-home figure but adds both the employer's 20% contribution in your name and the 1% slab waiver; an offer without SSF pays more cash today but nothing towards your retirement. Compare the two offers on total cost, retirement balance and tax, not only on the amount that lands in your account.
+
+<h2 id="mistakes">Common Mistakes</h2>
+
+- <strong>Adding TDS and income tax together.</strong> They are the same liability shown twice.
+- <strong>Assuming the 1% first-slab rate applies to you.</strong> It is waived for SSF and approved retirement-fund contributors, and it applies only to income inside that first slab.
+- <strong>Expecting the 10/20/27/29% rates to apply to the whole income.</strong> Only the income inside each band is taxed at that band's rate.
+- <strong>Thinking the employer's 20% SSF is deducted from your salary.</strong> It is not.
+- <strong>Ignoring the retirement deduction cap</strong> of Rs 5,00,000 and one-third of assessable income.
+- <strong>Comparing jobs on net pay alone</strong>, without the employer contribution and the tax position.
+- <strong>Using last year's slabs.</strong> FY 2082/83 had separate single and couple schedules with different bands — do not mix the two years.
+- <strong>Assuming payroll is uniform.</strong> The SSF base, the basic-to-gross split and attendance-deduction rules are employer-specific; ask payroll which method they use.
+
+<h2 id="sources">Sources and Disclaimer</h2>
+
+This guide explains how salary and take-home pay are calculated in Nepal. It is general information, not tax advice, and it does not replace your employment contract or your payslip.
+
+- <strong>Inland Revenue Department</strong> — income-tax slabs, TDS rules and forms: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a>, with filings through <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">taxpayerportal.ird.gov.np</a>
+- <strong>Social Security Fund</strong> — contribution rates and member services: <a href="https://ssf.gov.np" target="_blank" rel="noopener noreferrer">ssf.gov.np</a>
+- <strong>Labour Act 2074</strong> — working hours, overtime and festival expense: see Nepal Law Commission publications at <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">lawcommission.gov.np</a>
+- <strong>FY 2083/84 slab confirmation</strong> — the reported schedule has not yet been confirmed against the gazetted Finance Act 2083. Verify on ird.gov.np before filing.
+
+Rates, caps and reliefs change with each Finance Act and each SSF notice. Confirm the current position with IRD, the SSF and your employer's payroll before making decisions based on these figures.

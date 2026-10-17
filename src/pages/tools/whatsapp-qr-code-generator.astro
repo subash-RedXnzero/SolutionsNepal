@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import QrCodeGenerator from '../../components/tools/QrCodeGenerator.astro';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
 import Disclaimer from '../../components/ui/Disclaimer.astro';
 
 const title = 'WhatsApp QR Code Generator | SolutionsNepal';
@@ -59,4 +60,5 @@ const description = 'Create a WhatsApp QR code that opens a chat with your numbe
     </div>
   </div>
   <Disclaimer variant="general" />
+  <RelatedTools tools={[{ title: 'URL QR Code', description: 'Link to any website', href: '/tools/url-qr-code-generator' }, { title: 'WiFi QR Code', description: 'Share WiFi without typing passwords', href: '/tools/wifi-qr-code-generator' }, { title: 'Email QR Code', description: 'Pre-filled subject and body', href: '/tools/email-qr-code-generator' }, { title: 'QR Code Generator', description: 'All QR code types', href: '/tools/qr-code-generator' }]} />
 </BaseLayout>

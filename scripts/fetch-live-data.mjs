@@ -102,8 +102,8 @@ async function fetchGoldSilver() {
 // Parsing lives in src/lib/nepal/live-upstream.js (shared with the
 // post-hosting Worker) — the shape below stays byte-identical.
 async function fetchFuel() {
-  const { byCity, lpg, cities, history } = await fetchFuelUpstream();
-  return { byCity, lpg, cities, history, isLive: true };
+  const { byCity, lpg, cities, history, priceDate } = await fetchFuelUpstream();
+  return { byCity, lpg, cities, history, priceDate: priceDate || null, isLive: true };
 }
 
 /* ── 4. Open-Meteo weather + air quality ──────────────────── */

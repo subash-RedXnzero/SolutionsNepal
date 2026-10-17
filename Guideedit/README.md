@@ -36,8 +36,8 @@ The `id` must match exactly (lowercase, dashes, no spaces).
 ## Images
 
 1. Drop the photo into `Guideedit/images/` (JPG under ~300 KB is best)
-2. Cover photo — top of the file: `image: /blog/my-photo.jpg`
-3. Inside the text, anywhere: `![describe the photo](/blog/my-photo.jpg)`
+2. Cover photo — top of the file: `image: /blog/my-photo.webp`
+3. Inside the text, anywhere: `![describe the photo](/blog/my-photo.webp)`
 
 Delete an image = delete it from `images/` + remove its line.
 Remote (Unsplash) links also still work.

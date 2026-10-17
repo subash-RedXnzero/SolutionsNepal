@@ -25,6 +25,7 @@ import {
   Check,
 } from '@lucide/astro';
 import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import RelatedTools from '../components/ui/RelatedTools.astro';
 
 const seo = getSeo('/weather');
 
@@ -247,6 +248,8 @@ const initialCities = cityGrid(snaps, 'kathmandu');
           no signup or API key needed.
         </p>
       </section>
+
+      <RelatedTools tools={[{ title: 'All Nepal Tools', description: 'Calculators and converters for everyday life', href: '/nepal' }, { title: 'Trip Fuel Cost', description: 'Fuel cost for your journey', href: '/nepal/vehicle/fuel-cost' }, { title: 'Cost of Living', description: 'Monthly expenses by city', href: '/nepal/utilities/cost-of-living-calculator' }]} />
     </div>
     </ToolsLayout>
   </main>

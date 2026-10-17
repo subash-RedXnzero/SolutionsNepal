@@ -10,7 +10,7 @@ export const nepalCitizenshipCertificateDocumentsByCasePost = {
   authorCredential: 'Nepal documentation researchers',
   date: 'September 8, 2026',
   readTime: '9 min read',
-  image: '/blog/photo-1568992687947-868a62a9f521.jpg',
+  image: '/blog/photo-1568992687947-868a62a9f521.webp',
   tags: ['Citizenship', 'Documents', 'Nepal', 'Government'],
   relatedTools: ['passport-size-photo', 'nepali-age-calculator'],
   faqs: [

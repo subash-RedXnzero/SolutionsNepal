@@ -11,6 +11,7 @@ import {
 } from '../../lib/nepal/calendar.js';
 import { getEventsForBsMonth, getUpcomingEvents, getEventsForBsYear } from '../../data/nepal/calendar-events.js';
 import { getTithi } from '../../data/nepal/tithi-data.js';
+import RelatedTools from '../../components/ui/RelatedTools.astro';
 import Disclaimer from '../../components/ui/Disclaimer.astro';
 
 const today = todayInNepal();
@@ -132,6 +133,7 @@ const initialData = JSON.stringify({
     </div>
   </div>
 
+  <RelatedTools tools={[{ title: 'BS to AD Converter', description: 'Convert Bikram Sambat to Gregorian date', href: '/nepal/date/bs-to-ad' }, { title: 'AD to BS Converter', description: 'Convert Gregorian date to Bikram Sambat', href: '/nepal/date/ad-to-bs' }, { title: 'Age Calculator', description: 'Age in years, months and days', href: '/nepal/age-calculator' }, { title: 'Date Difference', description: 'Days between two dates', href: '/tools/date-difference' }]} />
   <Disclaimer variant="general" />
 
   <script is:inline define:vars={{ initialData }}>

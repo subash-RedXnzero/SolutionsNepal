@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax and personal-finance researchers
 date: September 14, 2026
 readTime: 12 min read
-image: "/blog/photo-1554224155-6726b3ff858f.jpg"
+image: "/blog/photo-1554224155-6726b3ff858f.webp"
 tags: [Remittance Tax Nepal, Foreign Income Nepal, Tax Residency Nepal, Bank Interest Tax, Finance]
 relatedTools: [foreign-exchange, salary-checker]
 headings:

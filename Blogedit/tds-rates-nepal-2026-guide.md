@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax and finance researchers
 date: September 26, 2026
 readTime: 14 min read
-image: "/blog/photo-1554224155-6726b3ff858f.jpg"
+image: "/blog/photo-1554224155-6726b3ff858f.webp"
 tags: [TDS Nepal, TDS Rates Nepal, Withholding Tax Nepal, IRD Nepal, Income Tax Act 2058, Finance]
 relatedTools: [overtime-calculator, salary-checker, vat-calculator, freelancer-take-home]
 headings:
@@ -14,7 +14,7 @@ headings:
     text: "Quick Answer (TL;DR)"
     level: 2
   - id: what-is-tds
-    text: What Is TDS in Nepal?
+    text: "What Is TDS in Nepal?"
     level: 2
   - id: final-vs-adjustable
     text: "Final vs Adjustable (Advance) — The Key Distinction"
@@ -32,25 +32,37 @@ headings:
     text: "Interest & Dividend: 6% / 15% / 5%"
     level: 3
   - id: who-withholds
-    text: Who Must Withhold & When?
+    text: "Who Must Withhold & When?"
     level: 2
   - id: deposit-etds
-    text: Deposit, e-TDS Return & Certificate
+    text: "Deposit, e-TDS Return & Certificate"
     level: 2
   - id: example
-    text: Two Worked Examples
+    text: "Two Worked Examples"
     level: 2
+  - id: example-service
+    text: "1) Freelancer (PAN-only) bills Rs 80,000 for a design sprint"
+    level: 3
+  - id: example-rent
+    text: "2) Company rents office for Rs 60,000/month"
+    level: 3
   - id: penalties
-    text: Late Deposit & Non-Filing Penalties
+    text: "Late Deposit & Non-Filing Penalties"
     level: 2
   - id: mistakes
-    text: Common Mistakes to Avoid
+    text: "Common Mistakes to Avoid"
     level: 2
   - id: checklist
-    text: Withholder & Payee Checklist
+    text: "Withholder & Payee Checklist"
     level: 2
+  - id: checklist-withholder
+    text: "If you pay rent/service/interest/dividend"
+    level: 3
+  - id: checklist-payee
+    text: "If you receive a payment with TDS"
+    level: 3
   - id: sources
-    text: Official Sources & Final Note
+    text: "Official Sources & Final Note"
     level: 2
 faqs:
   - q: What is the TDS rate for services in Nepal in 2026?
@@ -64,7 +76,7 @@ faqs:
   - q: Is TDS final or adjustable?
     a: "Final (commonly): individual bank interest (reported 6%), dividend (5%), windfall gains — settled at source. Adjustable/advance: service fees (1.5%/15%), contract (1.5%), commission — claimed as credit against final annual tax; excess is refundable. Confirm final vs adjustable for your payment head in the current IRD circular."
   - q: Who must withhold TDS?
-    a: Any resident person (business, entity, or individual with business) paying rent, service charge, royalty, interest, dividend, commission, sales bonus or retirement payment with source in Nepal (Sec 88). Employers withhold on salary via the progressive slab (FY 2083/84 unified 1/10/20/27/29% — see salary-tax guide).
+    a: Any resident person (business, entity, or individual with business) paying rent, service charge, royalty, interest, dividend, commission, sales bonus or retirement payment with source in Nepal (Sec 88). Employers withhold on salary via the progressive slab (FY 2083/84 unified 1/10/20/27/29% — see <a href="/nepal/finance/salary-checker">salary calculator</a>).
   - q: When must withheld TDS be deposited?
     a: Commonly within 25 days of the end of the Nepali month in which the payment was made, via the IRD portal (connectIPS/eSewa/IRD revenue) — per IRD notice, verify current deadlines on ird.gov.np. The withholder then issues the electronic TDS certificate to the payee within 15 days (per IRD notice — verify) and files the e-TDS return.
   - q: What changed in FY 2083/84?
@@ -74,7 +86,6 @@ faqs:
   - q: Is contract TDS also 1.5%?
     a: "Yes for contract/agreement payments over Rs 50,000 (1.5%). Vehicle rent to a VAT-registered party is also 1.5%; to a non-VAT party it is 2.5% (carriage/vehicle rent)."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 FY 2083/84 (Shrawan 2083–Ashad 2084, effective 16 July 2026): <strong>service with VAT invoice = 1.5% TDS</strong>, <strong>service on PAN-only bill = 15%</strong>, <strong>rent = 10%</strong>, <strong>bank interest to an individual = reported 6% final</strong> (reported rise from 5% — confirm current IRD circular), <strong>dividend = 5% final</strong>, <strong>contract > Rs 50k = 1.5%</strong>. The first two are <strong>adjustable/advance</strong> (claimed in your annual return); interest/dividend are <strong>reported final</strong> (settled at source — confirm circular).
@@ -85,7 +96,7 @@ FY 2083/84 (Shrawan 2083–Ashad 2084, effective 16 July 2026): <strong>service 
 
 Tax Deducted at Source (srotma kar katti) is the withholding mechanism under the <strong>Income Tax Act 2058</strong> where the payer withholds a % while paying and deposits it to the IRD on the payee’s behalf. It is the payee’s tax — the payer is just the withholding agent.
 
-- <strong>Salary:</strong> employer withholds monthly per the FY 2083/84 unified progressive slab (1% to Rs 10L → 10% to Rs 15L → 20% to Rs 25L → 27% to Rs 40L → 29% above; no separate single/couple slab, as of October 2026 — see our salary-tax guide)
+- <strong>Salary:</strong> employer withholds monthly per the FY 2083/84 unified progressive slab (1% to Rs 10L → 10% to Rs 15L → 20% to Rs 25L → 27% to Rs 40L → 29% above; no separate single/couple slab, as of October 2026 — see our <a href="/nepal/finance/salary-checker">salary calculator</a>)
 - <strong>Business payments:</strong> rent, service/consultancy, royalty, interest, dividend, commission, contract, carriage/vehicle rent
 - <strong>Legal base:</strong> Sec 88 (withholding on payments), Sec 87/88A/89 (non-resident), plus annual Finance Act updates
 
@@ -136,7 +147,7 @@ Rent for land/building/fixtures with source in Nepal is 10% withholding under Se
 - <strong>Individual pays rent directly for a private residence to another individual:</strong> often no federal TDS — instead a <strong>10% municipal rent tax</strong> is collected at the ward/municipality (check your local Economic Act). The rate looks identical but the collector is different.
 - <strong>Vehicle rent:</strong> use 1.5% if the provider is VAT-registered, otherwise 2.5% (carriage).
 
-<h3 id="interest">Interest &amp; Dividend: 6% / 15% / 5%</h3>
+<h3 id="interest">Interest & Dividend: 6% / 15% / 5%</h3>
 
 - **Interest to individual (savings/FD/bond)** — reported 6% final — do not add to annual return if final treatment confirmed; many 2025 guides still say 5% (earlier-FY rate — check which circular applies to your payment date)
 - **Interest to company / cooperative to entity** — commonly 15% adjustable (confirm circular; municipal rent-tax path for individual-to-individual rent is a different head)
@@ -144,14 +155,14 @@ Rent for land/building/fixtures with source in Nepal is 10% withholding under Se
 
 Because individual bank interest is commonly final, you generally cannot claim a refund even if your total income is below Rs 10 lakh — the reported 6% is gone at source (confirm final treatment in current circular).
 
-<h2 id="who-withholds">Who Must Withhold &amp; When?</h2>
+<h2 id="who-withholds">Who Must Withhold & When?</h2>
 
 - <strong>Withholding agent:</strong> any resident person (business, entity, or individual carrying on business) making a Sec 88 payment — not just companies.
 - <strong>Trigger:</strong> at the time of payment, not invoice date.
 - <strong>Threshold for contracts:</strong> 1.5% applies to contract/agreement payments <strong>over Rs 50,000</strong> per contract.
 - <strong>PAN requirement:</strong> always obtain the payee’s PAN — PAN-only service billed at 15% cannot be re-rated to 1.5% after payment.
 
-<h2 id="deposit-etds">Deposit, e-TDS Return &amp; Certificate</h2>
+<h2 id="deposit-etds">Deposit, e-TDS Return & Certificate</h2>
 
 - **Deposit withheld tax** — Commonly within 25 days of the end of the Nepali month of payment (via connectIPS/eSewa/IRD revenue portal) — per IRD notice, verify current deadlines on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a>
 - **Issue e-TDS certificate** — To the payee within 15 days of withholding (electronic via IRD portal — needed for credit; per IRD notice — verify)
@@ -171,7 +182,7 @@ Because individual bank interest is commonly final, you generally cannot claim a
 - Company withholds 10% = Rs 6,000, pays landlord Rs 54,000, deposits Rs 6,000, and issues e-TDS certificate.
 - Landlord claims Rs 6,000/month ×12 as credit in annual return if the rent is adjustable; if it was final municipal rent-tax path, no IRD credit applies.
 
-<h2 id="penalties">Late Deposit &amp; Non-Filing Penalties</h2>
+<h2 id="penalties">Late Deposit & Non-Filing Penalties</h2>
 
 - **Withholder fails to withhold/deposit** — Personally liable for the tax + interest on late payment under the interest provisions of the Act (commonly cited as Sec 117 at ~15% p.a. — verify current Finance Act) + late-filing fees
 - **e-TDS return not filed** — Fee for non-submission plus interest for non-payment periods (rates per current Finance Act — verify on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a>; commonly cited ~2.5% p.a. fee and ~15% interest)
@@ -187,7 +198,7 @@ Because individual bank interest is commonly final, you generally cannot claim a
 - Withholding 10% on a Rs 9 lakh land deal — commonly cited CGT floor is Rs 10 lakh (reported — confirm Finance Act 2083), but service/rent TDS has no such floor
 - Missing the commonly cited 25th-of-next-Nepali-month deposit deadline (per IRD notice — verify)
 
-<h2 id="checklist">Withholder &amp; Payee Checklist</h2>
+<h2 id="checklist">Withholder & Payee Checklist</h2>
 
 <h3 id="checklist-withholder">If you pay rent/service/interest/dividend</h3>
 
@@ -202,7 +213,7 @@ Because individual bank interest is commonly final, you generally cannot claim a
 - Reconcile all e-TDS credits in your ledger before filing ITR; claim advance credit for 1.5%/15% blocks
 - For PAN-only freelancers near Rs 30 lakh, model whether voluntary VAT registration (→1.5% ) beats 15% monthly
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a> — current-year withholding circular + Sec 88 provisos, and the federal Finance Act 2083 (effective 16 July 2026). For salary slabs see the FY 2083/84 unified schedule (1/10/20/27/29%, as of October 2026); for land CGT see Finance Act 2083 (reported 10%/7.5% — confirm current text).
 

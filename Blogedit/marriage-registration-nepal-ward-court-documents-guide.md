@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation and civil-registration researchers
 date: September 27, 2026
 readTime: 13 min read
-image: "/blog/photo-1516589178581-6cd7833ae3b2.jpg"
+image: "/blog/photo-1516589178581-6cd7833ae3b2.webp"
 tags: [Marriage Registration Nepal, Court Marriage Nepal, Ward Marriage, DONIDCR, Documents]
 relatedTools: [government-service-cost, nepali-calendar, passport-size-photo]
 headings:
@@ -78,7 +78,6 @@ faqs:
   - q: Do we need witnesses?
     a: "Yes — at least 2 adult witnesses with valid citizenship/passports, present in person at the ward or in court for the hearing."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>Ward:</strong> for an <strong>already-performed ceremony</strong> — register at either spouse’s <strong>permanent-address ward within 35 days</strong> (free, usually same-day) with <strong>citizenship + photos + ceremony proof + 2 witnesses</strong>. <strong>Court:</strong> the <strong>court solemnises the marriage itself</strong> (no ceremony needed) — file at <strong>District Court</strong>; both-Nepali cases commonly complete in <strong>~2–4 working days</strong>, while foreign-spouse cases take <strong>~16–22 days</strong> with residence verification and embassy NOC checks (as of October 2026 — confirm the notice period posted at your court, as practice varies). Court route is <strong>mandatory for foreign-spouse cases</strong>. Online pre-fill via DONIDCR helps but <strong>witnesses + spouses must appear in person</strong>.
@@ -133,7 +132,7 @@ faqs:
 - **Both Nepali** — Citizenship, unmarried certificate from ward, 4 photos each, 2 witnesses with citizenship, application + court fee
 - **Foreign spouse** — Passport + valid visa, NOC from embassy (mandatory), unmarried certificate from home country (apostilled/legalized + translated), divorce/death proof if applicable, 2 witnesses, translations + notarization; MoFA attestation is an outbound step only, not a prerequisite
 
-<h3 id="court-steps">Court Steps &amp; 15-Day Notice</h3>
+<h3 id="court-steps">Court Steps & 15-Day Notice</h3>
 
 1. <strong>File joint application</strong> at the District Court where either party resides (names, addresses, citizenship/passport numbers, DOB, marital declaration, consent, witnesses).
 2. <strong>Public notice (where the court requires it):</strong> some courts post a notice (commonly ~15 days); anyone may raise a valid objection within the posted window. Both-Nepali cases at courts that do not enforce a full wait are commonly reported as completing in ~2–4 working days — confirm at filing.
@@ -153,7 +152,7 @@ This saves counter time but <strong>does not issue the certificate online</stron
 
 > **Abroad?** Two Nepalis abroad can pre-fill online, but an in-person visit to Nepal is still expected for the registration itself, or a Power of Attorney authenticated at the Nepali embassy where the local office accepts it. For a foreign-national marriage the District Court route (with 15-day residence for the foreign party in many courts) is mandatory and cannot be done fully online.
 
-<h2 id="fees-timeline">Fees &amp; Timeline</h2>
+<h2 id="fees-timeline">Fees & Timeline</h2>
 
 - **Ward — within 35 days** — Free — certificate same day to a few days (if documents complete)
 - **Ward — after 35 days** — ~Rs 500–1,000 late fee + 1–3 days verification
@@ -185,7 +184,7 @@ This saves counter time but <strong>does not issue the certificate online</stron
 - Ward: file within 35 days (free); Court: file and wait the 15-day notice
 - Collect certificate and verify all spellings before leaving
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: <a href="https://donidcr.gov.np" target="_blank" rel="noopener noreferrer">DONIDCR (donidcr.gov.np)</a> civil-registration, <a href="https://lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Muluki Civil Code 2074, Part 3 (Sec 67–84) — Nepal Law Commission</a>, District Court / Supreme Court marriage registry, and Local Government Operation Act 2074. The 35-day ward-registration window and late-fee practice follow the vital-events registration framework and ward/DONIDCR notices — confirm the current late-fee figure on your ward's posted notice before visiting, as amounts vary by municipality. Court notice periods vary by court circular — confirm at the filing District Court.
 

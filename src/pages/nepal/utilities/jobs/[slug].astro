@@ -18,18 +18,47 @@ const related = JOBS.filter((j) => j.sector === job.sector && j.id !== job.id).s
 
 const title = `${job.title} Salary in Nepal | SolutionsNepal`;
 const description = `${job.title}: typical pay ${inr(job.min)}-${inr(job.max)}/month in Nepal. Entry, mid and senior ranges, skills and how to earn more.`;
+
+// Auto-generated FAQ — targets "[job] salary in Nepal" question queries.
+// Every answer is built from the verified job record, no invented figures.
+const faqs = [
+  {
+    q: `What is the average salary of a ${job.title} in Nepal?`,
+    a: `${job.title}s in Nepal typically earn Rs ${fmtNPR(job.min)} – ${fmtNPR(job.max)} per month (about ${inr(midMonthly * 12)} per year at mid-level). These are estimated ranges compiled from 2024–2026 postings and surveys — confirm pay with the employer before accepting a job.`,
+  },
+  {
+    q: `How much does an entry-level ${job.title} earn in Nepal?`,
+    a: `Entry-level ${job.title}s (0–2 years) typically earn ${inr(bands.entry[0])} – ${inr(bands.entry[1])} per month. Mid-level (2–5 years) earns ${inr(bands.mid[0])} – ${inr(bands.mid[1])}, and senior (5+ years) earns ${inr(bands.senior[0])} – ${inr(bands.senior[1])}.`,
+  },
+  {
+    q: `What education is needed to become a ${job.title} in Nepal?`,
+    a: `Legally required: ${job.eduRequired} What employers commonly ask for: ${job.eduCommon}`,
+  },
+];
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 
 <BaseLayout
   title={title}
   description={description}
-  jsonLd={{
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: `${job.title} Salary in Nepal`,
-    description,
-    url: `https://solutionsnepal.com/nepal/utilities/jobs/${job.id}`,
-  }}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: `${job.title} Salary in Nepal`,
+      description,
+      url: `https://solutionsnepal.com/nepal/utilities/jobs/${job.id}`,
+    },
+    faqJsonLd,
+  ]}
 >
   <div class="mx-auto max-w-[1100px] px-4 sm:px-6 py-4 sm:py-5 jobs-wrap">
     <Breadcrumbs items={[
@@ -183,6 +212,17 @@ const description = `${job.title}: typical pay ${inr(job.min)}-${inr(job.max)}/m
       </section>
     )}
 
+    <!-- FAQ — targets "[job] salary in Nepal" question queries -->
+    <section class="nk-card p-4 sm:p-5 mb-5" aria-label="Frequently asked questions">
+      <h2 class="text-[15px] font-bold mb-1" style="color: var(--nk-text);">Frequently asked questions</h2>
+      {faqs.map((f) => (
+        <details class="det-faq">
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </section>
+
     <RelatedTools tools={[
       { title: 'Salary Tax Calculator', description: 'Take-home salary after SSF, tax & deductions', href: '/nepal/finance/salary-checker' },
       { title: 'Cost of Living Calculator', description: 'Monthly expenses by city & household', href: '/nepal/utilities/cost-of-living-calculator' },
@@ -236,6 +276,14 @@ const description = `${job.title}: typical pay ${inr(job.min)}-${inr(job.max)}/m
       background: var(--nk-accent-subtle); color: var(--nk-accent);
       border: 1px solid color-mix(in srgb, var(--nk-accent) 22%, transparent);
     }
+    .det-faq { border-top: 1px solid var(--nk-border); padding: 10px 0; }
+    .det-faq:first-of-type { border-top: none; }
+    .det-faq summary {
+      font-size: 13.5px; font-weight: 600; color: var(--nk-text);
+      cursor: pointer; list-style: none;
+    }
+    .det-faq summary::-webkit-details-marker { display: none; }
+    .det-faq p { margin: 6px 0 2px; font-size: 13px; line-height: 1.65; color: var(--nk-text-secondary); }
     .det-list { margin: 2px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
     .det-list li { font-size: 13.5px; line-height: 1.6; color: var(--nk-text); }
     .det-list li::marker { color: var(--nk-accent); }

@@ -10,7 +10,7 @@ export const internationalDrivingPermitIdpNepalGuidePost = {
   authorCredential: 'Nepal documentation researchers',
   date: 'September 10, 2026',
   readTime: '8 min read',
-  image: '/blog/photo-1533473359331-0135ef1b58bf.jpg',
+  image: '/blog/photo-1533473359331-0135ef1b58bf.webp',
   tags: ['IDP', 'Driving Abroad', 'Driving License', 'Vehicles', 'Nepal'],
   relatedTools: ['vehicle-tax-new', 'fuel-cost'],
   faqs: [
@@ -25,11 +25,11 @@ export const internationalDrivingPermitIdpNepalGuidePost = {
   headings: [
     { id: 'what', text: 'What Is an International Driving Permit?', level: 2 },
     { id: 'need', text: 'Do You Actually Need One?', level: 2 },
-    { id: 'issuer', text: 'Who Issues the IDP in Nepal?', level: 2 },
+    { id: 'issuer', text: 'A Word on Who Issues the IDP in Nepal — Verify Before You Apply', level: 2 },
     { id: 'documents', text: 'Documents Typically Required', level: 2 },
-    { id: 'process', text: 'How to Apply', level: 2 },
+    { id: 'process', text: 'Step-by-Step: How to Apply', level: 2 },
     { id: 'validity', text: 'Validity', level: 2 },
-    { id: 'checklist', text: 'Before You Travel', level: 2 },
+    { id: 'checklist', text: 'Before You Travel: A Quick Checklist', level: 2 },
   ],
   sections: [
     { type: 'heading', level: 2, id: 'what', text: 'What Is an International Driving Permit?' },

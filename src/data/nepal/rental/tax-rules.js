@@ -12,7 +12,7 @@
  * 1. Rental income is classified as "Income from House/Property"
  * 2. For individuals, rental income is included in total taxable income
  * 3. Tax is calculated using progressive income tax slabs
- * 4. TDS on rent applies at 5% for certain payment categories
+ * 4. TDS on rent applies at 10% (Income Tax Act 2058, Section 88)
  * 5. Allowable deductions may apply (needs verification)
  *
  * SOURCES & VERIFICATION:
@@ -53,13 +53,15 @@ export const FISCAL_YEARS = {
     // Income Tax Slabs for Individual Resident Taxpayers
     // Based on Finance Act 2083 (FY 2083/84)
     // Source: IRD Nepal (ird.gov.np)
-    // NOTE: Rental income is taxed at the same progressive rates as salary
+    // NOTE: Rental income is taxed at the same progressive rates as salary.
+    // Kept in sync with src/data/nepal/tax/fy-2083-84.js — the single source
+    // of truth for income-tax slabs.
     taxSlabs: [
-      { min: 0,          max: 500000,   rate: 0.01 },  // 1%
-      { min: 500001,     max: 700000,   rate: 0.10 },  // 10%
-      { min: 700001,     max: 1000000,  rate: 0.20 },  // 20%
-      { min: 1000001,    max: 2000000,  rate: 0.30 },  // 30%
-      { min: 2000001,    max: null,     rate: 0.36 },  // 36%
+      { min: 0,          max: 1000000,  rate: 0.01 },  // 1% Social Security Tax (waived for SSF contributors)
+      { min: 1000001,    max: 1500000,  rate: 0.10 },  // 10%
+      { min: 1500001,    max: 2500000,  rate: 0.20 },  // 20%
+      { min: 2500001,    max: 4000000,  rate: 0.27 },  // 27%
+      { min: 4000001,    max: null,     rate: 0.29 },  // 29% (27% + 2% surcharge)
     ],
 
     // Allowable Deductions from Rental Income
@@ -106,22 +108,23 @@ export const FISCAL_YEARS = {
     },
 
     // TDS on Rent
-    // Based on Income Tax Act 2058, Section 91
+    // Based on Income Tax Act 2058, Section 88
     // TDS applies when rent is paid by certain entities
     tds: {
       // TDS rate on rent payments
-      rate: 0.05, // 5%
+      rate: 0.10, // 10%
 
       // Who must deduct TDS?
       // - Government bodies
       // - Bodies corporate (companies)
       // - Certain other entities
-      // Individual landlords receiving rent from individuals
-      // may not be subject to TDS
+      // An individual paying rent to another individual (natural person)
+      // is NOT required to withhold TDS (Section 88 proviso); that case is
+      // handled by the municipal house rent tax instead.
 
       // TDS applicability needs verification
       applicable: true,
-      notes: 'TDS on rent applies when rent is paid by government, bodies corporate, or other specified entities. Individual-to-individual rent may not require TDS.',
+      notes: 'TDS on rent applies when rent is paid by government, bodies corporate, or other specified entities. Individual-to-individual rent generally requires no TDS (Section 88 proviso) and falls under the municipal house rent tax instead.',
     },
 
     // Source information

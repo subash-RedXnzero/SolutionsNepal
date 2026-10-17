@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation and civil-registration researchers
 date: September 26, 2026
 readTime: 14 min read
-image: "/blog/photo-1568992687947-868a62a9f521.jpg"
+image: "/blog/photo-1568992687947-868a62a9f521.webp"
 tags: [Birth Certificate Nepal, Janma Darta, CRVS Nepal, DONIDCR, Ward Office, Documents]
 relatedTools: [government-service-cost, nepali-calendar, passport-size-photo]
 headings:
@@ -87,7 +87,6 @@ faqs:
   - q: Can a representative abroad get it?
     a: Yes with a power of attorney. The representative visits the issuing ward with the POA, his/her citizenship, and the request for a certified copy.
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 In Nepal a birth must be registered at the <strong>ward office within 35 days</strong> under the <strong>Birth, Death and Other Personal Events (Registration) Act 2033</strong>. The informant is usually <strong>father or mother</strong> (or an 18+ family member). Within 35 days it is <strong>free and usually same-day</strong>. After 35 days add a <strong>late fee (NPR 100–300)</strong> and extra verification. Bring the <strong>hospital birth letter + both parents’ citizenship copies + marriage certificate where applicable</strong>.
@@ -126,7 +125,7 @@ Birth is the most common and is handled entirely at the ward level.
 - If parents are absent: an <strong>18+ family member</strong>
 - The informant must present his/her <strong>citizenship</strong>, be clearly identifiable and responsible for the accuracy of the form
 
-<h2 id="deadline">35-Day Deadline &amp; Late Fee</h2>
+<h2 id="deadline">35-Day Deadline & Late Fee</h2>
 
 - **Within 35 days** — Free — same-day certificate in most wards
 - **After 35 days** — A late fee commonly applies (often reported as a flat ~Rs 200; graduated 100/200/300-by-years tables circulate but could not be verified against a DONIDCR circular as of October 2026 — confirm at your ward) + written reason for delay + deeper verification (ward-member recommendation, supporting evidence such as school/immunization record, and where asked, affidavit / muchulka or police report for very late cases)
@@ -199,7 +198,7 @@ For use outside Nepal:
 
 See also our <a href="/guides/mofa-document-attestation-nepal-online-guide">MOFA attestation (NEATS) guide</a> for the full chain.
 
-<h2 id="problems">Common Problems &amp; Fixes</h2>
+<h2 id="problems">Common Problems & Fixes</h2>
 
 - **Hospital letter missing / home birth** — Use khop card + health-worker/FCHV letter + ward attestation; ward may do a field muchulka
 - **Name spelling mismatch vs citizenship** — Correct the citizenship/NID source first — the ward copies what is on the parents’ citizenship
@@ -227,7 +226,7 @@ See also our <a href="/guides/mofa-document-attestation-nepal-online-guide">MOFA
 - Check printed certificate (name, DOB, sex, parents) before leaving
 - Make 2–3 certified copies + scanned backup for passport/NID
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Use the <a href="https://donidcr.gov.np" target="_blank" rel="noopener noreferrer">Department of National ID and Civil Registration (DONIDCR)</a> FAQs on registration, your municipality/ward office, and the <a href="https://donidcr.gov.np/category/registration-instructions/" target="_blank" rel="noopener noreferrer">DONIDCR registration instructions</a> for the current forms and circular. Act references: <em>Birth, Death and Other Personal Events (Registration) Act 2033</em>, <em>Local Government Operation Act 2074</em>, <em>National ID and Civil Registration Act 2076</em>.
 

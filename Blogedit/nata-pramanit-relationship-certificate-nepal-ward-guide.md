@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 27, 2026
 readTime: 9 min read
-image: "/blog/photo-1568992687947-868a62a9f521.jpg"
+image: "/blog/photo-1568992687947-868a62a9f521.webp"
 tags: [Nata Pramanit, Relationship Certificate Nepal, Ward Office, Citizenship, Documents]
 relatedTools: [government-service-cost, passport-size-photo, nepali-calendar]
 headings:
@@ -59,7 +59,6 @@ faqs:
   - q: Is it available online?
     a: Some municipalities allow online form download/pre-fill via donidcr.gov.np or municipal e-services, but verification and issuance are in-person at the ward with witnesses.
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 Get <strong>Nata Pramanit</strong> at your <strong>permanent-address ward office</strong> with <strong>citizenship of both parties + proof of relationship + 2 witnesses</strong>. Usually <strong>Rs 500–1,000</strong>, often <strong>same-day</strong> if the ward’s family register verifies. You need it most for <strong>citizenship by descent, minor passport, inheritance/property transfer, and abroad family-link proofs</strong>.
@@ -106,7 +105,7 @@ At the <strong>ward office of your permanent address</strong> where your family 
 6. <strong>Pay at the revenue counter</strong> (Rs 500–1,000) and keep the receipt.
 7. <strong>Collect the letter:</strong> signed/stamped by the ward chair/secretary — check spellings before leaving.
 
-<h2 id="fee-timeline">Fee &amp; Timeline</h2>
+<h2 id="fee-timeline">Fee & Timeline</h2>
 
 - **Fee** — Commonly Rs 500–1,000 at the ward (municipality revenue, as of October 2026) — municipality-dependent; confirm the posted fee notice at your ward
 - **Timeline** — Same day to a few days with complete documents and witnesses present; longer if the family register needs to be traced/updated
@@ -130,7 +129,7 @@ At the <strong>ward office of your permanent address</strong> where your family 
 - Rs 500–1,000 at the revenue counter
 - Certificate checked (names, numbers, ward, relationship) before leaving
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: Local Government Operation Act 2074 (ward as local registrar), <a href="https://donidcr.gov.np" target="_blank" rel="noopener noreferrer">DONIDCR civil-registration framework (donidcr.gov.np)</a>, and your municipality's posted ward fee/service notice. Witness count, fee and freshness expectations are municipality-dependent — verify with your ward before visiting.
 

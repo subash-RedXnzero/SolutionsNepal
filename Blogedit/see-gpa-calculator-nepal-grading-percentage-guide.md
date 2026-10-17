@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal education researchers
 date: September 27, 2026
 readTime: 10 min read
-image: "/blog/photo-1523240795612-9a054b0db644.jpg"
+image: "/blog/photo-1523240795612-9a054b0db644.webp"
 tags: [SEE GPA Calculator, SEE Grading System, Class 10 GPA, NEB GPA, Education Nepal]
 relatedTools: [see-gpa, neb-gpa, gpa-percentage, cgpa-calculator]
 headings:
@@ -51,7 +51,6 @@ faqs:
   - q: Can I improve my SEE GPA?
     a: Yes via the NEB grade-increment exam for NG or to improve a grade. The new grade replaces the old in GPA recalculation.
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 SEE Class 10 uses the same NEB <strong>4.0 scale: A+ 90–100 (4.0) → D 35–39 (1.6) → NG &lt;35 (0)</strong>. <strong>GPA = Σ(GP×CH) ÷ ΣCH</strong> (simple average works if credits equal). <strong>Pass = D in every subject</strong>; any NG needs the grade-increment exam. <strong>Percentage ≈ GPA×25</strong> — use only where accepted.
@@ -88,7 +87,7 @@ Most SEE subjects carry the same credit hours, so adding grade points and dividi
 
 Sum = 24.4 ÷8 = <strong>GPA 3.05 → ~76%</strong> (B/B+ average). Use SolutionsNepal’s <a href="/nepal/education/see-gpa">SEE GPA Calculator</a> for your exact subjects.
 
-<h2 id="passing">Passing Rule &amp; NG</h2>
+<h2 id="passing">Passing Rule & NG</h2>
 
 - <strong>Two separate bars (per current NEB notices, as of October 2026):</strong> commonly cited as <strong>≥35 in theory AND ≥40 in practical/internal</strong> per subject — failing either bar yields NG for that subject even if the combined total looks passing. Confirm the current directive on <a href="https://neb.gov.np" target="_blank" rel="noopener noreferrer">neb.gov.np</a> for your exam year.
 - <strong>Below the bar → NG (0.0)</strong> for that subject regardless of the other component's marks
@@ -120,7 +119,7 @@ Percentage ≈ GPA × 25
 - Divide by number of subjects (or weighted credits where given)
 - For percentage use GPA×25 and label as approximate
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: National Examination Board <a href="https://neb.gov.np" target="_blank" rel="noopener noreferrer">neb.gov.np</a> (current Letter Grading Directive + exam/result notices), Letter Grading Directive 2078, CDC. Theory/practical minimums and credit splits change by directive — verify the current year's notice on neb.gov.np. See also our <a href="/blog/neb-gpa-calculator-nepal-class-11-12-percentage-guide">NEB Class 11-12 GPA guide</a>.
 

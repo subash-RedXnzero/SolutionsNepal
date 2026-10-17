@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal banking researchers
 date: September 27, 2026
 readTime: 8 min read
-image: "/blog/photo-1556742049-0cfed4f6a45d.jpg"
+image: "/blog/photo-1556742049-0cfed4f6a45d.webp"
 tags: [Dollar Card Nepal, "NRB $500", Prepaid Card, Freelancer Payment, Banks]
 relatedTools: [foreign-exchange, emi-calculator, salary-checker]
 headings:
@@ -36,7 +36,6 @@ faqs:
   - q: What can I pay with it?
     a: "International online payments: domain/hosting, ads, SaaS, exam fees (GRE/IELTS/TOEFL), app stores. NOT for India/Bhutan INR payments, forex trading, gambling, or NRB-restricted purposes. ATM cash abroad follows bank-specific sub-limits."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>USD 500/FY, one card at a time.</strong> Apply at any Class-A bank with <strong>citizenship + PAN (+ passport at most banks)</strong>, load in <strong>NPR at selling rate + issuance Rs 500–1,500 + reload ~1%</strong>, use for <strong>online USD payments only</strong>. Expires/renews yearly — unspent cap does not roll over.
@@ -70,7 +69,7 @@ faqs:
 - Letting card expire with balance — refund takes weeks; renew early
 - Freelancers receiving income: dollar card is for <strong>spending</strong>, not receiving — receive via bank TT + prove income for tax
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: <a href="https://nrb.org.np" target="_blank" rel="noopener noreferrer">Nepal Rastra Bank (nrb.org.np)</a> Unified Foreign Exchange Circular + bank prepaid-card notices. Cap/fees revise by NRB notice — $500 working cap verified as of October 11, 2026 against the reported Circular 2082 pattern; confirm the live circular with your bank before applying.
 

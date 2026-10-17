@@ -1,6 +1,6 @@
 ---
-title: National Identity Card (NID) Online Pre-Registration Nepal Guide (2026)
-description: Complete 2026 guide to National ID (Rastriya Parichayapatra) in Nepal: online pre-registration, biometrics, documents and NIN.
+title: National ID Online Registration Nepal: Steps & Documents
+description: Apply for a National ID: online pre-registration, biometric appointment, required documents and NIN tracking.
 category: Documents
 author: SolutionsNepal Team
 authorCredential: Nepal digital-government researchers
@@ -14,37 +14,43 @@ headings:
     text: "Quick Answer (TL;DR)"
     level: 2
   - id: introduction
-    text: Introduction
+    text: "Introduction"
     level: 2
   - id: what-is-nid
-    text: What is National ID?
+    text: "What is National ID?"
     level: 2
+  - id: nid-included
+    text: "What is included?"
+    level: 3
+  - id: nid-replaces
+    text: "What does it replace?"
+    level: 3
   - id: what-is-nin
-    text: What is NIN?
+    text: "What is NIN?"
     level: 2
   - id: eligibility
-    text: Eligibility
+    text: "Eligibility"
     level: 2
   - id: documents
-    text: Required Documents
+    text: "Required Documents"
     level: 2
   - id: docs-basic
-    text: Basic requirements (most applicants)
+    text: "Basic requirements (most applicants)"
     level: 3
   - id: docs-corrections
-    text: Documents you may need if you are correcting details
+    text: "Documents you may need if you are correcting details"
     level: 3
   - id: docs-biometrics
-    text: Documents for biometric appointment
+    text: "Documents for biometric appointment"
     level: 3
   - id: online-vs-physical
-    text: Online vs Physical Process
+    text: "Online vs Physical Process"
     level: 2
   - id: portal
-    text: Official Pre-Registration Portal
+    text: "Official Pre-Registration Portal"
     level: 2
   - id: pre-registration
-    text: Complete Online Pre-Registration Tutorial (Step-by-Step)
+    text: "Complete Online Pre-Registration Tutorial (Step-by-Step)"
     level: 2
   - id: step-portal
     text: "Step 1: Open the official pre-registration portal"
@@ -80,82 +86,139 @@ headings:
     text: "Step 11: Save your confirmation"
     level: 3
   - id: appointment
-    text: Biometric Appointment Booking
+    text: "Biometric Appointment Booking"
     level: 2
+  - id: appointment-portal
+    text: "What the portal may ask you to do"
+    level: 3
+  - id: appointment-unavailable
+    text: "If appointments are unavailable"
+    level: 3
+  - id: appointment-change
+    text: "Can you change/cancel?"
+    level: 3
   - id: centers
-    text: Where Can You Complete NID Biometrics?
+    text: "Where Can You Complete NID Biometrics?"
     level: 2
   - id: during-biometrics
-    text: What Happens During Biometric Enrollment?
+    text: "What Happens During Biometric Enrollment?"
     level: 2
+  - id: biometrics-bring
+    text: "What you should bring"
+    level: 3
+  - id: biometrics-collected
+    text: "What information is collected?"
+    level: 3
+  - id: biometrics-incorrect
+    text: "What if information is incorrect?"
+    level: 3
+  - id: biometrics-time
+    text: "How long does it take?"
+    level: 3
   - id: appointment-docs
-    text: Documents for Appointment (Detailed Checklist)
+    text: "Documents for Appointment (Detailed Checklist)"
     level: 2
+  - id: docs-universal
+    text: "Universally required (most likely)"
+    level: 3
+  - id: docs-situation
+    text: "Situation-dependent (bring if relevant)"
+    level: 3
   - id: after-biometrics
-    text: What Happens After Biometric Enrollment?
+    text: "What Happens After Biometric Enrollment?"
     level: 2
   - id: check-nin
-    text: How to Find or Check Your NIN
+    text: "How to Find or Check Your NIN"
     level: 2
+  - id: nin-online
+    text: "Steps for online lookup (general)"
+    level: 3
   - id: check-status
-    text: How to Check National ID Application Status
+    text: "How to Check National ID Application Status"
     level: 2
   - id: card-collection
-    text: Physical Card Collection
+    text: "Physical Card Collection"
     level: 2
+  - id: collection-bring
+    text: "Bring"
+    level: 3
+  - id: collection-representative
+    text: "Someone else collecting on your behalf"
+    level: 3
+  - id: collection-not-ready
+    text: "If the card is not available yet"
+    level: 3
   - id: nid-vs-citizenship
-    text: Citizenship vs NID (Clear Difference)
+    text: "Citizenship vs NID (Clear Difference)"
     level: 2
   - id: passport
-    text: Passport Relationship
+    text: "Passport Relationship"
     level: 2
   - id: integration
-    text: Government-Service Integration
+    text: "Government-Service Integration"
     level: 2
   - id: social-security
-    text: Social-Security Relationship
+    text: "Social-Security Relationship"
     level: 2
   - id: nagarik-app
-    text: Nagarik App Integration
+    text: "Nagarik App Integration"
     level: 2
   - id: corrections
-    text: Corrections
+    text: "Corrections"
     level: 2
   - id: delays
-    text: Delays / Problems
+    text: "Delays / Problems"
     level: 2
+  - id: delay-patterns
+    text: "Common problem patterns"
+    level: 3
+  - id: delay-not-to-do
+    text: "What not to do"
+    level: 3
   - id: lost-card
-    text: Lost / Damaged Card
+    text: "Lost / Damaged Card"
     level: 2
   - id: abroad
-    text: Nepalis Abroad
+    text: "Nepalis Abroad"
     level: 2
   - id: fees
-    text: Fees
+    text: "Fees"
     level: 2
   - id: processing-time
-    text: Processing Time
+    text: "Processing Time"
     level: 2
   - id: troubleshooting
-    text: Troubleshooting (Big Table)
+    text: "Troubleshooting (Big Table)"
     level: 2
   - id: mistakes
-    text: Common Mistakes to Avoid
+    text: "Common Mistakes to Avoid"
     level: 2
   - id: safety
-    text: Is National ID Safe?
+    text: "Is National ID Safe?"
     level: 2
   - id: checklist
-    text: Complete National ID Application Checklist
+    text: "Complete National ID Application Checklist"
     level: 2
+  - id: checklist-prereg
+    text: "Before online pre-registration"
+    level: 3
+  - id: checklist-before-biometrics
+    text: "Before biometrics"
+    level: 3
+  - id: checklist-at-biometrics
+    text: "At biometric enrollment"
+    level: 3
+  - id: checklist-after
+    text: "After biometrics"
+    level: 3
   - id: quick-reference
-    text: Quick Reference Table (Process at a Glance)
+    text: "Quick Reference Table (Process at a Glance)"
     level: 2
   - id: official-sources
-    text: Official Sources to Check
+    text: "Official Sources to Check"
     level: 2
   - id: final-summary
-    text: Final Summary
+    text: "Final Summary"
     level: 2
 faqs:
   - q: What is a National ID in Nepal?
@@ -206,8 +269,11 @@ faqs:
     a: No, not automatically. In many cases, citizenship documentation is still required for certain processes. Treat NID as an additional government identity credential connected to NIN.
   - q: Is National ID mandatory for every government service?
     a: "Not necessarily. Some services may accept other documents or may rely on NIN/NID specifically. Requirements depend on the program and current policy — check the service’s official rules."
+  - q: Who should prioritize getting a National ID now?
+    a: Social-security benefit recipients, anyone opening bank accounts or updating KYC, and passport applicants benefit most from enrolling now. If none of these apply, there is no hard deadline — but enrolling during a quiet period beats queuing during a service rush.
+  - q: Is NID enrollment free?
+    a: Enrollment itself is free or nominal; be wary of anyone quoting large fees for "registration help" — they are selling convenience, not access. Confirm any official fee on donidcr.gov.np before paying.
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 To get Nepal’s National Identity Card (Rastriya Parichayapatra / NID), you normally complete online pre-registration, then visit an enrollment center for document verification and biometrics. After processing, you receive your National Identity Number (NIN), then later collect your physical NID card. <strong>Online pre-registration alone does not usually issue the card.</strong>
@@ -264,6 +330,8 @@ In general, Nepal’s National ID system is for Nepali citizens who are eligible
 - Follow the eligibility and “who can enroll” guidance shown in the official portal during pre-registration
 
 If the portal shows category-specific options (for students, special cases, or other groups), choose the correct option instead of guessing.
+
+> **Who should prioritize enrollment:** social-security benefit recipients, anyone opening bank accounts or updating KYC, passport applicants, people correcting address/name details, and anyone near an active mobile enrollment camp. If none of these apply yet, there is no hard deadline — but enrolling during a quiet period beats queuing during a service rush.
 
 <h2 id="documents">Required Documents</h2>
 
@@ -531,13 +599,15 @@ After processing, you need a method to check whether NIN has been assigned to yo
 4. Submit and verify results
 5. If not found, follow the official “not found” instruction (often linked to pending processing)
 
+The current Citizen Portal lookup lives at <a href="https://citizenportal.donidcr.gov.np/ne/check-national-id-number" target="_blank" rel="noopener noreferrer">citizenportal.donidcr.gov.np/ne/check-national-id-number</a> (the "NID Search" link published on donidcr.gov.np; last verified October 2026), where you enter a request number or NIN and complete a CAPTCHA. If that address moves, start from donidcr.gov.np and follow its current NID Search link rather than trusting a forwarded URL.
+
 <strong>SMS checking note:</strong> some systems may offer SMS checking, but the SMS format/keyword and SMS number must be verified from the official portal. Do not guess SMS keywords.
 
 <h2 id="check-status">How to Check National ID Application Status</h2>
 
 Status checking usually uses your application/reference number and citizenship details. Status labels can vary — use only the status meanings shown in the official portal for your application.
 
-- **“No record found”** — Re-check your reference number spelling and digits; ensure you are using the correct application; wait for official synchronization time and re-check later as instructed.
+- **“No record found”** — Re-check your reference number spelling and digits; ensure you are using the correct application; wait for official synchronization time and re-check later as instructed. An SMS format ("N [space] your 16-digit application number" to 30001) is commonly reported online but could not be confirmed on the official DoNIDCR portal (last checked October 2026) — use the portal lookup, not an unverified SMS short code.
 - **“Processing/delayed”** — Follow the official next step — some systems require no action; some require resubmission/correction only through official steps.
 
 <h2 id="card-collection">Physical Card Collection</h2>
@@ -558,6 +628,7 @@ Some processes allow authorization/representative collection; the official instr
 
 1. Check status first
 2. Then contact the relevant enrollment authority/department helpline as instructed on the official site
+3. While waiting on printing, check whether you can use the eNID download through the Citizen Portal (after verifying details + OTP) or the digital National ID in the Nagarik App once a NIN has been generated
 
 <h2 id="nid-vs-citizenship">Citizenship vs NID (Clear Difference)</h2>
 
@@ -623,6 +694,7 @@ This section helps you decide what to do if things don’t move quickly.
 
 - Do not rely on third-party agents who claim they can “update records instantly”
 - Do not submit random applications on unofficial websites
+- When you need human help, use official DoNIDCR channels (the published contact options on donidcr.gov.np, including info@donidcr.gov.np; toll-free 1147 as published) — confirm current numbers on the official site before calling
 
 <h2 id="lost-card">Lost / Damaged Card</h2>
 
@@ -630,7 +702,7 @@ If you lose your National ID card or it is damaged:
 
 1. Report it and request replacement through the official process
 2. Provide required identity details and any necessary documents
-3. Follow official fee and document requirements (do not guess fees)
+3. Follow official fee and document requirements (do not guess fees) — a replacement fee around NPR 500 has been commonly cited as of October 2026; confirm the current figure before paying
 
 <h2 id="abroad">Nepalis Abroad</h2>
 
@@ -756,6 +828,7 @@ No identity system is “100% secure” in every scenario. But you can greatly r
 
 - <a href="https://donidcr.gov.np/" target="_blank" rel="noopener noreferrer">Department of National ID and Civil Registration (DoNIDCR)</a> — verify portals and notices here
 - <a href="https://enrollment.donidcr.gov.np/PreEnrollment/" target="_blank" rel="noopener noreferrer">National ID pre-enrollment portal</a> — starting point for pre-registration, appointment/center instructions, NIN checking, and status updates
+- <a href="https://citizenportal.donidcr.gov.np/ne/check-national-id-number" target="_blank" rel="noopener noreferrer">Citizen Portal NID Search</a> — check request/NIN status (last verified October 2026; if moved, follow the current NID Search link from donidcr.gov.np)
 
 <h2 id="final-summary">Final Summary</h2>
 
@@ -767,4 +840,4 @@ No identity system is “100% secure” in every scenario. But you can greatly r
 
 > **SolutionsNepal CTA:** Planning other government paperwork? Check fees and document checklists in our <a href="/nepal/government-service-cost">Nepal Government Service Cost &amp; Document Checklist</a> and plan enrollment dates around working days with the <a href="/nepal/calendar">Nepal Calendar</a>.
 
-<strong>Last Updated: September 16, 2026 (portal links re-verified October 2026).</strong> Government identity procedures, portal features, appointment systems, processing steps, fees, and card distribution rules can change. Please verify the latest instructions with the Department of National ID and Civil Registration before applying. SolutionsNepal is an educational guide and is not the National ID authority.
+<strong>Last Updated: October 17, 2026 (portal links re-verified October 2026).</strong> Government identity procedures, portal features, appointment systems, processing steps, fees, and card distribution rules can change. Please verify the latest instructions with the Department of National ID and Civil Registration before applying. SolutionsNepal is an educational guide and is not the National ID authority.

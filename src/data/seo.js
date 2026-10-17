@@ -11,6 +11,7 @@
  */
 
 import { SEO_DB } from './seo-database.js';
+import { SEO_NEW_META } from './seo-new-meta.js';
 
 const SITE_NAME = 'SolutionsNepal';
 const SITE_URL = 'https://solutionsnepal.com';
@@ -96,6 +97,30 @@ const pages = {
     title: 'Solutions Nepal — Everyday Tools for Nepal',
     description:
       'Free Nepal-focused calculators, converters, price checkers and everyday utility tools. Salary, tax, gold, fuel, currency, calendar and more.',
+    // Legacy meta keywords. Every term names a real tool/page on the site —
+    // kept short and non-stuffed (Google ignores the tag; smaller engines
+    // and verification tools still display it).
+    keywords: [
+      'solutionsnepal',
+      'nepal calculator',
+      'nepal online tools',
+      'salary calculator nepal',
+      'income tax calculator nepal',
+      'bs to ad date converter',
+      'nepali calendar 2083',
+      'nepali patro',
+      'gold price nepal',
+      'tola to gram',
+      'vehicle tax nepal',
+      'nea electricity bill calculator',
+      'kukl water bill calculator',
+      'nepse calculator',
+      'remittance rate nepal',
+      'nepali unicode typing',
+      'land measurement nepal',
+      'emi calculator nepal',
+      'free tools nepal',
+    ],
     jsonLd: [
       {
         '@context': 'https://schema.org',
@@ -138,7 +163,7 @@ const pages = {
             name: 'Is SolutionsNepal free to use?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Yes, SolutionsNepal is completely free. There are no sign-ups, no subscriptions, no ads, and no data collection. All tools work entirely in your browser.',
+              text: 'Yes, SolutionsNepal is completely free. There are no sign-ups or subscriptions. Calculator inputs stay in your browser.',
             },
           },
           {
@@ -446,15 +471,15 @@ const pages = {
     noindex: true,
   },
   '/nepal/finance/house-rent-tax': {
-    title: 'House Rent Tax Calculator Nepal | Rental Income Tax | SolutionsNepal',
+    title: 'House Rent Tax Calculator Nepal 2083/84 | SolutionsNepal',
     description:
-      'Calculate house rent tax, rental income, applicable withholding, and estimated net rental income in Nepal.',
+      'Calculate house rent tax, rental income, applicable withholding and net rental income in Nepal.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
       name: 'Nepal House Rent Tax Calculator',
       description:
-        'Calculate house rent tax, rental income, applicable withholding, and estimated net rental income in Nepal.',
+        'Calculate house rent tax, rental income, applicable withholding and net rental income in Nepal.',
       url: `${SITE_URL}/nepal/finance/house-rent-tax`,
       applicationCategory: 'FinanceApplication',
       operatingSystem: 'Web',
@@ -465,15 +490,15 @@ const pages = {
     },
   },
   '/nepal/finance/rent-tax': {
-    title: 'Nepal Rent Tax | Rental Income Tax Information | SolutionsNepal',
+    title: 'Rental Income Tax Calculator Nepal 2083/84 | SolutionsNepal',
     description:
-      'Calculate rental income, taxable rent, applicable deductions, tax, TDS, and estimated net rental income in Nepal.',
+      'Calculate taxable rent, deductions, tax, TDS and net rental income for landlords in Nepal.',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
       name: 'Nepal Rental Income Tax Calculator',
       description:
-        'Calculate rental income, taxable rent, applicable deductions, tax, TDS, and estimated net rental income in Nepal.',
+        'Calculate taxable rent, deductions, tax, TDS and net rental income for landlords in Nepal.',
       url: `${SITE_URL}/nepal/finance/rent-tax`,
       applicationCategory: 'FinanceApplication',
       operatingSystem: 'Web',
@@ -1085,11 +1110,6 @@ const pages = {
     description: 'Convert any rupee amount into Nepali and English words instantly. Rs. 12,50,000 → रुपैयाँ बाह्र लाख पचास हजार मात्र. Ideal for cheques, bills and agreements.',
   },
 
-  '/nepal/tools/number-to-words-nepali': {
-    title: 'Number to Nepali Words – अंक शब्दमा लेख्नुहोस् | SolutionsNepal',
-    description: 'Convert numbers to Nepali words instantly: 1,00,000 → एक लाख, 1,00,00,000 → एक करोड. Accurate Devanagari number wording for any value, up to neel.',
-  },
-
   '/nepal/tools/cheque-amount-in-words': {
     title: 'Cheque Amount in Words Nepal – Write Cheque Amounts Correctly | SolutionsNepal',
     description: 'Write cheque amounts in words correctly in Nepal: रुपैयाँ … मात्र and Rupees … Only, generated automatically for any amount including paisa.',
@@ -1380,7 +1400,7 @@ const pages = {
 // ── Title/description length + uniqueness fixes ─────────────────
 // Titles target 50–60 chars incl. brand; descriptions 140–160 chars.
 const SEO_FIXES = {
-  '/about': { title: 'About SolutionsNepal — Free Tools for Nepal', description: 'SolutionsNepal is a free collection of calculators and utilities built for Nepal. No sign-up, no tracking — everything runs in your browser.' },
+  '/about': { title: 'About SolutionsNepal — Free Tools for Nepal', description: 'SolutionsNepal is a free collection of calculators and utilities built for Nepal. No sign-up — everything runs in your browser.' },
   '/blog': { title: 'Nepal Blog — Money, Costs & How-To Guides | SolutionsNepal', description: 'Practical stories and explainers for Nepal: cost of living, salaries, taxes, documents, vehicles and everyday money decisions with current rates.' },
   '/contact': { title: 'Contact SolutionsNepal — Feedback & Reports', description: 'Contact the SolutionsNepal team with feedback, tool requests, corrections or bug reports. We reply to every useful message about Nepal tools.' },
   '/foreign-exchange-nepal': { title: 'USD to NPR Today — NRB Exchange Rates | SolutionsNepal', description: "Today's USD to NPR rate plus EUR, GBP, INR and all NRB reference rates. Official buying and selling prices, updated daily." },
@@ -1469,6 +1489,20 @@ if (SEO_DB['/tools/logo-size-resizer'] && !pages['/tools/photo/logo-size-resizer
   };
 }
 
+// ── Meta keywords ────────────────────────────────────────────
+// Explicit page lists (e.g. the homepage) win; tool pages derive theirs from
+// the existing SEO DB record (primary + secondary keywords, deduped). Pages
+// outside both get an empty list and simply emit no keywords tag.
+function keywordsFor(path) {
+  const explicit = pages[path]?.keywords;
+  if (explicit) return explicit;
+  const rec = SEO_DB[path];
+  if (rec?.primary_keyword) {
+    return [...new Set([rec.primary_keyword, ...(rec.secondary_keywords || [])].filter(Boolean))];
+  }
+  return [];
+}
+
 // ── Public API ──────────────────────────────────────────────
 
 /**
@@ -1478,6 +1512,30 @@ if (SEO_DB['/tools/logo-size-resizer'] && !pages['/tools/photo/logo-size-resizer
 export function getSeo(pathname) {
   // Normalize: strip trailing slash (except root)
   const path = pathname !== '/' ? pathname.replace(/\/+$/, '') : pathname;
+  // Highest priority: approved titles/descriptions from solutionsnepal_new_meta.csv
+  const override = SEO_NEW_META[path];
+  if (override) {
+    const entry = pages[path];
+    const description = clampDescription(override.description);
+    const jsonLd = entry?.jsonLd || (override.noindex || entry?.noindex ? null : {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: override.title.split(' | ')[0],
+      description: override.description,
+      url: `${SITE_URL}${path}`,
+      isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },
+    });
+    return {
+      title: override.title,
+      description,
+      ogTitle: override.title,
+      ogDescription: description,
+      ogImage: entry?.ogImage || DEFAULT_OG_IMAGE,
+      noindex: override.noindex || entry?.noindex || false,
+      jsonLd,
+      keywords: keywordsFor(path),
+    };
+  }
   const entry = pages[path];
   if (entry) {
     const description = clampDescription(entry.description);
@@ -1499,6 +1557,7 @@ export function getSeo(pathname) {
       ogImage: entry.ogImage || DEFAULT_OG_IMAGE,
       noindex: entry.noindex || false,
       jsonLd,
+      keywords: keywordsFor(path),
     };
   }
   // Smart fallback: derive from SEO_DB record or prettified slug
@@ -1506,12 +1565,12 @@ export function getSeo(pathname) {
   if (rec) {
     const title = withBrand(rec.seo_title);
     const description = clampDescription(rec.meta_description);
-    return { title, description, ogTitle: title, ogDescription: description, ogImage: DEFAULT_OG_IMAGE, noindex: false, jsonLd: autoJsonLd(path, rec) };
+    return { title, description, ogTitle: title, ogDescription: description, ogImage: DEFAULT_OG_IMAGE, noindex: false, jsonLd: autoJsonLd(path, rec), keywords: keywordsFor(path) };
   }
   const pretty = path.split('/').filter(Boolean).pop()?.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || SITE_NAME;
   const title = `${pretty} | SolutionsNepal`;
   const description = clampDescription(`${pretty} — free online tool on SolutionsNepal. Fast, private and mobile-friendly; everything runs in your browser.`);
-  return { title, description, ogTitle: title, ogDescription: description, ogImage: DEFAULT_OG_IMAGE, noindex: false, jsonLd: null };
+  return { title, description, ogTitle: title, ogDescription: description, ogImage: DEFAULT_OG_IMAGE, noindex: false, jsonLd: null, keywords: [] };
 }
 
 export { SITE_NAME, SITE_URL, DEFAULT_OG_IMAGE };

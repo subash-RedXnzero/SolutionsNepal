@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and documentation researchers
 date: September 14, 2026
 readTime: 18 min read
-image: "/blog/photo-1500382017468-9049fed747ef.jpg"
+image: "/blog/photo-1500382017468-9049fed747ef.webp"
 tags: [Land, Malpot, Property Valuation, Registration Fees, Capital Gains Tax, Nepal]
 relatedTools: [emi-calculator, salary-checker]
 headings:
@@ -17,46 +17,55 @@ headings:
     text: "FY 2083/84 Update: Rates, Valuation, and Concessions"
     level: 2
   - id: malpot
-    text: What Is Malpot Karyalaya?
+    text: "What Is Malpot Karyalaya?"
     level: 2
   - id: office-roles
-    text: Malpot vs Survey Office vs Municipality vs IRD
+    text: "Malpot vs Survey Office vs Municipality vs IRD"
     level: 2
   - id: valuation
-    text: What Is Malpot Valuation?
+    text: "What Is Malpot Valuation?"
     level: 2
   - id: calculation
-    text: How Land Registration Fees Are Calculated
+    text: "How Land Registration Fees Are Calculated"
     level: 2
   - id: example
-    text: "Worked Example: Land Registration Cost"
+    text: "Worked Example: Land Registration Cost in Nepal"
     level: 2
   - id: who-pays
     text: "Buyer vs Seller: Who Pays What?"
     level: 2
   - id: capital-gains
-    text: Capital Gains Tax on Land in Nepal
+    text: "Capital Gains Tax on Land in Nepal"
     level: 2
   - id: cost-factors
-    text: What Determines Land Registration Cost?
+    text: "What Determines Land Registration Cost?"
     level: 2
   - id: documents
-    text: Documents Needed for Land Registration
+    text: "Documents Needed for Land Registration"
     level: 2
+  - id: buyer-documents
+    text: "For the Buyer"
+    level: 3
+  - id: seller-documents
+    text: "For the Seller"
+    level: 3
+  - id: transaction-documents
+    text: "Transaction and Special Documents"
+    level: 3
   - id: process
-    text: Land Registration Process at Malpot Karyalaya
+    text: "Land Registration Process at Malpot Karyalaya"
     level: 2
   - id: due-diligence
-    text: Due Diligence Before Paying for Land
+    text: "Due Diligence Before Paying for Land"
     level: 2
   - id: budget
-    text: How to Estimate Your Total Land Buying Budget
+    text: "How to Estimate Your Total Land Buying Budget"
     level: 2
   - id: mistakes
-    text: Common Mistakes When Buying Land
+    text: "Common Mistakes When Buying Land in Nepal"
     level: 2
   - id: checklist
-    text: Important Checks Before Paying for Land
+    text: "Important Checks Before Paying for Land"
     level: 2
 faqs:
   - q: What is the Malpot registration fee in Nepal?
@@ -82,7 +91,6 @@ faqs:
   - q: Can land registration be completed online in Nepal?
     a: No. Some preparation and land-map services are online, but final deed execution, identity verification, payment, and ownership transfer generally require the Land Revenue Office and original documents.
 ---
-
 <h2 id="quick-answer">Quick Answer: How Much Is the Malpot Registration Fee?</h2>
 
 The Malpot registration fee is the charge paid to the Land Revenue Office when ownership changes. There is no single nationwide flat rate. A typical planning range is about <strong>2% to 6%</strong> of the applicable property value, depending on location, property type, transaction type, and current fiscal-year law.

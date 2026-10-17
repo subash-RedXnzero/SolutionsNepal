@@ -76,6 +76,7 @@ const faqJsonLd = faqs.length > 0 ? [{
 <BaseLayout 
   title={post.title} 
   description={post.description}
+  keywords={post.tags || []}
   ogImage={post.image || '/og-default.png'}
   ogType="article"
   author={post.author || 'SolutionsNepal Team'}
@@ -104,7 +105,7 @@ const faqJsonLd = faqs.length > 0 ? [{
         <!-- Author + Meta -->
         <div class="post-author-row">
           <div class="author-avatar-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
           <div class="author-info">
             <span class="author-name">{post.author}</span>
@@ -118,21 +119,19 @@ const faqJsonLd = faqs.length > 0 ? [{
         </div>
       </header>
 
-      <!-- FEATURED IMAGE -->
-      {post.image && (
-        <div class="post-featured-image">
-          <Image src={post.image} alt={post.title} width={1200} height={630} loading="eager" fetchpriority="high" wrapper={false} />
-          {post.image.includes('unsplash.com') && (
-            <p class="post-image-credit">Photo via <a href="https://unsplash.com/license" target="_blank" rel="noopener">Unsplash</a> — free to use. All article text is original SolutionsNepal writing; factual rates/fees cite official sources (NRB, IRD, DoTM, OCR).</p>
-          )}
-        </div>
-      )}
-
       <!-- TWO-COLUMN: Content + Sidebar -->
       <div class="post-columns">
 
         <!-- MAIN CONTENT -->
         <div class="post-content">
+          {post.image && (
+            <div class="post-featured-image post-featured-image--inset">
+              <Image src={post.image} alt={post.title} width={1200} height={630} loading="eager" fetchpriority="high" wrapper={false} />
+              {post.image.includes('unsplash.com') && (
+                <p class="post-image-credit">Photo via <a href="https://unsplash.com/license" target="_blank" rel="noopener">Unsplash</a> — free to use. All article text is original SolutionsNepal writing; factual rates/fees cite official sources (NRB, IRD, DoTM, OCR).</p>
+              )}
+            </div>
+          )}
           {post.sections.map(section => {
             if (section.type === 'heading' && section.level === 2) {
               return <h2 id={section.id}>{section.text}</h2>;
@@ -316,11 +315,12 @@ const faqJsonLd = faqs.length > 0 ? [{
 
           <!-- RELATED POSTS -->
           {relatedPosts.length > 0 && (
-            <div class="sidebar-card">
-              <h4 class="sidebar-heading">Related articles</h4>
+            <div class="sidebar-card sidebar-related">
+              <h4 class="sidebar-heading">Suggested reads</h4>
               <div class="related-list">
-                {relatedPosts.map(rp => (
+                {relatedPosts.map((rp, i) => (
                   <a href={postUrl(rp)} class="related-item">
+                    <span class="related-rank" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                     {rp.image && (
                       <div class="related-thumb">
                         <Image src={rp.image} alt={rp.title} width={120} height={68} loading="lazy" wrapper={false} />
@@ -412,75 +412,97 @@ const faqJsonLd = faqs.length > 0 ? [{
 
   /* ── Layout ── */
   .post-layout {
-    max-width: 1100px;
+    max-width: 1360px;
     width: 100%;
     min-width: 0;
     margin: 0 auto;
-    padding: 24px 32px 80px;
+    padding: 12px 32px 80px;
     overflow-x: clip;
   }
+  .post-layout > nav.breadcrumb-nav { margin-bottom: 12px; }
 
-  /* ── Header ── */
-  .post-header { margin-bottom: 40px; max-width: 760px; }
+  /* ── Header ── compact premium hero */
+  .post-header { margin-bottom: 20px; max-width: 920px; }
   .post-category {
-    display: inline-block;
-    padding: 5px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px 4px 10px;
     border-radius: var(--radius-full);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--nk-accent);
-    background: var(--nk-accent-subtle);
-    margin-bottom: 18px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(180deg,
+      color-mix(in srgb, var(--nk-accent) 82%, #ffffff 18%) 0%,
+      var(--nk-accent) 55%,
+      color-mix(in srgb, var(--nk-accent) 76%, #000000) 100%);
+    border: 1px solid color-mix(in srgb, var(--nk-accent) 70%, #000000);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 6px 16px -8px color-mix(in srgb, var(--nk-accent) 65%, transparent);
+    margin-bottom: 12px;
+  }
+  .post-category::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.85;
   }
   .post-header h1 {
-    font-size: clamp(30px, 4vw, 38px);
-    font-weight: 750;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin-bottom: 16px;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.028em;
+    line-height: 1.22;
+    margin-bottom: 10px;
     overflow-wrap: break-word;
     word-break: break-word;
     text-wrap: balance;
-    max-width: 22ch;
+    max-width: 32ch;
   }
   .post-dek {
-    font-size: 17px;
+    font-size: 15.5px;
     color: var(--nk-text-secondary);
-    line-height: 1.7;
-    margin-bottom: 24px;
-    max-width: 60ch;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    max-width: 62ch;
     text-wrap: pretty;
   }
 
-  /* Author row */
+  /* Author row — slim inline byline */
   .post-author-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
-    padding-top: 20px;
+    padding: 12px 0;
     border-top: 1px solid var(--nk-hairline);
   }
   .author-avatar-sm {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: var(--nk-muted);
+    background: var(--nk-accent-subtle);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--nk-text-tertiary);
+    color: var(--nk-accent);
     flex-shrink: 0;
   }
+  .author-avatar-sm svg { width: 14px; height: 14px; }
   .author-info {
     display: flex;
-    flex-direction: column;
-    gap: 1px;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 6px;
   }
-  .author-name { font-size: 13px; font-weight: 650; color: var(--nk-text); }
-  .author-cred { font-size: 12px; color: var(--nk-text-tertiary); }
+  .author-name { font-size: 13px; font-weight: 650; color: var(--nk-text); letter-spacing: -0.01em; white-space: nowrap; }
+  .author-cred { font-size: 12px; color: var(--nk-text-tertiary); white-space: nowrap; }
+  .author-cred::before { content: '· '; }
   .post-meta {
     display: flex;
     align-items: center;
@@ -500,9 +522,12 @@ const faqJsonLd = faqs.length > 0 ? [{
   .post-featured-image {
     border-radius: var(--radius-lg);
     overflow: hidden;
-    aspect-ratio: 16/9;
+    aspect-ratio: 21 / 9;
+    max-height: 400px;
     background: var(--nk-muted);
     margin-bottom: 16px;
+    border: 1px solid var(--nk-border);
+    box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.25);
   }
   .post-featured-image img { width: 100%; height: 100%; object-fit: cover; }
   .post-image-credit {
@@ -517,8 +542,8 @@ const faqJsonLd = faqs.length > 0 ? [{
   /* ── Two-Column ── */
   .post-columns {
     display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 48px;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 56px;
     align-items: start;
     min-width: 0;
     max-width: 100%;
@@ -526,12 +551,12 @@ const faqJsonLd = faqs.length > 0 ? [{
 
   /* ── Content ── spacious, editorial reading rhythm ── */
   .post-content {
-    max-width: 680px;
+    max-width: 900px;
     width: 100%;
     min-width: 0;
     overflow-wrap: break-word;
-    font-size: 16px;
-    line-height: 1.8;
+    font-size: 17px;
+    line-height: 1.85;
     letter-spacing: -0.011em;
   }
   .post-content img,
@@ -581,9 +606,22 @@ const faqJsonLd = faqs.length > 0 ? [{
     line-height: 1.75;
     color: var(--nk-text-secondary);
   }
+  .post-content > p:first-of-type::first-letter {
+    font-family: Georgia, 'Times New Roman', 'Noto Serif', serif;
+    font-size: 3.4em;
+    font-weight: 700;
+    line-height: 0.85;
+    float: left;
+    margin: 7px 10px 0 0;
+    color: var(--nk-accent);
+  }
   .post-content a { color: var(--nk-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(13,93,78,0.3); transition: text-decoration-color 0.15s; }
   .post-content a:hover { text-decoration-color: var(--nk-accent); }
-  /* Airy lists with accent markers */
+  /* Airy lists with accent markers.
+     Tailwind preflight strips list-style globally (ol, ul { list-style: none }),
+     so restore list-style-type scoped to post content only — navigations,
+     footers and FAQ summaries keep their clean marker-free look. Nested lists
+     need their own rules: preflight's element-level rule beats inheritance. */
   .post-content ul, .post-content ol {
     margin: 0 0 28px;
     padding-left: 26px;
@@ -593,6 +631,11 @@ const faqJsonLd = faqs.length > 0 ? [{
     flex-direction: column;
     gap: 10px;
   }
+  .post-content ul { list-style-type: disc; }
+  .post-content ol { list-style-type: decimal; }
+  .post-content ul ul { list-style-type: circle; }
+  .post-content ol ol, .post-content ul ol { list-style-type: decimal; }
+  .post-content ol ul, .post-content ul ul ul { list-style-type: circle; }
   .post-content li { margin-bottom: 2px; padding-left: 4px; max-width: 66ch; text-wrap: pretty; }
   .post-content li::marker { color: var(--nk-accent); font-weight: 700; }
   .post-content ul li::marker { font-size: 1.1em; }
@@ -990,22 +1033,35 @@ const faqJsonLd = faqs.length > 0 ? [{
   .newsletter-btn:hover { background: var(--nk-accent-hover); }
 
   /* Related */
-  .related-list { display: flex; flex-direction: column; gap: 16px; }
+  .related-list { display: flex; flex-direction: column; gap: 6px; }
   .related-item {
     display: flex;
     gap: 12px;
-    align-items: flex-start;
+    align-items: center;
     text-decoration: none;
-    transition: opacity 0.15s;
+    padding: 10px;
+    margin: 0 -10px;
+    border-radius: var(--radius-md);
+    transition: background-color 0.15s ease, transform 0.15s ease;
   }
-  .related-item:hover { opacity: 0.8; }
+  .related-item:hover { background: var(--nk-hover); transform: translateX(2px); }
+  .related-rank {
+    font-size: 12px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--nk-accent);
+    opacity: 0.75;
+    flex-shrink: 0;
+    width: 22px;
+  }
   .related-thumb {
-    width: 72px;
-    height: 48px;
+    width: 80px;
+    height: 54px;
     border-radius: var(--radius-md);
     overflow: hidden;
     flex-shrink: 0;
     background: var(--nk-muted);
+    border: 1px solid var(--nk-border);
   }
   .related-thumb img { width: 100%; height: 100%; object-fit: cover; }
   .related-info {
@@ -1035,14 +1091,14 @@ const faqJsonLd = faqs.length > 0 ? [{
   @media (max-width: 560px) {
     .post-layout { padding: 20px 16px 56px; }
     .post-header { margin-bottom: 32px; }
-    .post-header h1 { font-size: 26px; line-height: 1.2; max-width: none; }
+    .post-header h1 { font-size: 22px; line-height: 1.25; }
     .post-dek { font-size: 15.5px; line-height: 1.7; }
-    .post-author-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .post-author-row { gap: 8px; padding: 10px 0; }
     .post-meta { margin-left: 0; }
     .post-content { font-size: 15.5px; }
     .post-content h2 { font-size: 21px; margin: 44px 0 14px; }
     .post-content h3 { font-size: 17.5px; margin: 32px 0 12px; }
-    .post-content p { font-size: 15.5px; line-height: 1.8; margin-bottom: 20px; }
+    .post-content p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; }
     .post-content > p:first-of-type { font-size: 16.5px; }
     .post-content ul, .post-content ol { font-size: 15.5px; gap: 8px; margin-bottom: 24px; }
     .post-sidebar { grid-template-columns: 1fr; }

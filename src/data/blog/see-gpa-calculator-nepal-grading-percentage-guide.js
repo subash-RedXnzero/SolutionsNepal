@@ -10,7 +10,7 @@ export const seeGpaCalculatorNepalGradingPercentageGuidePost = {
   authorCredential: 'Nepal education researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: '/blog/photo-1523240795612-9a054b0db644.jpg',
+  image: '/blog/photo-1523240795612-9a054b0db644.webp',
   tags: ['SEE GPA Calculator', 'SEE Grading System', 'Class 10 GPA', 'NEB GPA', 'Education Nepal'],
   relatedTools: ['see-gpa', 'neb-gpa', 'gpa-percentage', 'cgpa-calculator'],
   faqs: [

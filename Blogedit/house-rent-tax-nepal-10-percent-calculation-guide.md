@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax and property researchers
 date: September 27, 2026
 readTime: 12 min read
-image: "/blog/photo-1513475382585-d06e58bcb0e0.jpg"
+image: "/blog/photo-1513475382585-d06e58bcb0e0.webp"
 tags: [House Rent Tax Nepal, Ghar Bahal Kar, Rent TDS Nepal, IRD Nepal, Finance]
 relatedTools: [house-rent-tax, rent-tax, vat-calculator, salary-checker]
 headings:
@@ -59,7 +59,6 @@ faqs:
   - q: Where do I pay?
     a: "Municipal tax: ward office of the property's municipality (self-declaration, monthly/quarterly/annual). Federal TDS: tenant deposits via IRD portal (connectIPS/eSewa) within 25 days of Nepali month-end and issues e-TDS certificate within 15 days — per IRD notice, verify current deadlines on ird.gov.np."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 The 10% you hear about is <strong>two separate taxes</strong>. <strong>Individual tenant → individual landlord</strong>: landlord pays <strong>10% municipal ghar bahal kar at the ward</strong> (KMC =10%; other municipalities vary — confirm your ward's Economic Act). <strong>Company/business tenant → any landlord</strong>: tenant withholds <strong>10% federal TDS to IRD</strong>. You <strong>generally pay only one</strong> on the same rent — per the 2025 Adhikari ruling — but a follow-on division-bench decision reopened aspects with cases pending, so keep all receipts and check current status before paying.
@@ -96,7 +95,7 @@ Federal TDS = Rent Payment × 10% (withheld by business tenant at payment)
 
 > **Try it:** Use SolutionsNepal’s <a href="/nepal/finance/house-rent-tax">House Rent Tax Calculator</a> — pick landlord type (individual vs entity) and enter your municipality rate to see both paths side-by-side.
 
-<h2 id="ward-vs-ird">Where &amp; How to Pay: Ward vs IRD</h2>
+<h2 id="ward-vs-ird">Where & How to Pay: Ward vs IRD</h2>
 
 - **Municipal ghar bahal kar** — At the ward office of the property's municipality. Bring lease agreement + landlord ID. Payable monthly/quarterly/annually per ward notice; keep the ward receipt.
 - **Federal TDS** — Withholding tenant deposits via <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">taxpayerportal.ird.gov.np</a> (connectIPS/eSewa) within 25 days of the Nepali month-end, files e-TDS return, and issues e-TDS certificate to landlord within 15 days — per IRD notice, verify current deadlines on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a>.
@@ -123,7 +122,7 @@ Federal TDS = Rent Payment × 10% (withheld by business tenant at payment)
 - Federal path: tenant withholds at payment, deposits by 25th next Nepali month (per IRD notice — verify current deadline), issues e-TDS certificate within 15 days (per IRD notice — verify)
 - Keep both the lease and the tax receipt/certificate for the whole fiscal year; where both taxes are demanded, keep both receipts and check current ruling status
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: Income Tax Act 2058 Sec 88 (and proviso on house rent to natural persons) + Sec 92 (final withholding) — full text via <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">lawcommission.gov.np</a>; Local Government Operation Act 2074; Kathmandu Metropolitan City Finance Act (10%); <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">IRD notices (ird.gov.np)</a> and <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">Taxpayer Portal</a>; and the 2025 Supreme Court Adhikari ruling on municipal vs federal rent tax (Pioneer Law summary) plus the follow-on division-bench decision (cases pending). Verify your municipality's current rate at the ward where the property sits.
 

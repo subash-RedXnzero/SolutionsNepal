@@ -4,6 +4,7 @@ import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
 import RelatedTools from '../../../components/ui/RelatedTools.astro';
 
 const relatedTools = [
+  { title: 'House Rent Tax Calculator', description: 'Municipal house rent tax & 10% TDS', href: '/nepal/finance/house-rent-tax' },
   { title: 'Nepal Salary Calculator', description: 'Calculate take-home salary', href: '/nepal/finance/salary-checker' },
   { title: 'EMI Calculator', description: 'Calculate loan EMI', href: '/nepal/finance/emi-calculator' },
   { title: 'NEA Electricity Bill', description: 'Estimate your electricity bill', href: '/nepal/utilities/electricity-bill' },
@@ -17,11 +18,11 @@ const faqItems = [
   },
   {
     question: 'How is rental income taxed in Nepal?',
-    answer: 'Rental income is included in your total taxable income and taxed at the same progressive rates as salary income: 1% up to NPR 500,000, 10% up to NPR 700,000, 20% up to NPR 1,000,000, 30% up to NPR 2,000,000, and 36% above that. This is based on Finance Act 2083.',
+    answer: 'Rental income is included in your total taxable income and taxed at the same progressive rates as salary income: 1% (social security tax) on the first NPR 1,000,000, then 10% up to NPR 1,500,000, 20% up to NPR 2,500,000, 27% up to NPR 4,000,000, and 29% above that. This follows the FY 2083/84 schedule under Finance Act 2083.',
   },
   {
-    question: 'How do I calculate house rent tax?',
-    answer: 'To calculate house rent tax: (1) Determine your annual rental income, (2) Subtract any allowable deductions (property tax, insurance, repairs), (3) Apply the progressive tax rates to the taxable amount. This calculator does this automatically.',
+    question: 'How do I calculate rental income tax?',
+    answer: 'To calculate rental income tax: (1) Determine your annual rental income, (2) Subtract any allowable deductions (property tax, insurance, repairs), (3) Apply the progressive tax rates to the taxable amount. This calculator does this automatically.',
   },
   {
     question: 'Is rental income taxable in Nepal?',
@@ -29,7 +30,7 @@ const faqItems = [
   },
   {
     question: 'What is rental income TDS?',
-    answer: 'TDS (Tax Deducted at Source) on rent is a 5% withholding that applies when rent is paid by government bodies, companies, or other specified entities. The tenant deducts this amount and pays it to the government on your behalf.',
+    answer: 'TDS (Tax Deducted at Source) on rent is a 10% withholding (Section 88, Income Tax Act 2058) that applies when rent is paid by government bodies, companies, or other specified entities. The tenant deducts this amount and pays it to the government on your behalf. An individual paying rent to another individual is generally NOT required to withhold TDS — that case is covered by the municipal house rent tax in the House Rent Tax calculator.',
   },
   {
     question: 'Can I deduct property expenses from rental income?',
@@ -56,11 +57,11 @@ const faqItems = [
 const educationalContent = [
   {
     title: 'How is rental income taxed in Nepal?',
-    content: 'Rental income in Nepal is classified as "Income from House/Property" under Section 14 of the Income Tax Act 2058. For individual taxpayers, rental income is included in total taxable income and taxed at the same progressive rates as salary income. The current rates under Finance Act 2083 start at 1% for income up to NPR 500,000 and increase to 36% for income above NPR 2,000,000.',
+    content: 'Rental income in Nepal is classified as "Income from House/Property" under Section 14 of the Income Tax Act 2058. For individual taxpayers, rental income is included in total taxable income and taxed at the same progressive rates as salary income. The FY 2083/84 schedule under Finance Act 2083 starts at 1% (social security tax) on the first NPR 1,000,000 and rises to 29% for income above NPR 4,000,000.',
   },
   {
     title: 'How do I calculate rental income?',
-    answer: 'To calculate your rental income: (1) Multiply monthly rent by 12 for annual gross income, (2) Subtract any allowable deductions (property tax, insurance, repairs), (3) The remaining amount is your taxable rental income, (4) Apply progressive tax rates to determine tax liability. This calculator automates this process.',
+    content: 'To calculate your rental income: (1) Multiply monthly rent by 12 for annual gross income, (2) Subtract any allowable deductions (property tax, insurance, repairs), (3) The remaining amount is your taxable rental income, (4) Apply progressive tax rates to determine tax liability. This calculator automates this process.',
   },
   {
     title: 'What is taxable rental income?',
@@ -72,23 +73,22 @@ const educationalContent = [
   },
   {
     title: 'What is rental TDS?',
-    content: 'TDS (Tax Deducted at Source) on rent is a 5% withholding that applies when rent is paid by government bodies, companies, or other specified entities. The tenant deducts this amount and deposits it with the government. This is not an additional tax — it is a pre-payment against your tax liability.',
+    content: 'TDS (Tax Deducted at Source) on rent is a 10% withholding (Section 88, Income Tax Act 2058) that applies when rent is paid by government bodies, companies, or other specified entities. The tenant deducts this amount and deposits it with the government. This is not an additional tax — it is a pre-payment against your tax liability. Net TDS figures appear only as an indication of cash withheld; IRD treats the withheld amount as a final tax for individual landlords receiving rent from an entity.',
   },
   {
     title: 'Do landlords have to pay rental tax?',
-    answer: 'Yes, landlords in Nepal must pay income tax on rental income. The rental income is added to other income sources and taxed at progressive rates. Landlords must file annual tax returns declaring their rental income.',
+    content: 'Yes, landlords in Nepal must pay income tax on rental income. The rental income is added to other income sources and taxed at progressive rates. Landlords must file annual tax returns declaring their rental income.',
   },
 ];
 
 const fiscalYears = [
   { value: '2083/84', label: '2083/84 (2026/27)' },
-  { value: '2082/83', label: '2082/83 (2025/26)' },
 ];
 ---
 
 <BaseLayout
-  title="Nepal Rental Tax Calculator 2083/84 | SolutionsNepal"
-  description="Calculate rental income, taxable rent, applicable deductions, tax, TDS, and estimated net rental income in Nepal."
+  title="Rental Income Tax Calculator Nepal 2083/84 | SolutionsNepal"
+  description="Calculate taxable rent, deductions, tax, TDS and net rental income for landlords in Nepal."
   jsonLd={{
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -108,8 +108,8 @@ const fiscalYears = [
 
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">Nepal Rent & Rental Income Tax Calculator</h1>
-      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Estimate rental income, applicable tax, deductions, and your take-home rental income in Nepal.</p>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">Rental Income Tax Calculator Nepal</h1>
+      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Estimate the income tax on rent you receive as a landlord — taxable rent after deductions, the slab tax, and your net rental income.</p>
     </div>
 
     <!-- ============================================ -->
@@ -560,6 +560,13 @@ const fiscalYears = [
       <p>This calculator provides an estimate based on the information provided and applicable tax rules. Actual tax or rental-related charges may differ depending on your taxpayer status, property, location, deductions, and current government rules.</p>
       <p class="mt-1.5">Rental tax rules last verified: <strong>2026-08-19</strong> · Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Inland Revenue Department</a>, Income Tax Act 2058, Finance Act 2083</p>
       <p class="mt-1"><strong>Note:</strong> Deduction rules and TDS applicability need verification against current official IRD guidance.</p>
+    </div>
+
+    <!-- WHICH CALCULATOR -->
+    <div class="mt-6 p-4 rounded-lg text-sm" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color: var(--nk-text);">Which rent tax applies to you?</p>
+      <p>This page estimates the <strong>income tax</strong> on rental income when it is assessed under the income-tax system (for example, business letting or where rent is added to total income).</p>
+      <p class="mt-1.5">If you are an individual landlord renting to an individual, the flat <strong>municipal house rent tax</strong> (Ghar Bhada Kar, ~10% in Kathmandu) usually applies instead, and when a company pays your rent the <strong>10% TDS</strong> under Section 88 is the final tax. Use the <a class="underline hover:opacity-80" href="/nepal/finance/house-rent-tax" style="color:var(--nk-accent);">House Rent Tax Calculator</a> for that path.</p>
     </div>
 
     <!-- SEO CONTENT -->

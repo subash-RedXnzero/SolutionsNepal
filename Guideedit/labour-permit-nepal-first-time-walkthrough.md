@@ -6,51 +6,51 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 14, 2026
 readTime: 16 min read
-image: "/blog/photo-1568992687947-868a62a9f521.jpg"
+image: "/blog/photo-1568992687947-868a62a9f521.webp"
 tags: [Foreign Employment, Labour Permit, Shram Swikriti, FEIMS, DoFE, Nepal]
 relatedTools: [bs-to-ad, date-difference, foreign-exchange]
 headings:
   - id: what
-    text: What Is Shram Swikriti?
+    text: "What Is Shram Swikriti?"
     level: 2
   - id: documents
     text: "Before You Start: Documents You'll Need"
     level: 2
+  - id: documents-full
+    text: "Full Document Checklist"
+    level: 2
   - id: process
-    text: "Step-by-Step: Applying Online"
+    text: "Step-by-Step: Applying for Shram Swikriti Online"
     level: 2
   - id: fees
-    text: Shram Swikriti Fees (2026)
-    level: 2
-  - id: status
-    text: How to Check Your Status
-    level: 2
-  - id: documents-full
-    text: Full Document Checklist
+    text: "Shram Swikriti Fees (2026)"
     level: 2
   - id: insurance
-    text: Medical and Foreign-Employment Insurance
+    text: "Medical and Foreign-Employment Insurance"
     level: 2
   - id: payments
-    text: Welfare Fund and SSF Payments
+    text: "Welfare Fund and SSF Payments"
+    level: 2
+  - id: status
+    text: "How to Check Your Shram Swikriti Status"
     level: 2
   - id: reentry
-    text: Re-Entry and Renewal
+    text: "Re-Entry and Renewal"
     level: 2
   - id: visa-distinction
-    text: Shram Swikriti vs Visa and Work Permit
+    text: "Shram Swikriti vs Visa and Work Permit"
     level: 2
   - id: scams
-    text: How to Avoid Foreign-Employment Scams
+    text: "How to Avoid Foreign-Employment Scams"
     level: 2
   - id: renewals
-    text: A Note on Renewals
+    text: "A Note on Renewals"
     level: 2
   - id: mistakes
-    text: Common Mistakes First-Time Applicants Make
+    text: "Common Mistakes First-Time Applicants Make"
     level: 2
   - id: verify
-    text: Verify Before You Travel
+    text: "Verify Before You Travel"
     level: 2
 faqs:
   - q: Is Shram Swikriti mandatory for all Nepali workers going abroad?
@@ -76,7 +76,6 @@ faqs:
   - q: Can I apply without a manpower agency?
     a: "For certain direct-employer, government-to-government, or other permitted routes, yes. The required route depends on destination and job; verify the individual process in FEIMS."
 ---
-
 <h2 id="what">What Is Shram Swikriti?</h2>
 
 <strong>Shram Swikriti (श्रम स्वीकृति)</strong> is the labour approval issued by the Department of Foreign Employment (DoFE), under Nepal's Ministry of Labour, Employment and Social Security. It confirms that your employment contract has been reviewed, basic worker protections are in place, and you are cleared to travel for that specific job.

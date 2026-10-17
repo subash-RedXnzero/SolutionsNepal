@@ -117,48 +117,26 @@ function buildSilverPrice() {
 }
 
 /**
- * Get price history for a given period.
- * @param {'7d'|'30d'|'3m'|'1y'} period
+ * Price history for the trend chart.
+ * FENEGOSIDA publishes today + yesterday only, so the only honest series is
+ * those two real points. Never synthesize multi-day volatility — a fabricated
+ * chart would show fake drops/spikes on a page whose value is real prices.
+ * @param {'7d'|'30d'|'3m'|'1y'} period (accepted for API compatibility; the
+ * series is always the two published points)
  */
 export function getSilverPriceHistory(period = '7d') {
-  return generatePriceHistory(SILVER_MOCK.silver.pricePerTola, periodToDays(period), getVolatility(period));
-}
-
-function periodToDays(period) {
-  switch (period) {
-    case '7d': return 7;
-    case '30d': return 30;
-    case '3m': return 90;
-    case '1y': return 365;
-    default: return 7;
-  }
-}
-
-function getVolatility(period) {
-  switch (period) {
-    case '7d': return 40;
-    case '30d': return 60;
-    case '3m': return 100;
-    case '1y': return 150;
-    default: return 40;
-  }
-}
-
-function generatePriceHistory(basePrice, days, volatility) {
-  const history = [];
-  let price = basePrice - (volatility * days * 0.3);
-  for (let i = days; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const change = (Math.random() - 0.45) * volatility;
-    price = Math.max(price + change, basePrice * 0.88);
-    history.push({
-      date: d.toISOString().split('T')[0],
-      price: Math.round(price),
-    });
-  }
-  history[history.length - 1].price = basePrice;
-  return history;
+  const src = getDataSource();
+  const today = Math.round(src.silver.pricePerTola);
+  const yesterday = Math.round(src.silver.yesterdayPricePerTola);
+  const todayStr = getTodayStr();
+  const d = new Date(todayStr + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() - 1);
+  const yesterdayStr = d.toISOString().split('T')[0];
+  if (!yesterday) return [{ date: todayStr, price: today }];
+  return [
+    { date: yesterdayStr, price: yesterday },
+    { date: todayStr, price: today },
+  ];
 }
 
 /**

@@ -10,7 +10,7 @@ export const bluebookRenewalNepal2026DocumentsFeesOnlinePost = {
   authorCredential: 'Nepal transport and vehicle researchers',
   date: 'September 26, 2026',
   readTime: '13 min read',
-  image: '/blog/photo-1449965408869-eaa3f722e40d.jpg',
+  image: '/blog/photo-1449965408869-eaa3f722e40d.webp',
   tags: ['Bluebook Renewal Nepal', 'Vehicle Tax Nepal', 'DOTM', 'Nagarik App', 'Documents', 'Vehicles'],
   relatedTools: ['vehicle-tax-new', 'fuel-price', 'government-service-cost'],
   faqs: [

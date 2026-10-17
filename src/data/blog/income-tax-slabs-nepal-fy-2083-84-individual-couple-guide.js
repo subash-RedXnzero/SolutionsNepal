@@ -10,7 +10,7 @@ export const incomeTaxSlabsNepalFy208384IndividualCoupleGuidePost = {
   authorCredential: 'Nepal tax researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: '/blog/photo-1554224155-6726b3ff858f.jpg',
+  image: '/blog/photo-1554224155-6726b3ff858f.webp',
   tags: ['Income Tax Nepal', 'Salary Tax', 'IRD', 'FY 2083/84', 'Tax Slabs'],
   relatedTools: ['overtime-calculator', 'salary-checker', 'ssf-calculator'],
   faqs: [
@@ -28,7 +28,7 @@ export const incomeTaxSlabsNepalFy208384IndividualCoupleGuidePost = {
   ],
   sections: [
     { type: 'heading', level: 2, id: 'tldr', text: 'Quick Answer (TL;DR)' },
-    { type: 'paragraph', content: '<strong>FY 2083/84 uses one unified schedule for all individuals (no separate single/couple slabs, as of October 2026): Rs 10 lakh @1% → next 5L @10% → next 10L @20% → next 15L @27% → rest @29%.</strong> Taxable = <strong>gross − SSF/retirement deductions</strong>. <strong>SSF/pension contributors are exempt from the 1% band</strong> (pension income and sole-proprietorship income also excluded from the 1% band — commonly reported, confirm current IRD notice). Use <a href="/nepal/finance/salary-tax">Salary Tax calculator</a> for exact monthly TDS.' },
+    { type: 'paragraph', content: '<strong>FY 2083/84 uses one unified schedule for all individuals (no separate single/couple slabs, as of October 2026): Rs 10 lakh @1% → next 5L @10% → next 10L @20% → next 15L @27% → rest @29%.</strong> Taxable = <strong>gross − SSF/retirement deductions</strong>. <strong>SSF/pension contributors are exempt from the 1% band</strong> (pension income and sole-proprietorship income also excluded from the 1% band — commonly reported, confirm current IRD notice). Use <a href="/nepal/finance/salary-checker">Salary calculator</a> for exact monthly TDS.' },
     { type: 'heading', level: 2, id: 'slabs', text: 'FY 2083/84 Slabs — Unified Schedule' },
     { type: 'datatable', rows: [{ label: 'First Rs 1,000,000 (up to Rs 10 lakh)', value: '1% (SST — exempt if SSF/pension contributor; pension income and sole-proprietorship income also excluded from this band)' }, { label: 'Next Rs 500,000 (Rs 10L–15L)', value: '10%' }, { label: 'Next Rs 1,000,000 (Rs 15L–25L)', value: '20%' }, { label: 'Next Rs 1,500,000 (Rs 25L–40L)', value: '27%' }, { label: 'Above Rs 4,000,000', value: '29%' }, { label: 'No separate couple slab', value: 'the old single (Rs 5L) / couple (Rs 6L) first-band split no longer applies in FY 2083/84 (as of October 2026 — verify Finance Act 2083 on <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">ird.gov.np</a> before filing)' }] },
     { type: 'formula', code: 'Taxable income = Gross salary − SSF/EPF/CIT − approved insurance/retirement − allowable allowances\nAnnual tax = Σ (slab amount × slab rate)\nMonthly TDS = Annual tax ÷ 12' },
@@ -41,7 +41,7 @@ export const incomeTaxSlabsNepalFy208384IndividualCoupleGuidePost = {
     { type: 'heading', level: 2, id: 'mistakes', text: 'Common Mistakes' },
     { type: 'list', style: 'ul', items: ['Using the old single/couple slab (Rs 5L/6L first band, 30/36% top rates) — FY 2083/84 is unified (10L @1%, top rate 29%)', 'Forgetting Dashain bonus + overtime in gross — under-TDS means interest at filing', 'Claiming full insurance/CIT without caps — excess disallowed on assessment', 'Ignoring the SSF/pension 1% exemption (plus pension-income and sole-proprietorship exclusions) — exempt persons should not pay the first-band 1%'] },
     { type: 'heading', level: 2, id: 'sources', text: 'Official Sources & Final Note' },
-    { type: 'paragraph', content: 'Source: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a> — Income Tax Act 2058 + Finance Act 2083 (Economic Act 2083 information booklet) notices; slab figures as of October 2026. Slabs revise each Jestha budget — verify the current notice before payroll or filing.' },
+    { type: 'paragraph', content: 'Source: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a> — Income Tax Act 2058 + Finance Act 2083 (Economic Act 2083 information booklet) notices; current act texts also at <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Nepal Law Commission (lawcommission.gov.np)</a>. Slab figures as of October 2026. Slabs revise each Jestha budget — verify the current notice before payroll or filing.' },
     { type: 'paragraph', content: '<strong>Last updated: September 27, 2026. Figures rechecked as of October 2026.</strong> SolutionsNepal is an educational guide, not IRD.' },
   ],
 };

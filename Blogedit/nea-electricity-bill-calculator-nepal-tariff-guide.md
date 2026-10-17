@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal utilities and tariff researchers
 date: September 26, 2026
 readTime: 13 min read
-image: "/blog/photo-1754587113179-1865dcb6dae8.jpg"
+image: "/blog/photo-1754587113179-1865dcb6dae8.webp"
 tags: [NEA Electricity Bill, NEA Tariff Nepal, Electricity Bill Calculator Nepal, NEA 2026, Utilities, VAT]
 relatedTools: [electricity-bill, kukl-water-bill, cost-of-living, lpg-calculator]
 headings:
@@ -64,7 +64,6 @@ faqs:
   - q: What if my meter is 15A/30A?
     a: "Use the 15A or 30A service-charge column and the first-block energy rate for that capacity (15A first 20 = Rs 4.00, 30A = Rs 5.00, 60A = Rs 6.00). The 5A lifeline (Rs 0 for 0–20) does not apply to larger meters."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 FY 2083/84 (16 July 2026): NEA domestic single-phase tariff is <strong>progressive</strong> — Rs <strong>0–11 per unit</strong> across 6 blocks (<strong>21–30: Rs 6.50, 31–50: Rs 8.00, 51–250: Rs 9.50, 251+: Rs 11.00</strong>) plus <strong>one service charge</strong> by total units + meter capacity (5A/15A/30A/60A). <strong>5A ≤20 units = Rs 0 energy</strong> (Rs 30 charge only); if &gt;20 units those 20 are billed at <strong>Rs 3.00</strong>. <strong>Household VAT: first 50 units exempt, 5% on energy above 50</strong> (new from Shrawan 1, 2083).
@@ -132,7 +131,7 @@ Note: 50-unit math above is the 5A progressive illustration (first 20 at the Rs 
 - Check your NEA invoice — meter capacity is printed near the customer ID
 - Domestic single-phase is almost always 5A (standard house) or 15A (larger house); 30A/60A are less common for households
 
-<h2 id="pay-online">How to Check &amp; Pay Your NEA Bill Online</h2>
+<h2 id="pay-online">How to Check & Pay Your NEA Bill Online</h2>
 
 1. Open the NEA portal, Nagarik App → NEA, or eSewa/Khalti → Electricity/NEA
 2. Enter customer ID / SC number from the bill and select the meter/office
@@ -157,7 +156,7 @@ Note: 50-unit math above is the 5A progressive illustration (first 20 at the Rs 
 - 5% VAT on energy above 50 units only (household, FY 2083/84)
 - Total cross-checked with SolutionsNepal calculator before payment
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Source: Electricity Regulatory Commission (ERC) tariff sheet reproduced via Nepal Electricity Authority for FY 2083/84 — verify the live slab and service-charge matrix on <a href="https://nea.org.np" target="_blank" rel="noopener noreferrer">nea.org.np</a> before disputing a bill (matrix above is the commonly cited working table as of October 2026). The "5% VAT on energy above 50 units only, not the service charge" split follows the FY 2083/84 household VAT provision as commonly reported — confirm the VAT guideline line on your NEA invoice/notice, as VAT treatment is set per fiscal year.
 

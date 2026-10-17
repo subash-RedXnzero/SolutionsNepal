@@ -1,161 +1,284 @@
 ---
-title: How to Register a Company Online in Nepal (2026 CAMIS Guide)
-description: Step-by-step 2026 guide to company registration in Nepal via the OCR CAMIS portal. Fees, MOA/AOA, ward steps and compliance.
+title: "Register a Company Online in Nepal: CAMIS Step-by-Step"
+description: "Register a private limited company on the OCR CAMIS portal (camis.ocr.gov.np): fees, MOA/AOA, ward registration and compliance."
 category: Business
 author: SolutionsNepal Team
 authorCredential: Nepal business-registration researchers
 date: September 16, 2026
 readTime: 25 min read
-image: "/blog/photo-1454165804606-c3d57bc86b40.jpg"
+image: "/blog/photo-1454165804606-c3d57bc86b40.webp"
 tags: [Company Registration Nepal, CAMIS, OCR, Private Limited Company, MOA, AOA, Business]
 relatedTools: [business-registration-cost, break-even, online-selling-profit, freelancer-take-home]
 headings:
   - id: quick-answer
-    text: Quick Answer
+    text: "Quick Answer"
     level: 2
   - id: at-a-glance
-    text: Company Registration in Nepal at a Glance
+    text: "Company Registration in Nepal at a Glance"
     level: 2
   - id: what-is-pvt-ltd
-    text: What Is a Private Limited Company in Nepal?
+    text: "What Is a Private Limited Company in Nepal?"
     level: 2
   - id: why-register
-    text: Why Register a Pvt. Ltd. Company?
+    text: "Why Register a Pvt. Ltd. Company?"
     level: 2
   - id: structure-comparison
-    text: Private Company vs Other Business Structures
+    text: "Private Company vs Other Business Structures"
     level: 2
   - id: who-can-register
-    text: Who Can Register a Private Limited Company?
+    text: "Who Can Register a Private Limited Company?"
     level: 2
   - id: shareholders-directors
-    text: Shareholders and Directors
+    text: "Shareholders and Directors"
     level: 2
   - id: how-many
-    text: How Many Shareholders and Directors Are Required?
+    text: "How Many Shareholders and Directors Are Required?"
     level: 3
   - id: shareholder-vs-director
-    text: Shareholder vs Director
+    text: "Shareholder vs Director"
     level: 3
   - id: company-name
-    text: Choosing a Company Name
+    text: "Choosing a Company Name"
     level: 2
   - id: reserve-name
-    text: How to Choose and Reserve a Company Name in Nepal
+    text: "How to Choose and Reserve a Company Name in Nepal"
     level: 3
   - id: what-is-camis
-    text: What Is CAMIS?
+    text: "What Is CAMIS?"
     level: 2
   - id: documents
-    text: Documents Required
+    text: "Documents Required"
     level: 2
   - id: docs-incorporation
-    text: Documents Required for Incorporation
+    text: "Documents Required for Incorporation"
     level: 3
   - id: docs-later
-    text: Documents That May Be Required Later
+    text: "Documents That May Be Required Later"
     level: 3
   - id: moa
     text: "MOA: Memorandum of Association"
     level: 2
   - id: what-is-moa
-    text: What Is an MOA?
+    text: "What Is an MOA?"
     level: 3
   - id: aoa
     text: "AOA: Articles of Association"
     level: 2
   - id: what-is-aoa
-    text: What Is an AOA?
+    text: "What Is an AOA?"
     level: 3
   - id: drafting
-    text: MOA/AOA Drafting
+    text: "MOA/AOA Drafting"
     level: 2
   - id: share-capital
-    text: Share Capital Explained
+    text: "Share Capital Explained"
     level: 2
   - id: fees
-    text: Company Registration Fees in Nepal 2026
+    text: "Company Registration Fees in Nepal 2026"
     level: 2
   - id: reserve-name-steps
-    text: How to Reserve a Company Name Online
+    text: "How to Reserve a Company Name Online"
     level: 2
+  - id: reserve-step1
+    text: "Step 1 — Access the Official CAMIS Portal"
+    level: 3
+  - id: reserve-step2
+    text: "Step 2 — Create/Login to an Account"
+    level: 3
+  - id: reserve-step3
+    text: "Step 3 — Enter Your Proposed Company Name"
+    level: 3
+  - id: reserve-step4
+    text: "Step 4 — Submit the Name Reservation Request"
+    level: 3
+  - id: reserve-step5
+    text: "Step 5 — Wait for OCR Review"
+    level: 3
+  - id: reserve-step6
+    text: "Step 6 — Respond to Rejection/Correction if Required"
+    level: 3
+  - id: reserve-step7
+    text: "Step 7 — Proceed with the Incorporation Application"
+    level: 3
   - id: workflow
-    text: How to Register a Company Online Through CAMIS
+    text: "How to Register a Company Online Through CAMIS"
     level: 2
   - id: step-by-step
-    text: Step-by-Step CAMIS Application
+    text: "Step-by-Step CAMIS Application"
     level: 2
+  - id: step-1
+    text: "Step 1 — Prepare Founder Information"
+    level: 3
+  - id: step-2
+    text: "Step 2 — Prepare Your Company Name"
+    level: 3
+  - id: step-3
+    text: "Step 3 — Prepare Capital/Share Allocation"
+    level: 3
+  - id: step-4
+    text: "Step 4 — Prepare the MOA"
+    level: 3
+  - id: step-5
+    text: "Step 5 — Prepare the AOA"
+    level: 3
+  - id: step-6
+    text: "Step 6 — Gather Identity Documents"
+    level: 3
+  - id: step-7
+    text: "Step 7 — Create the CAMIS Application"
+    level: 3
+  - id: step-8
+    text: "Step 8 — Enter Company Information"
+    level: 3
+  - id: step-9
+    text: "Step 9 — Enter Shareholder Information"
+    level: 3
+  - id: step-10
+    text: "Step 10 — Enter Director Information"
+    level: 3
+  - id: step-11
+    text: "Step 11 — Enter Registered Office Information"
+    level: 3
+  - id: step-12
+    text: "Step 12 — Upload Required Documents"
+    level: 3
+  - id: step-13
+    text: "Step 13 — Review All Information"
+    level: 3
+  - id: step-14
+    text: "Step 14 — Submit the Application"
+    level: 3
+  - id: step-15
+    text: "Step 15 — Monitor Application Status"
+    level: 3
+  - id: step-16
+    text: "Step 16 — Correct Issues if OCR Requests Changes"
+    level: 3
+  - id: step-17
+    text: "Step 17 — Pay Applicable Fees"
+    level: 3
+  - id: step-18
+    text: "Step 18 — Complete Incorporation"
+    level: 3
+  - id: step-19
+    text: "Step 19 — Obtain Your Company Registration Certificate"
+    level: 3
   - id: after-submit
-    text: What Happens After Submitting the Application?
+    text: "What Happens After Submitting the Application?"
     level: 2
   - id: certificate
-    text: Company Registration Certificate
+    text: "Company Registration Certificate"
     level: 2
   - id: pan-after
-    text: PAN Registration After Incorporation
+    text: "PAN Registration After Incorporation"
     level: 2
   - id: vat
-    text: VAT Registration
+    text: "VAT Registration"
     level: 2
   - id: ward-registration
-    text: Ward Business Registration
+    text: "Ward Business Registration"
     level: 2
+  - id: ward-after
+    text: "Ward Registration After Company Incorporation"
+    level: 3
   - id: industry-registration
-    text: Industry Registration
+    text: "Industry Registration"
     level: 2
   - id: sector-licenses
-    text: Sector-Specific Licenses
+    text: "Sector-Specific Licenses"
     level: 2
   - id: bank-account
-    text: Opening a Company Bank Account
+    text: "Opening a Company Bank Account"
     level: 2
+  - id: bank-how
+    text: "How to Open a Company Bank Account in Nepal"
+    level: 3
   - id: recordkeeping
-    text: Accounting and Recordkeeping
+    text: "Accounting and Recordkeeping"
     level: 2
   - id: annual-compliance
-    text: Annual Company Compliance
+    text: "Annual Company Compliance"
     level: 2
+  - id: annual-private
+    text: "Annual Compliance for a Private Limited Company in Nepal"
+    level: 3
   - id: audit
-    text: Audit Requirements
+    text: "Audit Requirements"
     level: 2
   - id: changes-after
-    text: Changes After Incorporation
+    text: "Changes After Incorporation"
     level: 2
   - id: name-change
-    text: Company Name Change
+    text: "Company Name Change"
     level: 2
   - id: foreign
-    text: Foreign Company / Foreign Investor Registration
+    text: "Foreign Company / Foreign Investor Registration"
     level: 2
+  - id: foreign-can
+    text: "Can Foreigners Register a Company in Nepal?"
+    level: 3
   - id: startup-it
-    text: Startup & IT Company Registration
+    text: "Startup & IT Company Registration"
     level: 2
+  - id: startup-it-how
+    text: "Registering a Startup or IT Company in Nepal"
+    level: 3
   - id: camis-problems
-    text: Common CAMIS Problems
+    text: "Common CAMIS Problems"
     level: 2
   - id: mistakes
-    text: Common Registration Mistakes
+    text: "Common Registration Mistakes"
     level: 2
   - id: total-cost
-    text: Total Cost of Setting Up a Company
+    text: "Total Cost of Setting Up a Company"
     level: 2
+  - id: total-cost-how
+    text: "How Much Money Do You Need to Register a Company in Nepal?"
+    level: 3
   - id: how-long
-    text: How Long Does Registration Take?
+    text: "How Long Does Registration Take?"
     level: 2
+  - id: how-long-detail
+    text: "How Long Does Company Registration Take in Nepal?"
+    level: 3
   - id: examples
-    text: Practical Examples
+    text: "Practical Examples"
     level: 2
+  - id: example-1
+    text: "Example 1 — Two founders starting an IT company"
+    level: 3
+  - id: example-2
+    text: "Example 2 — Solo founder starting a consulting company"
+    level: 3
+  - id: example-3
+    text: "Example 3 — Small trading company"
+    level: 3
+  - id: example-4
+    text: "Example 4 — E-commerce company"
+    level: 3
+  - id: example-5
+    text: "Example 5 — Foreign investor entering Nepal"
+    level: 3
   - id: checklist
-    text: Company Registration Checklist
+    text: "Company Registration Checklist"
     level: 2
+  - id: checklist-before
+    text: "Before Applying"
+    level: 3
+  - id: checklist-camis
+    text: "CAMIS Application"
+    level: 3
+  - id: checklist-after
+    text: "After Incorporation"
+    level: 3
   - id: official-sources
-    text: Official Sources
+    text: "Official Sources"
     level: 2
   - id: related-guides
-    text: Related SolutionsNepal Guides
+    text: "Related SolutionsNepal Guides"
     level: 2
   - id: final-takeaway
-    text: Final Takeaway
+    text: "Final Takeaway"
     level: 2
 faqs:
   - q: How can I register a company online in Nepal?
@@ -239,7 +362,6 @@ faqs:
   - q: Can an online business register as a private company?
     a: "Yes — e-commerce and online-selling businesses can and commonly do register as private limited companies, following the same process described throughout this guide."
 ---
-
 Registering a private limited company in Nepal today runs almost entirely through the <strong>Office of the Company Registrar’s (OCR) CAMIS portal</strong> — no more standing in line with a stack of paper. But “I registered on CAMIS” is only the first of several steps a founder actually needs to take before a business is fully operational and compliant.
 
 This guide walks through the complete process: choosing a structure, reserving a name, preparing your MOA and AOA, submitting your CAMIS application, paying OCR’s fee, and then — critically — everything that comes <em>after</em> your Company Registration Certificate: PAN, VAT (if applicable), Ward registration, sector licenses, a bank account, and ongoing annual compliance.
@@ -531,23 +653,23 @@ Once your name is approved, it’s reserved for a limited window (commonly cited
 
 Here’s the overall workflow, from decision to operating company:
 
-1. **Choose business structure**
-2. **Select and reserve company name**
-3. **Determine share capital and ownership structure**
-4. **Prepare MOA & AOA**
-5. **Prepare founder/director information and documents**
-6. **Create the CAMIS incorporation application**
-7. **Upload/submit supporting documents**
-8. **OCR review**
-9. **Make corrections if OCR requests them**
-10. **Pay the applicable OCR registration fee**
-11. **Company approval/incorporation**
-12. **Receive Company Registration Certificate**
-13. **PAN registration with IRD**
-14. **Open a company bank account**
-15. **Ward/local registration, where applicable**
-16. **Industry/sector registrations, where applicable**
-17. **Begin operations and ongoing compliance**
+1. <strong>Choose business structure</strong>
+2. <strong>Select and reserve company name</strong>
+3. <strong>Determine share capital and ownership structure</strong>
+4. <strong>Prepare MOA & AOA</strong>
+5. <strong>Prepare founder/director information and documents</strong>
+6. <strong>Create the CAMIS incorporation application</strong>
+7. <strong>Upload/submit supporting documents</strong>
+8. <strong>OCR review</strong>
+9. <strong>Make corrections if OCR requests them</strong>
+10. <strong>Pay the applicable OCR registration fee</strong>
+11. <strong>Company approval/incorporation</strong>
+12. <strong>Receive Company Registration Certificate</strong>
+13. <strong>PAN registration with IRD</strong>
+14. <strong>Open a company bank account</strong>
+15. <strong>Ward/local registration, where applicable</strong>
+16. <strong>Industry/sector registrations, where applicable</strong>
+17. <strong>Begin operations and ongoing compliance</strong>
 
 <h2 id="step-by-step">Step-by-Step CAMIS Application</h2>
 
@@ -808,7 +930,7 @@ Key elements of the framework, based on current reporting:
 
 > **Do not assume:** “Foreigners can simply register a company online through CAMIS.” This oversimplifies a process that involves a separate regulatory approval step, minimum investment compliance, sector eligibility checks, and NRB coordination — foreign investors and their advisors should verify the complete, current process directly with the Department of Industry and Nepal Rastra Bank, ideally with qualified legal counsel, before committing to a structure or timeline.
 
-<h2 id="startup-it">Startup &amp; IT Company Registration</h2>
+<h2 id="startup-it">Startup & IT Company Registration</h2>
 
 <h3 id="startup-it-how">Registering a Startup or IT Company in Nepal</h3>
 

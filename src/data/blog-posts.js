@@ -18,7 +18,6 @@ import { canForeignersBuyPropertyNepalLegalGuidePost } from './blog/can-foreigne
 import { companyRegistrationOnlineNepalGuidePost } from './blog/company-registration-online-nepal-guide.js';
 import { costOfLivingKathmanduVsSmallerCitiesNepalPost } from './blog/cost-of-living-kathmandu-vs-smaller-cities-nepal.js';
 import { dollarCardNepal500LimitBanksDocumentsGuidePost } from './blog/dollar-card-nepal-500-limit-banks-documents-guide.js';
-import { drivingLicenseTrialNepalWrittenTestTipsGuidePost } from './blog/driving-license-trial-nepal-written-test-tips-guide.js';
 import { ePassportOnlineApplicationNepalGuidePost } from './blog/e-passport-online-application-nepal-guide.js';
 import { embossedNumberPlateOnlineApplicationNepalGuidePost } from './blog/embossed-number-plate-online-application-nepal-guide.js';
 import { epfCitVsSsfNepalWhichRetirementSchemeGuidePost } from './blog/epf-cit-vs-ssf-nepal-which-retirement-scheme-guide.js';
@@ -44,17 +43,13 @@ import { landRegistrationFeesMalpotNepalGuidePost } from './blog/land-registrati
 import { lpgGasCostNepalCylinderDurationCalculatorGuidePost } from './blog/lpg-gas-cost-nepal-cylinder-duration-calculator-guide.js';
 import { marriageRegistrationNepalWardCourtDocumentsGuidePost } from './blog/marriage-registration-nepal-ward-court-documents-guide.js';
 import { mofaDocumentAttestationNepalOnlineGuidePost } from './blog/mofa-document-attestation-nepal-online-guide.js';
-import { nagarikAppNepalRegistrationDigitalIdGuidePost } from './blog/nagarik-app-nepal-registration-digital-id-guide.js';
 import { nagarikAppNepalRegistrationDigitalServicesGuidePost } from './blog/nagarik-app-nepal-registration-digital-services-guide.js';
 import { nataPramanitRelationshipCertificateNepalWardGuidePost } from './blog/nata-pramanit-relationship-certificate-nepal-ward-guide.js';
-import { nationalIdCardNepalStatusCheckGuidePost } from './blog/national-id-card-nepal-status-check-guide.js';
-import { nationalIdCardNepalWhoNeedsOneNowPost } from './blog/national-id-card-nepal-who-needs-one-now.js';
 import { nationalIdCardOnlineRegistrationNepalGuidePost } from './blog/national-id-card-online-registration-nepal-guide.js';
 import { neaElectricityBillCalculatorNepalTariffGuidePost } from './blog/nea-electricity-bill-calculator-nepal-tariff-guide.js';
 import { nebGpaCalculatorNepalClass1112PercentageGuidePost } from './blog/neb-gpa-calculator-nepal-class-11-12-percentage-guide.js';
 import { nepalCitizenshipCertificateDocumentsByCasePost } from './blog/nepal-citizenship-certificate-documents-by-case.js';
 import { nepalDrivingLicenseTrialDateRouteGuidePost } from './blog/nepal-driving-license-trial-date-route-guide.js';
-import { nepalDrivingLicenseTrialFeesRejectionsPost } from './blog/nepal-driving-license-trial-fees-rejections.js';
 import { nepalOnlineDrivingLicenseEdlvrsPortalGuidePost } from './blog/nepal-online-driving-license-edlvrs-portal-guide.js';
 import { nepalPoliceClearanceCertificateOnlinePccGuidePost } from './blog/nepal-police-clearance-certificate-online-pcc-guide.js';
 import { nepalTrafficFinesCurrentRatesAndHowToPayPost } from './blog/nepal-traffic-fines-current-rates-and-how-to-pay.js';
@@ -66,23 +61,22 @@ import { openNepaliBankAccountOnlineEkycVkycGuidePost } from './blog/open-nepali
 import { panVatOnlineRegistrationNepalGuidePost } from './blog/pan-vat-online-registration-nepal-guide.js';
 import { personalPanCardOnlineNepalRegistrationGuidePost } from './blog/personal-pan-card-online-nepal-registration-guide.js';
 import { rajinamaGiftDeedNepalLandTransferProcessFeesPost } from './blog/rajinama-gift-deed-nepal-land-transfer-process-fees.js';
-import { registerCompanyInNepalOnlineCamisGuidePost } from './blog/register-company-in-nepal-online-camis-guide.js';
-import { registerPrivateLimitedCompanyOnlineNepalGuidePost } from './blog/register-private-limited-company-online-nepal-guide.js';
 import { salarySlipNepalComponentsGrossNetExplainedPost } from './blog/salary-slip-nepal-components-gross-net-explained.js';
 import { seeGpaCalculatorNepalGradingPercentageGuidePost } from './blog/see-gpa-calculator-nepal-grading-percentage-guide.js';
 import { socialSecurityAllowanceSeniorCitizenRatesNepalPost } from './blog/social-security-allowance-senior-citizen-rates-nepal.js';
-import { socialSecurityFundNepalCheckingBalancePost } from './blog/social-security-fund-nepal-checking-balance.js';
 import { ssfBalanceCheckNepalOnlinePortalGuidePost } from './blog/ssf-balance-check-nepal-online-portal-guide.js';
-import { ssfContributionNepal1120PercentBenefitsGuidePost } from './blog/ssf-contribution-nepal-11-20-percent-benefits-guide.js';
 import { taxOnRemittanceNepalIsRemittanceTaxablePost } from './blog/tax-on-remittance-nepal-is-remittance-taxable.js';
 import { tdsRatesNepal2026GuidePost } from './blog/tds-rates-nepal-2026-guide.js';
 import { transferringVehicleOwnershipNepalNamsariPost } from './blog/transferring-vehicle-ownership-nepal-namsari.js';
 import { understandingLoanInterestPost } from './blog/understanding-loan-interest.js';
 import { vatFilingNepalMonthlyReturn25thGuidePost } from './blog/vat-filing-nepal-monthly-return-25th-guide.js';
-import { vehicleOwnershipTransferNepalBluebookNamsariGuidePost } from './blog/vehicle-ownership-transfer-nepal-bluebook-namsari-guide.js';
 import { vehicleTaxPaymentNepalProvinceOnlineGuidePost } from './blog/vehicle-tax-payment-nepal-province-online-guide.js';
 import { voterIdRegistrationNepalOnlineGuidePost } from './blog/voter-id-registration-nepal-online-guide.js';
 import { whatHappensChequeBouncesNepalLawGuidePost } from './blog/what-happens-cheque-bounces-nepal-law-guide.js';
+import { ntcFiberPriceList2026Post } from './blog/ntc-fiber-price-list-2026.js';
+import { cyberBureauComplaintNepalPost } from './blog/cyber-bureau-complaint-nepal.js';
+import { bestMobileUnder20000NepalPost } from './blog/best-mobile-under-20000-nepal.js';
+import { bestScootersUnder3LakhNepalPost } from './blog/best-scooters-under-3-lakh-nepal.js';
 
 export const blogPosts = [
   advanceTaxNepalInstallmentsDueDatesInterestGuidePost,
@@ -99,7 +93,6 @@ export const blogPosts = [
   companyRegistrationOnlineNepalGuidePost,
   costOfLivingKathmanduVsSmallerCitiesNepalPost,
   dollarCardNepal500LimitBanksDocumentsGuidePost,
-  drivingLicenseTrialNepalWrittenTestTipsGuidePost,
   ePassportOnlineApplicationNepalGuidePost,
   embossedNumberPlateOnlineApplicationNepalGuidePost,
   epfCitVsSsfNepalWhichRetirementSchemeGuidePost,
@@ -125,17 +118,13 @@ export const blogPosts = [
   lpgGasCostNepalCylinderDurationCalculatorGuidePost,
   marriageRegistrationNepalWardCourtDocumentsGuidePost,
   mofaDocumentAttestationNepalOnlineGuidePost,
-  nagarikAppNepalRegistrationDigitalIdGuidePost,
   nagarikAppNepalRegistrationDigitalServicesGuidePost,
   nataPramanitRelationshipCertificateNepalWardGuidePost,
-  nationalIdCardNepalStatusCheckGuidePost,
-  nationalIdCardNepalWhoNeedsOneNowPost,
   nationalIdCardOnlineRegistrationNepalGuidePost,
   neaElectricityBillCalculatorNepalTariffGuidePost,
   nebGpaCalculatorNepalClass1112PercentageGuidePost,
   nepalCitizenshipCertificateDocumentsByCasePost,
   nepalDrivingLicenseTrialDateRouteGuidePost,
-  nepalDrivingLicenseTrialFeesRejectionsPost,
   nepalOnlineDrivingLicenseEdlvrsPortalGuidePost,
   nepalPoliceClearanceCertificateOnlinePccGuidePost,
   nepalTrafficFinesCurrentRatesAndHowToPayPost,
@@ -147,23 +136,22 @@ export const blogPosts = [
   panVatOnlineRegistrationNepalGuidePost,
   personalPanCardOnlineNepalRegistrationGuidePost,
   rajinamaGiftDeedNepalLandTransferProcessFeesPost,
-  registerCompanyInNepalOnlineCamisGuidePost,
-  registerPrivateLimitedCompanyOnlineNepalGuidePost,
   salarySlipNepalComponentsGrossNetExplainedPost,
   seeGpaCalculatorNepalGradingPercentageGuidePost,
   socialSecurityAllowanceSeniorCitizenRatesNepalPost,
-  socialSecurityFundNepalCheckingBalancePost,
   ssfBalanceCheckNepalOnlinePortalGuidePost,
-  ssfContributionNepal1120PercentBenefitsGuidePost,
   taxOnRemittanceNepalIsRemittanceTaxablePost,
   tdsRatesNepal2026GuidePost,
   transferringVehicleOwnershipNepalNamsariPost,
   understandingLoanInterestPost,
   vatFilingNepalMonthlyReturn25thGuidePost,
-  vehicleOwnershipTransferNepalBluebookNamsariGuidePost,
   vehicleTaxPaymentNepalProvinceOnlineGuidePost,
   voterIdRegistrationNepalOnlineGuidePost,
   whatHappensChequeBouncesNepalLawGuidePost,
+  ntcFiberPriceList2026Post,
+  cyberBureauComplaintNepalPost,
+  bestMobileUnder20000NepalPost,
+  bestScootersUnder3LakhNepalPost,
 ];
 
 export function getPostBySlug(slug) {

@@ -6,39 +6,39 @@ author: SolutionsNepal Team
 authorCredential: Nepal documentation researchers
 date: September 10, 2026
 readTime: 11 min read
-image: "/blog/photo-1568992687947-868a62a9f521.jpg"
+image: "/blog/photo-1568992687947-868a62a9f521.webp"
 tags: [NOC, Study Abroad, Documents, Nepal, Status]
 relatedTools: [bs-to-ad, ad-to-bs, date-difference]
 headings:
   - id: what
-    text: What Is the NOC?
+    text: "What Is the NOC?"
     level: 2
   - id: who
-    text: Who Needs an NOC?
+    text: "Who Needs an NOC?"
     level: 2
   - id: fees
-    text: NOC Fee and Processing Time (2026)
+    text: "NOC Fee and Processing Time (2026)"
     level: 2
   - id: documents
-    text: Documents Required
+    text: "Documents Required"
     level: 2
   - id: process
-    text: How to Apply for NOC Online
+    text: "Step-by-Step: How to Apply for NOC Online"
     level: 2
   - id: status
-    text: How to Check Your NOC Application Status
+    text: "How to Check Your NOC Application Status"
     level: 2
   - id: banking
-    text: The NRB Banking Rule You Should Know
+    text: "The NRB Banking Rule You Should Know Before You Transfer Fees"
     level: 2
   - id: validity
     text: "NOC Validity: What Trips Students Up"
     level: 2
   - id: mistakes
-    text: Common Mistakes That Delay or Reject Applications
+    text: "Common Mistakes That Delay or Reject Applications"
     level: 2
   - id: timeline
-    text: Suggested Timeline
+    text: "Suggested Timeline"
     level: 2
 faqs:
   - q: Is the NOC mandatory for all Nepali students studying abroad?
@@ -56,7 +56,6 @@ faqs:
   - q: What if my application gets rejected on the portal?
     a: The portal states the specific reason. Fix only that issue and resubmit rather than changing unrelated details.
 ---
-
 <h2 id="what">What Is the NOC?</h2>
 
 The NOC — officially the Foreign Study Approval Letter — is a government document issued by Nepal's Ministry of Education, Science and Technology (MoEST) through its Foreign Study Permit Branch. It confirms that the Government of Nepal has no objection to you studying at a specific institution in a specific country and permits you to use Nepali banks to legally send tuition and living expenses abroad.

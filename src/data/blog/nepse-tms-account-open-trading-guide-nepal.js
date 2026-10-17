@@ -10,7 +10,7 @@ export const nepseTmsAccountOpenTradingGuideNepalPost = {
   authorCredential: 'Nepal capital-market researchers',
   date: 'September 27, 2026',
   readTime: '10 min read',
-  image: '/blog/photo-1551288049-bebda4e38f71.jpg',
+  image: '/blog/photo-1551288049-bebda4e38f71.webp',
   tags: ['NEPSE', 'TMS Nepal', 'Share Market', 'Meroshare', 'DEMAT', 'Broker'],
   relatedTools: ['nepse-profit-loss', 'sip-calculator', 'emi-calculator'],
   faqs: [

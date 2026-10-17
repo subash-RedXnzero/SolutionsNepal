@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal property and land researchers
 date: September 27, 2026
 readTime: 12 min read
-image: "/blog/photo-1568992687947-868a62a9f521.jpg"
+image: "/blog/photo-1568992687947-868a62a9f521.webp"
 tags: [Rajinama Nepal, Gift Deed Nepal, Bakaspapatra, Lalpurja Transfer, Malpot, Property Nepal]
 relatedTools: [land-registration, property-registration-cost, ropani-to-aana]
 headings:
@@ -62,7 +62,6 @@ faqs:
   - q: What is dakhil kharej?
     a: "After the deed is passed (registration), dakhil kharej (namsari) is the record-update that strikes the old owner and writes the new owner into the field-book/shresta and issues a fresh Lalpurja. Cost is commonly reported as nil/minimal after a passed deed and ~Rs 10 for late inheritance filings — confirm the current fee head at your Malpot, as dakhil-kharej fee practice varies. You are not the recorded owner until this second step is done."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 <strong>Rajinama = registered sale deed at Malpot</strong> — the only way immovable ownership legally moves (<a href="https://lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Civil Code Sec 513 — lawcommission.gov.np</a>). Bring <strong>Lalpurja + citizenship (buyer & seller) + kitta/map + malpot tiro rasid + PAN (commonly requested — confirm at your office)</strong>. <strong>Gift deed (bakaspatra)</strong> to close family gets <strong>concessional stamp/CGT treatment (confirm exact heads at Malpot)</strong>; <strong>inheritance</strong> uses <strong>death + nata pramanit + heir consent</strong>. After the deed is passed, you still need <strong>dakhil kharej</strong> into your name for the new Lalpurja — that second step is what makes you the recorded owner.
@@ -112,7 +111,7 @@ Death-driven transfer uses <strong>death registration + nata pramanit + heir con
 
 > **Real closing:** You are not the recorded owner until the new Lalpurja in your name is in hand. A passed deed without dakhil kharej will block your next sale, mortgage or compensation claim. Do it at purchase time — fixing it years later when the seller is abroad or deceased is painful.
 
-<h2 id="fees-taxes">Fees &amp; Taxes</h2>
+<h2 id="fees-taxes">Fees & Taxes</h2>
 
 - **Registration fee (buyer, at deed pass)** — Province rate on higher of deed price vs government minimum valuation — Bagmati tiers commonly cited as 5.3%/4.8%/3% (unconfirmed planning figures as of October 2026 — confirm at Malpot; see dedicated cost guide + counter schedule)
 - **Gift to close family** — Concessional stamp; seller CGT generally reported as waived with nata proof — confirm the exact concession head at Malpot
@@ -137,7 +136,7 @@ Death-driven transfer uses <strong>death registration + nata pramanit + heir con
 - Parties + 2 witnesses + POA where needed appear in person
 - Deed passed → dakhil kharej → new Lalpurja in buyer/new-owner name collected and scanned
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
 Sources: <a href="https://lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Muluki Civil Code 2074 Sec 513 (lawcommission.gov.np)</a>, Land Revenue Act 2034, DoLMA / Malpot Karyalaya (now Bhumi Prashasan Karyalaya) charters, and ward procedure under Local Government Operation Act 2074. Tax rates follow the federal Finance Act and province Economic Acts — confirm the current schedule at your Malpot.
 

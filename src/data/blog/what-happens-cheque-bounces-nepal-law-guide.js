@@ -10,7 +10,7 @@ export const whatHappensChequeBouncesNepalLawGuidePost = {
   authorCredential: 'Nepal legal and finance researchers',
   date: 'September 10, 2026',
   readTime: '14 min read',
-  image: '/blog/photo-1763872867598-b1b5f769d7e3.jpg',
+  image: '/blog/photo-1763872867598-b1b5f769d7e3.webp',
   tags: ['Cheque Bounce', 'Banking Law', 'Legal Remedies', 'Finance', 'Nepal'],
   relatedTools: ['nepali-number-to-words', 'emi-calculator'],
   faqs: [
@@ -82,7 +82,7 @@ export const whatHappensChequeBouncesNepalLawGuidePost = {
     { type: 'heading', level: 2, id: 'mistakes', text: 'Common Mistakes to Avoid' },
     { type: 'list', style: 'ul', items: ['Ignoring the bank\'s stated dishonour reason', 'Losing the original cheque or return memo', 'Waiting until a limitation deadline is close', 'Relying only on verbal promises or informal settlement', 'Assuming every bounced cheque has the same legal consequence', 'Confusing blacklisting with criminal conviction', 'Assuming repayment automatically ends every proceeding', 'Using outdated legal summaries or sending an inaccurate legal notice', 'Publishing accusations publicly instead of using proper legal channels'] },
     { type: 'heading', level: 2, id: 'sources', text: 'Official Legal References' },
-    { type: 'list', style: 'ul', items: ['Negotiable Instruments Act, 2034 — cheque and dishonour provisions', 'Banking Offence and Punishment Act, 2064 — banking offences and penalties', 'Banking Offence and Punishment (Second Amendment) Act, 2082 and current amendments', 'Limitation Act, 2031 and current limitation provisions', 'Nepal Rastra Bank directives and circulars on banking and blacklist procedures', 'Supreme Court of Nepal decisions on cheque-dishonour limitation and procedure', 'Official Nepal Gazette and government legal publications'] },
+    { type: 'list', style: 'ul', items: ['Negotiable Instruments Act, 2034 — cheque and dishonour provisions', 'Banking Offence and Punishment Act, 2064 — banking offences and penalties', 'Banking Offence and Punishment (Second Amendment) Act, 2082 and current amendments', 'Limitation Act, 2031 and current limitation provisions', 'Nepal Rastra Bank directives and circulars on banking and blacklist procedures', 'Supreme Court of Nepal decisions on cheque-dishonour limitation and procedure', 'Official Nepal Gazette and government legal publications', 'Where to read them: current act texts at <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Nepal Law Commission (lawcommission.gov.np)</a> · gazette notices at <a href="https://www.dop.gov.np" target="_blank" rel="noopener noreferrer">Department of Printing (dop.gov.np)</a> · NRB directives at <a href="https://www.nrb.org.np" target="_blank" rel="noopener noreferrer">nrb.org.np</a>'] },
     { type: 'callout', style: 'accent', bold: 'Legal disclaimer:', content: 'This article is for general informational purposes and does not constitute legal advice. Cheque dishonour cases depend on facts, current legislation, banking rules, procedure, and court interpretation. Verify the current law and consult a qualified Nepalese lawyer for a significant or disputed transaction.' },
   ],
 };

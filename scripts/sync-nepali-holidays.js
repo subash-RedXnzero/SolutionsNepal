@@ -231,6 +231,12 @@ async function main() {
 
     try {
       const data = await fetchYear(year);
+      // Guard: aggregateYear() converts failed months to empty placeholders
+      // instead of throwing, so a total API outage would otherwise overwrite
+      // a good cached year with empty data. Refuse to save in that case.
+      if (!data.months.some((m) => m.days.length > 0)) {
+        throw new Error('all 12 months returned no day data');
+      }
       saveYear(year, data);
       successCount++;
     } catch (err) {
@@ -244,7 +250,14 @@ async function main() {
   console.log('═'.repeat(50));
 
   if (failCount > 0 && successCount === 0) {
-    process.exit(1);
+    // Fail-soft by default: builds (prebuild/predev) must never die because
+    // one optional upstream is unreachable — the shipped snapshot files stay
+    // as fallback and the edge cron re-syncs at runtime. Pass --strict to
+    // opt back into a non-zero exit (e.g. for a dedicated CI check).
+    if (process.argv.includes('--strict')) {
+      process.exit(1);
+    }
+    console.error('⚠ Calendar sync failed entirely — keeping existing snapshot files (non-fatal).');
   }
 }
 

@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal finance and cost-of-living researchers
 date: September 10, 2026
 readTime: 15 min read
-image: "/blog/photo-1658437711216-1b55fd9ae096.jpg"
+image: "/blog/photo-1658437711216-1b55fd9ae096.webp"
 tags: [Cost of Living, Kathmandu, Pokhara, Chitwan, Butwal, Nepal]
 relatedTools: [salary-checker, cost-of-living, emi-calculator, electricity-bill, sip-calculator]
 headings:
@@ -14,43 +14,43 @@ headings:
     text: "Quick Answer: How Much Does It Cost to Live in Kathmandu?"
     level: 2
   - id: comparison
-    text: Kathmandu vs Pokhara vs Chitwan vs Butwal
+    text: "Kathmandu vs Pokhara vs Chitwan vs Butwal"
     level: 2
   - id: rent
     text: "Rent: Kathmandu vs Smaller Cities"
     level: 2
   - id: food
-    text: Food and Grocery Costs
+    text: "Food and Grocery Costs"
     level: 2
   - id: transport
-    text: Transportation Costs
+    text: "Transportation Costs"
     level: 2
   - id: utilities
-    text: Utilities and Internet
+    text: "Utilities and Internet"
     level: 2
   - id: examples
-    text: Monthly Expense Examples
+    text: "Monthly Expense Examples"
     level: 2
   - id: salary
-    text: How Much Salary Do You Need?
+    text: "How Much Salary Do You Need?"
     level: 2
   - id: city-choice
     text: "Kathmandu vs Smaller Cities: Where Is Better?"
     level: 2
   - id: hidden-costs
-    text: Hidden Costs People Forget
+    text: "Hidden Costs People Forget"
     level: 2
   - id: reduce
-    text: How to Reduce Living Costs in Kathmandu
+    text: "How to Reduce Living Costs in Kathmandu"
     level: 2
   - id: budget
-    text: How to Build a Monthly Budget
+    text: "How to Build a Monthly Budget"
     level: 2
   - id: verdict
-    text: Final Verdict
+    text: "Kathmandu vs Pokhara vs Chitwan vs Butwal: Final Verdict"
     level: 2
   - id: methodology
-    text: Data Sources and Methodology
+    text: "Data Sources and Methodology"
     level: 2
 faqs:
   - q: How much does it cost to live in Kathmandu per month?
@@ -72,7 +72,6 @@ faqs:
   - q: How much does a family need to live in Kathmandu?
     a: "A small family of two adults and one child generally needs around Rs 85,000–1,20,000 or more for rent, food, education, healthcare, savings, and household costs."
 ---
-
 <h2 id="quick-answer">Quick Answer: How Much Does It Cost to Live in Kathmandu?</h2>
 
 If you earn the same salary in Kathmandu, Pokhara, Chitwan, or Butwal, your savings can look very different. Housing is the largest variable, and Kathmandu is generally 20–40% more expensive than the smaller cities for comparable lifestyles.
@@ -204,7 +203,7 @@ Net income − rent − food − transport − utilities − debt/EMI − person
 - **Emergency savings** — Rs 7,500 (15%)
 - **Discretionary savings** — Rs 3,000 (6%)
 
-> **Plan with SolutionsNepal:** Use our <a href="/nepal/finance/salary-checker">Salary Calculator</a> and <a href="/nepal/finance/salary-tax">Salary Tax Calculator</a> to estimate net income, tax, and deductions before setting your city budget.
+> **Plan with SolutionsNepal:** Use our <a href="/nepal/finance/salary-checker">Salary Calculator</a> to estimate net income, tax, and deductions before setting your city budget.
 
 <h2 id="verdict">Kathmandu vs Pokhara vs Chitwan vs Butwal: Final Verdict</h2>
 

@@ -1,49 +1,254 @@
 ---
-title: Understanding Loan Interest in Nepal
-description: How banks calculate interest on your loans in Nepal.
+title: "How Loan Interest Works in Nepal: Bank Calculation"
+description: "How Nepali banks calculate interest on home, car and personal loans, with simple and reducing-balance examples."
 category: Finance
 author: SolutionsNepal Team
 authorCredential: Financial analysts and Nepal tax experts
-date: July 20, 2026
-readTime: 5 min read
-image: "/blog/photo-1568667256549-094345857637.jpg"
-tags: [Finance, Loan, Interest, Banking]
+date: October 17, 2026
+readTime: 9 min read
+image: "/blog/photo-1568667256549-094345857637.webp"
+tags: [Finance, Loan, Interest, Banking, Nepal]
+relatedTools: [emi-calculator, loan-eligibility, fd-calculator]
 headings:
+  - id: quick-answer
+    text: Quick Answer
+    level: 2
   - id: introduction
-    text: Introduction
+    text: Why Two Loans With the Same Rate Cost Different Amounts
     level: 2
   - id: types
-    text: Types of Interest
+    text: The Four Rate Structures
+    level: 2
+  - id: monthly-interest
+    text: How a Bank Actually Charges Interest Each Month
+    level: 2
+  - id: simple-vs-reducing
+    text: Simple Interest vs Reducing Balance
+    level: 2
+  - id: flat-trap
+    text: The Flat-Rate Trap
+    level: 2
+  - id: base-rate
+    text: Base Rate, Premium and Reset — What Your Rate Is Made Of
+    level: 2
+  - id: overdue
+    text: What Happens to Interest If You Miss a Payment
+    level: 2
+  - id: verify
+    text: How to Check the Interest Your Bank Charged
     level: 2
   - id: rates
-    text: Current Rates in Nepal
+    text: Indicative Loan Rates in Nepal
     level: 2
-  - id: conclusion
-    text: Conclusion
+  - id: mistakes
+    text: Common Mistakes
     level: 2
+  - id: sources
+    text: Sources and Disclaimer
+    level: 2
+faqs:
+  - q: How do banks calculate loan interest in Nepal?
+    a: On a standard loan, interest for the month is the outstanding balance multiplied by the annual rate divided by 12. That interest is then deducted from your monthly instalment, and the rest reduces the principal — which is why the interest portion shrinks month by month.
+  - q: What is the difference between simple interest and reducing-balance interest?
+    a: Simple (or flat) interest is charged on the full original amount for the whole tenure. Reducing-balance interest is charged only on the balance still outstanding, so it falls as you repay. For the same headline rate, flat interest costs much more.
+  - q: Is a 1% monthly interest rate the same as 12% a year?
+    a: In nominal terms, yes — 1% a month is 12% a year. If the interest is compounded monthly, the effective annual cost is about 12.68%, because each month's interest is charged on a slightly larger balance.
+  - q: What is the base rate in Nepal?
+    a: The base rate is a bank's own published cost-of-funds indicator, calculated under Nepal Rastra Bank's framework and published periodically. A loan rate is usually the bank's base rate plus a premium the bank sets, which is why two banks can quote different rates on the same day.
+  - q: Can the bank increase my interest rate during the loan?
+    a: On a fixed-rate loan, the contract sets the rate. On a floating-rate loan — the common structure in Nepal — the rate can be reset when the base rate moves, subject to the terms in your loan agreement. Read the reset clause and ask how often resets happen.
+  - q: What happens if I pay late?
+    a: Loan agreements normally provide for additional interest on overdue amounts, and some banks also charge a fixed late fee. The exact rate is set in your agreement, so read that clause rather than assuming a standard figure.
+  - q: Does prepaying a loan save interest?
+    a: Yes, and the saving is largest early in the loan, because that is when the outstanding balance is highest. Ask the bank to apply the prepayment to the principal and to shorten the tenure, which saves more interest than keeping the same tenure and reducing the EMI.
+  - q: Is interest on a gold loan or overdraft calculated differently?
+    a: Often yes. Overdrafts and some gold loans charge interest on the amount actually used, frequently on a daily-balance (daily product) basis, with no fixed EMI. Ask the bank whether interest is charged on the sanctioned limit or only on the amount drawn.
+  - q: Are loan interest rates in Nepal the same for everyone?
+    a: No. The rate depends on the product, the tenure, the collateral, the bank's own funding cost and your credit profile. Two borrowers can get different rates from the same bank in the same week, so compare offers rather than assuming a published rate applies to you.
+  - q: Where can I check current loan interest rates?
+    a: Nepal Rastra Bank publishes monetary-policy and interest-rate information on nrb.org.np, and every bank publishes its own base rate and rate card. Use those two sources, plus the rate quoted in your own loan offer letter, which is the only one that binds you.
 ---
 
-<h2 id="introduction">Introduction</h2>
+<h2 id="quick-answer">Quick Answer</h2>
 
-Loan interest is the cost of borrowing money. In Nepal, interest rates vary by bank, loan type, and your credit profile. Understanding how interest works helps you choose the right loan.
+Loan interest is the price of borrowing. In Nepal, most loans are priced on a <strong>reducing balance</strong>: every month the bank charges interest on the amount you still owe, then your instalment pays that interest first and reduces the principal with what is left.
 
-<h2 id="types">Types of Interest</h2>
+The monthly interest calculation is short:
 
-- <strong>Fixed rate</strong> — stays the same throughout the loan tenure
-- <strong>Floating rate</strong> — changes based on market conditions
-- <strong>Reducing balance</strong> — interest calculated on remaining principal
-- <strong>Flat rate</strong> — interest calculated on original principal (less favorable)
+```text
+Monthly interest = outstanding × rate ÷ 12
+```
 
-<h2 id="rates">Current Rates in Nepal</h2>
+On a Rs 50,00,000 loan at 11% a year:
 
-Commonly reported indicative ranges:
+- <strong>First month's interest</strong> — about Rs 45,833
+- <strong>Principal repaid in that instalment</strong> — about Rs 5,776 of a Rs 51,609 EMI
+- <strong>Interest over the full 20 years</strong> — about Rs 73,86,261
+- <strong>By year five</strong> — about Rs 26,37,262 of interest already paid
+- <strong>By year ten</strong> — about Rs 49,39,730 of interest already paid
 
-- Home loans — 10-13%
-- Personal loans — 12-16%
-- Auto loans — 10-14%
+Two loans can carry the same headline rate and cost very different amounts, because the rate is only one of three things that matter: the rate, the method (reducing or flat), and how long the balance stays high.
 
-These are indicative market ranges as of October 2026 — verify current offers with NRB publications at <a href="https://www.nrb.org.np">nrb.org.np</a> and directly with banks, as rates move with NRB policy and each bank's base rate. Always compare rates from multiple banks.
+> **Compare before you commit:** the <a href="/nepal/finance/emi-calculator">EMI calculator</a> shows the interest and principal inside every instalment, and the <a href="/nepal/finance/loan-eligibility-calculator-nepal">loan eligibility calculator</a> estimates how large a loan your income supports. For the full EMI formula and worked examples, see our <a href="/guides/how-to-calculate-emi-nepal">EMI guide</a>.
 
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="introduction">Why Two Loans With the Same Rate Cost Different Amounts</h2>
 
-Understanding interest calculations empowers you to negotiate better terms. Use our <a href="/nepal/finance/emi-calculator">EMI Calculator</a> to compare different loan scenarios.
+Interest is not a fee — it is rent on money. You pay it for as long as you are using someone else's money, and the amount you pay depends on how much of it you are still using. That single idea explains almost everything borrowers find confusing:
+
+- Why the interest in your first EMI is so much bigger than the principal.
+- Why a flat-rate quote at 12% can cost more than a reducing-balance loan at 18%.
+- Why shortening the tenure by five years saves more than negotiating a small rate cut.
+- Why extra payments made early in a loan are worth several times the same payments made near the end.
+
+<h2 id="types">The Four Rate Structures</h2>
+
+Nepali lenders price loans in four broad ways, and the structure matters as much as the number:
+
+- <strong>Fixed rate</strong> — the rate stays the same for the agreed period. Predictable, but usually starts higher than a floating rate.
+- <strong>Floating rate</strong> — the rate moves when the bank's base rate moves, so the EMI or the tenure is adjusted at reset. Common in Nepal for home loans.
+- <strong>Reducing balance</strong> — interest is charged on the outstanding balance only. This is the standard and the cheapest method for the same headline rate.
+- <strong>Flat rate</strong> — interest is charged on the original amount for the entire tenure, regardless of how much you have repaid. Common in some hire-purchase, dealer and micro-lending quotes.
+
+A rate on its own tells you nothing until you know which of these four you are being offered. "12%" is not a price until you know whether it is reduced monthly or charged flat on the full amount.
+
+<h2 id="monthly-interest">How a Bank Actually Charges Interest Each Month</h2>
+
+For a reducing-balance loan, the process repeats every month:
+
+1. Take the outstanding balance at the start of the month.
+2. Multiply by the annual rate and divide by 12 to get that month's interest.
+3. Subtract the interest from your EMI.
+4. Whatever remains reduces the principal.
+5. Next month, repeat with the smaller balance.
+
+```text
+Interest = balance × annual rate ÷ 12
+```
+
+Worked through on a Rs 50,00,000 loan at 11% a year with an EMI of Rs 51,609:
+
+- <strong>Month 1</strong> — interest 50,00,000 × 11 ÷ 12 ÷ 100 = Rs 45,833; principal repaid Rs 5,776
+- <strong>Month 12</strong> — the balance has fallen, so the interest portion is smaller and the principal portion larger
+- <strong>Month 120</strong> — about Rs 49,39,730 of interest has been paid in total, and about Rs 12,53,400 of principal repaid
+- <strong>Month 240</strong> — the loan closes; total interest paid is about Rs 73,86,261
+
+The reason early payments feel like they are going nowhere is arithmetic, not unfairness: at the start almost the whole balance is still outstanding, so almost the whole instalment is rent on that balance.
+
+Some products work differently. Overdrafts and many gold loans charge interest only on the amount you have actually drawn, often on a daily-balance (daily product) basis, with no fixed EMI at all. If you are comparing an overdraft with a term loan, ask explicitly: interest on the limit, or interest on the drawn amount?
+
+<h2 id="simple-vs-reducing">Simple Interest vs Reducing Balance</h2>
+
+Simple interest is the easiest to reason about because the interest never compounds — it is calculated once on the original amount:
+
+```text
+Interest = P × rate × years
+```
+
+| Loan | Working | Interest |
+| --- | --- | --- |
+| Rs 2,00,000 at 10% for 2 years | 2,00,000 × 0.10 × 2 | Rs 40,000 |
+| Rs 5,00,000 at 12% for 1 year | 5,00,000 × 0.12 × 1 | Rs 60,000 |
+| Rs 1,00,000 at 9% for 3 years | 1,00,000 × 0.09 × 3 | Rs 27,000 |
+
+Simple interest is what a friendly relative might charge you, and it is what a flat-rate lender is effectively charging — except that a flat-rate lender also makes you repay the principal month by month while still charging interest on the full amount.
+
+Reducing balance compounds nothing either, but it recalculates on the shrinking balance. On a Rs 5,00,000 loan over three years:
+
+- <strong>Reducing balance at 12%</strong> — monthly interest is charged on what is still owed, so the total interest is well below the flat-rate equivalent.
+- <strong>Flat 12%</strong> — interest is 5,00,000 × 0.12 × 3 = Rs 1,80,000 no matter how fast you repay.
+- <strong>The same Rs 18,889 EMI</strong> — on a reducing-balance loan, that instalment corresponds to an annual rate of about 21.2%.
+
+<h2 id="flat-trap">The Flat-Rate Trap</h2>
+
+Flat-rate quotes are designed to look cheap. The headline number is applied to the original amount for the whole tenure, so the true cost is roughly double what the number suggests:
+
+- <strong>Headline</strong> — flat 12% over 36 months
+- <strong>Interest charged</strong> — Rs 1,80,000 on a Rs 5,00,000 loan
+- <strong>Equivalent reducing rate</strong> — about 21.2% a year for the same monthly payment
+- <strong>The gap</strong> — more than nine percentage points
+
+Whenever a quote comes from a dealer, a shop's instalment scheme or a hire-purchase agreement, ask two questions in writing:
+
+1. Is this rate flat or reducing balance?
+2. What is the annualised reducing-balance rate — the rate that would produce the same monthly payment?
+
+If the answer to the second question is not available, walk the quote through the <a href="/nepal/finance/emi-calculator">EMI calculator</a> with the same monthly payment and the same tenure, then read the implied rate. That number, not the headline, is what you are paying.
+
+> **Watch for the wording:** "12% flat", "12% per annum on the original amount" and "12% reducing" are three different prices. The same is true of a "1% monthly" quote, which is 12% a year nominal — about 12.68% effective if it compounds monthly.
+
+<h2 id="base-rate">Base Rate, Premium and Reset — What Your Rate Is Made Of</h2>
+
+In Nepal, a floating loan rate is normally built from two published pieces:
+
+- <strong>Base rate</strong> — the bank's own cost-of-funds indicator, calculated and published under Nepal Rastra Bank's framework.
+- <strong>Premium</strong> — the margin the bank adds for your product, collateral and credit profile.
+
+```text
+Loan rate = base rate + premium
+```
+
+Three consequences follow, and each one costs borrowers money when it is ignored:
+
+1. <strong>Two banks can quote different rates on the same day</strong> for the same borrower, because their base rates and premiums differ. Comparing offers is not a formality.
+2. <strong>Your rate can move.</strong> If the base rate rises, the loan rate rises. Depending on the agreement, your EMI changes, or the tenure stretches while the EMI stays fixed.
+3. <strong>The premium is your negotiating room.</strong> Base rates are published and identical for all customers of that bank; the premium is a commercial decision.
+
+Read the reset clause before signing: how often the rate can reset, whether the EMI or the tenure adjusts, and whether there is a floor rate below which your rate will not fall.
+
+<h2 id="overdue">What Happens to Interest If You Miss a Payment</h2>
+
+A missed instalment does not just get added to the end of the loan. Two things usually happen:
+
+- <strong>Additional interest on the overdue amount.</strong> Loan agreements normally specify a higher rate that applies to overdue sums, from the due date until payment.
+- <strong>A late or penal charge.</strong> Many banks also apply a fixed fee for a defaulted instalment.
+
+The exact rates are set in your loan agreement — read that clause rather than assuming a market-standard figure. The practical consequences matter more than the wording: an unpaid instalment also delays the amortisation schedule, can trigger reporting to the credit information system, and makes the next month's interest higher because the balance did not fall as planned.
+
+If you know a payment will be late, talk to the bank before the due date. Restructuring and rescheduling are normal banking processes; a defaulted instalment is not.
+
+<h2 id="verify">How to Check the Interest Your Bank Charged</h2>
+
+You can verify any month's interest in about a minute:
+
+1. Ask the bank for the <strong>amortisation schedule</strong> — the month-by-month table of opening balance, interest, principal and closing balance.
+2. For a chosen month, multiply the opening balance by the annual rate and divide by 12.
+3. Compare the result with the schedule's interest column. On a reducing-balance loan they should match to the rupee, allowing for rounding.
+4. Cross-check the closing balance: opening balance + interest − EMI = closing balance.
+
+If the numbers do not match, the likely explanations are a rate reset during the period, a fixed-versus-floating mismatch, or an overdue charge. Ask for the rate history for your account — banks can print it.
+
+> **Keep this habit:** recheck the schedule after every rate reset. On a floating loan, the schedule the bank gave you at sanction is not the schedule you will actually pay.
+
+<h2 id="rates">Indicative Loan Rates in Nepal</h2>
+
+Lenders' pricing changes with monetary policy, with each bank's funding cost, and with the borrower's profile. The ranges below are the indicative market ranges commonly reported as of October 2026 — they are a starting point for comparison, not a quote:
+
+- <strong>Home loans</strong> — commonly reported around 10–13% a year
+- <strong>Auto and vehicle loans</strong> — commonly reported around 10–14% a year
+- <strong>Personal and unsecured loans</strong> — commonly reported around 12–16% a year
+- <strong>Gold loans</strong> — usually priced against the bank's own gold-loan product rate; ask for the current card
+
+Verify the live position with <a href="https://www.nrb.org.np" target="_blank" rel="noopener noreferrer">Nepal Rastra Bank (nrb.org.np)</a> publications and with each bank's published base rate, then compare the actual offer letters. A rate you were quoted is evidence; a rate you read somewhere is not.
+
+<strong>Fixed or floating?</strong> A fixed rate buys certainty at a price. A floating rate starts lower but can move both ways. The right answer depends on how much a rise of one or two percentage points would hurt your monthly budget — run both scenarios through the <a href="/nepal/finance/emi-calculator">EMI calculator</a> before deciding.
+
+<h2 id="mistakes">Common Mistakes</h2>
+
+- <strong>Comparing headline rates without checking the method.</strong> Flat and reducing rates are not comparable numbers.
+- <strong>Ignoring the reset clause</strong> on a floating loan, then being surprised when the EMI changes.
+- <strong>Adding up EMI × months and calling it the loan cost.</strong> That total includes both principal and interest — subtract the principal to see the real cost.
+- <strong>Assuming the premium is fixed.</strong> The premium is negotiable; the base rate is not.
+- <strong>Prepaying a cheap loan while carrying an expensive one.</strong> Extra money should go to the highest-rate debt first.
+- <strong>Treating an overdraft like a term loan.</strong> Interest on the drawn amount behaves differently from an EMI loan.
+- <strong>Not asking for the amortisation schedule.</strong> It is the only document that shows the true monthly split.
+- <strong>Borrowing at a floating rate without stress-testing a rate rise.</strong>
+
+<h2 id="sources">Sources and Disclaimer</h2>
+
+This guide explains how interest is calculated. It is general information, not financial or legal advice, and it does not publish any lender's current rate as a quote.
+
+- <strong>Nepal Rastra Bank</strong> — monetary policy, base-rate and interest-rate publications: <a href="https://www.nrb.org.np" target="_blank" rel="noopener noreferrer">nrb.org.np</a>
+- <strong>Your loan agreement</strong> — the binding source for your rate, the method (flat or reducing), the premium, the reset clause and the overdue-interest provisions.
+- <strong>The arithmetic</strong> — monthly interest = outstanding × annual rate ÷ 12, and EMI = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1). All figures on this page were computed with the same engine used by our <a href="/nepal/finance/emi-calculator">EMI calculator</a>.
+
+Interest rates, base rates and product rules change. Confirm current terms with the bank and with Nepal Rastra Bank before making a borrowing decision.

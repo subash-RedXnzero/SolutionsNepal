@@ -6,27 +6,30 @@ author: SolutionsNepal Team
 authorCredential: Nepal banking and personal-finance researchers
 date: September 16, 2026
 readTime: 16 min read
-image: "/blog/photo-1551288049-bebda4e38f71.jpg"
+image: "/blog/photo-1551288049-bebda4e38f71.webp"
 tags: [Demat, Mero Share, BOID, CRN, C-ASBA, IPO, Nepal]
 relatedTools: [nepse-profit-loss, sip-calculator, foreign-exchange, nepali-calendar]
 headings:
   - id: introduction
-    text: Introduction
+    text: "Introduction"
     level: 2
   - id: what-is-demat
-    text: What Is a Demat Account in Nepal?
+    text: "What Is a Demat Account in Nepal?"
     level: 2
   - id: what-is-mero-share
-    text: What Is Mero Share?
+    text: "What Is Mero Share?"
     level: 2
+  - id: demat-vs-meroshare
+    text: "Demat Account vs Mero Share"
+    level: 3
   - id: key-terms
-    text: Demat Account vs Mero Share vs BOID vs CRN vs C-ASBA
+    text: "Demat Account vs Mero Share vs BOID vs CRN vs C-ASBA"
     level: 2
   - id: prerequisites
-    text: What You Need Before Opening a Demat Account
+    text: "What You Need Before Opening a Demat Account"
     level: 2
   - id: open-demat
-    text: How to Open a Demat Account Online in Nepal
+    text: "How to Open a Demat Account Online in Nepal"
     level: 2
   - id: dp-selection
     text: "Step 1: Choose a Depository Participant (DP)"
@@ -41,43 +44,43 @@ headings:
     text: "Step 4: Receive Your BOID"
     level: 3
   - id: mero-share-registration
-    text: How to Register for Mero Share
+    text: "How to Register for Mero Share"
     level: 2
   - id: crn
-    text: How to Get a CRN Number for C-ASBA
+    text: "How to Get a CRN Number for C-ASBA"
     level: 2
   - id: apply-ipo
-    text: How to Apply for an IPO Through Mero Share
+    text: "How to Apply for an IPO Through Mero Share"
     level: 2
   - id: fees
-    text: Demat Account and Mero Share Fees in Nepal
+    text: "Demat Account and Mero Share Fees in Nepal"
     level: 2
   - id: activation-time
-    text: How Long Does Demat and Mero Share Activation Take?
+    text: "How Long Does Demat and Mero Share Activation Take?"
     level: 2
   - id: troubleshooting
-    text: Common Mero Share Problems and Solutions
+    text: "Common Mero Share Problems and Solutions"
     level: 2
   - id: check-boid
-    text: How to Check Your BOID / Demat Details
+    text: "How to Check Your BOID / Demat Details"
     level: 2
   - id: multiple-accounts
-    text: Can You Have More Than One Demat Account in Nepal?
+    text: "Can You Have More Than One Demat Account in Nepal?"
     level: 2
   - id: abroad
-    text: Demat Account for Nepalis Working Abroad
+    text: "Demat Account for Nepalis Working Abroad"
     level: 2
   - id: security-tips
-    text: Important Security Tips
+    text: "Important Security Tips"
     level: 2
   - id: internal-links
-    text: Related SolutionsNepal Tools & Guides
+    text: "Related SolutionsNepal Tools & Guides"
     level: 2
   - id: important-note
-    text: Important Note
+    text: "Important Note"
     level: 2
   - id: checklist
-    text: Before You Apply for Your First IPO (Checklist)
+    text: "Before You Apply for Your First IPO (Checklist)"
     level: 2
 faqs:
   - q: What is a Demat account in Nepal?
@@ -105,7 +108,6 @@ faqs:
   - q: Can I have more than one Demat account?
     a: It is possible under certain conditions, but rules and system constraints apply. Mero Share access is tied to a BOID, so multiple accounts may mean managing separate BOIDs and CRNs. Verify with SEBON, CDSC, or your DP.
 ---
-
 <h2 id="introduction">Introduction</h2>
 
 If you want to participate in Nepal’s IPO, FPO, or rights issue market, you will need several connected services working together:
@@ -318,7 +320,7 @@ Rules vary; typically, individuals may hold Demat accounts with more than one DP
 - Be cautious of phishing sites and fake IPO or Mero Share pages.
 - If something looks suspicious, contact your DP or bank through official channels.
 
-<h2 id="internal-links">Related SolutionsNepal Tools &amp; Guides</h2>
+<h2 id="internal-links">Related SolutionsNepal Tools & Guides</h2>
 
 - <a href="/nepal/nepse/profit-loss">NEPSE Profit/Loss Calculator</a> — work out returns on shares you hold or sell
 - <a href="/nepal/gold-price-nepal">Gold Price Nepal</a> — track daily gold rates as an alternative asset

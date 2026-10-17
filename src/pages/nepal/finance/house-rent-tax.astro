@@ -4,6 +4,7 @@ import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
 import RelatedTools from '../../../components/ui/RelatedTools.astro';
 
 const relatedTools = [
+  { title: 'Rental Income Tax Calculator', description: 'Income tax on landlord rental income', href: '/nepal/finance/rent-tax' },
   { title: 'Nepal Salary Calculator', description: 'Calculate take-home salary', href: '/nepal/finance/salary-checker' },
   { title: 'EMI Calculator', description: 'Calculate loan EMI', href: '/nepal/finance/emi-calculator' },
   { title: 'NEA Electricity Bill', description: 'Estimate your electricity bill', href: '/nepal/utilities/electricity-bill' },
@@ -92,7 +93,7 @@ const fiscalYears = [
   jsonLd={{
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Nepal House Rent & Rental Income Tax Calculator",
+    "name": "Nepal House Rent Tax Calculator",
     "description": "Calculate house rent tax, rental income, applicable withholding, and estimated net rental income in Nepal.",
     "url": "https://solutionsnepal.com/nepal/finance/house-rent-tax",
     "applicationCategory": "FinanceApplication",
@@ -107,8 +108,8 @@ const fiscalYears = [
     ]} />
 
     <div class="mb-8 max-w-2xl mx-auto">
-      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">Nepal House Rent & Rental Income Tax Calculator</h1>
-      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Calculate estimated house rent tax, rental income, and your net rental income in Nepal.</p>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight" style="color: var(--nk-text);">House Rent Tax Calculator Nepal</h1>
+      <p class="mt-2 text-base" style="color: var(--nk-text-secondary);">Work out who pays rent tax — the flat municipal house rent tax (Ghar Bhada Kar) and the 10% TDS when a company pays your rent — plus your net rental income.</p>
     </div>
 
     <div class="max-w-2xl mx-auto">
@@ -413,6 +414,13 @@ const fiscalYears = [
       <p>This calculator provides an estimate based on the information provided and currently available Nepal tax rules. Actual tax, withholding, local charges, and filing requirements may vary depending on your circumstances and current government rules. Confirm the final amount with the relevant tax authority when necessary.</p>
       <p class="mt-1.5">Tax rules last verified: <strong>2026-08-19</strong></p>
       <p class="mt-1">Official Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Inland Revenue Department</a>, <a href="https://mof.gov.np" target="_blank" rel="noopener" style="color: var(--nk-accent);">Ministry of Finance</a>, Income Tax Act 2058, Finance Act 2083, Local Government Operation Act 2074</p>
+    </div>
+
+    <!-- WHICH CALCULATOR -->
+    <div class="max-w-2xl mx-auto mt-6 p-4 rounded-lg text-sm" style="background-color: var(--nk-muted); color: var(--nk-text-secondary);">
+      <p class="font-semibold mb-1" style="color: var(--nk-text);">Which rent tax applies to you?</p>
+      <p>This page covers the flat <strong>municipal house rent tax</strong> (Ghar Bhada Kar) for individual landlords renting to individuals, and the <strong>10% TDS</strong> (Section 88) when a company pays your rent.</p>
+      <p class="mt-1.5">If your rental income is assessed under the income-tax system (for example, business letting or rent added to total income), use the <a class="underline hover:opacity-80" href="/nepal/finance/rent-tax" style="color:var(--nk-accent);">Rental Income Tax Calculator</a> instead.</p>
     </div>
 
     <!-- SEO CONTENT -->

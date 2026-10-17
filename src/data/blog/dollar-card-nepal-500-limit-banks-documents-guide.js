@@ -10,7 +10,7 @@ export const dollarCardNepal500LimitBanksDocumentsGuidePost = {
   authorCredential: 'Nepal banking researchers',
   date: 'September 27, 2026',
   readTime: '8 min read',
-  image: '/blog/photo-1556742049-0cfed4f6a45d.jpg',
+  image: '/blog/photo-1556742049-0cfed4f6a45d.webp',
   tags: ['Dollar Card Nepal', 'NRB $500', 'Prepaid Card', 'Freelancer Payment', 'Banks'],
   relatedTools: ['foreign-exchange', 'emi-calculator', 'salary-checker'],
   faqs: [

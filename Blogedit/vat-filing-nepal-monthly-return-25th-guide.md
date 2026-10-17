@@ -6,7 +6,7 @@ author: SolutionsNepal Team
 authorCredential: Nepal tax researchers
 date: September 27, 2026
 readTime: 11 min read
-image: "/blog/photo-1434030216411-0b793f4b4173.jpg"
+image: "/blog/photo-1434030216411-0b793f4b4173.webp"
 tags: [VAT Filing Nepal, VAT Return Nepal, IRD VAT, VAT 2026, Finance]
 relatedTools: [vat-calculator, salary-checker, house-rent-tax]
 headings:
@@ -62,7 +62,6 @@ faqs:
   - q: What about deadline on a holiday?
     a: "If the 25th falls on a public holiday, IRD typically extends to the next working day — check the IRD notice for that month before assuming."
 ---
-
 <h2 id="tldr">Quick Answer (TL;DR)</h2>
 
 If you are VAT-registered, file a <strong>monthly VAT return by the 25th of the following Nepali month</strong> at <strong>taxpayerportal.ird.gov.np</strong> — even if turnover was zero (<strong>Nil return</strong>). <strong>Payable = 13% Output VAT − eligible Input VAT</strong>; Nil if no sales. <strong>Late = per-period fee + interest</strong> on unpaid VAT. Keep <strong>Rule 17 VAT invoices</strong> with VAT shown separately.
@@ -109,13 +108,13 @@ VAT Payable = Output VAT (13% on taxable sales) − Eligible Input VAT (on purch
 - **Input > Output** — No payment; excess = credit carried forward to next period
 - **Exporter / zero-rated** — May claim refund of input credit per IRD refund procedure (separate from normal carry)
 
-<h2 id="nil-credit">Nil Return, Credit &amp; Refund</h2>
+<h2 id="nil-credit">Nil Return, Credit & Refund</h2>
 
 - <strong>Nil return:</strong> select Nil/zero turnover for the period and submit by the 25th — required, not optional
 - <strong>Credit:</strong> excess Input over Output is not cash back by default; it rolls forward as opening credit
 - <strong>Refund:</strong> primarily for exporters making zero-rated supplies (VAT Act zero-rating) — file per IRD refund window with supporting invoices
 
-<h2 id="penalties">Late Filing &amp; Interest</h2>
+<h2 id="penalties">Late Filing & Interest</h2>
 
 - **Late return (per period)** — Per-period fee per Finance Act (commonly in the ~Rs 10k–20k range; verify the current schedule — it changes) + recovery of any undeclared VAT
 - **Unpaid VAT** — Annual interest on the amount due (rate per current Finance Act; interest runs until paid)
@@ -146,8 +145,8 @@ VAT Payable = Output VAT (13% on taxable sales) − Eligible Input VAT (on purch
 - File via taxpayerportal.ird.gov.np by the 25th; pay payable via connectIPS/eSewa and keep receipt
 - If Nil — file Nil return (same deadline, zero payment)
 
-<h2 id="sources">Official Sources &amp; Final Note</h2>
+<h2 id="sources">Official Sources & Final Note</h2>
 
-Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a>, <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">IRD Taxpayer Portal (taxpayerportal.ird.gov.np)</a>, VAT Act 2052 + VAT Rules 2053 Rule 17, and the annual Finance Act (late-fee/interest figures). Approve bi-monthly/trimester filing only where the Tax Officer's approval letter allows it.
+Sources: <a href="https://ird.gov.np" target="_blank" rel="noopener noreferrer">Inland Revenue Department (ird.gov.np)</a>, <a href="https://taxpayerportal.ird.gov.np" target="_blank" rel="noopener noreferrer">IRD Taxpayer Portal (taxpayerportal.ird.gov.np)</a>, VAT Act 2052 + VAT Rules 2053 Rule 17, and the annual Finance Act (late-fee/interest figures; act texts at <a href="https://www.lawcommission.gov.np" target="_blank" rel="noopener noreferrer">Nepal Law Commission</a>). Approve bi-monthly/trimester filing only where the Tax Officer's approval letter allows it.
 
 <strong>Last updated: September 27, 2026. Figures and hedges rechecked as of October 2026 — no numeric changes; re-verify the current period's IRD notice before filing.</strong> Deadlines, invoice formats, return fields and fee/interest figures are updated by IRD circulars and Finance Acts. Verify the current period's notice on ird.gov.np before filing. SolutionsNepal is an educational guide, not a tax advisor.

@@ -5,10 +5,9 @@ import { getSilverPriceAsync, getSilverPriceHistory, formatNPR, GRAMS_PER_TOLA }
 import Disclaimer from '../../components/ui/Disclaimer.astro';
 
 const priceData = await getSilverPriceAsync();
-const history7d = getSilverPriceHistory('7d');
-const history30d = getSilverPriceHistory('30d');
-const history3m = getSilverPriceHistory('3m');
-const history1y = getSilverPriceHistory('1y');
+// FENEGOSIDA publishes today + yesterday only — the trend is those two
+// real points. No fabricated multi-day history (see getSilverPriceHistory).
+const trendHistory = getSilverPriceHistory();
 ---
 
 <BaseLayout
@@ -141,18 +140,13 @@ const history1y = getSilverPriceHistory('1y');
   <!-- CHART -->
   <div class="sp-section">
     <h2 class="sp-section-title">Silver Price Trend</h2>
-    <div class="sp-chart-tabs">
-      <button class="sp-chart-tab active" data-period="7d">7 Days</button>
-      <button class="sp-chart-tab" data-period="30d">30 Days</button>
-      <button class="sp-chart-tab" data-period="3m">3 Months</button>
-      <button class="sp-chart-tab" data-period="1y">1 Year</button>
-    </div>
+    <p class="sp-chart-note">Yesterday → today · FENEGOSIDA publishes daily rates only, so the chart shows the two published points.</p>
     <div class="sp-chart-wrap">
       <canvas id="sp-chart" width="560" height="200"></canvas>
       <div class="sp-chart-tooltip" id="sp-tooltip" style="display:none;"></div>
     </div>
     <div class="sp-chart-legend">
-      <span id="sp-chart-label">7 Days</span>
+      <span id="sp-chart-label">Yesterday → Today</span>
       <span id="sp-chart-range"></span>
     </div>
   </div>
@@ -182,18 +176,12 @@ const history1y = getSilverPriceHistory('1y');
   <Disclaimer variant="price" />
 
   <script is:inline define:vars={{
-    history7d: JSON.stringify(history7d),
-    history30d: JSON.stringify(history30d),
-    history3m: JSON.stringify(history3m),
-    history1y: JSON.stringify(history1y),
+    trendHistory: JSON.stringify(trendHistory),
     pricePerTola: priceData.silver.pricePerTola,
     pricePerGram: priceData.silver.pricePerGram,
   }}>
     window.__sp_data = {
-      history7d: JSON.parse(history7d),
-      history30d: JSON.parse(history30d),
-      history3m: JSON.parse(history3m),
-      history1y: JSON.parse(history1y),
+      trendHistory: JSON.parse(trendHistory),
       pricePerTola: pricePerTola,
       pricePerGram: pricePerGram,
     };
@@ -339,6 +327,12 @@ const history1y = getSilverPriceHistory('1y');
 
   /* More units */
   .sp-more { margin-top: 8px; }
+  .sp-chart-note {
+    margin: 0 0 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--nk-text-tertiary);
+  }
   .sp-more-toggle {
     font-size: 12px;
     color: var(--nk-accent);
@@ -613,11 +607,8 @@ const history1y = getSilverPriceHistory('1y');
   var tooltip = document.getElementById('sp-tooltip');
   var chartLabel = document.getElementById('sp-chart-label');
   var chartRange = document.getElementById('sp-chart-range');
-  var tabs = document.querySelectorAll('.sp-chart-tab');
-  var currentPeriod = '7d';
-  var currentData = data.history7d;
-
-  var periodLabels = { '7d': '7 Days', '30d': '30 Days', '3m': '3 Months', '1y': '1 Year' };
+  // Single honest series: yesterday → today (the only points FENEGOSIDA publishes).
+  var currentData = data.trendHistory;
 
   function drawChart(chartData) {
     if (!chartData || chartData.length === 0) return;
@@ -710,7 +701,7 @@ const history1y = getSilverPriceHistory('1y');
     ctx.fillText(formatNPR(Math.round(min)), w, padTop + chartH - 2);
 
     // Legend
-    chartLabel.textContent = periodLabels[currentPeriod];
+    chartLabel.textContent = 'Yesterday → Today';
     var first = chartData[0];
     var last = chartData[chartData.length - 1];
     chartRange.textContent = first.date + ' — ' + last.date;
@@ -740,18 +731,7 @@ const history1y = getSilverPriceHistory('1y');
     };
   }
 
-  // Tab switching
-  tabs.forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      tabs.forEach(function(t) { t.classList.remove('active'); });
-      tab.classList.add('active');
-      currentPeriod = tab.dataset.period;
-      var map = { '7d': data.history7d, '30d': data.history30d, '3m': data.history3m, '1y': data.history1y };
-      currentData = map[currentPeriod] || data.history7d;
-      drawChart(currentData);
-    });
-  });
-
+  // Initial draw (single honest yesterday → today series)
   drawChart(currentData);
 
   var resizeTimer;

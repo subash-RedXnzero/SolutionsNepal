@@ -6,39 +6,42 @@ author: SolutionsNepal Team
 authorCredential: Nepal transport-administration researchers
 date: September 16, 2026
 readTime: 15 min read
-image: "/blog/photo-1449965408869-eaa3f722e40d.jpg"
+image: "/blog/photo-1449965408869-eaa3f722e40d.webp"
 tags: [Embossed Number Plate Online Application Nepal 2026, Embossed Number Plate, EVNP, HSNP, DoTM, RFID, Bluebook, Vehicles]
 relatedTools: [vehicle-tax-new, government-service-cost, nepali-calendar, vehicle-resale]
 headings:
   - id: tldr
-    text: Quick Answer / At-a-Glance
+    text: "Quick Answer / At-a-Glance"
     level: 2
   - id: what-is
-    text: What is an Embossed Number Plate in Nepal?
+    text: "What is an Embossed Number Plate in Nepal?"
     level: 2
   - id: why-embossed
     text: "Why “Embossed” Matters (Simple Explanation)"
     level: 2
   - id: applicability
-    text: Whether It Is Required for Your Vehicle Category (2026)
+    text: "Whether It Is Required for Your Vehicle Category (2026)"
     level: 2
   - id: who-needs
-    text: Who Needs an Embossed Number Plate?
+    text: "Who Needs an Embossed Number Plate?"
     level: 2
   - id: by-category
-    text: Vehicle-Category Notes
+    text: "Vehicle-Category Notes"
     level: 3
   - id: why-used
-    text: Why Are Embossed Number Plates Used?
+    text: "Why Are Embossed Number Plates Used?"
     level: 2
   - id: apply-online
-    text: Do You Need to Apply Online?
+    text: "Do You Need to Apply Online?"
     level: 2
   - id: portal
-    text: Official DoTM / HSENP / EVNP Online Portal
+    text: "Official DoTM / HSENP / EVNP Online Portal"
     level: 2
+  - id: portal-legit
+    text: "How to identify the legitimate portal (so you don’t get scammed)"
+    level: 3
   - id: process
-    text: Step-by-Step Online Application (Beginner-Friendly)
+    text: "Step-by-Step Online Application (Beginner-Friendly)"
     level: 2
   - id: step-docs
     text: "Step 1: Prepare your vehicle documents"
@@ -71,73 +74,115 @@ headings:
     text: "Step 10: Prepare for physical verification"
     level: 3
   - id: info-table
-    text: Information Required for the Online Application
+    text: "Information Required for the Online Application"
     level: 2
   - id: documents
-    text: Documents Required (What to Bring)
+    text: "Documents Required (What to Bring)"
     level: 2
+  - id: docs-universal
+    text: "Universal “most likely needed”"
+    level: 3
+  - id: docs-motorcycle
+    text: "Motorcycle/scooter owners (typical)"
+    level: 3
+  - id: docs-car
+    text: "Car/jeep owners (typical)"
+    level: 3
+  - id: docs-commercial
+    text: "Commercial vehicle owners (typical)"
+    level: 3
+  - id: docs-replacement
+    text: "Replacement/damaged plate"
+    level: 3
+  - id: docs-transfer
+    text: "Ownership transfer"
+    level: 3
   - id: bluebook-verification
-    text: Bluebook Verification
+    text: "Bluebook Verification"
     level: 2
   - id: vehicle-verification
-    text: Vehicle Physical Verification
+    text: "Vehicle Physical Verification"
     level: 2
   - id: fees
-    text: Embossed Number Plate Fees in Nepal
+    text: "Embossed Number Plate Fees in Nepal"
     level: 2
+  - id: payment
+    text: "Payment process"
+    level: 3
   - id: appointment
-    text: Appointment Process
+    text: "Appointment Process"
     level: 2
   - id: at-office
-    text: What Happens at the Transport Management Office
+    text: "What Happens at the Transport Management Office (Realistic Sequence)"
     level: 2
   - id: rfid
-    text: RFID Embossed Number Plate Installation (What Owners Should Know)
+    text: "RFID Embossed Number Plate Installation (What Owners Should Know)"
     level: 2
   - id: format
-    text: Number Plate Format
+    text: "Number Plate Format"
     level: 2
   - id: old-plate
-    text: What Happens to the Old Number Plate?
+    text: "What Happens to the Old Number Plate?"
     level: 2
   - id: how-long
-    text: How Long Does the Process Take?
+    text: "How Long Does the Process Take?"
     level: 2
   - id: status
-    text: How to Check Application / Plate Status
+    text: "How to Check Application / Plate Status"
     level: 2
   - id: practical
-    text: Vehicle-Type Guides (Practical)
+    text: "Vehicle-Type Guides (Practical)"
     level: 2
+  - id: practical-motorcycle
+    text: "Motorcycle/scooter guide"
+    level: 3
+  - id: practical-car
+    text: "Car/jeep guide"
+    level: 3
+  - id: practical-commercial
+    text: "Commercial vehicle guide"
+    level: 3
+  - id: practical-ev
+    text: "Electric vehicle guide"
+    level: 3
   - id: transfer
-    text: Ownership Transfer (Embossed Plates)
+    text: "Ownership Transfer (Embossed Plates)"
     level: 2
   - id: lost-damaged
-    text: Lost, Damaged or Stolen Plate
+    text: "Lost, Damaged or Stolen Plate"
     level: 2
   - id: troubleshooting
-    text: Common Problems and Troubleshooting
+    text: "Common Problems and Troubleshooting"
     level: 2
   - id: mistakes
-    text: Common Mistakes to Avoid
+    text: "Common Mistakes to Avoid"
     level: 2
   - id: inspection
-    text: What to Check After Installation (Final Inspection Checklist)
+    text: "What to Check After Installation (Final Inspection Checklist)"
     level: 2
   - id: scams
-    text: Scams and Fraud Prevention
+    text: "Scams and Fraud Prevention"
     level: 2
   - id: checklist
-    text: Complete Embossed Number Plate Checklist
+    text: "Complete Embossed Number Plate Checklist"
     level: 2
+  - id: checklist-before
+    text: "Before applying (online)"
+    level: 3
+  - id: checklist-online
+    text: "Online application"
+    level: 3
+  - id: checklist-physical
+    text: "Physical verification and installation"
+    level: 3
   - id: official-sources
-    text: Official Government Sources to Check
+    text: "Official Government Sources to Check"
     level: 2
   - id: related-guides
-    text: Related SolutionsNepal Guides
+    text: "Related SolutionsNepal Guides"
     level: 2
   - id: final-summary
-    text: Final Summary
+    text: "Final Summary"
     level: 2
 faqs:
   - q: What is an embossed number plate in Nepal?
@@ -191,7 +236,6 @@ faqs:
   - q: Can someone else complete the process for me?
     a: Only if the Transport Management Office allows an authorized representative and accepts required authorization/identity documents. Follow the official office rules.
 ---
-
 <h2 id="tldr">Quick Answer / At-a-Glance</h2>
 
 You usually start online (application/verification), but you normally finish with in-person verification and plate installation at an authorized office.
@@ -267,10 +311,10 @@ These are the system’s stated objectives; practical benefits (like fraud resis
 
 So the real workflow is:
 
-1. **online application/pre-registration**
-2. **physical verification/office processing**
-3. **number plate production**
-4. **installation**
+1. <strong>online application/pre-registration</strong>
+2. <strong>physical verification/office processing</strong>
+3. <strong>number plate production</strong>
+4. <strong>installation</strong>
 
 <h2 id="portal">Official DoTM / HSENP / EVNP Online Portal</h2>
 
