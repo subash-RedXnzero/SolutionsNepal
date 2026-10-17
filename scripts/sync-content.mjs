@@ -165,6 +165,8 @@ for (const dir of [GUIDE_DIR, BLOG_DIR]) {
     const src = path.join(imgDir, f);
     if (!fs.statSync(src).isFile()) continue;
     const dst = path.join(PUB_IMG, f);
+    if (path.extname(f).toLowerCase() === '.jpg'
+      && fs.existsSync(path.join(PUB_IMG, `${path.basename(f, path.extname(f))}.webp`))) continue;
     let skip = false;
     try {
       const sStat = fs.statSync(src);
