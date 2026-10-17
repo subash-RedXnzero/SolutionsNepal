@@ -1,7 +1,7 @@
 {
   "meta": {
-    "fetchedAt": "2026-10-17T07:36:04.331Z",
-    "fetchedAtNPT": "1:21 PM",
+    "fetchedAt": "2026-10-17T10:08:08.892Z",
+    "fetchedAtNPT": "3:53 PM",
     "sources": {
       "forex": "Nepal Rastra Bank (nrb.org.np)",
       "gold": "FENEGOSIDA (fenegosida.org)",
@@ -2931,6 +2931,7 @@
         "time": "2026-10-17T12:45"
       }
     },
-    "isLive": true
+    "isLive": false,
+    "carriedFrom": "1:21 PM"
   }
 }
