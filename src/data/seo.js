@@ -94,9 +94,9 @@ function autoJsonLd(path, rec) {
 const pages = {
   // ── Homepage ──────────────────────────────────────────────
   '/': {
-    title: 'Solutions Nepal — Everyday Tools for Nepal',
+    title: 'Solutions Nepal | Smart Tools for Everyday Life',
     description:
-      'Free Nepal-focused calculators, converters, price checkers and everyday utility tools. Salary, tax, gold, fuel, currency, calendar and more.',
+      'Free tools for Nepal! Calculate salary & tax, check gold & fuel prices, convert currency, use Nepali date converters, simplify daily tasks—all in one place.',
     // Legacy meta keywords. Every term names a real tool/page on the site —
     // kept short and non-stuffed (Google ignores the tag; smaller engines
     // and verification tools still display it).
@@ -127,7 +127,7 @@ const pages = {
         '@type': 'Organization',
         name: SITE_NAME,
         url: SITE_URL,
-        logo: `${SITE_URL}/favicon.svg`,
+        logo: `${SITE_URL}/android-chrome-512x512.png`,
         description:
           'Free calculators, converters, and utilities for everyday life in Nepal.',
         sameAs: [],

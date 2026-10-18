@@ -2,13 +2,17 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
 import GuideCard from '../components/blog/GuideCard.astro';
-import { getGuides, getGuideCategories } from '../data/guides.js';
+import { getGuideCategories, getGuidesPrioritized } from '../data/guides.js';
 
 // CONTENT: guides come from Guideedit/*.md (one file = one guide).
 // DESIGN: card look lives in src/components/blog/GuideCard.astro.
 // To add/edit a guide, edit the .md file only — never this page.
 
-const guides = getGuides();
+// Lead order: the important hand-picked guides (FEATURED_GUIDE_SLUGS in
+// src/data/guides.js — same list that spotlights the homepage) render first,
+// then the rest in library order. Category chips and counts count the whole
+// library, so this reorder only changes which card leads.
+const guides = getGuidesPrioritized();
 const categories = getGuideCategories();
 
 const jsonLd = [

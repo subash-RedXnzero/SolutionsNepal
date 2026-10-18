@@ -69,6 +69,30 @@ export function getJournalPosts() {
   return blogPosts.filter((p) => JOURNAL_SLUGS.has(p.slug));
 }
 
+/**
+ * Hand-picked important guides that lead the homepage spotlight AND the
+ * guides page (slug order = display order). Edit here — both consumers
+ * (src/components/home/Homepage.astro, src/pages/guides.astro) read it.
+ * Any slug that later leaves the library is skipped; remaining slots
+ * backfill in library order, so sections never show fewer cards.
+ */
+export const FEATURED_GUIDE_SLUGS = [
+  'company-registration-online-nepal-guide',
+  'home-loan-emi-nepal-calculation-guide',
+  'nagarik-app-nepal-registration-digital-services-guide',
+  'nepal-police-clearance-certificate-online-pcc-guide',
+];
+
+/** Guides reordered so the featured (important) ones lead, then library order. */
+export function getGuidesPrioritized() {
+  const list = getGuides();
+  const featuredSet = new Set(FEATURED_GUIDE_SLUGS);
+  const featured = FEATURED_GUIDE_SLUGS
+    .map((slug) => list.find((g) => g.slug === slug))
+    .filter(Boolean);
+  return [...featured, ...list.filter((g) => !featuredSet.has(g.slug))];
+}
+
 /** Distinct guide categories with live counts, for filter chips. */
 export function getGuideCategories() {
   const counts = {};

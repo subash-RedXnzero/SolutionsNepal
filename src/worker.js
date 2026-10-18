@@ -127,6 +127,22 @@ export default {
       });
     }
 
+    // URL canonicalization: the canonical form everywhere (canonical tags,
+    // sitemap, internal links, _redirects targets) is /path with NO trailing
+    // slash (matches html_handling:"drop-trailing-slash" in wrangler.jsonc),
+    // so /path/ permanently redirects to /path instead of serving a duplicate
+    // 200 page whose canonical tag points at a URL that redirects. Root keeps
+    // its slash.
+    if (url.pathname.length > 1 && url.pathname.endsWith('/')) {
+      return new Response(null, {
+        status: 301,
+        headers: {
+          Location: `${url.pathname.replace(/\/+$/, '')}${url.search}`,
+          'Cache-Control': 'public, max-age=31536000',
+        },
+      });
+    }
+
     if (request.method === 'GET') {
       const route = LIVE_ROUTES.find((r) => r.path === url.pathname);
       if (route) return serveLive(request, env, ctx, route.source, route.load, TTL_SECONDS);

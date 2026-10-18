@@ -29,6 +29,23 @@
   ],
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    // Env binding so src/worker.js fetch() can fall through to the assets
+    // pipeline: ASSETS.fetch(request) applies this whole config (_redirects,
+    // html_handling, not_found_handling). Required with run_worker_first.
+    "binding": "ASSETS",
+    // Serve /page directly (200 from /page/index.html) and redirect /page/ away.
+    // Must match BaseLayout's canonical tags, the sitemap and internal links,
+    // which all use the non-trailing-slash form. The default
+    // "auto-trailing-slash" did the opposite (307'd /page → /page/) so every
+    // canonical URL redirected away from itself — GSC then grouped the 200
+    // slash pages as "Alternate page with proper canonical tag" and the
+    // canonical URLs were never served.
+    "html_handling": "drop-trailing-slash",
+    // Invoke the worker for EVERY request, including asset matches — without
+    // this, matching assets are served before the worker runs and the worker's
+    // www→apex 301 + trailing-slash 301 (src/worker.js) never fire for page
+    // URLs.
+    "run_worker_first": true
   }
 }

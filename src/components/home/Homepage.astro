@@ -48,9 +48,9 @@ const CAT_ICONS = {
 
 const TOOL_COUNT = registry.length;
 
-// ─── GUIDES (latest library how-tos — how/why behind the calculators) ───
-import { getGuides } from '../../data/guides.js';
-const GUIDES = getGuides().slice(0, 4);
+// ─── GUIDES (front-page spotlight — important evergreen how-tos, not library order) ───
+import { getGuidesPrioritized } from '../../data/guides.js';
+const GUIDES = getGuidesPrioritized().slice(0, 4);
 
 // ─── NEW & UPDATED (honest changelog — only shipped items, newest first) ───
 const UPDATES = [
@@ -179,11 +179,14 @@ const petrolBadge = fuel.petrol.change.direction === 'none' ? null : badge(fuel.
 const wxIcon = WX_SVG[ktmWeather.today.cond.k] || WX_SVG.rain;
 
 const STRIP = [
+  // `live` keys match the client hydration keys in the script block below:
+  // /api/live/{forex,fuel} rewrites these values (and DATE via bsShort) after load.
   {
     label: 'EUR/NPR',
     text: `Rs ${formatNumber(eur?.sellPerUnit ?? 0)}`,
     badge: null,
     href: '/foreign-exchange-nepal',
+    live: 'stripEur',
   },
   {
     label: 'INR/NPR',
@@ -191,24 +194,28 @@ const STRIP = [
     unit: '100 INR',
     badge: null,
     href: '/foreign-exchange-nepal',
+    live: 'stripInr',
   },
   {
     label: 'DIESEL',
     text: `Rs ${formatNumber(fuel.diesel.price)}/L`,
     badge: null,
     href: '/nepal/fuel-price-nepal',
+    live: 'stripDiesel',
   },
   {
     label: 'LPG',
     text: `Rs ${formatNumber(fuel.lpg.price)}`,
     badge: null,
     href: '/nepal/fuel-price-nepal',
+    live: 'stripLpg',
   },
   {
     label: 'DATE',
     text: bsShort,
     badge: null,
     href: '/nepal/calendar',
+    live: 'bsShort',
   },
 ];
 ---
@@ -219,7 +226,7 @@ const STRIP = [
   <section class="hp-hero" aria-label="Smart Nepali Tools">
     <div class="hp-container hp-hero-grid">
       <div class="hp-hero-copy">
-      <p class="hp-dateline">{today.dayOfWeek}, <span lang="ne">{bsShort}</span>, Kathmandu {ktmWeather.today.temp}°</p>
+      <p class="hp-dateline"><span data-np-live="weekday">{today.dayOfWeek}</span>, <span lang="ne" data-np-live="bsShort">{bsShort}</span>, Kathmandu {ktmWeather.today.temp}°</p>
       <h1 class="hp-title">Tools for everyday <span class="hp-title-accent">Nepal</span></h1>
       <p class="hp-sub hp-sub-strong">{TOOL_COUNT}+ free calculators, converters and checkers for everyday life in Nepal.</p>
       <p class="hp-sub-np" lang="ne">नेपालका लागि निःशुल्क उपकरणहरू</p>
@@ -239,7 +246,7 @@ const STRIP = [
       <aside class="hp-today" aria-label="Nepal today at a glance">
         <div class="hp-today-bar">
           <p class="hp-today-head"><span class="hp-today-dot" aria-hidden="true"></span>Nepal Today</p>
-          <p class="hp-today-date">{today.dayOfWeek} · {bsShort} {toDevanagari(String(today.bsYear))}</p>
+          <p class="hp-today-date"><span data-np-live="weekday">{today.dayOfWeek}</span> · <span lang="ne" data-np-live="bsShort">{bsShort}</span> <span lang="ne" data-np-live="bsYear">{toDevanagari(String(today.bsYear))}</span></p>
         </div>
         <div class="hp-today-mini">
           <div class="hp-mini hp-mini-wx">
@@ -250,26 +257,26 @@ const STRIP = [
           </div>
           <a href="/nepal/calendar" class="hp-mini hp-mini-cal">
             <p class="hp-mini-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.6h17M8 3v4M16 3v4"/></svg>Nepal Calendar</p>
-            <p class="hp-mini-big" lang="ne">{toDevanagari(String(today.bsDay))}</p>
-            <p class="hp-mini-sub" lang="ne">{BS_MONTHS_NP[today.bsMonth - 1]} {toDevanagari(String(today.bsYear))}</p>
-            <p class="hp-mini-sub" lang="ne">{today.dayOfWeekNp}</p>
+            <p class="hp-mini-big" lang="ne" data-np-live="bsDayNp">{toDevanagari(String(today.bsDay))}</p>
+            <p class="hp-mini-sub" lang="ne" data-np-live="bsMonthYearNp">{BS_MONTHS_NP[today.bsMonth - 1]} {toDevanagari(String(today.bsYear))}</p>
+            <p class="hp-mini-sub" lang="ne" data-np-live="weekdayNp">{today.dayOfWeekNp}</p>
           </a>
         </div>
         <div class="hp-today-fx">
           <a class="hp-fx" href="/nepal/gold-price-nepal">
             <span class="hp-fx-ico hp-fx-gold" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={POP_ICONS.coins} /></span>
-            <span class="hp-fx-body"><span class="hp-fx-label">Gold <span>(per tola)</span></span><span class="hp-fx-val">Rs {formatNumber(gold24k)}</span></span>
-            <span class:list={['npb-chg', 'hp-fx-chg', gold.change.direction === 'up' ? 'up' : gold.change.direction === 'flat' ? 'flat' : 'down']}>{gold.change.direction === 'up' ? '↑' : gold.change.direction === 'flat' ? '→' : '↓'} {gold.change.percent.toFixed(1)}%</span>
+            <span class="hp-fx-body"><span class="hp-fx-label">Gold <span>(per tola)</span></span><span class="hp-fx-val" data-np-live="heroGold">Rs {formatNumber(gold24k)}</span></span>
+            <span class:list={['npb-chg', 'hp-fx-chg', gold.change.direction === 'up' ? 'up' : gold.change.direction === 'flat' ? 'flat' : 'down']} data-np-live="heroGoldChg">{gold.change.direction === 'up' ? '↑' : gold.change.direction === 'flat' ? '→' : '↓'} {gold.change.percent.toFixed(1)}%</span>
           </a>
           <a class="hp-fx" href="/foreign-exchange-nepal">
             <span class="hp-fx-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 20 20"><defs><clipPath id="hp-usclip"><circle cx="10" cy="10" r="10"/></clipPath></defs><g clip-path="url(#hp-usclip)"><rect width="20" height="20" fill="#B31942"/><g fill="#fff"><rect y="2.6" width="20" height="2"/><rect y="6.5" width="20" height="2"/><rect y="10.4" width="20" height="2"/><rect y="14.3" width="20" height="2"/></g><rect width="9" height="10" fill="#0A3161"/></g></svg></span>
-            <span class="hp-fx-body"><span class="hp-fx-label">USD / NPR</span><span class="hp-fx-val">Rs {formatNumber(usd?.sellPerUnit ?? 0)}</span></span>
+            <span class="hp-fx-body"><span class="hp-fx-label">USD / NPR</span><span class="hp-fx-val" data-np-live="heroUsd">Rs {formatNumber(usd?.sellPerUnit ?? 0)}</span></span>
           </a>
         </div>
         <div class="hp-today-links">
-          <a href="/nepal/fuel-price-nepal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M4 21h12"/><path d="M15 10h2.5A2.5 2.5 0 0 1 20 12.5V17a1.5 1.5 0 0 0 3 0V9.5L20.5 7"/><path d="M8 8h4v4H8z"/></svg>Diesel <strong>Rs {formatNumber(fuel.diesel.price)}/L</strong><span aria-hidden="true">→</span></a>
-          <a href="/nepal/fuel-price-nepal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.3 6 11a6 6 0 0 1-12 0c0-4.7 6-11 6-11z"/></svg>LPG <strong>Rs {formatNumber(fuel.lpg.price)}</strong><span aria-hidden="true">→</span></a>
-          <a href="/nepal/calendar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.6h17M8 3v4M16 3v4"/></svg>Date <strong lang="ne">{bsShort}</strong><span aria-hidden="true">→</span></a>
+          <a href="/nepal/fuel-price-nepal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M4 21h12"/><path d="M15 10h2.5A2.5 2.5 0 0 1 20 12.5V17a1.5 1.5 0 0 0 3 0V9.5L20.5 7"/><path d="M8 8h4v4H8z"/></svg>Diesel <strong data-np-live="dieselLink">Rs {formatNumber(fuel.diesel.price)}/L</strong><span aria-hidden="true">→</span></a>
+          <a href="/nepal/fuel-price-nepal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.3 6 11a6 6 0 0 1-12 0c0-4.7 6-11 6-11z"/></svg>LPG <strong data-np-live="lpgLink">Rs {formatNumber(fuel.lpg.price)}</strong><span aria-hidden="true">→</span></a>
+          <a href="/nepal/calendar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.6h17M8 3v4M16 3v4"/></svg>Date <strong lang="ne" data-np-live="bsShort">{bsShort}</strong><span aria-hidden="true">→</span></a>
           <a class="hp-today-more" href="#snapshot">View more <span aria-hidden="true">→</span></a>
         </div>
       </aside>
@@ -292,43 +299,43 @@ const STRIP = [
           <span class="npb-live">
             <span class="npb-live-row">
               <span class="npb-dot" aria-hidden="true"></span>
-              <span class:list={["npb-live-label", !isLive && "offline"]}>{isLive ? 'Live' : 'Offline'}</span>
+              <span class:list={["npb-live-label", !isLive && "offline"]} data-np-live="pillState">{isLive ? 'Live' : 'Offline'}</span>
             </span>
-            <span class="npb-live-time">{boardUpdated}</span>
+            <span class="npb-live-time" data-np-live="pillTime">{boardUpdated}</span>
           </span>
         </header>
 
         <div class="npb-bento">
           <a href="/nepal/gold-price-nepal" class="npb-card npb-gold">
             <p class="npb-label"><span class="npb-gold-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={POP_ICONS.coins} /></span>Gold</p>
-            <p class="npb-gold-value">Rs {formatNumber(gold24k)}</p>
+            <p class="npb-gold-value" data-np-live="goldVal">Rs {formatNumber(gold24k)}</p>
             <p class="npb-unit">per tola</p>
-            <p class:list={['npb-chg', goldBadge.cls]}>{goldBadge.arrow} {goldBadge.text}</p>
+            <p class:list={['npb-chg', goldBadge.cls]} data-np-live="goldChg">{goldBadge.arrow} {goldBadge.text}</p>
             <svg class="npb-trend" viewBox="0 0 220 56" preserveAspectRatio="none" aria-hidden="true">
-              <path class:list={['npb-trend-line', gold.change.direction]} d={goldTrend} fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              <path class:list={['npb-trend-line', gold.change.direction]} data-np-live="goldTrend" d={goldTrend} fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <p class="npb-trend-cap"><span>vs yesterday</span><span class="npb-more">View details <span aria-hidden="true">→</span></span></p>
           </a>
 
           <a href="/nepal/silver-price-nepal" class="npb-card npb-mini" aria-label={`Silver: Rs ${formatNumber(silver.silver.pricePerTola)} per tola`}>
             <p class="npb-label">Silver</p>
-            <p class="npb-value">Rs {formatNumber(silver.silver.pricePerTola)}</p>
+            <p class="npb-value" data-np-live="silverVal">Rs {formatNumber(silver.silver.pricePerTola)}</p>
             <p class="npb-unit">per tola</p>
-            <p class:list={['npb-chg', silverBadge.cls]}>{silverBadge.arrow} {silverBadge.text}</p>
+            <p class:list={['npb-chg', silverBadge.cls]} data-np-live="silverChg">{silverBadge.arrow} {silverBadge.text}</p>
           </a>
 
           <a href="/foreign-exchange-nepal" class="npb-card npb-mini" aria-label={`US Dollar: Rs ${formatNumber(usd?.sellPerUnit ?? 0)}`}>
             <p class="npb-label">USD / NPR</p>
-            <p class="npb-value">Rs {formatNumber(usd?.sellPerUnit ?? 0)}</p>
+            <p class="npb-value" data-np-live="usdVal">Rs {formatNumber(usd?.sellPerUnit ?? 0)}</p>
             <p class="npb-unit">1 USD · NRB</p>
           </a>
 
           <a href="/nepal/fuel-price-nepal" class="npb-card npb-mini npb-petrol" aria-label={`Petrol: Rs ${formatNumber(fuel.petrol.price)} per litre, Kathmandu`}>
             <p class="npb-label"><span class="npb-petrol-ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M4 21h12"/><path d="M15 10h2.5A2.5 2.5 0 0 1 20 12.5V17a1.5 1.5 0 0 0 3 0V9.5L20.5 7"/><path d="M8 8h4v4H8z"/></svg></span>Petrol</p>
-            <p class="npb-value">Rs {formatNumber(fuel.petrol.price)}/L</p>
+            <p class="npb-value" data-np-live="petrolVal">Rs {formatNumber(fuel.petrol.price)}/L</p>
             <p class="npb-unit">Kathmandu</p>
             {petrolBadge && (
-              <p class:list={['npb-chg', petrolBadge.cls]}>{petrolBadge.arrow} {petrolBadge.text}</p>
+              <p class:list={['npb-chg', petrolBadge.cls]} data-np-live="petrolChg">{petrolBadge.arrow} {petrolBadge.text}</p>
             )}
           </a>
 
@@ -348,14 +355,14 @@ const STRIP = [
             <>
               <a href={item.href} class="npb-strip-item">
                 <span class="npb-strip-label">{item.label}</span>
-                <span class="npb-strip-val">{item.text}</span>
+                <span class="npb-strip-val" data-np-live={item.live}>{item.text}</span>
                 {item.unit && <span class="npb-strip-unit">{item.unit}</span>}
                 {item.badge && <span class:list={['npb-strip-chg', item.badge.cls]}>{item.badge.arrow}{item.badge.text}</span>}
               </a>
             </>
           ))}
         </footer>
-        <p class="npb-src">Rates from NRB, NOC, FENEGOSIDA and Open-Meteo ({isLive ? 'live' : 'cached snapshot'}).</p>
+        <p class="npb-src">Rates from NRB, NOC, FENEGOSIDA and Open-Meteo (<span data-np-live="srcWord">{isLive ? 'live' : 'cached snapshot'}</span>).</p>
       </div>
     </div>
   </section>
@@ -1897,7 +1904,7 @@ const STRIP = [
     /* Hero */
     .hp-hero { padding: 32px 0 24px; }
     .hp-hero-grid { gap: 24px; }
-    .hp-hero-ghost { display: none; }
+    .hp-hero-ghost { min-height: 46px; padding: 12px 22px; font-size: var(--fs-body); }
     .hp-title { font-size: var(--fs-hero-m); margin-bottom: 12px; }
     .hp-sub-strong { font-size: var(--fs-md); margin-bottom: 8px; }
     .hp-sub { font-size: var(--fs-body); }
@@ -2026,6 +2033,9 @@ const STRIP = [
 </style>
 
 <script>
+  import { getTodayInfo, BS_MONTHS_NP } from '../../lib/nepal/nepal-time.js';
+  import { toDevanagari } from '../../lib/utils/npr.js';
+
   /* Mini transitions — staggered scroll reveal for homepage sections. */
   function initHpReveals() {
     const targets = document.querySelectorAll(
@@ -2082,5 +2092,190 @@ const STRIP = [
   }
   initHpSlash();
   document.addEventListener('astro:page-load', initHpSlash);
+
+  /* ── Live date hydration ───────────────────────────────────────────────
+     The board's date cells (hero dateline, mini-calendar card, DATE pill)
+     are rendered from getTodayInfo() at BUILD time — in production a
+     deployed page keeps showing the build day until the next rebuild.
+     Recompute "today" per visitor (Asia/Kathmandu via Intl, same source as
+     the calendar page's live-today fix) and swap only the tagged date
+     fragments (data-np-live). The baked static text doubles as the no-JS
+     fallback. */
+  function initNpLiveDate() {
+    try {
+      const t = getTodayInfo();
+      const dev = (n) => toDevanagari(String(n));
+      const live = {
+        weekday: t.dayOfWeek,
+        weekdayNp: t.dayOfWeekNp,
+        bsShort: `${dev(t.bsDay)} ${BS_MONTHS_NP[t.bsMonth - 1]}`,
+        bsYear: dev(t.bsYear),
+        bsDayNp: dev(t.bsDay),
+        bsMonthYearNp: `${BS_MONTHS_NP[t.bsMonth - 1]} ${dev(t.bsYear)}`,
+      };
+      for (const [key, text] of Object.entries(live)) {
+        document.querySelectorAll(`[data-np-live="${key}"]`).forEach((el) => {
+          el.textContent = text;
+        });
+      }
+    } catch {
+      /* Never break the page over date hydration — the baked date remains. */
+    }
+  }
+  initNpLiveDate();
+  document.addEventListener('astro:page-load', initNpLiveDate);
+
+  /* ── Live board hydration (prices) ─────────────────────────────────────
+     The homepage board's numbers are baked at build time. The same-origin
+     edge routes in src/worker.js (/api/live/metals|fuel|forex) re-fetch
+     FENEGOSIDA/NOC/NRB with edge caching — the gold, fuel and forex pages
+     already hydrate from them. This applies the same pattern here: fetch
+     all three in parallel, rewrite the tagged values, and flip the
+     Live/Offline pill + "Updated … NPT" stamp. Any failure keeps the baked
+     snapshot silently — never an error state. */
+  function initNpLiveBoard() {
+    const ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    const kill = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+    function getJson(path) {
+      return fetch(path, ctl ? { signal: ctl.signal } : {})
+        .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); });
+    }
+    // Mirror of lib/utils/npr.js formatNumber() (auto 0/2 decimals, en-IN
+    // grouping) so hydrated values match the server-rendered format exactly.
+    function fmtNp(n) {
+      const x = Number(n);
+      if (!isFinite(x)) return '0';
+      const frac = Math.abs(x - Math.round(x)) > 0.004;
+      return new Intl.NumberFormat('en-IN', {
+        minimumFractionDigits: frac ? 2 : 0,
+        maximumFractionDigits: frac ? 2 : 0,
+      }).format(x);
+    }
+    function nptTime(iso) {
+      try {
+        return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kathmandu' });
+      } catch { return ''; }
+    }
+    const q = (key) => document.querySelectorAll('[data-np-live="' + key + '"]');
+    const put = (key, text) => q(key).forEach(function (el) { el.textContent = text; });
+    // Badge/trend spans keep their base classes; only the direction word swaps.
+    function setDirection(key, dir) {
+      q(key).forEach(function (el) {
+        el.classList.remove('up', 'down', 'flat');
+        el.classList.add(dir);
+      });
+    }
+    // Mirror of frontmatter trendD(): straight line yesterday → today in a
+    // 220×56 viewBox with 10px padding.
+    function setTrend(dir, yesterday, today) {
+      q('goldTrend').forEach(function (path) {
+        const min = Math.min(yesterday, today);
+        const max = Math.max(yesterday, today);
+        const range = max - min || 1;
+        const y = (v) => 56 - 10 - ((v - min) / range) * (56 - 20);
+        path.setAttribute('d', 'M0,' + y(yesterday).toFixed(1) + ' L220,' + y(today).toFixed(1));
+        setDirection('goldTrend', dir);
+      });
+    }
+    function changeOf(today, yesterday) {
+      const diff = today - yesterday;
+      const dir = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+      const arrow = dir === 'flat' ? '→' : dir === 'up' ? '↑' : '↓';
+      const pct = (Math.abs(diff) / yesterday * 100).toFixed(1);
+      return { dir, arrow, diff, pct };
+    }
+    function okPrice(v) { return Number.isFinite(v) && v > 0; }
+    function applyMetals(j) {
+      const g = j.data && j.data.gold;
+      const s = j.data && j.data.silver;
+      if (g && okPrice(g.pricePerTola)) {
+        put('heroGold', 'Rs ' + fmtNp(g.pricePerTola));
+        put('goldVal', 'Rs ' + fmtNp(g.pricePerTola));
+        if (okPrice(g.yesterdayPricePerTola)) {
+          const c = changeOf(g.pricePerTola, g.yesterdayPricePerTola);
+          put('heroGoldChg', c.arrow + ' ' + c.pct + '%');
+          put('goldChg', c.arrow + ' ' + c.pct + '% today');
+          setDirection('heroGoldChg', c.dir);
+          setDirection('goldChg', c.dir);
+          if (c.dir !== 'flat') setTrend(c.dir, g.yesterdayPricePerTola, g.pricePerTola);
+        }
+      }
+      if (s && okPrice(s.pricePerTola)) {
+        put('silverVal', 'Rs ' + fmtNp(s.pricePerTola));
+        if (okPrice(s.yesterdayPricePerTola)) {
+          const c = changeOf(s.pricePerTola, s.yesterdayPricePerTola);
+          put('silverChg', c.arrow + ' ' + c.pct + '% today');
+          setDirection('silverChg', c.dir);
+        }
+      }
+    }
+    function applyFuel(j) {
+      const d = j.data || {};
+      const ktm = d.byCity && d.byCity.kathmandu;
+      if (ktm && okPrice(ktm.petrol)) put('petrolVal', 'Rs ' + fmtNp(ktm.petrol) + '/L');
+      if (ktm && okPrice(ktm.diesel)) put('dieselLink', 'Rs ' + fmtNp(ktm.diesel) + '/L');
+      if (okPrice(d.lpg)) put('lpgLink', 'Rs ' + fmtNp(d.lpg));
+      if (ktm && isFinite(ktm.diesel)) put('stripDiesel', 'Rs ' + fmtNp(ktm.diesel) + '/L');
+      if (isFinite(d.lpg)) put('stripLpg', 'Rs ' + fmtNp(d.lpg));
+      // Petrol change comes from the newest Kathmandu history entry
+      // (newest minus previous publish — same source as fuel-price page).
+      if (ktm && okPrice(ktm.petrol) && Array.isArray(d.history) && d.history.length && Number.isFinite(d.history[0].change)) {
+        const change = d.history[0].change;
+        const dir = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
+        const arrow = dir === 'flat' ? '→' : dir === 'up' ? '↑' : '↓';
+        put('petrolChg', arrow + ' Rs ' + fmtNp(Math.abs(change)) + '/L');
+        setDirection('petrolChg', dir);
+      }
+    }
+    function applyForex(j) {
+      const list = j.data && j.data.currencies;
+      if (!Array.isArray(list)) return;
+      // Worker rows: { iso3, unit, buy, sell } — sell is quoted per `unit`
+      // (USD/EUR per unit, INR per 100), matching the server-rendered values.
+      for (const r of list) {
+        if (!r) continue;
+        const sell = parseFloat(r.sell);
+        if (!isFinite(sell)) continue;
+        if (r.iso3 === 'USD') { put('heroUsd', 'Rs ' + fmtNp(sell)); put('usdVal', 'Rs ' + fmtNp(sell)); }
+        if (r.iso3 === 'EUR') put('stripEur', 'Rs ' + fmtNp(sell));
+        if (r.iso3 === 'INR') put('stripInr', 'Rs ' + fmtNp(sell));
+      }
+    }
+    return Promise.allSettled([getJson('/api/live/metals'), getJson('/api/live/fuel'), getJson('/api/live/forex')])
+      .then(function (results) {
+        clearTimeout(kill);
+        const apply = [applyMetals, applyFuel, applyForex];
+        let okCount = 0;
+        let bestIso = null;
+        for (let i = 0; i < results.length; i++) {
+          const res = results[i];
+          const j = res.status === 'fulfilled' ? res.value : null;
+          if (!j || !j.ok || !j.data) continue;
+          apply[i](j);
+          okCount++;
+          if (j.fetchedAt) {
+            const t = Date.parse(j.fetchedAt);
+            if (isFinite(t) && (bestIso === null || t > bestIso.t)) bestIso = { t, iso: j.fetchedAt };
+          }
+        }
+        // Honest labeling: the pill flips to Live only when every section
+        // refreshed — mirroring the build-time freshness logic. Partial
+        // success updates the values that arrived but keeps Offline.
+        if (okCount === 3) {
+          put('pillState', 'Live');
+          q('pillState').forEach(function (el) { el.classList.remove('offline'); });
+          put('srcWord', 'live');
+        } else if (okCount > 0) {
+          put('pillState', 'Offline');
+          put('srcWord', 'cached snapshot');
+        }
+        if (okCount > 0 && bestIso) {
+          const when = nptTime(bestIso.iso);
+          if (when) put('pillTime', 'Updated ' + when + ' NPT');
+        }
+      })
+      .catch(function () { clearTimeout(kill); });
+  }
+  initNpLiveBoard();
 </script>
 

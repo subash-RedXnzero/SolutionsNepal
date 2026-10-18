@@ -758,9 +758,102 @@ const initialData = JSON.stringify({
       }
     });
 
+    // ── Live "today" — the build-time date goes stale after hosting ──
+    // The page is pre-rendered: DATA.today was frozen at build time, so the
+    // आज highlight, "X दिन पछि" labels and the upcoming list all drift once
+    // the calendar rolls over. Same epoch/tables as the engine above let the
+    // browser recompute today per visitor (Nepal, UTC+05:45) with no rebuild.
+    const NEPAL_OFFSET_MS = (5 * 60 + 45) * 60 * 1000;
+
+    function adToBsClient(adY, adM, adD) {
+      const dayNum = Math.round(Date.UTC(adY, adM - 1, adD) / MS_PER_DAY);
+      const rel = dayNum - EPOCH_UTC / MS_PER_DAY;
+      if (!Number.isFinite(rel) || rel < 0) return null;
+      let lo = 2000, hi = 2090, bsYear = -1;
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        if (YEAR_START_OFFSET_INLINE[mid] <= rel) { bsYear = mid; lo = mid + 1; }
+        else { hi = mid - 1; }
+      }
+      if (bsYear < 0) return null;
+      let rem = rel - YEAR_START_OFFSET_INLINE[bsYear];
+      const row = ALL_BS_MONTH_DAYS[bsYear];
+      let bsMonth = 1;
+      while (bsMonth <= 12 && rem >= row[bsMonth - 1]) { rem -= row[bsMonth - 1]; bsMonth++; }
+      if (bsMonth > 12) return null;
+      return { year: bsYear, month: bsMonth, day: rem + 1 };
+    }
+
+    function nepalBsToday() {
+      // Shift the clock by +05:45 and read the UTC parts: identical to
+      // lib/nepal/calendar.js todayInNepal(), independent of device timezone.
+      const n = new Date(Date.now() + NEPAL_OFFSET_MS);
+      return adToBsClient(n.getUTCFullYear(), n.getUTCMonth() + 1, n.getUTCDate());
+    }
+
+    function applyLiveToday() {
+      const live = nepalBsToday();
+      if (!live) return false;
+      const baked = DATA.today;
+      // Guard against a bad device clock or a table gap: only accept the live
+      // date when it sits within 45 days of the build-time date.
+      const a = bsToAdClient(baked.year, baked.month, baked.day);
+      const b = bsToAdClient(live.year, live.month, live.day);
+      if (!a || !b) return false;
+      if (Math.abs(Date.UTC(b.year, b.month - 1, b.day) - Date.UTC(a.year, a.month - 1, a.day)) > 45 * MS_PER_DAY) return false;
+      if (live.year === baked.year && live.month === baked.month && live.day === baked.day) return false;
+      DATA.today = live;
+      return true;
+    }
+
+    // Rebuild the आगामी दिन list from the live today instead of the baked one.
+    function recomputeUpcomingEvents() {
+      const t = DATA.today;
+      const collected = [];
+      for (let y = t.year; y <= t.year + 2; y++) {
+        for (let m = 1; m <= 12; m++) {
+          if (y === t.year && m < t.month) continue;
+          const md = ensureMonthData(y, m);
+          for (const ev of dedupEvents(md.events || [])) {
+            if (ev.bs.year < t.year) continue;
+            if (ev.bs.year === t.year && ev.bs.month < t.month) continue;
+            if (ev.bs.year === t.year && ev.bs.month === t.month && ev.bs.day < t.day) continue;
+            collected.push(ev);
+          }
+        }
+      }
+      collected.sort((x, w) =>
+        (x.bs.year - w.bs.year) || (x.bs.month - w.bs.month) || (x.bs.day - w.bs.day));
+      return collected.slice(0, 15);
+    }
+
     // ── Initial render ──
+    if (applyLiveToday()) {
+      viewYear = DATA.today.year;
+      viewMonth = DATA.today.month;
+      selectedDay = DATA.today.day;
+      selectedMonth = DATA.today.month;
+      selectedYear = DATA.today.year;
+      DATA.upcomingEvents = recomputeUpcomingEvents();
+    }
     renderCalendar();
     renderEvents();
+
+    // Day-to-day liveness while the page stays open: re-check every minute so
+    // the आज highlight and relative labels roll over at Nepal midnight without
+    // waiting for a rebuild.
+    setInterval(() => {
+      if (!applyLiveToday()) return;
+      DATA.upcomingEvents = recomputeUpcomingEvents();
+      // When viewing today's own month, follow the rollover to the new day.
+      if (viewYear === DATA.today.year && viewMonth === DATA.today.month) {
+        selectedDay = DATA.today.day;
+        selectedMonth = DATA.today.month;
+        selectedYear = DATA.today.year;
+      }
+      renderCalendar();
+      renderEvents();
+    }, 60000);
   </script>
 </BaseLayout>
 

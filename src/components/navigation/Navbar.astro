@@ -14,7 +14,7 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
   <div class="nk-header-inner">
     <!-- Logo -->
     <a href="/" class="nk-logo" aria-label="SolutionsNepal Home">
-      <img src="/navbar.webp" alt="SolutionsNepal logo" width="38" height="38" class="nk-logo-mark" fetchpriority="high" decoding="async" />
+      <img src="/android-chrome-192x192.png" alt="SolutionsNepal logo" width="40" height="40" class="nk-logo-mark" fetchpriority="high" decoding="async" />
       <span class="nk-logo-text">SolutionsNepal</span>
     </a>
 
@@ -88,16 +88,17 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
   }
   .nk-logo:hover { color: var(--nk-text); }
   .nk-logo-mark {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border-radius: 8px;
     display: block;
     flex-shrink: 0;
-    object-fit: cover;
+    object-fit: contain;
+    background: #fff;
     align-self: center;
   }
   .nk-logo-text {
-    font-size: 26px;
+    font-size: 32px;
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1;
@@ -189,8 +190,8 @@ const isActive = (href) => href === '/' ? path === '/' : path === href || path.s
   @media (max-width: 768px) {
     .nk-header-inner { padding: 0 16px; gap: 16px; height: 60px; }
     .nk-logo { margin-left: 0; gap: 6px; transform: none; }
-    .nk-logo-mark { width: 24px; height: 24px; }
-    .nk-logo-text { font-size: 24px; }
+    .nk-logo-mark { width: 28px; height: 28px; }
+    .nk-logo-text { font-size: 27px; }
     .nk-nav-desktop { display: none; }
     .nk-mobile-only { display: inline-flex; }
     .nk-mobile-link { min-height: 44px; display: flex; align-items: center; }
