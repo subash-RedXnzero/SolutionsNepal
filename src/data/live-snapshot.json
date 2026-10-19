@@ -1,7 +1,7 @@
 {
   "meta": {
-    "fetchedAt": "2026-10-19T20:23:21.676Z",
-    "fetchedAtNPT": "2:08 AM",
+    "fetchedAt": "2026-10-19T23:52:26.382Z",
+    "fetchedAtNPT": "5:37 AM",
     "sources": {
       "forex": "Nepal Rastra Bank (nrb.org.np)",
       "gold": "FENEGOSIDA (fenegosida.org)",
@@ -330,15 +330,15 @@
     "cities": {
       "kathmandu": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 12.7,
-          "relative_humidity_2m": 99,
-          "apparent_temperature": 13,
-          "weather_code": 45,
+          "temperature_2m": 11.3,
+          "relative_humidity_2m": 100,
+          "apparent_temperature": 11,
+          "weather_code": 3,
           "cloud_cover": 100,
-          "wind_speed_10m": 3.4,
-          "wind_direction_10m": 164,
+          "wind_speed_10m": 4.8,
+          "wind_direction_10m": 155,
           "precipitation": 0
         },
         "hourly": {
@@ -395,14 +395,14 @@
             16.3
           ],
           "code": [
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            1,
             0,
             0,
             0,
@@ -433,11 +433,11 @@
             0,
             0,
             0,
-            7,
-            17,
-            22,
-            17,
-            7,
+            5,
+            12,
+            16,
+            12,
+            5,
             0,
             0,
             0,
@@ -481,14 +481,14 @@
             0,
             0.1,
             1.05,
-            2.65,
-            4.4,
+            2.7,
+            4.45,
             5.85,
             6.65,
             6.7,
             5.95,
-            4.6,
-            2.8,
+            4.55,
+            2.7,
             0.8,
             0.05,
             0,
@@ -511,27 +511,27 @@
             "2026-10-27"
           ],
           "temperature_2m_max": [
-            24.1,
-            25,
+            24,
             24.8,
-            24.5,
-            24.4,
             24.8,
-            26.2,
-            27.2
+            24.3,
+            24.2,
+            24.7,
+            25.3,
+            26
           ],
           "temperature_2m_min": [
             11.2,
-            14.1,
-            15.1,
+            14.2,
+            15.3,
+            13.7,
             13.5,
-            13.4,
-            14.9,
             14.7,
+            14.6,
             15.8
           ],
           "weather_code": [
-            45,
+            3,
             51,
             2,
             1,
@@ -541,13 +541,13 @@
             0
           ],
           "precipitation_probability_max": [
-            22,
-            22,
+            16,
+            8,
+            6,
+            0,
+            0,
             0,
             2,
-            0,
-            0,
-            4,
             6
           ],
           "sunrise": [
@@ -584,15 +584,15 @@
       },
       "pokhara": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 16.4,
-          "relative_humidity_2m": 83,
-          "apparent_temperature": 17.2,
+          "temperature_2m": 15.5,
+          "relative_humidity_2m": 86,
+          "apparent_temperature": 16.2,
           "weather_code": 0,
-          "cloud_cover": 2,
-          "wind_speed_10m": 1.9,
-          "wind_direction_10m": 311,
+          "cloud_cover": 0,
+          "wind_speed_10m": 1.5,
+          "wind_direction_10m": 291,
           "precipitation": 0
         },
         "hourly": {
@@ -671,8 +671,8 @@
             0,
             0,
             0,
-            45,
-            45
+            0,
+            0
           ],
           "rainProb": [
             0,
@@ -690,11 +690,11 @@
             0,
             0,
             0,
-            1,
-            2,
-            2,
-            2,
-            1,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -738,7 +738,7 @@
             2.3,
             3.95,
             5.3,
-            6.1,
+            6.15,
             6.25,
             5.6,
             4.35,
@@ -765,43 +765,43 @@
             "2026-10-27"
           ],
           "temperature_2m_max": [
-            24.8,
+            24.7,
             25.6,
-            25.8,
+            25.7,
+            25.5,
             25.2,
-            25.1,
-            25.3,
-            26.3,
-            27.9
+            25.5,
+            26,
+            27.3
           ],
           "temperature_2m_min": [
             15.5,
-            13.8,
+            14.3,
             13.7,
-            14,
+            15.1,
+            13.3,
             13.5,
-            12.6,
-            11.7,
-            11.7
+            12.2,
+            10.9
           ],
           "weather_code": [
-            45,
-            45,
-            45,
             0,
             0,
-            45,
-            45,
-            45
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
           ],
           "precipitation_probability_max": [
+            0,
+            0,
+            0,
+            2,
             2,
             0,
             0,
-            6,
-            2,
-            0,
-            2,
             4
           ],
           "sunrise": [
@@ -826,26 +826,26 @@
           ],
           "uv_index_max": [
             6.25,
-            6.25,
+            6.2,
             6.2,
             6.15,
             6.1,
-            6.15,
             6.1,
-            6
+            6.1,
+            6.1
           ]
         }
       },
       "lalitpur": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 12.9,
-          "relative_humidity_2m": 99,
-          "apparent_temperature": 13.7,
-          "weather_code": 45,
+          "temperature_2m": 11.2,
+          "relative_humidity_2m": 100,
+          "apparent_temperature": 11.4,
+          "weather_code": 3,
           "cloud_cover": 98,
-          "wind_speed_10m": 0.5,
+          "wind_speed_10m": 1.4,
           "wind_direction_10m": 180,
           "precipitation": 0
         },
@@ -903,14 +903,14 @@
             16.1
           ],
           "code": [
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            1,
             0,
             0,
             0,
@@ -941,11 +941,11 @@
             0,
             0,
             0,
-            7,
-            17,
-            22,
-            17,
-            7,
+            5,
+            12,
+            16,
+            12,
+            5,
             0,
             0,
             0,
@@ -989,14 +989,14 @@
             0,
             0.1,
             1.05,
-            2.65,
-            4.4,
+            2.7,
+            4.45,
             5.85,
             6.65,
             6.7,
             5.95,
-            4.6,
-            2.8,
+            4.55,
+            2.7,
             0.8,
             0.05,
             0,
@@ -1022,21 +1022,21 @@
             23.9,
             24.3,
             24.9,
+            24.5,
+            24.2,
             24.7,
-            24.1,
-            24.8,
-            26.1,
-            26.9
+            25.3,
+            25.8
           ],
           "temperature_2m_min": [
             11.2,
-            13.7,
-            14.3,
-            13.6,
-            13.7,
+            13.8,
             14.7,
-            14.2,
-            15.1
+            13.9,
+            13.6,
+            14.7,
+            14.3,
+            15
           ],
           "weather_code": [
             51,
@@ -1049,13 +1049,13 @@
             0
           ],
           "precipitation_probability_max": [
-            22,
-            22,
+            16,
+            8,
+            6,
+            0,
+            0,
             0,
             2,
-            0,
-            0,
-            4,
             6
           ],
           "sunrise": [
@@ -1092,15 +1092,15 @@
       },
       "bhaktapur": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 12.6,
-          "relative_humidity_2m": 99,
-          "apparent_temperature": 13.3,
-          "weather_code": 45,
+          "temperature_2m": 11.2,
+          "relative_humidity_2m": 100,
+          "apparent_temperature": 11.5,
+          "weather_code": 3,
           "cloud_cover": 99,
           "wind_speed_10m": 0.6,
-          "wind_direction_10m": 252,
+          "wind_direction_10m": 236,
           "precipitation": 0
         },
         "hourly": {
@@ -1157,13 +1157,13 @@
             15.9
           ],
           "code": [
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
             1,
             0,
             0,
@@ -1251,7 +1251,7 @@
             5.95,
             4.55,
             2.85,
-            1.05,
+            1,
             0.1,
             0,
             0,
@@ -1274,23 +1274,23 @@
           ],
           "temperature_2m_max": [
             23.2,
-            23.8,
+            23.7,
             24.4,
-            24.5,
-            23.8,
             24.4,
-            25.1,
-            26
+            23.9,
+            24.3,
+            24.2,
+            24.9
           ],
           "temperature_2m_min": [
             11.2,
-            14.3,
-            14.7,
+            14.4,
+            14.8,
+            14.2,
+            13.4,
             14,
-            13.8,
-            14.3,
-            14.3,
-            15
+            14,
+            14.6
           ],
           "weather_code": [
             51,
@@ -1305,12 +1305,12 @@
           "precipitation_probability_max": [
             0,
             2,
-            0,
             4,
+            2,
+            2,
             0,
             2,
-            4,
-            10
+            6
           ],
           "sunrise": [
             "2026-10-20T06:06",
@@ -1339,22 +1339,22 @@
             6.6,
             6.55,
             6.55,
-            6.55,
+            6.5,
             6.5
           ]
         }
       },
       "biratnagar": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 21.3,
-          "relative_humidity_2m": 91,
-          "apparent_temperature": 24.3,
+          "temperature_2m": 20.3,
+          "relative_humidity_2m": 93,
+          "apparent_temperature": 23.3,
           "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 4.7,
-          "wind_direction_10m": 302,
+          "cloud_cover": 7,
+          "wind_speed_10m": 3.5,
+          "wind_direction_10m": 348,
           "precipitation": 0
         },
         "hourly": {
@@ -1499,10 +1499,10 @@
             1.15,
             2.75,
             4.4,
-            5.7,
+            5.65,
             6.35,
             6.3,
-            5.55,
+            5.5,
             4.15,
             2.5,
             0.95,
@@ -1530,27 +1530,27 @@
             30,
             30.1,
             29.6,
+            29.2,
             29.1,
-            29,
-            29.8,
-            30.5,
-            31.1
+            29.9,
+            29.7,
+            30.5
           ],
           "temperature_2m_min": [
             20.3,
+            20,
             19.9,
-            19.8,
-            19.4,
-            18.9,
-            18.1,
-            17.4,
-            17.2
+            19.5,
+            18.8,
+            18.8,
+            17.7,
+            16.8
           ],
           "weather_code": [
             1,
             0,
             0,
-            45,
+            3,
             0,
             0,
             0,
@@ -1562,9 +1562,9 @@
             0,
             0,
             0,
-            2,
-            4,
-            4
+            0,
+            6,
+            14
           ],
           "sunrise": [
             "2026-10-20T05:57",
@@ -1591,24 +1591,24 @@
             6.35,
             6.35,
             6.3,
-            6.25,
+            6.3,
             6.2,
             6.2,
-            6
+            6.1
           ]
         }
       },
       "bharatpur": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 20.5,
-          "relative_humidity_2m": 78,
-          "apparent_temperature": 22.6,
+          "temperature_2m": 18.4,
+          "relative_humidity_2m": 89,
+          "apparent_temperature": 20.3,
           "weather_code": 0,
           "cloud_cover": 0,
-          "wind_speed_10m": 1.2,
-          "wind_direction_10m": 27,
+          "wind_speed_10m": 2.1,
+          "wind_direction_10m": 15,
           "precipitation": 0
         },
         "hourly": {
@@ -1785,27 +1785,27 @@
             29.9,
             29.4,
             29,
-            28.6,
+            28.8,
             29.1,
-            30,
-            31.2
+            28.2,
+            29.4
           ],
           "temperature_2m_min": [
+            18.4,
             18.3,
-            18.3,
-            17.6,
+            17.8,
             17.4,
-            17.9,
-            16.3,
+            17.8,
+            16.8,
             15.9,
-            15.7
+            15.4
           ],
           "weather_code": [
             0,
             0,
             0,
             0,
-            45,
+            2,
             0,
             0,
             0
@@ -1817,8 +1817,8 @@
             0,
             0,
             0,
-            4,
-            6
+            0,
+            2
           ],
           "sunrise": [
             "2026-10-20T06:10",
@@ -1848,21 +1848,21 @@
             6.05,
             6.05,
             6.05,
-            5.55
+            6
           ]
         }
       },
       "butwal": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 19.5,
+          "temperature_2m": 18.8,
           "relative_humidity_2m": 81,
-          "apparent_temperature": 21.1,
-          "weather_code": 45,
-          "cloud_cover": 26,
-          "wind_speed_10m": 3.7,
-          "wind_direction_10m": 23,
+          "apparent_temperature": 20.1,
+          "weather_code": 1,
+          "cloud_cover": 41,
+          "wind_speed_10m": 3.6,
+          "wind_direction_10m": 20,
           "precipitation": 0
         },
         "hourly": {
@@ -1919,14 +1919,14 @@
             20.5
           ],
           "code": [
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
             0,
             0,
             0,
@@ -1939,10 +1939,10 @@
             0,
             0,
             0,
-            45,
-            45,
-            45,
-            45
+            0,
+            1,
+            1,
+            1
           ],
           "rainProb": [
             0,
@@ -1957,11 +1957,11 @@
             0,
             0,
             0,
-            1,
-            2,
-            2,
-            2,
-            1,
+            3,
+            6,
+            8,
+            6,
+            3,
             0,
             0,
             0,
@@ -2036,43 +2036,43 @@
           ],
           "temperature_2m_max": [
             27.1,
-            27.4,
+            27.3,
             27.4,
             26.8,
-            26.5,
+            26.6,
             27.2,
-            27.6,
-            28.4
+            26.7,
+            27.7
           ],
           "temperature_2m_min": [
-            18.6,
             18.7,
-            18,
+            18.8,
+            18.1,
+            18.2,
             17.5,
-            17.5,
-            16.4,
-            15.8,
-            15.7
+            16.7,
+            16.1,
+            15.4
           ],
           "weather_code": [
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45,
-            45
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1
           ],
           "precipitation_probability_max": [
-            2,
             8,
+            12,
             0,
             0,
             0,
             0,
             2,
-            8
+            6
           ],
           "sunrise": [
             "2026-10-20T06:14",
@@ -2096,26 +2096,26 @@
           ],
           "uv_index_max": [
             6,
-            6,
-            6,
+            5.95,
+            5.95,
             5.9,
             5.85,
             5.9,
-            5.85,
-            5.35
+            5.9,
+            5.85
           ]
         }
       },
       "dharan": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 19.9,
-          "relative_humidity_2m": 80,
-          "apparent_temperature": 21.8,
-          "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 2.1,
+          "temperature_2m": 17.9,
+          "relative_humidity_2m": 87,
+          "apparent_temperature": 19.5,
+          "weather_code": 1,
+          "cloud_cover": 34,
+          "wind_speed_10m": 2.7,
           "wind_direction_10m": 20,
           "precipitation": 0
         },
@@ -2176,11 +2176,11 @@
             1,
             0,
             0,
-            45,
-            45,
-            45,
-            45,
-            45,
+            0,
+            1,
+            1,
+            1,
+            0,
             0,
             0,
             0,
@@ -2264,7 +2264,7 @@
             5.7,
             6.35,
             6.3,
-            5.55,
+            5.5,
             4.15,
             2.5,
             0.95,
@@ -2292,28 +2292,28 @@
             27.9,
             28.1,
             27.6,
-            26.9,
+            27,
             26.7,
             28.1,
-            29,
-            30
+            28.5,
+            29.4
           ],
           "temperature_2m_min": [
             18,
-            17.6,
+            17.7,
             17.3,
             16.6,
-            16.1,
-            17.1,
-            17.5,
-            17.5
+            15.7,
+            16.9,
+            17.4,
+            17.1
           ],
           "weather_code": [
-            45,
-            45,
-            45,
-            45,
-            45,
+            1,
+            1,
+            1,
+            1,
+            1,
             0,
             0,
             0
@@ -2324,9 +2324,9 @@
             0,
             0,
             0,
+            0,
             2,
-            6,
-            4
+            10
           ],
           "sunrise": [
             "2026-10-20T05:57",
@@ -2356,21 +2356,21 @@
             6.25,
             6.2,
             6.2,
-            5.9
+            5.75
           ]
         }
       },
       "nepalgunj": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 18.9,
-          "relative_humidity_2m": 92,
-          "apparent_temperature": 21.6,
-          "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 0,
-          "wind_direction_10m": 270,
+          "temperature_2m": 17.1,
+          "relative_humidity_2m": 100,
+          "apparent_temperature": 19.5,
+          "weather_code": 3,
+          "cloud_cover": 100,
+          "wind_speed_10m": 0.3,
+          "wind_direction_10m": 225,
           "precipitation": 0
         },
         "hourly": {
@@ -2431,11 +2431,11 @@
             0,
             0,
             0,
-            45,
-            45,
-            45,
-            45,
-            45,
+            3,
+            3,
+            3,
+            3,
+            1,
             0,
             0,
             0,
@@ -2543,34 +2543,34 @@
             "2026-10-27"
           ],
           "temperature_2m_max": [
-            28.6,
+            28.5,
             28.7,
             28.8,
+            28.5,
             28.4,
-            28.2,
-            28.9,
-            28.9,
-            30.1
+            29,
+            27.1,
+            28.6
           ],
           "temperature_2m_min": [
+            17,
             16.9,
-            16.8,
+            17.1,
             16.9,
             16.8,
             16.7,
-            16.6,
-            16.4,
-            16
+            16.2,
+            16.1
           ],
           "weather_code": [
-            45,
             3,
-            45,
-            45,
+            3,
+            3,
+            3,
             0,
             0,
-            45,
-            45
+            3,
+            3
           ],
           "precipitation_probability_max": [
             0,
@@ -2610,21 +2610,21 @@
             5.55,
             5.15,
             5.15,
-            5.15
+            5.2
           ]
         }
       },
       "dhangadhi": {
         "current": {
-          "time": "2026-10-20T02:00",
+          "time": "2026-10-20T05:30",
           "interval": 900,
-          "temperature_2m": 19.6,
-          "relative_humidity_2m": 84,
-          "apparent_temperature": 21.9,
+          "temperature_2m": 18,
+          "relative_humidity_2m": 88,
+          "apparent_temperature": 20,
           "weather_code": 0,
-          "cloud_cover": 0,
-          "wind_speed_10m": 0.2,
-          "wind_direction_10m": 360,
+          "cloud_cover": 4,
+          "wind_speed_10m": 0.4,
+          "wind_direction_10m": 333,
           "precipitation": 0
         },
         "hourly": {
@@ -2687,8 +2687,8 @@
             0,
             0,
             0,
-            45,
-            45,
+            0,
+            0,
             0,
             0,
             0,
@@ -2768,7 +2768,7 @@
             0,
             0.5,
             1.65,
-            3.1,
+            3.15,
             4.45,
             5.35,
             5.6,
@@ -2799,25 +2799,25 @@
           "temperature_2m_max": [
             28.5,
             28.4,
-            28.8,
+            28.9,
             28.6,
             28.4,
-            29.1,
-            29.1,
-            29.5
+            29,
+            27.2,
+            27.8
           ],
           "temperature_2m_min": [
-            17.8,
+            17.9,
             18,
-            17,
+            17.1,
             17.6,
-            18.2,
-            16.7,
-            16.2,
-            15.9
+            18.3,
+            18,
+            16.4,
+            15.8
           ],
           "weather_code": [
-            45,
+            0,
             0,
             0,
             0,
@@ -2861,7 +2861,7 @@
             5.6,
             5.55,
             5.5,
-            5.45,
+            5.5,
             5.15,
             5.1,
             5.1
@@ -2871,64 +2871,64 @@
     },
     "aqi": {
       "kathmandu": {
-        "value": 102,
-        "pm25": 54.1,
-        "pm10": 57,
-        "time": "2026-10-20T01:45"
+        "value": 100,
+        "pm25": 50.9,
+        "pm10": 54.5,
+        "time": "2026-10-20T04:45"
       },
       "pokhara": {
-        "value": 51,
-        "pm25": 12.1,
-        "pm10": 15.1,
-        "time": "2026-10-20T01:45"
+        "value": 58,
+        "pm25": 16.3,
+        "pm10": 25.7,
+        "time": "2026-10-20T04:45"
       },
       "lalitpur": {
-        "value": 102,
-        "pm25": 54.1,
-        "pm10": 57,
-        "time": "2026-10-20T01:45"
+        "value": 100,
+        "pm25": 50.9,
+        "pm10": 54.5,
+        "time": "2026-10-20T04:45"
       },
       "bhaktapur": {
-        "value": 119,
-        "pm25": 66.6,
-        "pm10": 69.6,
-        "time": "2026-10-20T01:45"
+        "value": 113,
+        "pm25": 51.7,
+        "pm10": 55.8,
+        "time": "2026-10-20T04:45"
       },
       "biratnagar": {
-        "value": 158,
-        "pm25": 101.5,
-        "pm10": 105.5,
-        "time": "2026-10-20T01:45"
+        "value": 163,
+        "pm25": 110.8,
+        "pm10": 114.3,
+        "time": "2026-10-20T04:45"
       },
       "bharatpur": {
-        "value": 80,
-        "pm25": 33.8,
-        "pm10": 35.9,
-        "time": "2026-10-20T01:45"
+        "value": 82,
+        "pm25": 41.1,
+        "pm10": 44,
+        "time": "2026-10-20T04:45"
       },
       "butwal": {
-        "value": 94,
-        "pm25": 54.7,
-        "pm10": 56.1,
-        "time": "2026-10-20T01:45"
+        "value": 95,
+        "pm25": 55.9,
+        "pm10": 56.9,
+        "time": "2026-10-20T04:45"
       },
       "dharan": {
-        "value": 128,
-        "pm25": 64.7,
-        "pm10": 67.5,
-        "time": "2026-10-20T01:45"
+        "value": 140,
+        "pm25": 59,
+        "pm10": 61.5,
+        "time": "2026-10-20T04:45"
       },
       "nepalgunj": {
-        "value": 87,
-        "pm25": 48.9,
-        "pm10": 61.9,
-        "time": "2026-10-20T01:45"
+        "value": 85,
+        "pm25": 42.5,
+        "pm10": 48,
+        "time": "2026-10-20T04:45"
       },
       "dhangadhi": {
-        "value": 84,
-        "pm25": 43.4,
-        "pm10": 51,
-        "time": "2026-10-20T01:45"
+        "value": 79,
+        "pm25": 32.8,
+        "pm10": 35.7,
+        "time": "2026-10-20T04:45"
       }
     },
     "isLive": true
